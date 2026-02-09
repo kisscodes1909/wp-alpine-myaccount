@@ -1,0 +1,577 @@
+# Copyright (C) 2023 Codemanas
+# This file is distributed under the http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
+msgid ""
+msgstr ""
+"Project-Id-Version: Typesense Search for WooCommerce 1.6.3\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/typesense-search-for-woocommerce\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2023-09-28T10:25:22+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.7.1\n"
+"X-Domain: typesense-search-for-woocommerce\n"
+
+#. Plugin Name of the plugin
+msgid "Typesense Search for WooCommerce"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://www.codemanas.com/downloads/typesense-search-for-woocommerce/"
+msgstr ""
+
+#. Description of the plugin
+msgid "Typesense Search for WooCommerce supercharges your WooCommerce site search functionality with Typesense providing search-as-you-type experience. Product searching will be instant and super-fast which enhances user experience on your site."
+msgstr ""
+
+#. Author of the plugin
+msgid "Codemanas"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://www.codemanas.com/"
+msgstr ""
+
+#: includes/Admin/Admin.php:91
+#: includes/Admin/Admin.php:92
+#: includes/Bootstrap.php:81
+msgid "WooCommerce"
+msgstr ""
+
+#: includes/Admin/Admin.php:156
+#: includes/Admin/Admin.php:204
+#: includes/Main/Main.php:248
+msgid "Search products"
+msgstr ""
+
+#: includes/Admin/Admin.php:211
+#: includes/Admin/Customizer.php:90
+#: includes/Frontend/Frontend.php:46
+#: includes/Main/Licensing/LicensingAjaxHandler.php:67
+#: templates/instant-search/partials/sort-by.php:19
+msgid "Recent"
+msgstr ""
+
+#: includes/Admin/Admin.php:212
+#: includes/Admin/Customizer.php:91
+#: includes/Frontend/Frontend.php:47
+#: includes/Main/Licensing/LicensingAjaxHandler.php:71
+#: templates/instant-search/partials/sort-by.php:23
+msgid "Oldest"
+msgstr ""
+
+#: includes/Admin/Admin.php:213
+#: includes/Admin/Customizer.php:92
+#: includes/Frontend/Frontend.php:48
+#: includes/Main/Licensing/LicensingAjaxHandler.php:75
+#: templates/instant-search/partials/sort-by.php:27
+msgid "Sort by rating: low to high"
+msgstr ""
+
+#: includes/Admin/Admin.php:214
+#: includes/Admin/Customizer.php:93
+#: includes/Frontend/Frontend.php:49
+#: includes/Main/Licensing/LicensingAjaxHandler.php:79
+#: templates/instant-search/partials/sort-by.php:31
+msgid "Sort by rating: high to low"
+msgstr ""
+
+#: includes/Admin/Admin.php:215
+#: includes/Admin/Customizer.php:94
+#: includes/Frontend/Frontend.php:50
+#: includes/Main/Licensing/LicensingAjaxHandler.php:83
+#: templates/instant-search/partials/sort-by.php:35
+msgid "Sort by price: low to high"
+msgstr ""
+
+#: includes/Admin/Admin.php:216
+#: includes/Admin/Customizer.php:95
+#: includes/Frontend/Frontend.php:51
+#: includes/Main/Licensing/LicensingAjaxHandler.php:87
+#: templates/instant-search/partials/sort-by.php:39
+msgid "Sort by price: high to low"
+msgstr ""
+
+#: includes/Admin/Admin.php:217
+#: includes/Admin/Customizer.php:96
+#: includes/Frontend/Frontend.php:52
+#: includes/Main/Licensing/LicensingAjaxHandler.php:91
+#: templates/instant-search/partials/sort-by.php:43
+msgid "Sort by popularity"
+msgstr ""
+
+#: includes/Admin/Admin.php:222
+msgid "WooCommerce Settings"
+msgstr ""
+
+#: includes/Admin/Admin.php:223
+msgid "Global Settings"
+msgstr ""
+
+#: includes/Admin/Admin.php:228
+msgid "Replace Shop page"
+msgstr ""
+
+#: includes/Admin/Admin.php:240
+msgid "Filters"
+msgstr ""
+
+#: includes/Admin/Admin.php:246
+msgid "Enable category"
+msgstr ""
+
+#: includes/Admin/Admin.php:252
+msgid "Enable price"
+msgstr ""
+
+#: includes/Admin/Admin.php:258
+msgid "Enable rating"
+msgstr ""
+
+#: includes/Admin/Admin.php:264
+msgid "Enable attributes"
+msgstr ""
+
+#: includes/Admin/Admin.php:270
+msgid "Enable sortby"
+msgstr ""
+
+#: includes/Admin/Admin.php:274
+#: includes/Admin/Customizer.php:100
+msgid "Select Default Sort By"
+msgstr ""
+
+#: includes/Admin/Admin.php:289
+msgid "Pagination"
+msgstr ""
+
+#: includes/Admin/Admin.php:295
+#: assets/admin/index.js:277
+#: src/admin/tab.js:132
+#: assets/admin/index.js:236
+msgid "Enable Pagination"
+msgstr ""
+
+#: includes/Admin/Admin.php:302
+msgid "Show featured products first"
+msgstr ""
+
+#: includes/Admin/Admin.php:308
+msgid "Display featured products first while filtering"
+msgstr ""
+
+#: includes/Admin/Admin.php:315
+msgid "Search placeholder"
+msgstr ""
+
+#: includes/Admin/Admin.php:326
+#: includes/Admin/Customizer.php:118
+msgid "Replace Product Search"
+msgstr ""
+
+#: includes/Admin/Admin.php:332
+msgid "With autocomplete search."
+msgstr ""
+
+#: includes/Admin/Admin.php:339
+msgid "With popup."
+msgstr ""
+
+#: includes/Admin/Admin.php:347
+msgid "Autocomplete Submit Action"
+msgstr ""
+
+#: includes/Admin/Admin.php:353
+#: assets/admin/index.js:316
+#: src/admin/tab.js:180
+#: assets/admin/index.js:284
+msgid "Keep Autocomplete Panel Open"
+msgstr ""
+
+#: includes/Admin/Admin.php:361
+msgid "Use Default product search"
+msgstr ""
+
+#: includes/Admin/Admin.php:369
+msgid "Advanced Settings"
+msgstr ""
+
+#: includes/Admin/Admin.php:373
+msgid "Enable hierarchical menu"
+msgstr ""
+
+#: includes/Admin/Admin.php:379
+#: assets/admin/index.js:328
+#: src/admin/tab.js:194
+#: assets/admin/index.js:298
+msgid "Make the default Category filter hierarchical menu."
+msgstr ""
+
+#: includes/Admin/Admin.php:382
+msgid "Please note that enabling it will be resource heavy for your site. Also products should be re-indexed too."
+msgstr ""
+
+#: includes/Admin/Admin.php:389
+msgid "Save Changes"
+msgstr ""
+
+#: includes/Admin/Customizer.php:24
+msgid "Typesense Settings"
+msgstr ""
+
+#: includes/Admin/Customizer.php:32
+msgid "Replace Shop Pages"
+msgstr ""
+
+#: includes/Admin/Customizer.php:33
+msgid "Replace shop page with Typesense instant search listing"
+msgstr ""
+
+#: includes/Admin/Customizer.php:36
+msgid "Show Category Filters"
+msgstr ""
+
+#: includes/Admin/Customizer.php:39
+msgid "Show Price Filter"
+msgstr ""
+
+#: includes/Admin/Customizer.php:43
+msgid "Show Rating Filter"
+msgstr ""
+
+#: includes/Admin/Customizer.php:47
+msgid "Show Attribute Filter"
+msgstr ""
+
+#: includes/Admin/Customizer.php:51
+msgid "Show Pagination"
+msgstr ""
+
+#: includes/Admin/Customizer.php:54
+msgid "Show Sort By"
+msgstr ""
+
+#: includes/Admin/Customizer.php:57
+msgid "Display featured products first"
+msgstr ""
+
+#: includes/Admin/Customizer.php:58
+msgid "Display the feauted producst first while filtering"
+msgstr ""
+
+#: includes/Admin/Customizer.php:101
+msgid "Select the default Sort By option"
+msgstr ""
+
+#: includes/Admin/Customizer.php:122
+msgid "With autocomplete"
+msgstr ""
+
+#: includes/Admin/Customizer.php:123
+msgid "With popup"
+msgstr ""
+
+#: includes/Admin/Customizer.php:138
+#: assets/admin/index.js:290
+#: src/admin/tab.js:147
+#: assets/admin/index.js:251
+msgid "Search Placeholder"
+msgstr ""
+
+#. translators: 1: Plugin name 2: PHP 3: Required PHP version
+#: includes/Bootstrap.php:51
+msgid "\"%1$s\" requires \"%2$s\" version %3$s or greater."
+msgstr ""
+
+#: includes/Bootstrap.php:52
+#: includes/Bootstrap.php:66
+#: includes/Bootstrap.php:80
+msgid "Typesense Search For WooCommerce"
+msgstr ""
+
+#: includes/Bootstrap.php:53
+msgid "PHP"
+msgstr ""
+
+#. translators: 1: Plugin name 2: PHP 3: Required PHP version
+#: includes/Bootstrap.php:65
+#: includes/Bootstrap.php:79
+msgid "\"%1$s\" requires \"%2$s\" plugin to work - please get it from the %3$s."
+msgstr ""
+
+#: includes/Bootstrap.php:67
+msgid "Search with Typesense"
+msgstr ""
+
+#: includes/Bootstrap.php:68
+#: includes/Bootstrap.php:82
+msgid "WordPress Repo"
+msgstr ""
+
+#: includes/Bootstrap.php:210
+msgid "Heads up, Please backup before upgrade!"
+msgstr ""
+
+#: includes/Bootstrap.php:214
+msgid "The latest update includes some substantial changes across different areas of the plugin. We highly recommend you backup your site before upgrading, and make sure you first update in a staging environment"
+msgstr ""
+
+#: includes/Frontend/Frontend.php:45
+#: templates/instant-search/partials/sort-by.php:15
+msgid "Default"
+msgstr ""
+
+#: includes/Frontend/Frontend.php:54
+msgid "Show more"
+msgstr ""
+
+#: includes/Frontend/Frontend.php:55
+msgid "Show less"
+msgstr ""
+
+#: includes/Frontend/Frontend.php:56
+msgid "Up"
+msgstr ""
+
+#: includes/Frontend/Frontend.php:57
+msgid "Clear all"
+msgstr ""
+
+#: includes/Frontend/Frontend.php:58
+msgid "Query"
+msgstr ""
+
+#: includes/Helpers/WPMLCompat.php:39
+msgid "Filter by Language"
+msgstr ""
+
+#: includes/Main/Licensing/Licensing.php:197
+#: includes/Main/Licensing/Licensing.php:224
+#: includes/Main/Licensing/Licensing.php:284
+msgid "An error occurred, please try again."
+msgstr ""
+
+#: includes/Main/Licensing/Licensing.php:204
+msgid "Your license key expired on %s. Please check your email for renew notice related to your existing license."
+msgstr ""
+
+#: includes/Main/Licensing/Licensing.php:208
+msgid "Your license key has been disabled."
+msgstr ""
+
+#: includes/Main/Licensing/Licensing.php:211
+msgid "Invalid license."
+msgstr ""
+
+#: includes/Main/Licensing/Licensing.php:215
+msgid "Your license is not active for this URL."
+msgstr ""
+
+#: includes/Main/Licensing/Licensing.php:218
+msgid "This appears to be an invalid license key for %s."
+msgstr ""
+
+#: includes/Main/Licensing/Licensing.php:221
+msgid "Your license key has reached its activation limit."
+msgstr ""
+
+#: includes/Main/Licensing/Licensing.php:274
+msgid "An error occurred, please try again later."
+msgstr ""
+
+#: includes/Main/Licensing/Updater.php:187
+msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s."
+msgstr ""
+
+#: includes/Main/Licensing/Updater.php:189
+msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s."
+msgstr ""
+
+#: includes/Main/Licensing/Updater.php:325
+msgid "You do not have permission to install plugin updates"
+msgstr ""
+
+#: includes/Main/Licensing/Updater.php:325
+msgid "Error"
+msgstr ""
+
+#: includes/Main/Licensing/views/tpl-licensing.php:12
+msgid "WooCommerce License Key"
+msgstr ""
+
+#: includes/Main/Licensing/views/tpl-licensing.php:21
+msgid "Your license key here"
+msgstr ""
+
+#: includes/Shortcode/Shortcode.php:65
+msgid "Per page"
+msgstr ""
+
+#: includes/Shortcode/Shortcode.php:66
+#: includes/Shortcode/Shortcode.php:67
+#: includes/Shortcode/Shortcode.php:68
+#: includes/Shortcode/Shortcode.php:69
+#: includes/Shortcode/Shortcode.php:70
+msgid "%d per page"
+msgstr ""
+
+#: templates/autocomplete/no-results.php:1
+#: templates/instant-search-no-results.php:2
+msgid "No Results Found"
+msgstr ""
+
+#: templates/instant-search/filter-panel.php:8
+msgid "Filter"
+msgstr ""
+
+#: templates/instant-search/filter-panel.php:16
+msgid "Filter Search Results"
+msgstr ""
+
+#: templates/instant-search/filter-panel.php:34
+msgid "Close"
+msgstr ""
+
+#: templates/instant-search/partials/category-filter.php:35
+msgid "Categories"
+msgstr ""
+
+#: templates/instant-search/partials/category-filter.php:36
+msgid "Filter by Category"
+msgstr ""
+
+#: templates/instant-search/partials/price-filter.php:7
+#: assets/admin/index.js:245
+#: src/admin/tab.js:99
+#: assets/admin/index.js:203
+msgid "Price"
+msgstr ""
+
+#: templates/instant-search/partials/price-filter.php:8
+msgid "Filter by Price"
+msgstr ""
+
+#: templates/instant-search/partials/product-attributes.php:22
+msgid "Filter by %s"
+msgstr ""
+
+#: templates/instant-search/partials/rating-filter.php:7
+#: assets/admin/index.js:251
+#: src/admin/tab.js:104
+#: assets/admin/index.js:208
+msgid "Rating"
+msgstr ""
+
+#: templates/instant-search/partials/rating-filter.php:8
+msgid "Filter by Rating"
+msgstr ""
+
+#: assets/admin/index.js:232
+#: src/admin/tab.js:84
+#: assets/admin/index.js:188
+msgid "Replace Shop"
+msgstr ""
+
+#: assets/admin/index.js:233
+#: src/admin/tab.js:85
+#: assets/admin/index.js:189
+msgid "Replace Shop with Typesense Search"
+msgstr ""
+
+#: assets/admin/index.js:239
+#: src/admin/tab.js:94
+#: assets/admin/index.js:198
+msgid "Category"
+msgstr ""
+
+#: assets/admin/index.js:257
+#: src/admin/tab.js:109
+#: assets/admin/index.js:213
+msgid "Product Attributes"
+msgstr ""
+
+#: assets/admin/index.js:259
+#: src/admin/tab.js:111
+#: assets/admin/index.js:215
+msgid "All visible product attributes will be shown"
+msgstr ""
+
+#: assets/admin/index.js:264
+#: src/admin/tab.js:115
+#: assets/admin/index.js:219
+msgid "Sorting"
+msgstr ""
+
+#: assets/admin/index.js:270
+#: src/admin/tab.js:120
+#: assets/admin/index.js:224
+msgid "Select Default Sort By Option"
+msgstr ""
+
+#: assets/admin/index.js:283
+#: src/admin/tab.js:139
+#: assets/admin/index.js:243
+msgid "Enable Routing"
+msgstr ""
+
+#: assets/admin/index.js:284
+#: src/admin/tab.js:140
+#: assets/admin/index.js:244
+msgid "Enabling this option will activate routing, allowing you to share the URL with the applied filter."
+msgstr ""
+
+#: assets/admin/index.js:296
+#: src/admin/tab.js:155
+#: assets/admin/index.js:259
+msgid "With Autocomplete Search"
+msgstr ""
+
+#: assets/admin/index.js:302
+#: src/admin/tab.js:160
+#: assets/admin/index.js:264
+msgid "With Instant Search Popup"
+msgstr ""
+
+#: assets/admin/index.js:303
+#: src/admin/tab.js:161
+#: assets/admin/index.js:265
+msgid "Please add class \"wc-block-product-search__fields\" to your search widget for WooCommerce Popup Search to run"
+msgstr ""
+
+#: assets/admin/index.js:309
+#: src/admin/tab.js:169
+#: assets/admin/index.js:273
+msgid "Show Featured First"
+msgstr ""
+
+#: assets/admin/index.js:310
+#: src/admin/tab.js:170
+#: assets/admin/index.js:274
+msgid "Display featured products first when showing Products"
+msgstr ""
+
+#: assets/admin/index.js:322
+#: src/admin/tab.js:185
+#: assets/admin/index.js:289
+msgid "Use Default Product Search"
+msgstr ""
+
+#: assets/admin/index.js:329
+#: src/admin/tab.js:195
+#: assets/admin/index.js:299
+msgid "Please note that enabling it will be resource heavy for your site. Products need to be Delete and Re-indexed"
+msgstr ""
+
+#: src/admin/tab.js:48
+msgid "success"
+msgstr ""
+
+#: src/admin/tab.js:55
+msgid "Request has been aborted"
+msgstr ""
+
+#: src/admin/tab.js:58
+msgid "Settings could not be saved!"
+msgstr ""

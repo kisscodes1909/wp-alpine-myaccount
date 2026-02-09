@@ -1,0 +1,52 @@
+{
+	"name": "tailpress",
+	"version": "0.0.7",
+	"description": "Boilerplate WordPress theme with TailwindCSS.",
+	"author": "Jeffrey van Rossum",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/jeffreyvr/tailpress"
+	},
+	"theme_uri": "https://github.com/jeffreyvr/tailpress",
+	"author_uri": "https://vanrossum.dev",
+	"text_domain": "tailpress",
+	"license": "GPL-2.0",
+	"scripts": {
+		"production:css-app": "cross-env NODE_ENV=development tailwindcss -i ./assets/css/structure-file.css -o assets/css/app.css --postcss --minify",
+		"production:js": "cross-env NODE_ENV=development ./node_modules/.bin/esbuild ./assets/js/app.js --bundle --outfile=./js/app.js --minify",
+		"dev:css-app": "cross-env NODE_ENV=development tailwindcss -i ./assets/css/structure-file.css -o assets/css/app.css --postcss",
+		"dev:js": "cross-env NODE_ENV=development ./node_modules/.bin/esbuild ./assets/js/app.js --bundle --outfile=./js/app.js",
+		"watch:css-app": "cross-env NODE_ENV=development tailwindcss -i ./assets/css/structure-file.css -o ./assets/css/app.css --postcss --watch",
+		"watch:js": "cross-env NODE_ENV=developçment ./node_modules/.bin/esbuild ./assets/js/app.js --bundle --outfile=./js/app.js --watch",
+		"build:alpine": "./node_modules/.bin/esbuild assets/js/alpine/init.js --bundle --outfile=assets/js/alpine.bundle.js --format=iife --global-name=AlpineBundle",
+		"build:alpine:min": "./node_modules/.bin/esbuild assets/js/alpine/init.js --bundle --outfile=assets/js/alpine.bundle.min.js --format=iife --global-name=AlpineBundle --minify",
+		"watch:alpine": "./node_modules/.bin/esbuild assets/js/alpine/init.js --bundle --outfile=assets/js/alpine.bundle.js --format=iife --global-name=AlpineBundle --watch",
+		"production": "cross-env NODE_ENV=production concurrently \"npm run production:css-app\" \"npm run production:js\"",
+		"dev": "cross-env NODE_ENV=development concurrently \"npm run dev:css-app\" \"npm run dev:js\"",
+		"watch": "cross-env NODE_ENV=development concurrently \"npm run watch:css-app\" \"npm run watch:js\" \"node es-build.js watch\" ",
+		"browser-sync": "cross-env NODE_ENV=development browser-sync start --proxy \"tailpress.test\" --host=\"tailpress.test\" --no-inject-changes --files=\"./\"",
+		"watch-sync": "cross-env NODE_ENV=development concurrently \"npm run browser-sync\" \"npm run watch\""
+	},
+	"devDependencies": {
+		"@jeffreyvr/tailwindcss-tailpress": "^2.0.0",
+		"autoprefixer": "^10.4.17",
+		"browser-sync": "^2.29.3",
+		"chokidar": "^3.5.3",
+		"concurrently": "^6.2.1",
+		"cross-env": "^6.0.3",
+		"esbuild": "^0.12.29",
+		"postcss": "^8.4.33",
+		"postcss-import": "^14.0.0",
+		"postcss-nested": "^5.0.3",
+		"postcss-nested-ancestors": "^2.0.0",
+		"resolve-url-loader": "^3.1.2",
+		"tailwindcss": "^3.4.3",
+		"ws": "^8.16.0"
+	},
+	"dependencies": {
+		"@tailwindcss/forms": "^0.5.7",
+		"alpinejs": "^3.14.0",
+		"precss": "^4.0.0",
+		"yup": "^1.3.3"
+	}
+}

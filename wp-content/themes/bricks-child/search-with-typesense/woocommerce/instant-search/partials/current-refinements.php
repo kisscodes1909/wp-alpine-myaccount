@@ -1,0 +1,1 @@
+<div class="cmtsfwc-CurrentRefinements"></div>
