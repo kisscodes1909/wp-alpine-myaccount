@@ -145,6 +145,12 @@ class Theme_Ajax {
     }
 
     function save_address_book() {
+        // Verify nonce
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'save_address_nonce')) {
+            wp_send_json_error('Invalid security token');
+            exit;
+        }
+
         $new_address = json_decode(stripslashes($_POST['data']), true);
 
         $user_id = get_current_user_id();

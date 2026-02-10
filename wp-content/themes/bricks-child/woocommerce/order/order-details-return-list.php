@@ -2,7 +2,7 @@
     <?php if (have_rows('order_return_request', $order->get_id())) : ?>
         <div class="your-custom-class">
             <?php
-            wc_get_template('myaccount/page-heading.php', ['page_heading' => 'Returns in Progress']);
+            wc_get_template('myaccount/page-heading.php', ['page_heading' => 'Returns in Progress', 'page_description' => 'Track your return requests']);
 
             while (have_rows('order_return_request', $order->get_id())) {
                 the_row();

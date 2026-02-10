@@ -56,6 +56,7 @@ do_action( 'yith_wcwl_before_wishlist_form', $wishlist );
     <?php wc_get_template('myaccount/page-heading.php',
         [
             'page_heading' => 'Wishlist',
+            'page_description' => 'Items you\'ve saved for later',
         ]
     ); ?>
     <?php

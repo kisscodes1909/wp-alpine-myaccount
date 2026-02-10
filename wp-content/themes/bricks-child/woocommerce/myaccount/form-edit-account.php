@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 
 do_action( 'woocommerce_before_edit_account_form' ); ?>
 
-<?php wc_get_template('myaccount/page-heading.php', ['page_heading' => 'My Info']); ?>
+<?php wc_get_template('myaccount/page-heading.php', ['page_heading' => 'My Info', 'page_description' => 'Update your personal details']); ?>
 
 <form x-data="updateAccount" id="form-update-account" class="underline-form flex flex-col gap-8 md:container mx-auto px-8"
       @submit.prevent="handleSubmit"

@@ -40,18 +40,20 @@ class Adress_Book {
 
     function enqueue_scripts($addresses, $countries): void
     {
-        $aafw_google_api_key = get_option( 'aafw_google_api_key', '' );
+        $aafw_google_api_key = 'AIzaSyD-42Ska0L9w12EoymnnOFAPaF5uCdiPgU';
         $language = 'en';
 
         wp_enqueue_script('address-book', CHILD_URL . '/assets/js/address-book.js', array('alpine-bundle'), filemtime(CHILD_DIR . '/assets/js/address-book.js'), true);
         wp_localize_script('alpine-bundle', 'scriptData', [
                 'ajaxUrl' => admin_url('admin-ajax.php'),
                 'addresses' => $addresses,
-                'countries' => $countries
+                'countries' => $countries,
+                'nonce' => wp_create_nonce('save_address_nonce')
         ]);
+        // Places API (New): load without legacy libraries; places loaded via importLibrary() in JS
         wp_enqueue_script(
             'address-googleapis',
-            'https://maps.googleapis.com/maps/api/js?key=' . $aafw_google_api_key . '&language=' . $language . '&libraries=places&v=weekly',
+            'https://maps.googleapis.com/maps/api/js?key=' . $aafw_google_api_key . '&language=' . $language . '&loading=async',
             array( 'address-book' ),
             '1.0',
             true

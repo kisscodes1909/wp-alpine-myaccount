@@ -12,4 +12,7 @@
         }
     ?>
     <h2 class="text-base md:text-xl text-center font-normal"><?php echo $page_heading ?? ''; ?></h2>
+    <?php if (!empty($page_description)) : ?>
+        <p class="text-sm text-center mt-2 pb-4 border-b border-gray-200"><?php echo $page_description; ?></p>
+    <?php endif; ?>
 </div>

@@ -29,6 +29,7 @@ do_action( 'woocommerce_before_account_payment_methods', $has_methods );
 <?php wc_get_template('myaccount/page-heading.php',
     [
         'page_heading' => 'Payment methods',
+        'page_description' => 'Manage your saved payment methods',
     ]
 ); ?>
 

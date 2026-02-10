@@ -34,6 +34,7 @@ do_action( 'woocommerce_before_lost_password_form' );
 <?php wc_get_template('myaccount/page-heading.php',
     [
         'page_heading' => 'Forgot Password',
+        'page_description' => 'Enter your email to receive a reset link',
     ]
 ); ?>
 

@@ -5910,17 +5910,25 @@ attempted value: ${formattedValue}
     open: false,
     content: ``,
     direction: "center",
+    _scrollbarWidth: 0,
     openPopup(content, direction = "center") {
       this.content = content;
       this.direction = direction;
+      this._scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      if (this._scrollbarWidth > 0) {
+        document.body.style.paddingRight = this._scrollbarWidth + "px";
+        document.documentElement.style.paddingRight = this._scrollbarWidth + "px";
+      }
+      document.body.classList.add("overflow-y-hidden");
       setTimeout(() => {
         this.open = true;
       }, 50);
-      document.body.classList.add("overflow-y-hidden");
     },
     closePopup() {
       this.open = false;
       document.body.classList.remove("overflow-y-hidden");
+      document.body.style.paddingRight = "";
+      document.documentElement.style.paddingRight = "";
     }
   };
 
@@ -6015,55 +6023,63 @@ attempted value: ${formattedValue}
   };
 
   // assets/js/alpine/stores/userAddress.js
+  var MAX_ADDRESSES = 9;
+  var DEFAULT_COUNTRY = "United States";
+  var AJAX_ACTION = "save-address";
+  var ADDRESS_COMPONENT_MAP = {
+    street_number: { field: "address", prefix: true },
+    route: { field: "address", append: true },
+    locality: { field: "city" },
+    administrative_area_level_1: { field: "region", shortName: true },
+    postal_code: { field: "postalCode" }
+  };
   var userAddress_default = {
     addresses: [],
     countries: {},
     ajaxUrl: "",
+    nonce: "",
     stopAdd: false,
-    editAddress: {
-      fname: "",
-      lname: "",
-      phone: "",
-      address: "",
-      address2: "",
-      city: "",
-      region: "",
-      postalCode: "",
-      country: "United States",
-      default: false
-    },
+    editAddress: null,
     isEditing: false,
     form: {
-      title: "Add Address",
-      buttonSaveLabel: "Add",
+      title: "",
+      buttonSaveLabel: "",
       action: ""
     },
     _inited: false,
+    _autocompleteInstance: null,
     init() {
       if (this._inited)
         return;
       const data2 = window.scriptData || {};
-      this.addresses = data2.addresses || [];
+      this.addresses = Array.isArray(data2.addresses) ? data2.addresses : [];
       this.countries = data2.countries || {};
       this.ajaxUrl = data2.ajaxUrl || window.ajaxurl || "/wp-admin/admin-ajax.php";
-      window.countries = this.countries;
+      this.nonce = data2.nonce || "";
       this._inited = true;
+      this.ensureOneDefault();
       this.checkMaxAddress();
     },
+    ensureOneDefault() {
+      if (this.addresses.length === 0)
+        return;
+      const hasDefault = this.addresses.some((addr) => this._isDefault(addr));
+      if (!hasDefault) {
+        this.addresses[0].default = true;
+      }
+    },
     checkMaxAddress() {
-      this.stopAdd = this.addresses.length >= 9;
+      this.stopAdd = this.addresses.length >= MAX_ADDRESSES;
     },
-    generateUniqueKey() {
-      const now = Date.now().toString();
-      const random = Math.random().toString(36).substring(2, 15);
-      return now + random;
+    _normalizeId(id) {
+      return String(id);
     },
-    startAdd() {
-      this.form.title = "Add Address";
-      this.form.buttonSaveLabel = "Add Address";
-      this.form.action = "add";
-      this.editAddress = {
-        id: this.generateUniqueKey(),
+    _isDefault(address) {
+      return address.default === true || address.default === 1 || address.default === "1";
+    },
+    _getEmptyAddress(id = null) {
+      return {
+        id: id || this.generateUniqueKey(),
         fname: "",
         lname: "",
         phone: "",
@@ -6072,25 +6088,56 @@ attempted value: ${formattedValue}
         city: "",
         region: "",
         postalCode: "",
-        country: "United States",
+        country: DEFAULT_COUNTRY,
         default: false
       };
+    },
+    _setFormMode(action, title, buttonLabel) {
+      this.form.action = action;
+      this.form.title = title;
+      this.form.buttonSaveLabel = buttonLabel;
+    },
+    _findAddressById(id) {
+      const idStr = this._normalizeId(id);
+      return this.addresses.find((addr) => this._normalizeId(addr.id) === idStr);
+    },
+    _findAddressIndex(id) {
+      const idStr = this._normalizeId(id);
+      return this.addresses.findIndex((addr) => this._normalizeId(addr.id) === idStr);
+    },
+    _updateDefaultFlags(addresses, defaultId) {
+      const defaultIdStr = this._normalizeId(defaultId);
+      addresses.forEach((addr) => {
+        addr.default = this._normalizeId(addr.id) === defaultIdStr;
+      });
+    },
+    generateUniqueKey() {
+      const now = Date.now().toString();
+      const random = Math.random().toString(36).substring(2, 15);
+      return now + random;
+    },
+    startAdd() {
+      this._setFormMode("add", "Add Address", "Add Address");
+      this.editAddress = this._getEmptyAddress();
       this.isEditing = true;
+      this._cleanupAutocomplete();
+      setTimeout(() => this.initAutocomplete(), 150);
     },
     startEdit(id) {
-      this.form.title = "Edit Address";
-      this.form.buttonSaveLabel = "Update Address";
-      this.form.action = "edit";
-      const address = this.addresses.find((addr) => addr.id === id);
+      this._setFormMode("edit", "Edit Address", "Update Address");
+      const address = this._findAddressById(id);
       if (address) {
         this.editAddress = { ...address };
         this.isEditing = true;
+        this._cleanupAutocomplete();
+        setTimeout(() => this.initAutocomplete(), 150);
       }
     },
     async save() {
-      let addresses = [...this.addresses];
+      const addresses = [...this.addresses];
+      const editId = this._normalizeId(this.editAddress.id);
       if (this.form.action === "edit") {
-        const index = addresses.findIndex((addr) => addr.id === this.editAddress.id);
+        const index = this._findAddressIndex(this.editAddress.id);
         if (index !== -1) {
           addresses[index] = { ...this.editAddress };
         }
@@ -6098,34 +6145,23 @@ attempted value: ${formattedValue}
         addresses.push({ ...this.editAddress });
       }
       if (this.editAddress.default) {
-        addresses.forEach((addr) => {
-          addr.default = addr.id === this.editAddress.id;
-        });
+        this._updateDefaultFlags(addresses, editId);
       }
-      await this.ajaxRequest("save-address", addresses);
+      await this.ajaxRequest(AJAX_ACTION, addresses);
       this.addresses = addresses;
       this.isEditing = false;
       this.checkMaxAddress();
     },
     async setDefault(id, syncToServer = false) {
-      let addresses = [...this.addresses];
-      const defaultIndex = addresses.findIndex((addr) => addr.id === id);
-      if (defaultIndex !== -1 && defaultIndex !== 0) {
-        const temp = addresses[defaultIndex];
-        addresses[defaultIndex] = addresses[0];
-        addresses[0] = temp;
-      }
-      addresses.forEach((address) => {
-        address.default = address.id === id;
-      });
-      this.addresses = addresses;
+      this._updateDefaultFlags(this.addresses, id);
       if (syncToServer) {
-        await this.ajaxRequest("save-address", this.addresses);
+        await this.ajaxRequest(AJAX_ACTION, this.addresses);
       }
     },
     async remove(id) {
-      const addresses = this.addresses.filter((addr) => addr.id !== id);
-      await this.ajaxRequest("save-address", addresses);
+      const idStr = this._normalizeId(id);
+      const addresses = this.addresses.filter((addr) => this._normalizeId(addr.id) !== idStr);
+      await this.ajaxRequest(AJAX_ACTION, addresses);
       this.addresses = addresses;
       this.isEditing = false;
       Alpine.store("popup").closePopup();
@@ -6134,35 +6170,56 @@ attempted value: ${formattedValue}
     async delete(id) {
       return this.remove(id);
     },
-    async ajaxRequest(action, data2) {
-      Alpine.store("loader").show();
+    async _sendRequest(action, data2) {
+      const response = await fetch(this.ajaxUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: new URLSearchParams({
+          action,
+          nonce: this.nonce,
+          data: JSON.stringify(data2)
+        })
+      });
+      return await response.json();
+    },
+    async ajaxRequest(action, data2, options = {}) {
+      const {
+        showLoader = true,
+        showToast = true,
+        closePopup = true
+      } = options;
+      if (showLoader)
+        Alpine.store("loader").show();
       try {
-        const response = await fetch(this.ajaxUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: new URLSearchParams({
-            action,
-            data: JSON.stringify(data2)
-          })
-        });
-        const responseData = await response.json();
-        if (responseData.success) {
-          Alpine.store("toast").addToast(responseData.data, "success");
-          this.editAddress = {};
-          Alpine.store("popup").closePopup();
+        const result = await this._sendRequest(action, data2);
+        if (showLoader)
+          Alpine.store("loader").hide();
+        if (result.success) {
+          if (showToast)
+            Alpine.store("toast").addToast(result.data, "success");
+          if (closePopup) {
+            this.editAddress = this._getEmptyAddress();
+            Alpine.store("popup").closePopup();
+          }
+          return result;
         } else {
-          Alpine.store("toast").addToast(responseData.data, "error");
+          if (showToast)
+            Alpine.store("toast").addToast(result.data, "error");
+          throw new Error(result.data);
         }
       } catch (error2) {
+        if (showLoader)
+          Alpine.store("loader").hide();
+        if (showToast)
+          Alpine.store("toast").addToast("An error occurred", "error");
         console.error("AJAX error:", error2);
-        Alpine.store("toast").addToast("An error occurred", "error");
+        throw error2;
       }
-      Alpine.store("loader").hide();
     },
     formatUSPhoneNumber() {
-      let phone = this.editAddress.phone || "";
+      let phone = this.editAddress?.phone || "";
       phone = phone.replace(/\D/g, "");
       if (phone.length > 10)
         phone = phone.slice(0, 10);
@@ -6174,39 +6231,121 @@ attempted value: ${formattedValue}
         this.editAddress.phone = phone;
       }
     },
-    transformToGoogleAutoComplete(el) {
-      const addressEl = document.getElementById("address");
-      if (!addressEl)
+    async initAutocomplete() {
+      this._cleanupAutocomplete();
+      if (typeof google === "undefined" || !google.maps) {
+        setTimeout(() => this.initAutocomplete(), 500);
         return;
-      const addressAutoComplete = new google.maps.places.Autocomplete(addressEl, {});
-      addressAutoComplete.setComponentRestrictions({ country: "us" });
-      addressAutoComplete.addListener("place_changed", () => {
-        const place = addressAutoComplete.getPlace();
-        this.editAddress.address = "";
-        this.editAddress.city = "";
-        this.editAddress.region = "";
-        this.editAddress.postalCode = "";
-        if (place.address_components) {
-          place.address_components.forEach((component) => {
-            const types = component.types;
-            if (types.includes("street_number")) {
-              this.editAddress.address = component.long_name + " ";
-            }
-            if (types.includes("route")) {
-              this.editAddress.address += component.short_name;
-            }
-            if (types.includes("locality")) {
-              this.editAddress.city = component.long_name;
-            }
-            if (types.includes("administrative_area_level_1")) {
-              this.editAddress.region = component.short_name;
-            }
-            if (types.includes("postal_code")) {
-              this.editAddress.postalCode = component.long_name;
-            }
-          });
-        }
+      }
+      const popup = document.querySelector("#popup-container");
+      const wrapper = popup?.querySelector(".address-autocomplete-wrapper");
+      if (!wrapper)
+        return;
+      try {
+        const { PlaceAutocompleteElement } = await google.maps.importLibrary("places");
+        const placeAutocomplete = new PlaceAutocompleteElement({
+          placeholder: "Start typing your address..."
+        });
+        placeAutocomplete.includedRegionCodes = ["us"];
+        placeAutocomplete.addEventListener("gmp-select", async ({ placePrediction }) => {
+          const place = placePrediction.toPlace();
+          await this._handlePlaceSelectNew(place);
+        });
+        wrapper.innerHTML = "";
+        wrapper.appendChild(placeAutocomplete);
+        this._autocompleteInstance = placeAutocomplete;
+      } catch (err) {
+        console.error("Places API (New) autocomplete init error:", err);
+      }
+    },
+    async _handlePlaceSelectNew(place) {
+      if (!place || !this.editAddress)
+        return;
+      this._resetAddressFields();
+      try {
+        await place.fetchFields({ fields: ["addressComponents", "formattedAddress"] });
+      } catch (e) {
+        console.warn("Place fetchFields error:", e);
+        return;
+      }
+      if (place.formattedAddress) {
+        this.editAddress.address = place.formattedAddress;
+      }
+      if (place.addressComponents?.length) {
+        this._parseAddressComponentsNew(place.addressComponents);
+      }
+    },
+    _parseAddressComponentsNew(components) {
+      if (!this.editAddress)
+        return;
+      components.forEach((component) => {
+        if (!component.types?.length)
+          return;
+        component.types.forEach((type) => {
+          const mapping = ADDRESS_COMPONENT_MAP[type];
+          if (!mapping)
+            return;
+          const value = mapping.shortName ? component.shortText || "" : component.longText || "";
+          if (!value)
+            return;
+          if (mapping.append) {
+            this.editAddress[mapping.field] += value;
+          } else if (mapping.prefix) {
+            this.editAddress[mapping.field] = value + " ";
+          } else {
+            this.editAddress[mapping.field] = value;
+          }
+        });
       });
+      if (this.editAddress.address) {
+        this.editAddress.address = this.editAddress.address.trim();
+      }
+    },
+    _cleanupAutocomplete() {
+      if (!this._autocompleteInstance)
+        return;
+      const popup = document.querySelector("#popup-container");
+      const wrapper = popup?.querySelector(".address-autocomplete-wrapper");
+      if (wrapper && this._autocompleteInstance.parentNode === wrapper) {
+        wrapper.removeChild(this._autocompleteInstance);
+      }
+      this._autocompleteInstance = null;
+    },
+    _resetAddressFields() {
+      if (!this.editAddress)
+        return;
+      this.editAddress.address = "";
+      this.editAddress.city = "";
+      this.editAddress.region = "";
+      this.editAddress.postalCode = "";
+    },
+    _parseAddressComponents(components) {
+      if (!this.editAddress) {
+        console.error("editAddress is null, cannot parse components");
+        return;
+      }
+      components.forEach((component) => {
+        if (!component.types || component.types.length === 0)
+          return;
+        component.types.forEach((type) => {
+          const mapping = ADDRESS_COMPONENT_MAP[type];
+          if (mapping) {
+            const value = mapping.shortName ? component.short_name : component.long_name;
+            if (!value)
+              return;
+            if (mapping.append) {
+              this.editAddress[mapping.field] += value;
+            } else if (mapping.prefix) {
+              this.editAddress[mapping.field] = value + " ";
+            } else {
+              this.editAddress[mapping.field] = value;
+            }
+          }
+        });
+      });
+      if (this.editAddress.address) {
+        this.editAddress.address = this.editAddress.address.trim();
+      }
     }
   };
 

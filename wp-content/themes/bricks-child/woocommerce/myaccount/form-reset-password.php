@@ -30,6 +30,7 @@ do_action( 'woocommerce_before_reset_password_form' );
 <?php wc_get_template('myaccount/page-heading.php',
     [
         'page_heading' => 'Set a New Password',
+        'page_description' => 'Choose a strong password for your account',
     ]
 ); ?>
 <div class="md:container mx-auto px-8">

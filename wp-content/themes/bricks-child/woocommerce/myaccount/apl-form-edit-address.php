@@ -2,9 +2,36 @@
 /**
  * Alpine Data
  * const userAddress
+ * Place Autocomplete (New) – https://developers.google.com/maps/documentation/javascript/place-autocomplete-new
  */
 ?>
-
+<style>
+/* Place Autocomplete (New) – host + Places UI Kit custom properties (see places-ui-kit/custom-styling) */
+.underline-form .address-autocomplete-wrapper {
+    width: 100%;
+}
+.underline-form .address-autocomplete-wrapper gmp-place-autocomplete {
+    width: 100%;
+    min-height: 2.5rem;
+    display: block;
+    /* Match underline-form inputs */
+    border-radius: 0.75rem;
+    border-bottom: 1px solid rgb(77 77 77);
+    transition: border-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    /* Force light theme to match form */
+    color-scheme: light;
+    /* Places UI Kit CSS variables (pierce Shadow DOM) */
+    --gmp-mat-color-surface: #fff;
+    --gmp-mat-color-on-surface: rgb(77 77 77);
+    --gmp-mat-color-on-surface-variant: rgb(77 77 77);
+    --gmp-mat-color-primary: rgb(77 77 77);
+    --gmp-mat-color-outline-decorative: transparent;
+    --gmp-mat-font-family: inherit;
+}
+.underline-form .address-autocomplete-wrapper gmp-place-autocomplete:focus-within {
+    border-color: rgb(0 0 0);
+}
+</style>
 <template id="edit-address" x-data>
     <div class="flex justify-between items-center mb-8">
         <h2 class="text-lg font-semibold" x-text="$store.userAddress.form.title">Add Address</h2>
@@ -30,11 +57,9 @@
             </div>
         </div>
 
-        <div >
+        <div>
             <label for="address">Address</label>
-            <div>
-                <input x-init="$store.userAddress.transformToGoogleAutoComplete($el)" x-model="$store.userAddress.editAddress.address" type="text" name="address" id="address" autocomplete="address" />
-            </div>
+            <div class="address-autocomplete-wrapper"></div>
         </div>
 
         <div  x-data="{ countries: window.countries }">

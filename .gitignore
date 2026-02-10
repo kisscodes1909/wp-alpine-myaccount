@@ -20,6 +20,9 @@
 # Configuration
 wp-config.php
 
+# Cursor IDE (rules, skills – local only)
+.cursor/
+
 # Example themes
 /wp-content/themes/twenty*/
 

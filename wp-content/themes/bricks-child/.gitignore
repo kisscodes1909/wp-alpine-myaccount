@@ -1,2 +1,6 @@
 node_modules/
 *.md
+
+# TODO / task lists (local, not committed)
+TODO.txt
+TODO*

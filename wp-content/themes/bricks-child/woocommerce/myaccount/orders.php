@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
 do_action( 'woocommerce_before_account_orders', $has_orders );
 
 ?>
-<?php wc_get_template('myaccount/page-heading.php', ['page_heading' => 'Order History']); ?>
+<?php wc_get_template('myaccount/page-heading.php', ['page_heading' => 'Order History', 'page_description' => 'View and track your past orders']); ?>
 
 
 <?php if ( $has_orders ) : ?>
