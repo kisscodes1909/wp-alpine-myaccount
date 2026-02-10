@@ -1,35 +1,33 @@
 /**
- * Popup Store - Global modal/popup management
- * Usage: Alpine.store('popup').openPopup(content, direction)
- * Directions: 'left', 'right', 'center' (default)
+ * Popup Store – modal center only. KISS: open + content.
+ * Usage: Alpine.store('popup').openPopup(content)
  */
 export default {
     open: false,
     content: ``,
-    direction: 'center', // Default direction
-    _scrollbarWidth: 0,
+    _closeTimeout: null,
 
-    openPopup(content, direction = 'center') {
+    openPopup(content) {
         this.content = content;
-        this.direction = direction;
-
-        // Prevent layout shift when hiding scrollbar (keeps modal aligned)
-        this._scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-        if (this._scrollbarWidth > 0) {
-            document.body.style.paddingRight = this._scrollbarWidth + 'px';
-            document.documentElement.style.paddingRight = this._scrollbarWidth + 'px';
+        const scrollbar = window.innerWidth - document.documentElement.clientWidth;
+        if (scrollbar > 0) {
+            document.body.style.paddingRight = scrollbar + 'px';
+            document.documentElement.style.paddingRight = scrollbar + 'px';
         }
         document.body.classList.add('overflow-y-hidden');
-
-        setTimeout(() => {
-            this.open = true;
-        }, 50);
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => { this.open = true; });
+        });
     },
 
     closePopup() {
         this.open = false;
-        document.body.classList.remove('overflow-y-hidden');
-        document.body.style.paddingRight = '';
-        document.documentElement.style.paddingRight = '';
+        if (this._closeTimeout) clearTimeout(this._closeTimeout);
+        this._closeTimeout = setTimeout(() => {
+            document.body.classList.remove('overflow-y-hidden');
+            document.body.style.paddingRight = '';
+            document.documentElement.style.paddingRight = '';
+            this._closeTimeout = null;
+        }, 500);
     }
 };

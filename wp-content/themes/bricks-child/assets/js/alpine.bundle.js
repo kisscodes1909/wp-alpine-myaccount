@@ -5906,29 +5906,38 @@ attempted value: ${formattedValue}
   };
 
   // assets/js/alpine/stores/popup.js
+  var POPUP_DIRECTIONS = ["center", "left", "right", "bottom"];
   var popup_default = {
     open: false,
     content: ``,
     direction: "center",
-    _scrollbarWidth: 0,
+    _closeTimeout: null,
     openPopup(content, direction = "center") {
       this.content = content;
-      this.direction = direction;
-      this._scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-      if (this._scrollbarWidth > 0) {
-        document.body.style.paddingRight = this._scrollbarWidth + "px";
-        document.documentElement.style.paddingRight = this._scrollbarWidth + "px";
+      const d = String(direction || "center").trim().toLowerCase();
+      this.direction = POPUP_DIRECTIONS.includes(d) ? d : "center";
+      const scrollbar = window.innerWidth - document.documentElement.clientWidth;
+      if (scrollbar > 0) {
+        document.body.style.paddingRight = scrollbar + "px";
+        document.documentElement.style.paddingRight = scrollbar + "px";
       }
       document.body.classList.add("overflow-y-hidden");
-      setTimeout(() => {
-        this.open = true;
-      }, 50);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          this.open = true;
+        });
+      });
     },
     closePopup() {
       this.open = false;
-      document.body.classList.remove("overflow-y-hidden");
-      document.body.style.paddingRight = "";
-      document.documentElement.style.paddingRight = "";
+      if (this._closeTimeout)
+        clearTimeout(this._closeTimeout);
+      this._closeTimeout = setTimeout(() => {
+        document.body.classList.remove("overflow-y-hidden");
+        document.body.style.paddingRight = "";
+        document.documentElement.style.paddingRight = "";
+        this._closeTimeout = null;
+      }, 500);
     }
   };
 
@@ -6026,6 +6035,11 @@ attempted value: ${formattedValue}
   var MAX_ADDRESSES = 9;
   var DEFAULT_COUNTRY = "United States";
   var AJAX_ACTION = "save-address";
+  var AUTOCOMPLETE_INIT_DELAY = 150;
+  var GOOGLE_API_RETRY_DELAY = 500;
+  var GOOGLE_API_MAX_RETRIES = 10;
+  var POPUP_SELECTOR = "#popup-container";
+  var AUTOCOMPLETE_WRAPPER_SELECTOR = ".address-autocomplete-wrapper";
   var ADDRESS_COMPONENT_MAP = {
     street_number: { field: "address", prefix: true },
     route: { field: "address", append: true },
@@ -6048,6 +6062,7 @@ attempted value: ${formattedValue}
     },
     _inited: false,
     _autocompleteInstance: null,
+    _googleApiRetries: 0,
     init() {
       if (this._inited)
         return;
@@ -6121,7 +6136,8 @@ attempted value: ${formattedValue}
       this.editAddress = this._getEmptyAddress();
       this.isEditing = true;
       this._cleanupAutocomplete();
-      setTimeout(() => this.initAutocomplete(), 150);
+      this._googleApiRetries = 0;
+      setTimeout(() => this.initAutocomplete(), AUTOCOMPLETE_INIT_DELAY);
     },
     startEdit(id) {
       this._setFormMode("edit", "Edit Address", "Update Address");
@@ -6130,7 +6146,8 @@ attempted value: ${formattedValue}
         this.editAddress = { ...address };
         this.isEditing = true;
         this._cleanupAutocomplete();
-        setTimeout(() => this.initAutocomplete(), 150);
+        this._googleApiRetries = 0;
+        setTimeout(() => this.initAutocomplete(), AUTOCOMPLETE_INIT_DELAY);
       }
     },
     async save() {
@@ -6234,13 +6251,20 @@ attempted value: ${formattedValue}
     async initAutocomplete() {
       this._cleanupAutocomplete();
       if (typeof google === "undefined" || !google.maps) {
-        setTimeout(() => this.initAutocomplete(), 500);
+        if (this._googleApiRetries < GOOGLE_API_MAX_RETRIES) {
+          this._googleApiRetries++;
+          setTimeout(() => this.initAutocomplete(), GOOGLE_API_RETRY_DELAY);
+        } else {
+          console.error("Google Maps API failed to load after max retries");
+        }
         return;
       }
-      const popup = document.querySelector("#popup-container");
-      const wrapper = popup?.querySelector(".address-autocomplete-wrapper");
-      if (!wrapper)
+      const popup = document.querySelector(POPUP_SELECTOR);
+      const wrapper = popup?.querySelector(AUTOCOMPLETE_WRAPPER_SELECTOR);
+      if (!wrapper) {
+        console.warn("Autocomplete wrapper not found in popup");
         return;
+      }
       try {
         const { PlaceAutocompleteElement } = await google.maps.importLibrary("places");
         const placeAutocomplete = new PlaceAutocompleteElement({
@@ -6254,25 +6278,28 @@ attempted value: ${formattedValue}
         wrapper.innerHTML = "";
         wrapper.appendChild(placeAutocomplete);
         this._autocompleteInstance = placeAutocomplete;
+        this._googleApiRetries = 0;
       } catch (err) {
-        console.error("Places API (New) autocomplete init error:", err);
+        console.error("Places API autocomplete init error:", err);
       }
     },
     async _handlePlaceSelectNew(place) {
-      if (!place || !this.editAddress)
+      if (!place || !this.editAddress) {
+        console.warn("Invalid place or editAddress is null");
         return;
+      }
       this._resetAddressFields();
       try {
         await place.fetchFields({ fields: ["addressComponents", "formattedAddress"] });
       } catch (e) {
-        console.warn("Place fetchFields error:", e);
+        console.error("Failed to fetch place fields:", e);
+        Alpine.store("toast")?.addToast("Failed to load address details", "error");
         return;
-      }
-      if (place.formattedAddress) {
-        this.editAddress.address = place.formattedAddress;
       }
       if (place.addressComponents?.length) {
         this._parseAddressComponentsNew(place.addressComponents);
+      } else if (place.formattedAddress) {
+        this.editAddress.address = place.formattedAddress;
       }
     },
     _parseAddressComponentsNew(components) {
@@ -6304,10 +6331,14 @@ attempted value: ${formattedValue}
     _cleanupAutocomplete() {
       if (!this._autocompleteInstance)
         return;
-      const popup = document.querySelector("#popup-container");
-      const wrapper = popup?.querySelector(".address-autocomplete-wrapper");
-      if (wrapper && this._autocompleteInstance.parentNode === wrapper) {
-        wrapper.removeChild(this._autocompleteInstance);
+      try {
+        const popup = document.querySelector(POPUP_SELECTOR);
+        const wrapper = popup?.querySelector(AUTOCOMPLETE_WRAPPER_SELECTOR);
+        if (wrapper && this._autocompleteInstance.parentNode === wrapper) {
+          wrapper.removeChild(this._autocompleteInstance);
+        }
+      } catch (e) {
+        console.warn("Autocomplete cleanup error:", e);
       }
       this._autocompleteInstance = null;
     },
@@ -6318,34 +6349,6 @@ attempted value: ${formattedValue}
       this.editAddress.city = "";
       this.editAddress.region = "";
       this.editAddress.postalCode = "";
-    },
-    _parseAddressComponents(components) {
-      if (!this.editAddress) {
-        console.error("editAddress is null, cannot parse components");
-        return;
-      }
-      components.forEach((component) => {
-        if (!component.types || component.types.length === 0)
-          return;
-        component.types.forEach((type) => {
-          const mapping = ADDRESS_COMPONENT_MAP[type];
-          if (mapping) {
-            const value = mapping.shortName ? component.short_name : component.long_name;
-            if (!value)
-              return;
-            if (mapping.append) {
-              this.editAddress[mapping.field] += value;
-            } else if (mapping.prefix) {
-              this.editAddress[mapping.field] = value + " ";
-            } else {
-              this.editAddress[mapping.field] = value;
-            }
-          }
-        });
-      });
-      if (this.editAddress.address) {
-        this.editAddress.address = this.editAddress.address.trim();
-      }
     }
   };
 
