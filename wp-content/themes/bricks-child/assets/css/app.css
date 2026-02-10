@@ -734,6 +734,10 @@ select {
   min-height: 50vh;
 }
 
+.min-h-\[70vh\] {
+  min-height: 70vh;
+}
+
 .w-1\/2 {
   width: 50%;
 }
@@ -1267,6 +1271,10 @@ select {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
+.bg-black\/50 {
+  background-color: rgb(0 0 0 / 0.5);
+}
+
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
 }
@@ -1392,6 +1400,14 @@ select {
 
 .pt-7 {
   padding-top: 1.75rem;
+}
+
+.pt-1 {
+  padding-top: 0.25rem;
+}
+
+.pt-6 {
+  padding-top: 1.5rem;
 }
 
 .text-left {
@@ -1676,6 +1692,10 @@ select {
 
 .duration-500 {
   transition-duration: 500ms;
+}
+
+.duration-150 {
+  transition-duration: 150ms;
 }
 
 .ease-in {
@@ -2177,6 +2197,10 @@ label.jk-checkbox-wrapper input[type=checkbox]:checked + .jk-checkbox::before, l
 
   .sm\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sm\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .sm\:flex-row {

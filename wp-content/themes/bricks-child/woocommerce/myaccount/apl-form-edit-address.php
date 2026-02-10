@@ -42,18 +42,19 @@
         </button>
     </div>
     <!-- Modal Body -->
-    <form class="flex flex-col underline-form gap-5">
-        <div>
-            <label for="first-name">First name</label>
+    <form class="underline-form flex flex-col gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-                <input x-model="$store.userAddress.editAddress.fname" type="text" name="first-name" id="first-name" autocomplete="given-name" />
+                <label for="first-name">First name</label>
+                <div>
+                    <input x-model="$store.userAddress.editAddress.fname" type="text" name="first-name" id="first-name" autocomplete="given-name" />
+                </div>
             </div>
-        </div>
-
-        <div>
-            <label for="last-name">Last name</label>
             <div>
-                <input x-model="$store.userAddress.editAddress.lname"  type="text" name="last-name" id="last-name" autocomplete="family-name" />
+                <label for="last-name">Last name</label>
+                <div>
+                    <input x-model="$store.userAddress.editAddress.lname" type="text" name="last-name" id="last-name" autocomplete="family-name" />
+                </div>
             </div>
         </div>
 
@@ -62,7 +63,7 @@
             <div class="address-autocomplete-wrapper"></div>
         </div>
 
-        <div  x-data="{ countries: window.countries }">
+        <div x-data="{ countries: window.countries }">
             <label for="country">Country</label>
             <div>
                 <select x-model="$store.userAddress.editAddress.country" id="country" name="country" autocomplete="country-name">
@@ -73,59 +74,54 @@
             </div>
         </div>
 
-        <div >
+        <div>
             <label for="address2">Apartment, suite, etc. (optional)</label>
             <div>
                 <input x-model="$store.userAddress.editAddress.address2" type="text" name="address2" id="address2" autocomplete="address2">
             </div>
         </div>
 
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+                <label for="city">City</label>
+                <div>
+                    <input x-model="$store.userAddress.editAddress.city" type="text" name="city" id="city" autocomplete="address-level2" />
+                </div>
+            </div>
+            <div>
+                <label for="region">State / Province</label>
+                <div>
+                    <input x-model="$store.userAddress.editAddress.region" type="text" name="region" id="region" autocomplete="address-level1" />
+                </div>
+            </div>
+            <div>
+                <label for="postal-code">ZIP / Postal code</label>
+                <div>
+                    <input x-model="$store.userAddress.editAddress.postalCode" type="text" name="postal-code" id="postal-code" autocomplete="postal-code" />
+                </div>
+            </div>
+        </div>
+
         <div>
-            <label for="city">City</label>
+            <label for="phone-number">Phone</label>
             <div>
-                <input x-model="$store.userAddress.editAddress.city" type="text" name="city" id="city" autocomplete="address-level2" />
-            </div>
-        </div>
-
-        <div >
-            <label for="region">State / Province</label>
-            <div>
-                <input x-model="$store.userAddress.editAddress.region" type="text" name="region" id="region" autocomplete="address-level1" />
-            </div>
-        </div>
-
-        <div >
-            <label for="postal-code">ZIP / Postal code</label>
-            <div>
-                <input x-model="$store.userAddress.editAddress.postalCode" type="text" name="postal-code" id="postal-code" autocomplete="postal-code" />
-            </div>
-        </div>
-
-        <div>
-            <label for="phone-number">Phone Number</label>
-            <div>
-                <input @input="$store.userAddress.formatUSPhoneNumber()" x-model="$store.userAddress.editAddress.phone" type="text" name="phone-number" maxlength="14" />
+                <input @input="$store.userAddress.formatUSPhoneNumber()" x-model="$store.userAddress.editAddress.phone" type="text" name="phone-number" id="phone-number" maxlength="14" />
             </div>
         </div>
 
 
         <template x-if="$store.userAddress.form.action === 'add'">
-            <div class="flex items-center">
-                <label class="flex items-center jk-checkbox">
-                    <input
-                            x-model="$store.userAddress.editAddress.default"
-                            class="mr-2 leading-tight"
-                            type="checkbox"
-                    />
+            <div class="flex items-center pt-1">
+                <label class="flex items-center jk-checkbox cursor-pointer">
+                    <input x-model="$store.userAddress.editAddress.default" class="mr-2 leading-tight" type="checkbox" />
                     <span>Make this my default shipping address.</span>
                 </label>
             </div>
         </template>
-
     </form>
 
     <!-- Modal Footer -->
-    <div class="flex flex-col gap-5 py-8">
+    <div class="flex flex-col gap-4 pt-6">
 
         <template x-if="$store.userAddress.form.action === 'edit'">
             <button

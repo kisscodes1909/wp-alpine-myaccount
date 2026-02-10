@@ -5906,22 +5906,11 @@ attempted value: ${formattedValue}
   };
 
   // assets/js/alpine/stores/popup.js
-  var POPUP_DIRECTIONS = ["center", "left", "right", "bottom"];
   var popup_default = {
     open: false,
     content: ``,
-    direction: "center",
-    _closeTimeout: null,
-    openPopup(content, direction = "center") {
+    openPopup(content) {
       this.content = content;
-      const d = String(direction || "center").trim().toLowerCase();
-      this.direction = POPUP_DIRECTIONS.includes(d) ? d : "center";
-      const scrollbar = window.innerWidth - document.documentElement.clientWidth;
-      if (scrollbar > 0) {
-        document.body.style.paddingRight = scrollbar + "px";
-        document.documentElement.style.paddingRight = scrollbar + "px";
-      }
-      document.body.classList.add("overflow-y-hidden");
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           this.open = true;
@@ -5930,14 +5919,6 @@ attempted value: ${formattedValue}
     },
     closePopup() {
       this.open = false;
-      if (this._closeTimeout)
-        clearTimeout(this._closeTimeout);
-      this._closeTimeout = setTimeout(() => {
-        document.body.classList.remove("overflow-y-hidden");
-        document.body.style.paddingRight = "";
-        document.documentElement.style.paddingRight = "";
-        this._closeTimeout = null;
-      }, 500);
     }
   };
 
