@@ -27,15 +27,17 @@
                             @keyup="handler.validateField('password')"
                             :type="showPassword === true ? 'text' : 'password'"
                             class="pr-5"
+                            :class="{'field-invalid': errors.currentPassword}"
 
                     />
-                    <div class="absolute right-0.5 w-20 top-3 flex flex-row items-center justify-between gap-1">
+                    <div class="password-toggle">
                         <!-- Validate Field -->
 <!--                        <div x-validate-icon="{message: errors.password, touched:touched.password}"></div>-->
                         <!-- Password Eye -->
                         <div class="block w-10 h-10 flex items-center justify-center" x-password-eye="showPassword" @click="showPassword=!showPassword"></div>
                     </div>
                 </div>
+                <span class="text-red-600 mt-1 block" x-show="errors.currentPassword" x-text="errors.currentPassword"></span>
             </div>
 
             <!-- New Password -->
@@ -49,15 +51,17 @@
                             @keyup="handler.validateField('password')"
                             :type="showPassword === true ? 'text' : 'password'"
                             class="pr-5"
+                            :class="{'field-invalid': errors.newPassword}"
 
                     />
-                    <div class="absolute right-0.5 w-20 top-3 flex flex-row items-center justify-between gap-1">
+                    <div class="password-toggle">
                         <!-- Validate Field -->
                         <!--                        <div x-validate-icon="{message: errors.password, touched:touched.password}"></div>-->
                         <!-- Password Eye -->
                         <div class="block w-10 h-10 flex items-center justify-center" x-password-eye="showPassword" @click="showPassword=!showPassword"></div>
                     </div>
                 </div>
+                <span class="text-red-600 mt-1 block" x-show="errors.newPassword" x-text="errors.newPassword"></span>
             </div>
 
             <!-- Confirm Password -->
@@ -71,15 +75,17 @@
                             @keyup="handler.validateField('password')"
                             :type="showPassword === true ? 'text' : 'password'"
                             class="pr-5"
+                            :class="{'field-invalid': errors.confirmPassword}"
 
                     />
-                    <div class="absolute right-0.5 w-20 top-3 flex flex-row items-center justify-between gap-1">
+                    <div class="password-toggle">
                         <!-- Validate Field -->
                         <!--                        <div x-validate-icon="{message: errors.password, touched:touched.password}"></div>-->
                         <!-- Password Eye -->
                         <div class="block w-10 h-10 flex items-center justify-center" x-password-eye="showPassword" @click="showPassword=!showPassword"></div>
                     </div>
                 </div>
+                <span class="text-red-600 mt-1 block" x-show="errors.confirmPassword" x-text="errors.confirmPassword"></span>
             </div>
 
 <!--             Keep Me Signed In Checkbox-->
@@ -97,14 +103,9 @@
 
             <!-- Submit Button -->
             <div class="text-center">(Password must be 8-25 characters.)</div>
-            <div>
-                <button class="button slim w-full">Save</button>
+            <div class="apl-form-actions">
+                <button class="button">Save</button>
             </div>
-            <ul class="space-y-2 p-0 m-0 list-none">
-                <template x-for="(error, index) in errors">
-                    <li class="text-red-500 text-xs italic text-center" x-text="error"></li>
-                </template>
-            </ul>
         </form>
 </template>
 

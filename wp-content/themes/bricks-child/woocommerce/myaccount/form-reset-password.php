@@ -50,7 +50,7 @@ do_action( 'woocommerce_before_reset_password_form' );
                            name="password_1"
                            autocomplete="new-password"
                     />
-                    <div class="absolute right-0 top-0 flex flex-row items-center gap-1">
+                    <div class="password-toggle">
                         <!-- Password Eye -->
                         <span class="block w-10 h-10 flex items-center justify-center">
                     <svg x-show="!showPassword" @click="showPassword=!showPassword" class="cursor-pointer size-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -105,10 +105,10 @@ do_action( 'woocommerce_before_reset_password_form' );
 
         <?php do_action( 'woocommerce_resetpassword_form' ); ?>
 
-        <p>
+        <div class="apl-form-actions">
             <input type="hidden" name="wc_reset_password" value="true" />
-            <button type="submit" class="woocommerce-Button slim w-full button<?php echo esc_attr( wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); ?>" value="<?php esc_attr_e( 'Save', 'woocommerce' ); ?>"><?php esc_html_e( 'Save', 'woocommerce' ); ?></button>
-        </p>
+            <button type="submit" class="woocommerce-Button button<?php echo esc_attr( wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); ?>" value="<?php esc_attr_e( 'Save', 'woocommerce' ); ?>"><?php esc_html_e( 'Save', 'woocommerce' ); ?></button>
+        </div>
 
         <?php wp_nonce_field( 'reset_password', 'woocommerce-reset-password-nonce' ); ?>
 

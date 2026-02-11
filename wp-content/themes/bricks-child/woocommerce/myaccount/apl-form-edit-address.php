@@ -149,11 +149,11 @@
     </form>
 
     <!-- Modal Footer -->
-    <div class="flex flex-col gap-4 pt-6">
+    <div class="apl-form-actions apl-form-actions--two">
 
         <template x-if="$store.userAddress.form.action === 'edit'">
             <button
-                    class="button slim light inline-flex items-center justify-center gap-2"
+                    class="button light"
                     @click="$store.userAddress.remove($store.userAddress.editAddress.id)"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -166,7 +166,7 @@
         <!-- <template x-if="$store.userAddress.form.action === 'add'">
             <div class="text-sm">By adding your address, you agree to our terms of service and privacy policy.</div>
         </template> -->
-        <button @click="$store.userAddress.save()" class="button slim inline-flex items-center justify-center gap-2">
+        <button @click="$store.userAddress.save()" class="button">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
             </svg>

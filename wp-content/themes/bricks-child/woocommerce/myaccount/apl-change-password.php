@@ -69,8 +69,8 @@
 
             <!-- Submit Button -->
             <div class="text-center">(Password must be 8-25 characters.)</div>
-            <div>
-                <button class="button slim w-full">Save</button>
+            <div class="apl-form-actions">
+                <button class="button">Save</button>
             </div>
         </form>
 </template>

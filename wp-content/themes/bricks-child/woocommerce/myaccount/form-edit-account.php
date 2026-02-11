@@ -33,7 +33,9 @@ do_action( 'woocommerce_before_edit_account_form' ); ?>
                 id="firstName"
                 x-model="firstName"
                 class="capitalize"
+                :class="{'field-invalid': errors.firstName}"
         />
+        <span class="text-red-600 mt-1 block" x-show="errors.firstName" x-text="errors.firstName"></span>
     </div>
 
     <div>
@@ -42,7 +44,9 @@ do_action( 'woocommerce_before_edit_account_form' ); ?>
                id="lastName"
                x-model="lastName"
                class="capitalize"
+               :class="{'field-invalid': errors.lastName}"
         />
+        <span class="text-red-600 mt-1 block" x-show="errors.lastName" x-text="errors.lastName"></span>
     </div>
 
     <div>
@@ -53,7 +57,9 @@ do_action( 'woocommerce_before_edit_account_form' ); ?>
                 x-model="email"
                 autocomplete="email"
                 class=""
+                :class="{'field-invalid': errors.email}"
         />
+        <span class="text-red-600 mt-1 block" x-show="errors.email" x-text="errors.email"></span>
     </div>
 
     <div>
@@ -76,16 +82,10 @@ do_action( 'woocommerce_before_edit_account_form' ); ?>
         </div>
     </div>
 
-    <ul class="space-y-2 p-0 m-0 list-none">
-        <template x-for="(error, index) in errors">
-            <li class="text-red-500 text-xs italic text-center" x-text="error"></li>
-        </template>
-    </ul>
-
-    <div class="flex flex-col items-center justify-between">
+    <div class="apl-form-actions">
         <button
                 :disabled="!allowSubmit"
-                class="button slim max-w-[800px] w-full inline-flex items-center justify-center gap-2"
+                class="button max-w-[800px]"
                 type="submit"
                 >
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">

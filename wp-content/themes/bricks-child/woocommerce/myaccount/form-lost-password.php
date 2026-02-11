@@ -61,13 +61,13 @@ do_action( 'woocommerce_before_lost_password_form' );
 
         <?php do_action( 'woocommerce_lostpassword_form' ); ?>
 
-        <p class="flex flex-col items-center lg:flex-row gap-5">
+        <div class="apl-form-actions apl-form-actions--two">
             <input type="hidden" name="wc_reset_password" value="true" />
             <button
                     :disabled="(Object.values(errors).length > 0  && Object.values(touched).length > 0) || Object.values(touched).length == 0 "
-                    type="submit" class="woocommerce-Button slim w-1/2 button<?php echo esc_attr( wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); ?>" value="<?php esc_attr_e( 'Reset password', 'woocommerce' ); ?>"><?php esc_html_e( 'Reset password', 'woocommerce' ); ?></button>
-            <a href="<?php echo home_url('/') ?>" class="button slim w-1/2 light">Go Back</a>
-        </p>
+                    type="submit" class="woocommerce-Button button<?php echo esc_attr( wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); ?>" value="<?php esc_attr_e( 'Reset password', 'woocommerce' ); ?>"><?php esc_html_e( 'Reset password', 'woocommerce' ); ?></button>
+            <a href="<?php echo home_url('/') ?>" class="button light">Go Back</a>
+        </div>
 
         <?php wp_nonce_field( 'lost_password', 'woocommerce-lost-password-nonce' ); ?>
 

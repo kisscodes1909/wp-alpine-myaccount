@@ -74,7 +74,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
                                 class="pr-5"
 
                         />
-                        <div class="absolute right-0.5 w-20 top-3 flex flex-row items-center justify-between gap-1">
+                        <div class="password-toggle">
                             <!-- Validate Field -->
                             <div x-validate-icon="{message: errors.password, touched:touched.password}"></div>
                             <!-- Password Eye -->
@@ -102,8 +102,8 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
                     <?php
                         // TODO: Find a way for reusable this button with alpine state.
                     ?>
-                    <div class="flex flex-row justify-center mt-12">
-                        <button type="submit" class="woocommerce-button slim w-1/2 button">
+                    <div class="apl-form-actions mt-12">
+                        <button type="submit" class="woocommerce-button button">
                         <span x-show="isFormSubmitting" class="loading-icon inline-block w-8 h-8 mr-4">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
                               <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
@@ -186,7 +186,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
                                @keyup="validateField('password')"
                                :type="showPassword === true ? 'text' : 'password'"
                         />
-                        <div class="absolute right-0 top-0 flex flex-row items-center gap-1">
+                        <div class="password-toggle">
                             <!-- Password Eye -->
                             <span class="block w-10 h-10 flex items-center justify-center">
                     <svg x-show="!showPassword" @click="showPassword=!showPassword" class="cursor-pointer size-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -253,8 +253,8 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 
                 <?php do_action( 'woocommerce_register_form' ); ?>
 
-                <div class="flex flex-row justify-center">
-                    <button  type="submit" class="mt-12 woocommerce-button slim button w-1/2">
+                <div class="apl-form-actions mt-12">
+                    <button  type="submit" class="woocommerce-button button">
             <span x-show="isFormSubmitting" class="loading-icon inline-block w-8 h-8 mr-4">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />

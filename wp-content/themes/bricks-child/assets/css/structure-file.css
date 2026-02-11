@@ -10,13 +10,25 @@
 
 /*
  * Minimal base for Tailwind – avoid duplicating Bricks theme styles.
- * Bricks provides its own reset/global styles; we only keep box-sizing and --tw-* vars for utilities.
- * No button/select/::backdrop reset to avoid conflicts.
+ * Bricks provides its own reset/global styles; we only keep a small set of predictable defaults.
  */
 *, ::before, ::after {
     box-sizing: border-box;
     border-width: 0;
     border-style: solid;
+}
+
+button,
+[type='button'],
+[type='submit'],
+[type='reset'] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    color: inherit;
+    font: inherit;
 }
 
 
@@ -45,6 +57,10 @@
 
     div[x-validate-icon] {
         @apply top-3 right-1;
+    }
+
+    .password-toggle {
+        @apply absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1;
     }
 
     &.loading {
@@ -198,6 +214,82 @@
                 @apply text-red-600;
             }
         }
+
+        .field-invalid {
+            @apply border-form-danger;
+        }
+
+        .button,
+        .woocommerce-button,
+        button[type='submit'],
+        input[type='submit'] {
+            @apply inline-flex items-center justify-center gap-2 w-full h-form-field px-4 rounded-lg border border-form-accent text-white text-base font-medium bg-form-accent;
+            transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
+
+            &:hover {
+                @apply border-form-accent text-white;
+                filter: brightness(1.08);
+                color: #ffffff !important;
+            }
+
+            &:focus-visible {
+                @apply outline outline-2 outline-form-focus outline-offset-2;
+            }
+
+            &[disabled] {
+                @apply opacity-50 cursor-not-allowed;
+            }
+
+            &.light {
+                @apply bg-white text-form-text border-form-border;
+
+                &:hover {
+                    @apply border-form-focus text-form-text;
+                    filter: brightness(0.97);
+                    color: #111827 !important;
+                }
+            }
+        }
+    }
+
+}
+
+.apl-form-actions {
+    @apply flex flex-col gap-4 pt-6;
+
+    > .button,
+    > button[type='button'],
+    > button[type='submit'],
+    > input[type='submit'],
+    > a.button {
+        @apply w-full h-form-field inline-flex items-center justify-center gap-2 px-4 rounded-lg border border-form-accent text-white text-base font-medium bg-form-accent;
+        transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
+
+        &:hover {
+            @apply border-form-accent text-white;
+            filter: brightness(1.08);
+            color: #ffffff !important;
+        }
+
+        &.light {
+            @apply bg-white text-form-text border-form-border;
+
+            &:hover {
+                @apply border-form-focus text-form-text;
+                filter: brightness(0.97);
+                color: #111827 !important;
+            }
+        }
+    }
+}
+
+.apl-form-actions.apl-form-actions--two {
+    @apply sm:flex-row;
+
+    > .button,
+    > button,
+    > a.button {
+        @apply sm:flex-1;
     }
 }
 
@@ -238,6 +330,100 @@
             line-height: 1.25;
             font-weight: 500;
             cursor: pointer;
+        }
+    }
+}
+
+/* Wishlist refinement (scoped to My Account) */
+.woocommerce-account {
+    .yith-wcwl-form {
+        @apply text-form-text;
+
+        .wishlist_view {
+            @apply space-y-8;
+
+            > li {
+                @apply border border-form-border rounded-xl bg-white p-4 sm:p-6;
+                transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+
+                &:hover {
+                    @apply border-form-focus;
+                }
+            }
+        }
+
+        .item-wrapper {
+            @apply items-start gap-4 sm:gap-6;
+        }
+
+        .product-thumbnail {
+            @apply w-[110px] sm:w-[130px] rounded-lg overflow-hidden bg-form-surface;
+        }
+
+        .item-details {
+            @apply w-[calc(100%-1rem-110px)] sm:w-[calc(100%-1.5rem-130px)];
+        }
+
+        .product-name {
+            @apply text-base sm:text-lg font-medium leading-snug;
+        }
+
+        .item-details-table {
+            @apply mt-2 gap-2;
+
+            .text-sm,
+            .sm\:text-xl,
+            strong {
+                @apply text-base sm:text-lg leading-snug;
+            }
+        }
+
+        .product-add-to-cart {
+            .button {
+                @apply w-full sm:w-auto min-w-[170px] h-form-field px-5 rounded-lg border border-form-border text-form-text text-base font-medium bg-white;
+                transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
+
+                &:hover {
+                    @apply border-form-focus;
+                    filter: brightness(0.97);
+                }
+
+                &:focus-visible {
+                    @apply outline outline-2 outline-form-focus outline-offset-2;
+                }
+            }
+        }
+
+        a.remove_from_wishlist {
+            @apply w-[52px] h-[52px] rounded-lg border border-form-border bg-white inline-flex items-center justify-center text-form-text;
+            transition: border-color 180ms ease, background-color 180ms ease;
+
+            &:hover {
+                @apply border-form-focus bg-form-surface;
+            }
+
+            svg {
+                @apply w-7 h-7;
+            }
+        }
+
+        .yith_wcwl_wishlist_footer {
+            @apply mt-8 flex flex-col gap-4;
+
+            input[type='submit'],
+            .ask-an-estimate-button {
+                @apply inline-flex items-center justify-center gap-2 w-full sm:w-auto min-w-[140px] h-form-field px-4 rounded-lg border border-form-border text-form-text text-base font-medium bg-white;
+                transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
+
+                &:hover {
+                    @apply border-form-focus;
+                    filter: brightness(0.97);
+                }
+            }
+
+            .yith_wcwl_footer_additional_action {
+                @apply flex flex-col sm:flex-row gap-3;
+            }
         }
     }
 }

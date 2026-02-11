@@ -100,9 +100,6 @@ if ( ! defined( 'YITH_WCWL' ) ) {
 			</div>
 		<?php endif; ?>
 
-
-
-
 		<?php if ( $count && $share_enabled ) : ?>
 			<!-- Sharing section -->
 			<?php yith_wcwl_get_template( 'share.php', array_merge( $share_atts, array( 'wishlist' => $wishlist ) ) ); ?>
