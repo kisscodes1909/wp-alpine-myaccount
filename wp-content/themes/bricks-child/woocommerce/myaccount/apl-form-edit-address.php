@@ -63,12 +63,12 @@
             <div class="address-autocomplete-wrapper"></div>
         </div>
 
-        <div x-data="{ countries: window.countries }">
+        <div>
             <label for="country">Country</label>
             <div>
                 <select x-model="$store.userAddress.editAddress.country" id="country" name="country" autocomplete="country-name">
-                    <template x-for="country in countries" :key="country">
-                        <option x-bind:value="country" x-text="country"></option>
+                    <template x-for="(countryName, countryCode) in $store.userAddress.countries" :key="countryCode">
+                        <option x-bind:value="countryName" x-text="countryName"></option>
                     </template>
                 </select>
             </div>
@@ -136,6 +136,5 @@
         <button @click="$store.userAddress.save()" class="button slim" x-text="$store.userAddress.form.buttonSaveLabel">Add</button>
     </div>
 </template>
-
 
 

@@ -13,6 +13,8 @@ const AJAX_ACTION = 'save-address';
 const AUTOCOMPLETE_INIT_DELAY = 150; // Delay for popup content to render in DOM
 const GOOGLE_API_RETRY_DELAY = 500; // Delay before retrying Google API load
 const GOOGLE_API_MAX_RETRIES = 10; // Max retries (5 seconds total)
+const DOM_RETRY_DELAY = 150; // Delay before retrying popup DOM lookup
+const DOM_MAX_RETRIES = 10; // Max retries for popup DOM (1.5 seconds total)
 const POPUP_SELECTOR = '#popup-container';
 const AUTOCOMPLETE_WRAPPER_SELECTOR = '.address-autocomplete-wrapper';
 
@@ -42,6 +44,7 @@ export default {
     _inited: false,
     _autocompleteInstance: null,
     _googleApiRetries: 0,
+    _domRetries: 0,
 
     // ==================== Initialization ====================
 
@@ -135,6 +138,7 @@ export default {
         this.isEditing = true;
         this._cleanupAutocomplete();
         this._googleApiRetries = 0;
+        this._domRetries = 0;
         // Init autocomplete after popup content is in DOM (x-html doesn't run x-init)
         setTimeout(() => this.initAutocomplete(), AUTOCOMPLETE_INIT_DELAY);
     },
@@ -148,6 +152,7 @@ export default {
             this.isEditing = true;
             this._cleanupAutocomplete();
             this._googleApiRetries = 0;
+            this._domRetries = 0;
             setTimeout(() => this.initAutocomplete(), AUTOCOMPLETE_INIT_DELAY);
         }
     },
@@ -288,6 +293,11 @@ export default {
         const popup = document.querySelector(POPUP_SELECTOR);
         const wrapper = popup?.querySelector(AUTOCOMPLETE_WRAPPER_SELECTOR);
         if (!wrapper) {
+            if (this._domRetries < DOM_MAX_RETRIES) {
+                this._domRetries++;
+                setTimeout(() => this.initAutocomplete(), DOM_RETRY_DELAY);
+                return;
+            }
             console.warn('Autocomplete wrapper not found in popup');
             return;
         }
@@ -308,6 +318,7 @@ export default {
             wrapper.appendChild(placeAutocomplete);
             this._autocompleteInstance = placeAutocomplete;
             this._googleApiRetries = 0; // Reset on success
+            this._domRetries = 0; // Reset on success
         } catch (err) {
             console.error('Places API autocomplete init error:', err);
         }

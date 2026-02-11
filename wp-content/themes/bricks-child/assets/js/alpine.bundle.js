@@ -6019,6 +6019,8 @@ attempted value: ${formattedValue}
   var AUTOCOMPLETE_INIT_DELAY = 150;
   var GOOGLE_API_RETRY_DELAY = 500;
   var GOOGLE_API_MAX_RETRIES = 10;
+  var DOM_RETRY_DELAY = 150;
+  var DOM_MAX_RETRIES = 10;
   var POPUP_SELECTOR = "#popup-container";
   var AUTOCOMPLETE_WRAPPER_SELECTOR = ".address-autocomplete-wrapper";
   var ADDRESS_COMPONENT_MAP = {
@@ -6044,6 +6046,7 @@ attempted value: ${formattedValue}
     _inited: false,
     _autocompleteInstance: null,
     _googleApiRetries: 0,
+    _domRetries: 0,
     init() {
       if (this._inited)
         return;
@@ -6118,6 +6121,7 @@ attempted value: ${formattedValue}
       this.isEditing = true;
       this._cleanupAutocomplete();
       this._googleApiRetries = 0;
+      this._domRetries = 0;
       setTimeout(() => this.initAutocomplete(), AUTOCOMPLETE_INIT_DELAY);
     },
     startEdit(id) {
@@ -6128,6 +6132,7 @@ attempted value: ${formattedValue}
         this.isEditing = true;
         this._cleanupAutocomplete();
         this._googleApiRetries = 0;
+        this._domRetries = 0;
         setTimeout(() => this.initAutocomplete(), AUTOCOMPLETE_INIT_DELAY);
       }
     },
@@ -6243,6 +6248,11 @@ attempted value: ${formattedValue}
       const popup = document.querySelector(POPUP_SELECTOR);
       const wrapper = popup?.querySelector(AUTOCOMPLETE_WRAPPER_SELECTOR);
       if (!wrapper) {
+        if (this._domRetries < DOM_MAX_RETRIES) {
+          this._domRetries++;
+          setTimeout(() => this.initAutocomplete(), DOM_RETRY_DELAY);
+          return;
+        }
         console.warn("Autocomplete wrapper not found in popup");
         return;
       }
@@ -6260,6 +6270,7 @@ attempted value: ${formattedValue}
         wrapper.appendChild(placeAutocomplete);
         this._autocompleteInstance = placeAutocomplete;
         this._googleApiRetries = 0;
+        this._domRetries = 0;
       } catch (err) {
         console.error("Places API autocomplete init error:", err);
       }

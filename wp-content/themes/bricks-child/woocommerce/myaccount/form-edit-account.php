@@ -88,9 +88,6 @@ do_action( 'woocommerce_before_edit_account_form' ); ?>
 </form>
 <?php
     wc_get_template('myaccount/apl-form-edit-change-password.php');
-    wc_get_template('ui/apl-popup.php');
-    wc_get_template('ui/apl-toast.php');
-    wc_get_template('ui/apl-loader.php');
 ?>
 
 <script>
@@ -103,6 +100,5 @@ do_action( 'woocommerce_before_edit_account_form' ); ?>
     ]); ?>;
     window.ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 </script>
-
 
 
