@@ -94,11 +94,15 @@ wc_get_template('myaccount/page-heading.php',
                 $store.userAddress.startAdd()
                 $store.popup.openPopup(document.getElementById('edit-address').innerHTML)"
                 :disabled="$store.userAddress.stopAdd"
-                class="button slim max-w-[450px] w-full font-normal">Add Address</button>
+                class="button slim max-w-[450px] w-full font-normal inline-flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            <span>Add Address</span>
+        </button>
     </div>
 
 </div>
-
 
 
 

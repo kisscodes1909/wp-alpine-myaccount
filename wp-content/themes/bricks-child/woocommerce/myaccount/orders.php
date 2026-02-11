@@ -86,11 +86,21 @@ do_action( 'woocommerce_before_account_orders', $has_orders );
         <?php if ( 1 < $customer_orders->max_num_pages ) : ?>
             <div class="woocommerce-pagination woocommerce-pagination--without-numbers woocommerce-Pagination mt-10 justify-center">
                 <?php if ( 1 !== $current_page ) : ?>
-                    <a class="slim woocommerce-button woocommerce-button--previous woocommerce-Button woocommerce-Button--previous button<?php echo esc_attr( $wp_button_class ); ?>" href="<?php echo esc_url( wc_get_endpoint_url( 'orders', $current_page - 1 ) ); ?>"><?php esc_html_e( 'Previous', 'woocommerce' ); ?></a>
+                    <a class="slim woocommerce-button woocommerce-button--previous woocommerce-Button woocommerce-Button--previous button<?php echo esc_attr( $wp_button_class ); ?> inline-flex items-center gap-2" href="<?php echo esc_url( wc_get_endpoint_url( 'orders', $current_page - 1 ) ); ?>">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                        </svg>
+                        <span><?php esc_html_e( 'Previous', 'woocommerce' ); ?></span>
+                    </a>
                 <?php endif; ?>
 
                 <?php if ( intval( $customer_orders->max_num_pages ) !== $current_page ) : ?>
-                    <a class="slim woocommerce-button woocommerce-button--next woocommerce-Button button<?php echo esc_attr( $wp_button_class ); ?>" href="<?php echo esc_url( wc_get_endpoint_url( 'orders', $current_page + 1 ) ); ?>"><?php esc_html_e( 'Next', 'woocommerce' ); ?></a>
+                    <a class="slim woocommerce-button woocommerce-button--next woocommerce-Button button<?php echo esc_attr( $wp_button_class ); ?> inline-flex items-center gap-2" href="<?php echo esc_url( wc_get_endpoint_url( 'orders', $current_page + 1 ) ); ?>">
+                        <span><?php esc_html_e( 'Next', 'woocommerce' ); ?></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5L15.75 12l-7.5 7.5" />
+                        </svg>
+                    </a>
                 <?php endif; ?>
             </div>
         <?php endif; ?>
@@ -99,7 +109,12 @@ do_action( 'woocommerce_before_account_orders', $has_orders );
 
             <div class="flex flex-col items-center justify-center p-6">
                 <p class="mb-4 text-lg font-semibold text-gray-800">No orders were found</p>
-                <a href="/shop" class="button slim">Continue Shopping</a>
+                <a href="/shop" class="button slim inline-flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386a1.5 1.5 0 011.415 1.026L5.91 6.75m0 0h12.84m-12.84 0l1.531 8.677A1.5 1.5 0 008.917 16.5h8.666a1.5 1.5 0 001.476-1.073L20.25 9H6.75m2.25 10.5a1.125 1.125 0 11-2.25 0 1.125 1.125 0 012.25 0zm9 0a1.125 1.125 0 11-2.25 0 1.125 1.125 0 012.25 0z" />
+                    </svg>
+                    <span>Continue Shopping</span>
+                </a>
             </div>
 
         <?php endif; ?>

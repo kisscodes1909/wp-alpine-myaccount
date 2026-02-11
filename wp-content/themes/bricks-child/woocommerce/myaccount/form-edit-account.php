@@ -67,7 +67,12 @@ do_action( 'woocommerce_before_edit_account_form' ); ?>
                     class="bg-transparent border-b border-gray-500 w-full px-3 mb-3 leading-tight focus:outline-none" />
             <span
                     @click="$store.popup.openPopup(document.getElementById('form-change-password').innerHTML)"
-                    class="absolute right-8 right-0 mt-1.5 underline cursor-pointer">Change</span>
+                    class="absolute right-8 right-0 mt-1.5 underline cursor-pointer inline-flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125" />
+                </svg>
+                <span>Change</span>
+            </span>
         </div>
     </div>
 
@@ -80,9 +85,14 @@ do_action( 'woocommerce_before_edit_account_form' ); ?>
     <div class="flex flex-col items-center justify-between">
         <button
                 :disabled="!allowSubmit"
-                class="button slim max-w-[800px] w-full"
+                class="button slim max-w-[800px] w-full inline-flex items-center justify-center gap-2"
                 type="submit"
-                >Update</button>
+                >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+            </svg>
+            <span>Update</span>
+        </button>
     </div>
 
 </form>
@@ -100,5 +110,4 @@ do_action( 'woocommerce_before_edit_account_form' ); ?>
     ]); ?>;
     window.ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 </script>
-
 
