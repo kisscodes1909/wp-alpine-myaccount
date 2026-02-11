@@ -7,29 +7,47 @@
 ?>
 <style>
 /* Place Autocomplete (New) – host + Places UI Kit custom properties (see places-ui-kit/custom-styling) */
-.underline-form .address-autocomplete-wrapper {
+.apl-form-refined.apl-address-form .address-autocomplete-wrapper {
     width: 100%;
 }
-.underline-form .address-autocomplete-wrapper gmp-place-autocomplete {
+
+.apl-form-refined.apl-address-form .address-autocomplete-wrapper gmp-place-autocomplete {
     width: 100%;
-    min-height: 2.5rem;
+    min-height: 50px;
     display: block;
-    /* Match underline-form inputs */
-    border-radius: 0.75rem;
-    border-bottom: 1px solid rgb(77 77 77);
-    transition: border-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    background-color: #f8fafc;
+    transition: border-color 150ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1);
     /* Force light theme to match form */
     color-scheme: light;
     /* Places UI Kit CSS variables (pierce Shadow DOM) */
-    --gmp-mat-color-surface: #fff;
-    --gmp-mat-color-on-surface: rgb(77 77 77);
-    --gmp-mat-color-on-surface-variant: rgb(77 77 77);
+    --gmp-mat-color-surface: #f8fafc;
+    --gmp-mat-color-on-surface: #111827;
+    --gmp-mat-color-on-surface-variant: #6b7280;
     --gmp-mat-color-primary: rgb(77 77 77);
     --gmp-mat-color-outline-decorative: transparent;
     --gmp-mat-font-family: inherit;
 }
-.underline-form .address-autocomplete-wrapper gmp-place-autocomplete:focus-within {
-    border-color: rgb(0 0 0);
+
+.apl-form-refined.apl-address-form .address-autocomplete-wrapper gmp-place-autocomplete:focus-within {
+    border-color: #9ca3af;
+    box-shadow: 0 0 0 1px rgba(17, 24, 39, 0.08);
+}
+
+.apl-address-line2-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #1f3a8a;
+    font-size: 15px;
+    line-height: 1.25;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.apl-address-line2-toggle:hover {
+    opacity: 0.9;
 }
 </style>
 <template id="edit-address" x-data>
@@ -42,7 +60,7 @@
         </button>
     </div>
     <!-- Modal Body -->
-    <form class="underline-form flex flex-col gap-4">
+    <form class="apl-form-refined apl-address-form flex flex-col gap-4" x-data="{ showAddress2: false }" x-init="showAddress2 = !!$store.userAddress.editAddress.address2">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
                 <label for="first-name">First name</label>
@@ -64,17 +82,16 @@
         </div>
 
         <div>
-            <label for="country">Country</label>
-            <div>
-                <select x-model="$store.userAddress.editAddress.country" id="country" name="country" autocomplete="country-name">
-                    <template x-for="(countryName, countryCode) in $store.userAddress.countries" :key="countryCode">
-                        <option x-bind:value="countryName" x-text="countryName"></option>
-                    </template>
-                </select>
-            </div>
+            <button type="button" class="apl-address-line2-toggle" @click="showAddress2 = !showAddress2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path x-show="!showAddress2" stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    <path x-show="showAddress2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
+                </svg>
+                <span x-text="showAddress2 ? 'Hide Address Line 2 (optional)' : 'Add Address Line 2 (optional)'"></span>
+            </button>
         </div>
 
-        <div>
+        <div x-show="showAddress2" x-transition>
             <label for="address2">Apartment, suite, etc. (optional)</label>
             <div>
                 <input x-model="$store.userAddress.editAddress.address2" type="text" name="address2" id="address2" autocomplete="address2">
@@ -83,22 +100,33 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-                <label for="city">City</label>
+                <label for="country">Country / Region</label>
                 <div>
-                    <input x-model="$store.userAddress.editAddress.city" type="text" name="city" id="city" autocomplete="address-level2" />
+                    <select x-model="$store.userAddress.editAddress.country" id="country" name="country" autocomplete="country-name">
+                        <template x-for="(countryName, countryCode) in $store.userAddress.countries" :key="countryCode">
+                            <option x-bind:value="countryName" x-text="countryName"></option>
+                        </template>
+                    </select>
                 </div>
             </div>
             <div>
-                <label for="region">State / Province</label>
+                <label for="postal-code">ZIP Code</label>
+                <div>
+                    <input x-model="$store.userAddress.editAddress.postalCode" type="text" name="postal-code" id="postal-code" autocomplete="postal-code" />
+                </div>
+            </div>
+            <div>
+                <label for="region">State</label>
                 <div>
                     <input x-model="$store.userAddress.editAddress.region" type="text" name="region" id="region" autocomplete="address-level1" />
                 </div>
             </div>
+        </div>
+
+        <div>
+            <label for="city">Town / City</label>
             <div>
-                <label for="postal-code">ZIP / Postal code</label>
-                <div>
-                    <input x-model="$store.userAddress.editAddress.postalCode" type="text" name="postal-code" id="postal-code" autocomplete="postal-code" />
-                </div>
+                <input x-model="$store.userAddress.editAddress.city" type="text" name="city" id="city" autocomplete="address-level2" />
             </div>
         </div>
 
@@ -146,4 +174,3 @@
         </button>
     </div>
 </template>
-

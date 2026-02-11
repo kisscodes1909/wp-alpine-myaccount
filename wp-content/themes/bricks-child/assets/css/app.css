@@ -345,10 +345,6 @@ select {
   pointer-events: none;
 }
 
-.pointer-events-auto {
-  pointer-events: auto;
-}
-
 .invisible {
   visibility: hidden;
 }
@@ -375,16 +371,6 @@ select {
 
 .inset-0 {
   inset: 0px;
-}
-
-.inset-x-0 {
-  left: 0px;
-  right: 0px;
-}
-
-.inset-y-0 {
-  top: 0px;
-  bottom: 0px;
 }
 
 .bottom-0 {
@@ -423,12 +409,12 @@ select {
   right: 3.5rem;
 }
 
-.right-5 {
-  right: 1.25rem;
+.right-3 {
+  right: 0.75rem;
 }
 
-.right-8 {
-  right: 2rem;
+.right-5 {
+  right: 1.25rem;
 }
 
 .top-0 {
@@ -437,6 +423,10 @@ select {
 
 .top-1 {
   top: 0.25rem;
+}
+
+.top-1\/2 {
+  top: 50%;
 }
 
 .top-14 {
@@ -504,11 +494,6 @@ select {
 .my-8 {
   margin-top: 2rem;
   margin-bottom: 2rem;
-}
-
-.my-auto {
-  margin-top: auto;
-  margin-bottom: auto;
 }
 
 .mb-0 {
@@ -579,10 +564,6 @@ select {
   margin-top: 0.25rem;
 }
 
-.mt-1\.5 {
-  margin-top: 0.375rem;
-}
-
 .mt-10 {
   margin-top: 2.5rem;
 }
@@ -593,6 +574,10 @@ select {
 
 .mt-14 {
   margin-top: 3.5rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
 }
 
 .mt-20 {
@@ -619,24 +604,12 @@ select {
   margin-top: auto;
 }
 
-.mt-2 {
-  margin-top: 0.5rem;
-}
-
-.ml-auto {
-  margin-left: auto;
-}
-
 .block {
   display: block;
 }
 
 .inline-block {
   display: inline-block;
-}
-
-.inline {
-  display: inline;
 }
 
 .flex {
@@ -709,33 +682,8 @@ select {
   height: 50px;
 }
 
-.h-fit {
-  height: -moz-fit-content;
-  height: fit-content;
-}
-
 .h-full {
   height: 100%;
-}
-
-.max-h-\[95\%\] {
-  max-height: 95%;
-}
-
-.max-h-\[95vh\] {
-  max-height: 95vh;
-}
-
-.min-h-\[320px\] {
-  min-height: 320px;
-}
-
-.min-h-\[50vh\] {
-  min-height: 50vh;
-}
-
-.min-h-\[70vh\] {
-  min-height: 70vh;
 }
 
 .w-1\/2 {
@@ -867,23 +815,8 @@ select {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
-.translate-y-0 {
-  --tw-translate-y: 0px;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-.translate-y-full {
-  --tw-translate-y: 100%;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-.translate-x-0 {
-  --tw-translate-x: 0px;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-.translate-x-full {
-  --tw-translate-x: 100%;
+.-translate-y-1\/2 {
+  --tw-translate-y: -50%;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
@@ -908,12 +841,6 @@ select {
 .scale-90 {
   --tw-scale-x: .9;
   --tw-scale-y: .9;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-.scale-95 {
-  --tw-scale-x: .95;
-  --tw-scale-y: .95;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
@@ -1150,29 +1077,6 @@ select {
   border-bottom-right-radius: 0px;
 }
 
-.rounded-l-xl {
-  border-top-left-radius: 0.75rem;
-  border-bottom-left-radius: 0.75rem;
-}
-
-.rounded-r-xl {
-  border-top-right-radius: 0.75rem;
-  border-bottom-right-radius: 0.75rem;
-}
-
-.rounded-t-xl {
-  border-top-left-radius: 0.75rem;
-  border-top-right-radius: 0.75rem;
-}
-
-.rounded-tl-xl {
-  border-top-left-radius: 0.75rem;
-}
-
-.rounded-tr-xl {
-  border-top-right-radius: 0.75rem;
-}
-
 .border {
   border-width: 1px;
 }
@@ -1233,8 +1137,8 @@ select {
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));
 }
 
-.bg-black\/80 {
-  background-color: rgb(0 0 0 / 0.8);
+.bg-black\/50 {
+  background-color: rgb(0 0 0 / 0.5);
 }
 
 .bg-blue-50 {
@@ -1269,14 +1173,6 @@ select {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-
-.bg-black\/50 {
-  background-color: rgb(0 0 0 / 0.5);
-}
-
-.bg-opacity-50 {
-  --tw-bg-opacity: 0.5;
 }
 
 .bg-opacity-70 {
@@ -1386,6 +1282,10 @@ select {
   padding-bottom: 1rem;
 }
 
+.pr-28 {
+  padding-right: 7rem;
+}
+
 .pr-5 {
   padding-right: 1.25rem;
 }
@@ -1394,20 +1294,20 @@ select {
   padding-right: 2rem;
 }
 
-.pt-4 {
-  padding-top: 1rem;
-}
-
-.pt-7 {
-  padding-top: 1.75rem;
-}
-
 .pt-1 {
   padding-top: 0.25rem;
 }
 
+.pt-4 {
+  padding-top: 1rem;
+}
+
 .pt-6 {
   padding-top: 1.5rem;
+}
+
+.pt-7 {
+  padding-top: 1.75rem;
 }
 
 .text-left {
@@ -1542,11 +1442,6 @@ select {
   color: rgb(77 77 77 / var(--tw-text-opacity));
 }
 
-.text-gray-400 {
-  --tw-text-opacity: 1;
-  color: rgb(156 163 175 / var(--tw-text-opacity));
-}
-
 .text-gray-500 {
   --tw-text-opacity: 1;
   color: rgb(107 114 128 / var(--tw-text-opacity));
@@ -1650,32 +1545,10 @@ select {
   transition-duration: 150ms;
 }
 
-.transition-opacity {
-  transition-property: opacity;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-
 .transition-transform {
   transition-property: transform;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
-}
-
-.delay-100 {
-  transition-delay: 100ms;
-}
-
-.delay-200 {
-  transition-delay: 200ms;
-}
-
-.delay-75 {
-  transition-delay: 75ms;
-}
-
-.duration-100 {
-  transition-duration: 100ms;
 }
 
 .duration-1000 {
@@ -1694,20 +1567,12 @@ select {
   transition-duration: 500ms;
 }
 
-.duration-150 {
-  transition-duration: 150ms;
-}
-
 .ease-in {
   transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
 }
 
 .ease-out {
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
-}
-
-.ease-in-out {
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @layer {
@@ -1729,133 +1594,65 @@ select {
   border-style: solid;
 }
 
-.underline-form * {
+.apl-form-refined * {
     font-size: 14px;
   }
 
 @media (min-width: 1280px) {
-    .underline-form * {
+    .apl-form-refined * {
       font-size: 16px;
     }
   }
 
-.underline-form .input,
-    .underline-form input:not([type=submit]),
-    .underline-form select,
-    .underline-form textarea {
-    border-radius: 0.75rem;
-  }
-
-.underline-form .input,
-    .underline-form input:not([type=submit]),
-    .underline-form select,
-    .underline-form textarea {
-    border-bottom-width: 1px;
-  }
-
-.underline-form .input,
-    .underline-form input:not([type=submit]),
-    .underline-form select,
-    .underline-form textarea {
-    --tw-border-opacity: 1;
-    border-color: rgb(77 77 77 / var(--tw-border-opacity));
-  }
-
-.underline-form .input,
-    .underline-form input:not([type=submit]),
-    .underline-form select,
-    .underline-form textarea {
+.apl-form-refined .input,
+    .apl-form-refined input:not([type='submit']):not([type='checkbox']):not([type='radio']),
+    .apl-form-refined select,
+    .apl-form-refined textarea {
     transition-property: all;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms;
   }
 
-.underline-form .input:-webkit-autofill, .underline-form input:not([type=submit]):-webkit-autofill, .underline-form select:-webkit-autofill, .underline-form textarea:-webkit-autofill {
+.apl-form-refined .input:-webkit-autofill, .apl-form-refined input:not([type='submit']):not([type='checkbox']):not([type='radio']):-webkit-autofill, .apl-form-refined select:-webkit-autofill, .apl-form-refined textarea:-webkit-autofill {
     --tw-shadow: inset 0 0 0px 1000px #fff;
     --tw-shadow-colored: inset 0 0 0px 1000px var(--tw-shadow-color);
     box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   }
 
-.underline-form .input:autofill,
-    .underline-form input:not([type=submit]):autofill,
-    .underline-form select:autofill,
-    .underline-form textarea:autofill {
+.apl-form-refined .input:autofill,
+    .apl-form-refined input:not([type='submit']):not([type='checkbox']):not([type='radio']):autofill,
+    .apl-form-refined select:autofill,
+    .apl-form-refined textarea:autofill {
     --tw-shadow: inset 0 0 0px 1000px #fff;
     --tw-shadow-colored: inset 0 0 0px 1000px var(--tw-shadow-color);
     box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   }
 
-.underline-form .input,
-    .underline-form input:not([type=submit]),
-    .underline-form select {
-    padding-left: 1.75rem;
-  }
-
-.underline-form .input,
-    .underline-form input:not([type=submit]),
-    .underline-form select {
+.apl-form-refined .input,
+    .apl-form-refined input:not([type='submit']):not([type='checkbox']):not([type='radio']),
+    .apl-form-refined select {
     padding-right: 2.5rem;
   }
 
-.underline-form .input,
-    .underline-form input:not([type=submit]),
-    .underline-form select {
-    line-height: 40px;
-  }
-
-.underline-form input[type=password] {
+.apl-form-refined input[type='password'] {
     padding-right: 6rem;
   }
 
-.underline-form label {
-    margin-bottom: 0.75rem;
-  }
-
-.underline-form label {
-    font-weight: 700;
-  }
-
-.underline-form label {
-    text-transform: capitalize;
-  }
-
-.underline-form label {
-    line-height: 25px;
-  }
-
-.underline-form label {
-    --tw-text-opacity: 1;
-    color: rgb(77 77 77 / var(--tw-text-opacity));
-  }
-
-.underline-form .error .input,
-        .underline-form .error input:not([type=submit]),
-        .underline-form .error select,
-        .underline-form .error textarea {
-      --tw-border-opacity: 1;
-      border-color: rgb(220 38 38 / var(--tw-border-opacity));
-    }
-
-.underline-form .error label {
-      --tw-text-opacity: 1;
-      color: rgb(220 38 38 / var(--tw-text-opacity));
-    }
-
-.underline-form div[x-validate-icon] {
+.apl-form-refined div[x-validate-icon] {
     top: 0.75rem;
   }
 
-.underline-form div[x-validate-icon] {
+.apl-form-refined div[x-validate-icon] {
     right: 0.25rem;
   }
 
-.underline-form.loading input,
-        .underline-form.loading button,
-        .underline-form.loading select {
+.apl-form-refined.loading input,
+        .apl-form-refined.loading button,
+        .apl-form-refined.loading select {
       pointer-events: none;
     }
 
-.underline-form.loading button {
+.apl-form-refined.loading button {
       opacity: 0.7;
     }
 
@@ -1994,94 +1791,6 @@ select {
     opacity: 0.5;
   }
 
-label.jk-checkbox-wrapper,
-label.woocommerce-form__label-for-checkbox {
-  cursor: pointer;
-  text-transform: none;
-  --tw-text-opacity: 1;
-  color: rgb(77 77 77 / var(--tw-text-opacity));
-}
-
-label.jk-checkbox-wrapper input[type=checkbox], label.woocommerce-form__label-for-checkbox input[type=checkbox] {
-    display: none;
-  }
-
-label.jk-checkbox-wrapper input[type=checkbox] + .jk-checkbox, label.woocommerce-form__label-for-checkbox input[type=checkbox] + .jk-checkbox {
-      margin-right: 0.75rem;
-    }
-
-label.jk-checkbox-wrapper input[type=checkbox] + .jk-checkbox, label.woocommerce-form__label-for-checkbox input[type=checkbox] + .jk-checkbox {
-      display: flex;
-    }
-
-label.jk-checkbox-wrapper input[type=checkbox] + .jk-checkbox, label.woocommerce-form__label-for-checkbox input[type=checkbox] + .jk-checkbox {
-      flex-direction: row;
-    }
-
-label.jk-checkbox-wrapper input[type=checkbox] + .jk-checkbox, label.woocommerce-form__label-for-checkbox input[type=checkbox] + .jk-checkbox {
-      align-items: center;
-    }
-
-label.jk-checkbox-wrapper input[type=checkbox] + .jk-checkbox, label.woocommerce-form__label-for-checkbox input[type=checkbox] + .jk-checkbox {
-      gap: 1rem;
-    }
-
-label.jk-checkbox-wrapper input[type=checkbox] + .jk-checkbox::before, label.woocommerce-form__label-for-checkbox input[type=checkbox] + .jk-checkbox::before {
-        content: '';
-      }
-
-label.jk-checkbox-wrapper input[type=checkbox] + .jk-checkbox::before, label.woocommerce-form__label-for-checkbox input[type=checkbox] + .jk-checkbox::before {
-        display: block;
-      }
-
-label.jk-checkbox-wrapper input[type=checkbox] + .jk-checkbox::before, label.woocommerce-form__label-for-checkbox input[type=checkbox] + .jk-checkbox::before {
-        height: 25px;
-      }
-
-label.jk-checkbox-wrapper input[type=checkbox] + .jk-checkbox::before, label.woocommerce-form__label-for-checkbox input[type=checkbox] + .jk-checkbox::before {
-        width: 25px;
-      }
-
-label.jk-checkbox-wrapper input[type=checkbox] + .jk-checkbox::before, label.woocommerce-form__label-for-checkbox input[type=checkbox] + .jk-checkbox::before {
-        border-radius: 0.375rem;
-      }
-
-label.jk-checkbox-wrapper input[type=checkbox] + .jk-checkbox::before, label.woocommerce-form__label-for-checkbox input[type=checkbox] + .jk-checkbox::before {
-        border-width: 1px;
-      }
-
-label.jk-checkbox-wrapper input[type=checkbox] + .jk-checkbox::before, label.woocommerce-form__label-for-checkbox input[type=checkbox] + .jk-checkbox::before {
-        --tw-border-opacity: 1;
-        border-color: rgb(0 0 0 / var(--tw-border-opacity));
-      }
-
-label.jk-checkbox-wrapper input[type=checkbox] + .jk-checkbox::before, label.woocommerce-form__label-for-checkbox input[type=checkbox] + .jk-checkbox::before {
-        --tw-bg-opacity: 1;
-        background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-      }
-
-label.jk-checkbox-wrapper input[type=checkbox] + .jk-checkbox::before, label.woocommerce-form__label-for-checkbox input[type=checkbox] + .jk-checkbox::before {
-        padding: 0.25rem;
-      }
-
-label.jk-checkbox-wrapper input[type=checkbox] + .jk-checkbox::before, label.woocommerce-form__label-for-checkbox input[type=checkbox] + .jk-checkbox::before {
-        line-height: 20px;
-      }
-
-label.jk-checkbox-wrapper input[type=checkbox] ~ .jk-checkbox-label, label.woocommerce-form__label-for-checkbox input[type=checkbox] ~ .jk-checkbox-label {
-      font-weight: 400;
-    }
-
-label.jk-checkbox-wrapper input[type=checkbox]:checked + .jk-checkbox::before, label.woocommerce-form__label-for-checkbox input[type=checkbox]:checked + .jk-checkbox::before {
-      --tw-bg-opacity: 1;
-      background-color: rgb(0 0 0 / var(--tw-bg-opacity));
-    }
-
-label.jk-checkbox-wrapper input[type=checkbox]:checked + .jk-checkbox::before, label.woocommerce-form__label-for-checkbox input[type=checkbox]:checked + .jk-checkbox::before {
-      content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="12" viewBox="0 0 18 12" fill="none"><path d="M1.26562 4.82911L5.87042 10.1246L16.568 1.55078" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>');
-      /* SVG icon data */
-    }
-
 .wc-item-meta {
   display: flex;
   list-style: none;
@@ -2103,6 +1812,291 @@ label.jk-checkbox-wrapper input[type=checkbox]:checked + .jk-checkbox::before, l
 .woocommerce-account .woocommerce-MyAccount-content {
   margin-bottom: 40px;
 }
+
+/* Shared My Account form style: apl-form-refined */
+
+.woocommerce-account .apl-form-refined label {
+      margin-bottom: 6px;
+    }
+
+.woocommerce-account .apl-form-refined label {
+      font-size: 13px;
+      line-height: 1.1;
+    }
+
+.woocommerce-account .apl-form-refined label {
+      --tw-text-opacity: 1;
+      color: rgb(107 114 128 / var(--tw-text-opacity));
+    }
+
+.woocommerce-account .apl-form-refined label {
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      text-transform: none;
+    }
+
+.woocommerce-account .apl-form-refined .input,
+        .woocommerce-account .apl-form-refined input:not([type='submit']):not([type='checkbox']):not([type='radio']),
+        .woocommerce-account .apl-form-refined select,
+        .woocommerce-account .apl-form-refined textarea {
+      height: 50px;
+    }
+
+.woocommerce-account .apl-form-refined .input,
+        .woocommerce-account .apl-form-refined input:not([type='submit']):not([type='checkbox']):not([type='radio']),
+        .woocommerce-account .apl-form-refined select,
+        .woocommerce-account .apl-form-refined textarea {
+      border-radius: 0.5rem;
+    }
+
+.woocommerce-account .apl-form-refined .input,
+        .woocommerce-account .apl-form-refined input:not([type='submit']):not([type='checkbox']):not([type='radio']),
+        .woocommerce-account .apl-form-refined select,
+        .woocommerce-account .apl-form-refined textarea {
+      border-width: 1px;
+    }
+
+.woocommerce-account .apl-form-refined .input,
+        .woocommerce-account .apl-form-refined input:not([type='submit']):not([type='checkbox']):not([type='radio']),
+        .woocommerce-account .apl-form-refined select,
+        .woocommerce-account .apl-form-refined textarea {
+      --tw-border-opacity: 1;
+      border-color: rgb(209 213 219 / var(--tw-border-opacity));
+    }
+
+.woocommerce-account .apl-form-refined .input,
+        .woocommerce-account .apl-form-refined input:not([type='submit']):not([type='checkbox']):not([type='radio']),
+        .woocommerce-account .apl-form-refined select,
+        .woocommerce-account .apl-form-refined textarea {
+      --tw-bg-opacity: 1;
+      background-color: rgb(248 250 252 / var(--tw-bg-opacity));
+    }
+
+.woocommerce-account .apl-form-refined .input,
+        .woocommerce-account .apl-form-refined input:not([type='submit']):not([type='checkbox']):not([type='radio']),
+        .woocommerce-account .apl-form-refined select,
+        .woocommerce-account .apl-form-refined textarea {
+      padding-left: 14px;
+      padding-right: 14px;
+    }
+
+.woocommerce-account .apl-form-refined .input,
+        .woocommerce-account .apl-form-refined input:not([type='submit']):not([type='checkbox']):not([type='radio']),
+        .woocommerce-account .apl-form-refined select,
+        .woocommerce-account .apl-form-refined textarea {
+      font-size: 18px;
+      line-height: 1.2;
+    }
+
+.woocommerce-account .apl-form-refined .input,
+        .woocommerce-account .apl-form-refined input:not([type='submit']):not([type='checkbox']):not([type='radio']),
+        .woocommerce-account .apl-form-refined select,
+        .woocommerce-account .apl-form-refined textarea {
+      --tw-text-opacity: 1;
+      color: rgb(17 24 39 / var(--tw-text-opacity));
+    }
+
+.woocommerce-account .apl-form-refined .input,
+        .woocommerce-account .apl-form-refined input:not([type='submit']):not([type='checkbox']):not([type='radio']),
+        .woocommerce-account .apl-form-refined select,
+        .woocommerce-account .apl-form-refined textarea {
+      transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+    }
+
+.woocommerce-account .apl-form-refined input:not([type='submit']):not([type='checkbox']):not([type='radio'])::-moz-placeholder, .woocommerce-account .apl-form-refined textarea::-moz-placeholder {
+      --tw-text-opacity: 1;
+      color: rgb(156 163 175 / var(--tw-text-opacity));
+    }
+
+.woocommerce-account .apl-form-refined input:not([type='submit']):not([type='checkbox']):not([type='radio'])::placeholder,
+        .woocommerce-account .apl-form-refined textarea::placeholder {
+      --tw-text-opacity: 1;
+      color: rgb(156 163 175 / var(--tw-text-opacity));
+    }
+
+.woocommerce-account .apl-form-refined input:not([type='submit']):not([type='checkbox']):not([type='radio']):focus,
+        .woocommerce-account .apl-form-refined select:focus,
+        .woocommerce-account .apl-form-refined textarea:focus {
+      --tw-border-opacity: 1;
+      border-color: rgb(156 163 175 / var(--tw-border-opacity));
+    }
+
+.woocommerce-account .apl-form-refined input:not([type='submit']):not([type='checkbox']):not([type='radio']):focus,
+        .woocommerce-account .apl-form-refined select:focus,
+        .woocommerce-account .apl-form-refined textarea:focus {
+      --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+      --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+      box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+    }
+
+.woocommerce-account .apl-form-refined input:not([type='submit']):not([type='checkbox']):not([type='radio']):focus,
+        .woocommerce-account .apl-form-refined select:focus,
+        .woocommerce-account .apl-form-refined textarea:focus {
+      --tw-ring-color: rgb(17 24 39 / 0.08);
+    }
+
+.woocommerce-account .apl-form-refined .error .input,
+            .woocommerce-account .apl-form-refined .error input:not([type='submit']):not([type='checkbox']):not([type='radio']),
+            .woocommerce-account .apl-form-refined .error select,
+            .woocommerce-account .apl-form-refined .error textarea {
+        --tw-border-opacity: 1;
+        border-color: rgb(220 38 38 / var(--tw-border-opacity));
+      }
+
+.woocommerce-account .apl-form-refined .error label {
+        --tw-text-opacity: 1;
+        color: rgb(220 38 38 / var(--tw-text-opacity));
+      }
+
+/* Checkout native controls (radio) */
+
+.woocommerce ul#shipping_method {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 0.25rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(209 213 219 / var(--tw-border-opacity));
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+}
+
+.woocommerce ul#shipping_method > li {
+    display: flex;
+  }
+
+.woocommerce ul#shipping_method > li {
+    align-items: center;
+  }
+
+.woocommerce ul#shipping_method > li {
+    gap: 10px;
+  }
+
+.woocommerce ul#shipping_method > li {
+    border-bottom-width: 1px;
+  }
+
+.woocommerce ul#shipping_method > li {
+    --tw-border-opacity: 1;
+    border-color: rgb(209 213 219 / var(--tw-border-opacity));
+  }
+
+.woocommerce ul#shipping_method > li {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+
+.woocommerce ul#shipping_method > li {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+.woocommerce ul#shipping_method > li {
+    margin: 0;
+  }
+
+.woocommerce ul#shipping_method > li:last-child {
+      border-bottom: 0;
+    }
+
+.woocommerce ul#shipping_method > li > input.shipping_method[type='radio'] {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+           appearance: none
+    }
+
+.woocommerce ul#shipping_method > li > input.shipping_method[type='radio'] {
+      display: inline-grid;
+    }
+
+.woocommerce ul#shipping_method > li > input.shipping_method[type='radio'] {
+      height: 18px;
+    }
+
+.woocommerce ul#shipping_method > li > input.shipping_method[type='radio'] {
+      width: 18px;
+    }
+
+.woocommerce ul#shipping_method > li > input.shipping_method[type='radio'] {
+      flex: none;
+    }
+
+.woocommerce ul#shipping_method > li > input.shipping_method[type='radio'] {
+      cursor: pointer;
+    }
+
+.woocommerce ul#shipping_method > li > input.shipping_method[type='radio'] {
+      place-content: center;
+    }
+
+.woocommerce ul#shipping_method > li > input.shipping_method[type='radio'] {
+      border-radius: 9999px;
+    }
+
+.woocommerce ul#shipping_method > li > input.shipping_method[type='radio'] {
+      border-width: 1px;
+    }
+
+.woocommerce ul#shipping_method > li > input.shipping_method[type='radio'] {
+      --tw-border-opacity: 1;
+      border-color: rgb(199 205 212 / var(--tw-border-opacity));
+    }
+
+.woocommerce ul#shipping_method > li > input.shipping_method[type='radio'] {
+      --tw-bg-opacity: 1;
+      background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+    }
+
+.woocommerce ul#shipping_method > li > input.shipping_method[type='radio'] {
+      margin: 0;
+    }
+
+.woocommerce ul#shipping_method > li > input.shipping_method[type='radio']:checked {
+        --tw-border-opacity: 1;
+        border-color: rgb(17 24 39 / var(--tw-border-opacity));
+      }
+
+.woocommerce ul#shipping_method > li > input.shipping_method[type='radio']:checked {
+        background: radial-gradient(circle at center, #111827 0 4px, #ffffff 4.5px);
+      }
+
+.woocommerce ul#shipping_method > li > input.shipping_method[type='radio']:focus-visible {
+        outline-style: solid;
+      }
+
+.woocommerce ul#shipping_method > li > input.shipping_method[type='radio']:focus-visible {
+        outline-width: 2px;
+      }
+
+.woocommerce ul#shipping_method > li > input.shipping_method[type='radio']:focus-visible {
+        outline-offset: 2px;
+      }
+
+.woocommerce ul#shipping_method > li > input.shipping_method[type='radio']:focus-visible {
+        outline-color: #9ca3af;
+      }
+
+.woocommerce ul#shipping_method > li > label {
+      margin: 0;
+    }
+
+.woocommerce ul#shipping_method > li > label {
+      font-size: 18px;
+    }
+
+.woocommerce ul#shipping_method > li > label {
+      --tw-text-opacity: 1;
+      color: rgb(17 24 39 / var(--tw-text-opacity));
+    }
+
+.woocommerce ul#shipping_method > li > label {
+      line-height: 1.25;
+      font-weight: 500;
+      cursor: pointer;
+    }
 
 @media (min-width: 992px) {
   .md\:container {
@@ -2154,11 +2148,6 @@ label.jk-checkbox-wrapper input[type=checkbox]:checked + .jk-checkbox::before, l
 .hover\:bg-blue-700:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(29 78 216 / var(--tw-bg-opacity));
-}
-
-.hover\:text-gray-700:hover {
-  --tw-text-opacity: 1;
-  color: rgb(55 65 81 / var(--tw-text-opacity));
 }
 
 .focus\:border-gray-500:focus {
@@ -2385,26 +2374,6 @@ label.jk-checkbox-wrapper input[type=checkbox]:checked + .jk-checkbox::before, l
 }
 
 @media (min-width: 1280px) {
-  .lg\:bottom-auto {
-    bottom: auto;
-  }
-
-  .lg\:left-0 {
-    left: 0px;
-  }
-
-  .lg\:left-1\/2 {
-    left: 50%;
-  }
-
-  .lg\:right-0 {
-    right: 0px;
-  }
-
-  .lg\:top-1\/2 {
-    top: 50%;
-  }
-
   .lg\:m-0 {
     margin: 0px;
   }
@@ -2429,71 +2398,12 @@ label.jk-checkbox-wrapper input[type=checkbox]:checked + .jk-checkbox::before, l
     height: 23px;
   }
 
-  .lg\:h-full {
-    height: 100%;
-  }
-
-  .lg\:max-h-none {
-    max-height: none;
-  }
-
   .lg\:w-1\/3 {
     width: 33.333333%;
   }
 
   .lg\:w-\[23px\] {
     width: 23px;
-  }
-
-  .lg\:w-auto {
-    width: auto;
-  }
-
-  .lg\:-translate-x-1\/2 {
-    --tw-translate-x: -50%;
-    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-  }
-
-  .lg\:-translate-x-full {
-    --tw-translate-x: -100%;
-    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-  }
-
-  .lg\:-translate-y-1\/2 {
-    --tw-translate-y: -50%;
-    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-  }
-
-  .lg\:translate-x-0 {
-    --tw-translate-x: 0px;
-    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-  }
-
-  .lg\:translate-x-full {
-    --tw-translate-x: 100%;
-    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-  }
-
-  .lg\:translate-y-0 {
-    --tw-translate-y: 0px;
-    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-  }
-
-  .lg\:translate-y-\[-0\.5rem\] {
-    --tw-translate-y: -0.5rem;
-    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-  }
-
-  .lg\:scale-100 {
-    --tw-scale-x: 1;
-    --tw-scale-y: 1;
-    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-  }
-
-  .lg\:scale-\[0\.98\] {
-    --tw-scale-x: 0.98;
-    --tw-scale-y: 0.98;
-    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
   }
 
   .lg\:grid-cols-1 {
@@ -2532,18 +2442,6 @@ label.jk-checkbox-wrapper input[type=checkbox]:checked + .jk-checkbox::before, l
     --tw-space-x-reverse: 0;
     margin-right: calc(1rem * var(--tw-space-x-reverse));
     margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
-  }
-
-  .lg\:rounded-none {
-    border-radius: 0px;
-  }
-
-  .lg\:rounded-bl-xl {
-    border-bottom-left-radius: 0.75rem;
-  }
-
-  .lg\:rounded-br-xl {
-    border-bottom-right-radius: 0.75rem;
   }
 
   .lg\:text-center {

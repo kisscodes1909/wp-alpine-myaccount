@@ -1,7 +1,7 @@
 <template id="form-change-payment-method" x-data>
     <form
         x-data="paymentMethodChangeForm()"
-        class="w-full underline-form flex flex-col gap-8"
+        class="w-full apl-form-refined flex flex-col gap-8"
         @keyup.enter="handleSubmit()"
         @submit.prevent="handleSubmit"
         @keyup="validateForm()"
@@ -201,4 +201,3 @@
     });
 
 </script>
-

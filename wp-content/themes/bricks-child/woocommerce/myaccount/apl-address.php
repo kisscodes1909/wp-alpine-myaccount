@@ -19,6 +19,7 @@ wc_get_template('myaccount/page-heading.php',
          class="fixed top-14 right-5 bg-black text-white px-4 py-3 rounded shadow-lg z-[1000]">
         <p x-text="$store.userAddress.notificationMessage"></p>
     </div>
+
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         <template x-for="address in $store.userAddress.addresses">
             <div class="bg-[#F6F8FC] rounded-lg p-6 flex flex-col">
@@ -103,8 +104,5 @@ wc_get_template('myaccount/page-heading.php',
     </div>
 
 </div>
-
-
-
 
 

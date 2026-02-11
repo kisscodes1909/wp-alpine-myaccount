@@ -2,7 +2,7 @@
         <form
                 x-data="passwordChangeForm()"
                 @submit.prevent="handleSubmit"
-                class="w-full underline-form flex flex-col gap-8"
+                class="w-full apl-form-refined flex flex-col gap-8"
         >
             <div class="flex justify-between items-center">
                 <h2 class="text-xl font-semibold">Change Password</h2>
@@ -142,4 +142,3 @@
     });
 
 </script>
-

@@ -38,6 +38,17 @@ module.exports = {
       'xl': '1440px',
     },
     extend: {
+      fontSize: {
+        'form-label': ['13px', { lineHeight: '1.1' }],
+        'form-input': ['18px', { lineHeight: '1.2' }],
+        'form-check': ['18px', { lineHeight: '1.25' }],
+      },
+      minHeight: {
+        'form-field': '50px',
+      },
+      height: {
+        'form-field': '50px',
+      },
       colors: {
         goldBase: '#CAA15F',
         goldLight: '#E8CBA3',
@@ -46,6 +57,18 @@ module.exports = {
           500: '#CAA15F', // Extended yellow color
         },
         charcoal: '#4d4d4d',
+        form: {
+          text: '#111827',
+          muted: '#6b7280',
+          border: '#d1d5db',
+          borderStrong: '#c7cdd4',
+          focus: '#9ca3af',
+          surface: '#f3f4f6',
+          field: '#f8fafc',
+          accent: '#111827',
+          danger: '#dc2626',
+          ring: 'rgb(17 24 39 / 0.08)',
+        },
       },
       backgroundImage: {
         'gold-gradient': 'linear-gradient(45deg, #E8CBA3, #CAA15F, #8A6A2F)',

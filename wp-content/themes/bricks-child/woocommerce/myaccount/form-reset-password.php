@@ -34,7 +34,7 @@ do_action( 'woocommerce_before_reset_password_form' );
     ]
 ); ?>
 <div class="md:container mx-auto px-8">
-    <form x-data="resetPassword" method="post" class="underline-form sm:w-[700px] mx-auto">
+    <form x-data="resetPassword" method="post" class="apl-form-refined sm:w-[700px] mx-auto">
 
 <!--        <p>--><?php //echo apply_filters( 'woocommerce_reset_password_message', esc_html__( 'Enter a new password below.', 'woocommerce' ) ); ?><!--</p>--><?php //// @codingStandardsIgnoreLine ?>
 
@@ -116,4 +116,3 @@ do_action( 'woocommerce_before_reset_password_form' );
 </div>
 <?php
 do_action( 'woocommerce_after_reset_password_form' );
-

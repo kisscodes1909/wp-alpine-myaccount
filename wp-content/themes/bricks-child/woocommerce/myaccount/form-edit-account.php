@@ -21,7 +21,7 @@ do_action( 'woocommerce_before_edit_account_form' ); ?>
 
 <?php wc_get_template('myaccount/page-heading.php', ['page_heading' => 'My Info', 'page_description' => 'Update your personal details']); ?>
 
-<form x-data="updateAccount" id="form-update-account" class="underline-form flex flex-col gap-8 md:container mx-auto px-8"
+<form x-data="updateAccount" id="form-update-account" class="apl-form-refined flex flex-col gap-8 md:container mx-auto px-8"
       @submit.prevent="handleSubmit"
       @keyup.enter="handleSubmit"
       @keyup="setAllowSubmit(), validateForm()"
@@ -32,7 +32,7 @@ do_action( 'woocommerce_before_edit_account_form' ); ?>
                 type="text"
                 id="firstName"
                 x-model="firstName"
-                class="capitalize "
+                class="capitalize"
         />
     </div>
 
@@ -64,10 +64,10 @@ do_action( 'woocommerce_before_edit_account_form' ); ?>
                     type="password"
                     id="password"
                     x-model="password"
-                    class="bg-transparent border-b border-gray-500 w-full px-3 mb-3 leading-tight focus:outline-none" />
+                    class="w-full pr-28" />
             <span
                     @click="$store.popup.openPopup(document.getElementById('form-change-password').innerHTML)"
-                    class="absolute right-8 right-0 mt-1.5 underline cursor-pointer inline-flex items-center gap-1">
+                    class="absolute right-3 top-1/2 -translate-y-1/2 underline cursor-pointer inline-flex items-center gap-1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125" />
                 </svg>
@@ -110,4 +110,3 @@ do_action( 'woocommerce_before_edit_account_form' ); ?>
     ]); ?>;
     window.ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 </script>
-
