@@ -91,10 +91,10 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
                 <?php do_action( 'woocommerce_login_form' ); ?>
 
                 <div class="form-row">
-                    <label class="flex items-center jk-checkbox-wrapper">
-                        <input x-model="formData.rememberme" class="mr-2 leading-tight" type="checkbox" id="keep-signed-in">
+                    <label class="jk-checkbox-wrapper">
+                        <input x-model="formData.rememberme" type="checkbox" id="keep-signed-in">
                         <span class="jk-checkbox"></span>
-                        <span class="jk-checkbox-label flex flex-col leading-8">
+                        <span class="jk-checkbox-label flex flex-col">
                                 <span>Keep me signed in.</span>
                                 <span class="text-sm"> if you are using a public device. </span>
                             </span>
@@ -230,8 +230,8 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 
                 <!-- Receive Offers Checkbox -->
                 <div class="mb-10">
-                    <label class="flex items-center jk-checkbox-wrapper">
-                        <input x-model="formData.receiveOfferNews" class="mr-2 leading-tight" type="checkbox" id="keep-signed-in">
+                    <label class="jk-checkbox-wrapper">
+                        <input x-model="formData.receiveOfferNews" type="checkbox" id="keep-signed-in">
                         <span class="jk-checkbox"></span>
                         <span class="jk-checkbox-label">Receive emails with specialized offers and news.</span>
                     </label>
@@ -239,8 +239,8 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 
                 <!-- Agree TOS Checkbox -->
                 <div class="mb-10">
-                    <label class="flex items-center jk-checkbox-wrapper">
-                        <input @change="validateField('agreeTOS')" x-model="formData.agreeTOS" class="mr-2 leading-tight" type="checkbox" id="keep-signed-in">
+                    <label class="jk-checkbox-wrapper">
+                        <input @change="validateField('agreeTOS')" x-model="formData.agreeTOS" type="checkbox" id="keep-signed-in">
                         <span class="jk-checkbox"></span>
                         <?php
                         $privacy_page_id = wc_privacy_policy_page_id();
