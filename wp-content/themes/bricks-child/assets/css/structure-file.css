@@ -179,18 +179,31 @@ button,
     }
 }
 
+/* Spinner: arc moves around the circle via stroke-dashoffset (no element rotation). */
 .loading-icon {
-    animation: dual-ring-spin 2s linear infinite;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
 }
 
+.loading-icon svg {
+    display: block;
+    vertical-align: middle;
+}
+
+.loading-icon .spinner-arc {
+    animation: spinner-dash 0.8s linear infinite;
+}
+
+@keyframes spinner-dash {
+    to {
+        stroke-dashoffset: -63;
+    }
+}
 
 @keyframes dual-ring-spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+    to { transform: rotate(360deg); }
 }
 
 [x-cloak] { display: none; }

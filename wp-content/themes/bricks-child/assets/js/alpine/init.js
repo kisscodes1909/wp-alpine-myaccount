@@ -21,12 +21,14 @@ if (typeof performance !== 'undefined' && performance.mark) {
 
 import { registerStores } from './stores/index.js';
 import { registerValidationDirectives } from './directives/validate.js';
+import { registerLoadingDirective } from './directives/loading.js';
 import { registerFormComponents } from './components/forms/index.js';
 import { registerAccountComponents } from './components/account/index.js';
 
 // Register stores, directives, components (bundle runs in one file, Alpine already available)
 registerStores();
 registerValidationDirectives();
+registerLoadingDirective();
 registerFormComponents();
 registerAccountComponents();
 

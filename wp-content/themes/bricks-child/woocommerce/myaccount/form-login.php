@@ -103,12 +103,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
                         // TODO: Find a way for reusable this button with alpine state.
                     ?>
                     <div class="apl-form-actions mt-12">
-                        <button type="submit" class="woocommerce-button button">
-                        <span x-show="isFormSubmitting" class="loading-icon inline-block w-8 h-8 mr-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-                            </svg>
-                        </span>
+                        <button type="submit" class="woocommerce-button button inline-flex items-center justify-center gap-2" :disabled="isFormSubmitting" :aria-busy="isFormSubmitting" x-loading="isFormSubmitting" data-loading-label="<?php esc_attr_e( 'Signing in...', 'woocommerce' ); ?>">
                             <?php esc_html_e( 'Log in', 'woocommerce' ); ?>
                         </button>
                     </div>
@@ -254,12 +249,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
                 <?php do_action( 'woocommerce_register_form' ); ?>
 
                 <div class="apl-form-actions mt-12">
-                    <button  type="submit" class="woocommerce-button button">
-            <span x-show="isFormSubmitting" class="loading-icon inline-block w-8 h-8 mr-4">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-                </svg>
-            </span>
+                    <button type="submit" class="woocommerce-button button inline-flex items-center justify-center gap-2" :disabled="isFormSubmitting" :aria-busy="isFormSubmitting" x-loading="isFormSubmitting" data-loading-label="<?php esc_attr_e( 'Creating account...', 'woocommerce' ); ?>">
                         <?php esc_html_e( 'Create Account', 'woocommerce' ); ?>
                     </button>
                 </div>

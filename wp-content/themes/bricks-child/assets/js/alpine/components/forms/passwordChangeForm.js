@@ -13,18 +13,14 @@ export default () => {
         confirmPassword: '',
         keepSignedIn: true,
         changePasswordNonce: nonce,
+        isLoading: false,
         errors: {},
         
         async handleSubmit() {
-            // Validate Form
             await this.validateForm();
-
             if (Object.keys(this.errors).length > 0) return;
 
-            // Show loader
-            this.$store.loader.show();
-
-            // Prepare data to be sent
+            this.isLoading = true;
             const data = {
                 action: 'change_password',
                 nonce: this.changePasswordNonce,
@@ -34,31 +30,25 @@ export default () => {
                 keepSignedIn: this.keepSignedIn,
             };
 
-            // Send data to WordPress Server
-            fetch(ajaxUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams(data)
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Hide loader
-                this.$store.loader.hide();
-
-                if (data.success) {
-                    this.$store.toast.addToast(data.data, 'success');
+            try {
+                const response = await fetch(ajaxUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams(data)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    this.$store.toast.addToast(result.data, 'success');
                     this.$store.popup.closePopup();
                 } else {
-                    this.$store.toast.addToast(data.data, 'error');
+                    this.$store.toast.addToast(result.data, 'error');
                 }
-            })
-            .catch(error => {
-                console.log('Error:', error);
-                this.$store.loader.hide();
+            } catch (error) {
+                console.error('Error:', error);
                 this.$store.toast.addToast('AJAX request failed', 'error');
-            });
+            } finally {
+                this.isLoading = false;
+            }
         },
         
         async validateForm() {

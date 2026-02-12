@@ -6045,6 +6045,8 @@ attempted value: ${formattedValue}
       buttonSaveLabel: "",
       action: ""
     },
+    saving: false,
+    removing: false,
     _inited: false,
     _autocompleteInstance: null,
     _googleApiRetries: 0,
@@ -6166,11 +6168,16 @@ attempted value: ${formattedValue}
     async remove(id) {
       const idStr = this._normalizeId(id);
       const addresses = this.addresses.filter((addr) => this._normalizeId(addr.id) !== idStr);
-      await this.ajaxRequest(AJAX_ACTION, addresses);
-      this.addresses = addresses;
-      this.isEditing = false;
-      Alpine.store("popup").closePopup();
-      this.checkMaxAddress();
+      this.removing = true;
+      try {
+        await this.ajaxRequest(AJAX_ACTION, addresses);
+        this.addresses = addresses;
+        this.isEditing = false;
+        Alpine.store("popup").closePopup();
+        this.checkMaxAddress();
+      } finally {
+        this.removing = false;
+      }
     },
     async delete(id) {
       return this.remove(id);
@@ -6191,16 +6198,12 @@ attempted value: ${formattedValue}
     },
     async ajaxRequest(action, data2, options = {}) {
       const {
-        showLoader = true,
         showToast = true,
         closePopup = true
       } = options;
-      if (showLoader)
-        Alpine.store("loader").show();
+      this.saving = true;
       try {
         const result = await this._sendRequest(action, data2);
-        if (showLoader)
-          Alpine.store("loader").hide();
         if (result.success) {
           if (showToast)
             Alpine.store("toast").addToast(result.data, "success");
@@ -6215,12 +6218,12 @@ attempted value: ${formattedValue}
           throw new Error(result.data);
         }
       } catch (error2) {
-        if (showLoader)
-          Alpine.store("loader").hide();
         if (showToast)
           Alpine.store("toast").addToast("An error occurred", "error");
         console.error("AJAX error:", error2);
         throw error2;
+      } finally {
+        this.saving = false;
       }
     },
     formatUSPhoneNumber() {
@@ -6435,6 +6438,34 @@ attempted value: ${formattedValue}
     });
   }
 
+  // assets/js/alpine/directives/loading.js
+  var SPINNER_SVG = `<span class="loading-icon inline-flex items-center justify-center w-5 h-5 flex-shrink-0" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle class="spinner-arc" cx="12" cy="12" r="10" stroke-dasharray="16 46" stroke-dashoffset="0" /></svg></span>`;
+  function registerLoadingDirective() {
+    Alpine.directive("loading", (el, { expression }, { evaluateLater: evaluateLater2, effect: effect3 }) => {
+      const getLoading = evaluateLater2(expression);
+      const loadingLabel = el.getAttribute("data-loading-label") || "Saving...";
+      const contentWrap = document.createElement("span");
+      contentWrap.className = "inline-flex items-center justify-center gap-2";
+      while (el.firstChild)
+        contentWrap.appendChild(el.firstChild);
+      const loadingWrap = document.createElement("span");
+      loadingWrap.className = "inline-flex items-center justify-center gap-2";
+      loadingWrap.setAttribute("aria-hidden", "true");
+      loadingWrap.innerHTML = SPINNER_SVG + `<span class="button-loading-label">${loadingLabel}</span>`;
+      loadingWrap.style.display = "none";
+      el.appendChild(loadingWrap);
+      el.appendChild(contentWrap);
+      effect3(() => {
+        getLoading((loading) => {
+          const isLoad = !!loading;
+          el.setAttribute("aria-busy", isLoad);
+          loadingWrap.style.display = isLoad ? "" : "none";
+          contentWrap.style.display = isLoad ? "none" : "";
+        });
+      });
+    });
+  }
+
   // assets/js/BaseFormHandler.js
   var BaseFormHandler = class {
     constructor(formData, additionalData = {}) {
@@ -6630,18 +6661,19 @@ attempted value: ${formattedValue}
       password: "*********",
       saveAccountDetailsNonce: nonce,
       allowSubmit: false,
+      isLoading: false,
       errors: {},
       async handleSubmit() {
         await this.validateForm();
         if (Object.keys(this.errors).length > 0)
           return;
-        this.ajaxSaveAccountDetails();
+        await this.ajaxSaveAccountDetails();
       },
       setAllowSubmit() {
         this.allowSubmit = true;
       },
-      ajaxSaveAccountDetails() {
-        this.$store.loader.show();
+      async ajaxSaveAccountDetails() {
+        this.isLoading = true;
         const data2 = {
           action: "save_account_details",
           nonce: this.saveAccountDetailsNonce,
@@ -6649,24 +6681,24 @@ attempted value: ${formattedValue}
           lastName: this.lastName,
           email: this.email
         };
-        fetch(ajaxUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: new URLSearchParams(data2)
-        }).then((response) => response.json()).then((data3) => {
-          this.$store.loader.hide();
-          if (data3.success) {
-            this.$store.toast.addToast(data3.data, "success");
+        try {
+          const response = await fetch(ajaxUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams(data2)
+          });
+          const result = await response.json();
+          if (result.success) {
+            this.$store.toast.addToast(result.data, "success");
           } else {
             this.$store.toast.addToast("Error updating account details", "error");
           }
-        }).catch((error2) => {
+        } catch (error2) {
           console.error("Error:", error2);
-          this.$store.loader.hide();
           this.$store.toast.addToast("AJAX request failed", "error");
-        });
+        } finally {
+          this.isLoading = false;
+        }
       },
       async validateForm() {
         const yup = window.yup;
@@ -6705,12 +6737,13 @@ attempted value: ${formattedValue}
       confirmPassword: "",
       keepSignedIn: true,
       changePasswordNonce: nonce,
+      isLoading: false,
       errors: {},
       async handleSubmit() {
         await this.validateForm();
         if (Object.keys(this.errors).length > 0)
           return;
-        this.$store.loader.show();
+        this.isLoading = true;
         const data2 = {
           action: "change_password",
           nonce: this.changePasswordNonce,
@@ -6719,25 +6752,25 @@ attempted value: ${formattedValue}
           pass2: this.confirmPassword,
           keepSignedIn: this.keepSignedIn
         };
-        fetch(ajaxUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: new URLSearchParams(data2)
-        }).then((response) => response.json()).then((data3) => {
-          this.$store.loader.hide();
-          if (data3.success) {
-            this.$store.toast.addToast(data3.data, "success");
+        try {
+          const response = await fetch(ajaxUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams(data2)
+          });
+          const result = await response.json();
+          if (result.success) {
+            this.$store.toast.addToast(result.data, "success");
             this.$store.popup.closePopup();
           } else {
-            this.$store.toast.addToast(data3.data, "error");
+            this.$store.toast.addToast(result.data, "error");
           }
-        }).catch((error2) => {
-          console.log("Error:", error2);
-          this.$store.loader.hide();
+        } catch (error2) {
+          console.error("Error:", error2);
           this.$store.toast.addToast("AJAX request failed", "error");
-        });
+        } finally {
+          this.isLoading = false;
+        }
       },
       async validateForm() {
         const yup = window.yup;
@@ -6784,6 +6817,7 @@ attempted value: ${formattedValue}
   }
   registerStores();
   registerValidationDirectives();
+  registerLoadingDirective();
   registerFormComponents();
   registerAccountComponents();
   if (typeof performance !== "undefined" && performance.mark) {

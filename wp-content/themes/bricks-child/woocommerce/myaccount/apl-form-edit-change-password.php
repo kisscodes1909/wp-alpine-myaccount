@@ -103,7 +103,9 @@
             <!-- Submit Button -->
             <div class="text-center">(Password must be 8-25 characters.)</div>
             <div class="apl-form-actions">
-                <button class="button">Save</button>
+                <button type="submit" class="button inline-flex items-center justify-center gap-2" :disabled="isLoading" :aria-busy="isLoading" x-loading="isLoading" data-loading-label="Saving...">
+                    Save
+                </button>
             </div>
         </form>
 </template>

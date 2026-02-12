@@ -45,6 +45,8 @@ export default {
         buttonSaveLabel: '',
         action: ''
     },
+    saving: false,
+    removing: false,
     _inited: false,
     _autocompleteInstance: null,
     _googleApiRetries: 0,
@@ -198,13 +200,16 @@ export default {
     async remove(id) {
         const idStr = this._normalizeId(id);
         const addresses = this.addresses.filter(addr => this._normalizeId(addr.id) !== idStr);
-
-        await this.ajaxRequest(AJAX_ACTION, addresses);
-
-        this.addresses = addresses;
-        this.isEditing = false;
-        Alpine.store('popup').closePopup();
-        this.checkMaxAddress();
+        this.removing = true;
+        try {
+            await this.ajaxRequest(AJAX_ACTION, addresses);
+            this.addresses = addresses;
+            this.isEditing = false;
+            Alpine.store('popup').closePopup();
+            this.checkMaxAddress();
+        } finally {
+            this.removing = false;
+        }
     },
 
     async delete(id) {
@@ -230,17 +235,13 @@ export default {
 
     async ajaxRequest(action, data, options = {}) {
         const {
-            showLoader = true,
             showToast = true,
             closePopup = true
         } = options;
 
-        if (showLoader) Alpine.store('loader').show();
-
+        this.saving = true;
         try {
             const result = await this._sendRequest(action, data);
-
-            if (showLoader) Alpine.store('loader').hide();
 
             if (result.success) {
                 if (showToast) Alpine.store('toast').addToast(result.data, 'success');
@@ -254,10 +255,11 @@ export default {
                 throw new Error(result.data);
             }
         } catch (error) {
-            if (showLoader) Alpine.store('loader').hide();
             if (showToast) Alpine.store('toast').addToast('An error occurred', 'error');
             console.error('AJAX error:', error);
             throw error;
+        } finally {
+            this.saving = false;
         }
     },
 

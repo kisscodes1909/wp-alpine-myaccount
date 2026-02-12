@@ -1,16 +1,13 @@
 /**
- * Loader Store - Global loading indicator
- * Usage: Alpine.store('loader').show() / hide()
+ * Loader Store – kept for backwards compatibility.
+ * Prefer in-button loading: set isLoading/saving on the component or store
+ * and show spinner + label (e.g. "Saving...") inside the button (app-style).
  */
 export default {
     isLoading: false,
-
-    // Method to show the loader
     show() {
         this.isLoading = true;
     },
-
-    // Method to hide the loader
     hide() {
         this.isLoading = false;
     }

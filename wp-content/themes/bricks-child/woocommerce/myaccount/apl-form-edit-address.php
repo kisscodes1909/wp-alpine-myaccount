@@ -159,13 +159,15 @@
     <div class="apl-form-actions apl-form-actions--two">
 
         <template x-if="$store.userAddress.form.action === 'edit'">
-            <button
-                    class="button light"
+            <button type="button"
+                    class="button light inline-flex items-center justify-center gap-2"
+                    :disabled="$store.userAddress.removing"
+                    :aria-busy="$store.userAddress.removing"
+                    x-loading="$store.userAddress.removing"
+                    data-loading-label="Removing..."
                     @click="$store.userAddress.remove($store.userAddress.editAddress.id)"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673A2.25 2.25 0 0115.916 21H8.084a2.25 2.25 0 01-2.244-1.327L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0V4.5A2.25 2.25 0 0013.5 2.25h-3A2.25 2.25 0 008.25 4.5v.893m7.5 0a48.667 48.667 0 00-7.5 0" />
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673A2.25 2.25 0 0115.916 21H8.084a2.25 2.25 0 01-2.244-1.327L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0V4.5A2.25 2.25 0 0013.5 2.25h-3A2.25 2.25 0 008.25 4.5v.893m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
                 <span>Remove</span>
             </button>
         </template>
@@ -173,10 +175,12 @@
         <!-- <template x-if="$store.userAddress.form.action === 'add'">
             <div class="text-sm">By adding your address, you agree to our terms of service and privacy policy.</div>
         </template> -->
-        <button @click="$store.userAddress.save()" class="button">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-            </svg>
+        <button type="button" @click="$store.userAddress.save()" class="button inline-flex items-center justify-center gap-2"
+                :disabled="$store.userAddress.saving"
+                :aria-busy="$store.userAddress.saving"
+                x-loading="$store.userAddress.saving"
+                data-loading-label="Saving...">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
             <span x-text="$store.userAddress.form.buttonSaveLabel">Add</span>
         </button>
     </div>

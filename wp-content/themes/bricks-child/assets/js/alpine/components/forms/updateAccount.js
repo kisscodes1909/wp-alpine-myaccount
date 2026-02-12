@@ -16,6 +16,7 @@ export default () => {
         password: '*********',
         saveAccountDetailsNonce: nonce,
         allowSubmit: false,
+        isLoading: false,
         errors: {},
         
         async handleSubmit() {
@@ -24,17 +25,15 @@ export default () => {
 
             if (Object.keys(this.errors).length > 0) return;
 
-            this.ajaxSaveAccountDetails();
+            await this.ajaxSaveAccountDetails();
         },
         
         setAllowSubmit() {
             this.allowSubmit = true;
         },
         
-        ajaxSaveAccountDetails() {
-            // Show loader
-            this.$store.loader.show();
-
+        async ajaxSaveAccountDetails() {
+            this.isLoading = true;
             const data = {
                 action: 'save_account_details',
                 nonce: this.saveAccountDetailsNonce,
@@ -43,29 +42,24 @@ export default () => {
                 email: this.email,
             };
 
-            fetch(ajaxUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams(data)
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Hide loader
-                this.$store.loader.hide();
-
-                if (data.success) {
-                    this.$store.toast.addToast(data.data, 'success');
+            try {
+                const response = await fetch(ajaxUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams(data)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    this.$store.toast.addToast(result.data, 'success');
                 } else {
                     this.$store.toast.addToast('Error updating account details', 'error');
                 }
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('Error:', error);
-                this.$store.loader.hide();
                 this.$store.toast.addToast('AJAX request failed', 'error');
-            });
+            } finally {
+                this.isLoading = false;
+            }
         },
         
         async validateForm() {

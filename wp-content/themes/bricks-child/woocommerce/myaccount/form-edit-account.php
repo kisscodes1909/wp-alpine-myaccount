@@ -84,13 +84,14 @@ do_action( 'woocommerce_before_edit_account_form' ); ?>
 
     <div class="apl-form-actions">
         <button
-                :disabled="!allowSubmit"
-                class="button max-w-[800px]"
                 type="submit"
-                >
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-            </svg>
+                class="button max-w-[800px] inline-flex items-center justify-center gap-2"
+                :disabled="!allowSubmit || isLoading"
+                :aria-busy="isLoading"
+                x-loading="isLoading"
+                data-loading-label="Saving..."
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
             <span>Update</span>
         </button>
     </div>
