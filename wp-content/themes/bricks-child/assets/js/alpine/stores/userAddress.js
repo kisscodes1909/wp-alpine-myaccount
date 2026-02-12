@@ -9,6 +9,9 @@ const MAX_ADDRESSES = 9;
 const DEFAULT_COUNTRY = 'United States';
 const AJAX_ACTION = 'save-address';
 
+// Set to true to re-enable Google Places autocomplete (disabled for demo)
+const AUTOCOMPLETE_ENABLED = false;
+
 // Google Places Autocomplete constants
 const AUTOCOMPLETE_INIT_DELAY = 150; // Delay for popup content to render in DOM
 const GOOGLE_API_RETRY_DELAY = 500; // Delay before retrying Google API load
@@ -29,6 +32,7 @@ const ADDRESS_COMPONENT_MAP = {
 
 export default {
     // State
+    autocompleteEnabled: AUTOCOMPLETE_ENABLED, // Exposed for template (fallback address input when false)
     addresses: [],
     countries: {},
     ajaxUrl: '',
@@ -277,6 +281,8 @@ export default {
     // ==================== Places API (New) – PlaceAutocompleteElement (see place-autocomplete-new doc) ====================
 
     async initAutocomplete() {
+        if (!AUTOCOMPLETE_ENABLED) return;
+
         this._cleanupAutocomplete();
 
         // Check if Google Maps API is loaded

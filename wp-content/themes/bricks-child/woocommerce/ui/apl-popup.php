@@ -11,6 +11,6 @@
             class="fixed inset-0 flex items-center justify-center p-4 bg-black/50"
             aria-labelledby="modal-title" role="dialog" aria-modal="true"
             @click.self="$store.popup.closePopup()">
-        <div class="relative z-20 bg-white rounded-xl overflow-auto w-full max-w-[700px] px-5 p-8 md:p-8" x-html="$store.popup.content"></div>
+        <div class="relative z-20 bg-white overflow-auto w-full max-w-[700px] px-5 p-8 md:p-8" x-html="$store.popup.content"></div>
     </div>
 </template>

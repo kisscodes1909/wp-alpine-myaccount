@@ -1,4 +1,4 @@
-<div class="grid grid-cols-1 divide-y divide-black bg-slate-50 pt-7 px-7 rounded-lg md:text-base text-sm">
+<div class="grid grid-cols-1 divide-y divide-black bg-slate-50 pt-7 px-7 md:text-base text-sm">
     <div class="mb-2 md:mb-8">
         <h1 class="md:text-base text-sm font-normal leading-28px">Order #<?php echo $order->get_order_number(); ?></h1>
         <p>

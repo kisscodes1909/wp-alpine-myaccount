@@ -16,18 +16,18 @@ wc_get_template('myaccount/page-heading.php',
          x-transition:leave="transition ease-in duration-300"
          x-transition:leave-start="opacity-100 transform scale-100"
          x-transition:leave-end="opacity-0 transform scale-90"
-         class="fixed top-14 right-5 bg-black text-white px-4 py-3 rounded shadow-lg z-[1000]">
+         class="fixed top-14 right-5 bg-black text-white px-4 py-3 shadow-lg z-[1000]">
         <p x-text="$store.userAddress.notificationMessage"></p>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         <template x-for="address in $store.userAddress.addresses">
-            <div class="bg-[#F6F8FC] rounded-lg p-6 flex flex-col">
+            <div class="bg-[#F6F8FC] p-6 flex flex-col">
                 <!-- Header: Name & Default Badge -->
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-base font-bold text-gray-900" x-text="`${address.fname} ${address.lname}`"></h3>
                     <template x-if="address.default">
-                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium bg-blue-50 text-blue-700">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3">
                                 <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
                             </svg>

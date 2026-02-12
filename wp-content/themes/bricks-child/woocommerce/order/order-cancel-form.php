@@ -17,7 +17,7 @@
             Reason for canceling
         </label>
         <div class="relative">
-            <select id="reason" name="reason" class="block appearance-none w-full bg-gray-100 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+            <select id="reason" name="reason" class="block appearance-none w-full bg-gray-100 border border-gray-200 text-gray-700 py-3 px-4 pr-8 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                 <?php foreach ($cancellation_reasons as $key => $value): ?>
                     <option value="<?php echo htmlspecialchars($key); ?>"><?php echo htmlspecialchars($value); ?></option>
                 <?php endforeach; ?>
@@ -28,7 +28,7 @@
     <?php wp_nonce_field( 'cancel-order', 'cancel-order-nonce' ); ?>
 
     <div class="mb-6">
-        <textarea id="message" name="message" rows="8" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Write message here (optional)..."></textarea>
+        <textarea id="message" name="message" rows="8" class="appearance-none border w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Write message here (optional)..."></textarea>
     </div>
 
     <div class="flex items-center justify-end">

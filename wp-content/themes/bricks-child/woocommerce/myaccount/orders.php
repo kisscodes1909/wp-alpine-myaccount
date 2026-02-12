@@ -38,7 +38,7 @@ do_action( 'woocommerce_before_account_orders', $has_orders );
 
     ?>
 
-            <div class="flex flex-col md:flex-row bg-[#F6F8FC] p-8 md:p-14 rounded-xl justify-between md:gap-10 gap-3">
+            <div class="flex flex-col md:flex-row bg-[#F6F8FC] p-8 md:p-14 justify-between md:gap-10 gap-3">
                 <?php wc_get_template('order/order-meta-data.php', ['order' => $order]); ?>
                 <div class="flex flex-row md:gap-16 gap-6 md:items-center">
                     <ul class="flex flex-row gap-2 list-none m-0 p-0">
@@ -55,12 +55,12 @@ do_action( 'woocommerce_before_account_orders', $has_orders );
                                 ?>
 
                             <?php if(count($items) < 5): ?>
-                                <li class="rounded-lg overflow-hidden md:max-w-[70px] max-w-[35px]"><?php echo $image ?></li>
+                                <li class="overflow-hidden md:max-w-[70px] max-w-[35px]"><?php echo $image ?></li>
                             <?php else: ?>
                                 <?php if($index < 3): ?>
-                                    <li class="rounded-lg overflow-hidden md:max-w-[70px] max-w-[35px]"><?php echo $image; ?></li>
+                                    <li class="overflow-hidden md:max-w-[70px] max-w-[35px]"><?php echo $image; ?></li>
                                 <?php else: ?>
-                                    <li class="relative rounded-lg overflow-hidden md:max-w-[70px] max-w-[35px]">
+                                    <li class="relative overflow-hidden md:max-w-[70px] max-w-[35px]">
                                         <span class="pointer-events-none absolute inset-0 bg-black bg-opacity-70 flex justify-center items-center opacity-100 text-white text-sm">+<?php echo count($items) - 4; ?></span>
                                         <?php echo $image ?>
                                     </li>

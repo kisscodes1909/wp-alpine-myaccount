@@ -80,7 +80,7 @@ button,
         height: var(--apl-radio-size);
         min-width: var(--apl-radio-size);
         min-height: var(--apl-radio-size);
-        @apply rounded-full cursor-pointer;
+        @apply rounded-none cursor-pointer;
 
         &:checked {
             @apply border-form-accent;
@@ -93,7 +93,7 @@ button,
         height: var(--apl-checkbox-size);
         min-width: var(--apl-checkbox-size);
         min-height: var(--apl-checkbox-size);
-        @apply rounded-md cursor-pointer;
+        @apply rounded-none cursor-pointer;
 
         &:checked {
             @apply border-form-accent bg-form-accent;
@@ -134,7 +134,7 @@ button,
             height: var(--apl-checkbox-size);
             min-width: var(--apl-checkbox-size);
             min-height: var(--apl-checkbox-size);
-            @apply inline-block rounded-md border border-form-border bg-white flex-none;
+            @apply inline-block rounded-none border border-form-border bg-white flex-none;
             position: relative;
             margin-top: 0;
         }
@@ -216,7 +216,7 @@ button,
     width: 64px;
     height: 64px;
     margin: 8px;
-    border-radius: 50%;
+    border-radius: 0;
     border: 6px solid #000;
     border-color: #000 transparent #000 transparent;
     animation: dual-ring-spin 1.2s linear infinite;
@@ -287,7 +287,7 @@ button,
         input:not([type='submit']):not([type='checkbox']):not([type='radio']),
         select,
         textarea {
-            @apply h-form-field border border-form-border rounded-lg bg-form-field text-form-text px-[14px] text-form-input;
+            @apply h-form-field border border-form-border rounded-none bg-form-field text-form-text px-[14px] text-form-input;
             transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
         }
 
@@ -323,7 +323,7 @@ button,
         .woocommerce-button,
         button[type='submit'],
         input[type='submit'] {
-            @apply inline-flex items-center justify-center gap-2 w-full h-form-field px-4 rounded-lg border border-form-accent text-white text-base font-medium bg-form-accent;
+            @apply inline-flex items-center justify-center gap-2 w-full h-form-field px-4 rounded-none border border-form-accent text-white text-base font-medium bg-form-accent;
             transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
 
             &:hover {
@@ -362,7 +362,7 @@ button,
     > button[type='submit'],
     > input[type='submit'],
     > a.button {
-        @apply w-full h-form-field inline-flex items-center justify-center gap-2 px-4 rounded-lg border border-form-accent text-white text-base font-medium bg-form-accent;
+        @apply w-full h-form-field inline-flex items-center justify-center gap-2 px-4 rounded-none border border-form-accent text-white text-base font-medium bg-form-accent;
         transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
 
         &:hover {
@@ -398,7 +398,7 @@ button,
     list-style: none;
     margin: 0;
     padding: 0;
-    @apply border border-form-border rounded overflow-hidden bg-form-surface;
+    @apply border border-form-border rounded-none overflow-hidden bg-form-surface;
 
     > li {
         @apply flex items-center gap-[10px] py-3 px-[14px] border-b border-form-border;
@@ -411,7 +411,7 @@ button,
         > input.shipping_method[type='radio'] {
             -webkit-appearance: none;
             appearance: none;
-            @apply w-[18px] h-[18px] border border-form-borderStrong rounded-full bg-white inline-grid place-content-center cursor-pointer flex-none;
+            @apply w-[18px] h-[18px] border border-form-borderStrong rounded-none bg-white inline-grid place-content-center cursor-pointer flex-none;
             margin: 0;
 
             &:checked {
@@ -437,7 +437,7 @@ button,
 /* Checkout native controls (payment radio + checkbox) */
 .woocommerce #payment {
     ul.payment_methods {
-        @apply m-0 p-0 list-none border border-form-border rounded overflow-hidden bg-white;
+        @apply m-0 p-0 list-none border border-form-border rounded-none overflow-hidden bg-white;
 
         > li {
             @apply m-0 py-3 px-[14px] border-b border-form-border;
@@ -454,7 +454,7 @@ button,
                 min-width: 20px;
                 min-height: 20px;
                 margin: 0;
-                @apply inline-grid place-content-center rounded-full border border-form-border bg-white cursor-pointer flex-none;
+                @apply inline-grid place-content-center rounded-none border border-form-border bg-white cursor-pointer flex-none;
 
                 &:checked {
                     @apply border-form-accent;
@@ -489,7 +489,7 @@ button,
         min-width: 24px;
         min-height: 24px;
         margin: 0;
-        @apply inline-grid place-content-center rounded-md border border-form-border bg-white cursor-pointer flex-none;
+        @apply inline-grid place-content-center rounded-none border border-form-border bg-white cursor-pointer flex-none;
 
         &:checked {
             @apply border-form-accent bg-form-accent;
@@ -514,7 +514,7 @@ button,
             @apply space-y-8;
 
             > li {
-                @apply border border-form-border rounded-xl bg-white p-4 sm:p-6;
+                @apply border border-form-border rounded-none bg-white p-4 sm:p-6;
                 transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
 
                 &:hover {
@@ -528,7 +528,7 @@ button,
         }
 
         .product-thumbnail {
-            @apply w-[110px] sm:w-[130px] rounded-lg overflow-hidden bg-form-surface;
+            @apply w-[110px] sm:w-[130px] rounded-none overflow-hidden bg-form-surface;
         }
 
         .item-details {
@@ -558,7 +558,7 @@ button,
 
         .product-add-to-cart {
             .button {
-                @apply w-full sm:w-auto min-w-[170px] h-form-field px-5 rounded-lg border border-form-border text-form-text text-base font-medium bg-white;
+                @apply w-full sm:w-auto min-w-[170px] h-form-field px-5 rounded-none border border-form-border text-form-text text-base font-medium bg-white;
                 transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
 
                 &:hover {
@@ -573,7 +573,7 @@ button,
         }
 
         a.remove_from_wishlist {
-            @apply w-[52px] h-[52px] rounded-lg border border-form-border bg-white inline-flex items-center justify-center text-form-text;
+            @apply w-[52px] h-[52px] rounded-none border border-form-border bg-white inline-flex items-center justify-center text-form-text;
             transition: border-color 180ms ease, background-color 180ms ease;
 
             &:hover {
@@ -590,7 +590,7 @@ button,
 
             input[type='submit'],
             .ask-an-estimate-button {
-                @apply inline-flex items-center justify-center gap-2 w-full sm:w-auto min-w-[140px] h-form-field px-4 rounded-lg border border-form-border text-form-text text-base font-medium bg-white;
+                @apply inline-flex items-center justify-center gap-2 w-full sm:w-auto min-w-[140px] h-form-field px-4 rounded-none border border-form-border text-form-text text-base font-medium bg-white;
                 transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
 
                 &:hover {
@@ -619,7 +619,7 @@ button,
         }
 
         .payment-methods-section__body {
-            @apply border border-form-border rounded-2xl bg-white p-5 sm:p-6;
+            @apply border border-form-border rounded-none bg-white p-5 sm:p-6;
         }
 
         .payment-methods-section--add {
@@ -628,7 +628,7 @@ button,
             }
 
             .woocommerce-PaymentMethods {
-                @apply m-0 p-0 list-none border border-form-border rounded-lg bg-white overflow-hidden;
+                @apply m-0 p-0 list-none border border-form-border rounded-none bg-white overflow-hidden;
 
                 > li {
                     @apply m-0 py-4 px-4 border-b border-form-border;
@@ -663,7 +663,7 @@ button,
             }
 
             .woocommerce-PaymentBox > p:first-child {
-                @apply mb-5 rounded-xl border border-[#9fc5ff] bg-[#eaf2ff] text-[#1e3a8a] px-4 py-3 text-base;
+                @apply mb-5 rounded-none border border-[#9fc5ff] bg-[#eaf2ff] text-[#1e3a8a] px-4 py-3 text-base;
             }
 
             .woocommerce-PaymentBox fieldset {
@@ -679,7 +679,7 @@ button,
             .woocommerce-PaymentBox input[type='tel'],
             .woocommerce-PaymentBox input[type='number'],
             .woocommerce-PaymentBox select {
-                @apply h-form-field rounded-xl border border-[#e5e7eb] bg-[#f3f4f6] text-form-text text-lg px-4;
+                @apply h-form-field rounded-none border border-[#e5e7eb] bg-[#f3f4f6] text-form-text text-lg px-4;
             }
 
             .woocommerce-PaymentBox .wc-stripe-elements-field,
@@ -705,7 +705,7 @@ button,
             }
 
             #place_order {
-                @apply w-full h-form-field rounded-xl border border-form-accent bg-form-accent text-white text-xl font-medium;
+                @apply w-full h-form-field rounded-none border border-form-accent bg-form-accent text-white text-xl font-medium;
                 transition: filter 180ms ease, border-color 180ms ease;
 
                 &:hover {
@@ -756,7 +756,7 @@ button,
             @apply flex items-center justify-end;
 
             a {
-                @apply inline-flex items-center justify-center w-10 h-10 rounded-lg border border-transparent bg-white text-form-muted;
+                @apply inline-flex items-center justify-center w-10 h-10 rounded-none border border-transparent bg-white text-form-muted;
                 transition: border-color 180ms ease, background-color 180ms ease;
 
                 &:hover {

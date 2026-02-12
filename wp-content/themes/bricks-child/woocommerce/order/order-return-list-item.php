@@ -28,7 +28,7 @@
         </div>
     <?php endif; ?>
     <div class="flex flex-col mt-10 items-start gap-10">
-        <div class="lg:grid lg:grid-cols-1 bg-gray-100 space-y-3 py-6 rounded-lg w-full lg:w-1/3 px-8">
+        <div class="lg:grid lg:grid-cols-1 bg-gray-100 space-y-3 py-6 w-full lg:w-1/3 px-8">
             <div class="flex justify-between items-center">
                 <h2 class="text-base font-normal">Subtotal:</h2>
                 <p class="text-sm" x-text="formatCurrency(subtotal)">0</p>

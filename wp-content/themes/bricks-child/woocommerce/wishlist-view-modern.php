@@ -71,7 +71,7 @@ if ( ! defined( 'YITH_WCWL' ) ) {
 				?>
 				<li id="yith-wcwl-row-<?php echo esc_attr( $item->get_product_id() ); ?>" data-row-id="<?php echo esc_attr( $item->get_product_id() ); ?>">
 					<div class="item-wrapper flex gap-8">
-						<div class="product-thumbnail rounded-lg overflow-hidden">
+						<div class="product-thumbnail overflow-hidden">
 							<?php if ( $show_cb ) : ?>
 								<div class="product-checkbox">
 									<input type="checkbox" value="yes" name="items[<?php echo esc_attr( $item->get_product_id() ); ?>][cb]"/>

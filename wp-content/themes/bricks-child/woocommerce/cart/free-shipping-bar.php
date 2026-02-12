@@ -2,7 +2,7 @@
     <div class="text-gray-700 mb-2" x-text="textMessage">
         You're $49 away from Free Standard Shipping
     </div>
-    <div class="relative w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+    <div class="relative w-full h-3 bg-gray-200 overflow-hidden">
         <div :style="{ width: progress + '%' }" id="progress-bar" class="absolute top-0 left-0 h-full bg-gold-gradient transition-all duration-1000"></div>
     </div>
     <div class="flex justify-between text-gray-500 mt-1">

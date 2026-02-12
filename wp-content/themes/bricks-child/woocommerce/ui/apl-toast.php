@@ -12,7 +12,7 @@
                 x-transition:leave="transition ease-in duration-300 transform"
                 x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0"
-                class="fixed top-14 right-14 bg-black text-white py-5 px-7 rounded shadow-lg"
+                class="fixed top-14 right-14 bg-black text-white py-5 px-7 shadow-lg"
         >
             <!-- Toast message will be displayed here -->
         </div>

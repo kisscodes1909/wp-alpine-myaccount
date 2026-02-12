@@ -60,7 +60,7 @@ $show_customer_details = is_user_logged_in() && $order->get_user_id() === get_cu
 <?php endif; ?>
 
 <div class="md:container mx-auto px-8">
-    <div class="grid grid-cols-1 lg:grid-cols-10 rounded-xl lg:gap-[90px]">
+    <div class="grid grid-cols-1 lg:grid-cols-10 lg:gap-[90px]">
         <div class="col-span-3 mb-10 lg:mb-0">
             <?php wc_get_template('order/order-total.php', ['order' => $order]); ?>
         </div>

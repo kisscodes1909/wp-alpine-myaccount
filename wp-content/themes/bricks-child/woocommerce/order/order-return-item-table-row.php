@@ -36,12 +36,12 @@
             </div>
             <div class="text-right" x-text="formatCurrency(item.subTotalFormatted)"></div>
             <div class="col-span-2">
-                <select id="reason" x-model="item.reason" class="block appearance-none rounded-lg">
+                <select id="reason" x-model="item.reason" class="block appearance-none">
                     <template x-for="(value, key) in Object.entries(returnReason)" :key="key">
                         <option x-bind:value="value[0]" x-text="value[1]"></option>
                     </template>
                 </select>
-                <textarea placeholder="Feedback (optional)" class="mt-3 rounded-lg" x-model="item.feedback">Feedback(optional)</textarea>
+                <textarea placeholder="Feedback (optional)" class="mt-3" x-model="item.feedback">Feedback(optional)</textarea>
             </div>
         </div>
     </td>

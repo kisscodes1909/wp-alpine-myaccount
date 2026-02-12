@@ -6016,6 +6016,7 @@ attempted value: ${formattedValue}
   var MAX_ADDRESSES = 9;
   var DEFAULT_COUNTRY = "United States";
   var AJAX_ACTION = "save-address";
+  var AUTOCOMPLETE_ENABLED = false;
   var AUTOCOMPLETE_INIT_DELAY = 150;
   var GOOGLE_API_RETRY_DELAY = 500;
   var GOOGLE_API_MAX_RETRIES = 10;
@@ -6031,6 +6032,7 @@ attempted value: ${formattedValue}
     postal_code: { field: "postalCode" }
   };
   var userAddress_default = {
+    autocompleteEnabled: AUTOCOMPLETE_ENABLED,
     addresses: [],
     countries: {},
     ajaxUrl: "",
@@ -6235,6 +6237,8 @@ attempted value: ${formattedValue}
       }
     },
     async initAutocomplete() {
+      if (!AUTOCOMPLETE_ENABLED)
+        return;
       this._cleanupAutocomplete();
       if (typeof google === "undefined" || !google.maps) {
         if (this._googleApiRetries < GOOGLE_API_MAX_RETRIES) {
@@ -6775,14 +6779,32 @@ attempted value: ${formattedValue}
   // assets/js/alpine/init.js
   window.Alpine = module_default;
   window.yup = index_esm_exports;
+  if (typeof performance !== "undefined" && performance.mark) {
+    performance.mark("alpine-bundle-start");
+  }
   registerStores();
   registerValidationDirectives();
   registerFormComponents();
   registerAccountComponents();
-  if (window.location.hostname === "localhost" || window.location.hostname.includes("local")) {
+  if (typeof performance !== "undefined" && performance.mark) {
+    performance.mark("alpine-register-done");
+  }
+  module_default.start();
+  if (typeof performance !== "undefined" && performance.mark) {
+    performance.mark("alpine-start-done");
+    performance.measure("alpine-register", "alpine-bundle-start", "alpine-register-done");
+    performance.measure("alpine-start", "alpine-register-done", "alpine-start-done");
+    performance.measure("alpine-total", "alpine-bundle-start", "alpine-start-done");
+  }
+  var isLocalHost = window.location.hostname === "localhost" || window.location.hostname.includes("local") || window.location.hostname.endsWith(".test");
+  var debugQuery = new URLSearchParams(window.location.search).get("alpine_debug");
+  if (isLocalHost || debugQuery === "1") {
     console.log("\u2705 Alpine.js initialization complete");
     console.log("\u{1F4E6} Stores:", Object.keys(module_default.store));
     console.log("\u{1F3A8} Components:", Object.keys(module_default._data || {}));
+    if (typeof performance !== "undefined" && performance.getEntriesByType) {
+      const measures = performance.getEntriesByType("measure").filter((m) => m.name.startsWith("alpine-"));
+      measures.forEach((m) => console.log(`\u23F1 ${m.name}: ${m.duration.toFixed(2)} ms`));
+    }
   }
-  module_default.start();
 })();

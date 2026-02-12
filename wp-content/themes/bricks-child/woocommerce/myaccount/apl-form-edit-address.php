@@ -15,7 +15,7 @@
     width: 100%;
     min-height: 50px;
     display: block;
-    border-radius: 8px;
+    border-radius: 0;
     border: 1px solid #d1d5db;
     background-color: #f8fafc;
     transition: border-color 150ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -78,7 +78,14 @@
 
         <div>
             <label for="address">Address</label>
-            <div class="address-autocomplete-wrapper"></div>
+            <template x-if="$store.userAddress.autocompleteEnabled">
+                <div class="address-autocomplete-wrapper"></div>
+            </template>
+            <template x-if="!$store.userAddress.autocompleteEnabled">
+                <div>
+                    <input x-model="$store.userAddress.editAddress.address" type="text" name="address" id="address" autocomplete="street-address" />
+                </div>
+            </template>
         </div>
 
         <div>
