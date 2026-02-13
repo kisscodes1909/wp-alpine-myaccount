@@ -262,6 +262,20 @@ button,
     }
 }
 
+/* Global button shape: flat across the entire theme */
+button,
+.button,
+a.button,
+input[type='button'],
+input[type='submit'],
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce input.button {
+    border-radius: 0 !important;
+    font-size: 16px !important;
+    line-height: 24px !important;
+}
+
 
 .wc-item-meta {
     display: flex;
@@ -557,14 +571,17 @@ button,
 
             .sm\:text-xl,
             strong {
-                font-size: 1rem;
-                line-height: 1.375;
+                font-size: 1.25rem;
+                line-height: 1.4;
+                font-weight: 600;
+                @apply text-form-text;
             }
 
             @media (min-width: 768px) {
                 .sm\:text-xl,
                 strong {
-                    font-size: 1.125rem;
+                    font-size: 1.5rem;
+                    line-height: 1.35;
                 }
             }
         }
@@ -619,163 +636,423 @@ button,
     }
 }
 
+
 .woocommerce-account {
     .payment-methods-page {
-        @apply space-y-10;
+        @apply flex flex-col;
+        gap: 64px;
+
+        .payment-methods-header {
+            @apply flex flex-col;
+            gap: 16px;
+        }
+
+        .payment-methods-header__title {
+            @apply m-0 font-medium text-form-text;
+            font-size: 48px;
+            line-height: 48px;
+            letter-spacing: 0.00732em;
+        }
+
+        .payment-methods-header__description {
+            @apply m-0 text-form-muted text-base;
+            line-height: 24px;
+            letter-spacing: -0.0195em;
+        }
 
         .payment-methods-section {
             @apply p-0;
         }
 
         .payment-methods-section__title {
-            @apply inline-flex items-center gap-2 text-base md:text-lg font-semibold leading-none text-form-text mb-5;
+            @apply inline-flex items-center text-form-text m-0;
+            gap: 12px;
+            font-size: 18px;
+            line-height: 28px;
+            font-weight: 500;
+        }
+
+        .payment-methods-section__title-icon {
+            width: 20px;
+            height: 20px;
         }
 
         .payment-methods-section__body {
-            @apply border border-form-border rounded-none bg-white p-5 sm:p-6;
+            @apply border border-form-border rounded-none bg-white;
         }
 
         .payment-methods-section--add {
             .payment-methods-section__body {
-                box-shadow: 0 2px 0 rgba(17, 24, 39, 0.03);
+                @apply border border-form-border;
+                padding: 33px 33px 1px;
+                display: flex;
+                flex-direction: column;
+                gap: 24px;
+                border-radius: 0 !important;
+            }
+
+            .apl-form-refined {
+                @apply p-0;
+            }
+
+            .woocommerce-add-payment-method,
+            #add_payment_method {
+                @apply p-0 border-0 bg-transparent rounded-none;
+                margin: 0;
+                border-radius: 0 !important;
+            }
+
+            .woocommerce-add-payment-method .form-row,
+            #add_payment_method .form-row {
+                @apply m-0;
+            }
+
+            #payment {
+                @apply bg-transparent;
             }
 
             .woocommerce-PaymentMethods {
-                @apply m-0 p-0 list-none border border-form-border rounded-none bg-white overflow-hidden;
+                @apply m-0 p-0 list-none border border-[#e5e7eb] rounded-none bg-[#f9fafb] overflow-hidden;
+                border-radius: 0 !important;
+            }
 
-                > li {
-                    @apply m-0 py-4 px-4 border-b border-form-border;
+            .woocommerce-PaymentMethods > li {
+                @apply m-0 px-4 border-b border-[#e5e7eb];
+                min-height: 54px;
+                padding-top: 0;
+                padding-bottom: 0;
+                border-radius: 0 !important;
+            }
 
-                    &:last-child {
-                        border-bottom: 0;
-                    }
-                }
+            .woocommerce-PaymentMethods > li:last-child {
+                border-bottom: 0;
+            }
 
-                > li.woocommerce-PaymentMethod {
-                    display: grid;
-                    grid-template-columns: 20px 1fr;
-                    align-items: center;
-                    column-gap: 12px;
-                }
+            .woocommerce-PaymentMethods > li.woocommerce-PaymentMethod {
+                position: relative;
+                display: grid;
+                grid-template-columns: 20px 1fr;
+                align-items: center;
+                column-gap: 12px;
+                width: 100%;
+            }
+
+            .woocommerce-PaymentMethods > li.woocommerce-PaymentMethod--woocommerce_payments.payment_method_woocommerce_payments {
+                border: 0 !important;
+                padding: 0 16px !important;
+                min-height: 54px;
+                background: #f9fafb;
+            }
+
+            .woocommerce-PaymentMethod > input.input-radio {
+                @apply w-4 h-4 rounded-full border-2 border-black bg-white;
+                margin: 0;
+                min-width: 16px;
+                min-height: 16px;
+                appearance: none;
+                display: inline-grid;
+                place-content: center;
             }
 
             .woocommerce-PaymentMethod > label,
             .woocommerce-PaymentMethod > label[for='payment_method_woocommerce_payments'] {
-                @apply m-0 text-sm md:text-base font-medium text-form-text cursor-pointer;
-                line-height: 1.3;
+                @apply m-0 text-sm font-medium text-form-text cursor-pointer;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                width: 100%;
+                min-height: 54px;
+                line-height: 20px;
+                letter-spacing: -0.01074em;
             }
 
-            .woocommerce-PaymentMethod .payment_method_icons,
-            .woocommerce-PaymentMethod > label img {
-                @apply align-middle;
+            .woocommerce-PaymentMethod > input.input-radio:checked::before {
+                content: '';
+                width: 8px;
+                height: 8px;
+                border-radius: 9999px;
+                background-color: #111827;
+            }
+
+            .woocommerce-PaymentMethod .payment_method_icons {
+                display: none !important;
+            }
+
+            .woocommerce-PaymentMethod label img,
+            .woocommerce-PaymentMethod label svg,
+            .woocommerce-PaymentMethod label i {
+                margin-left: auto;
+                width: 18px;
+                height: 13px;
+                object-fit: contain;
+                opacity: 0.85;
             }
 
             .woocommerce-PaymentBox {
                 grid-column: 1 / -1;
-                @apply mt-4 pt-4 border-t border-form-border bg-transparent p-0;
+                @apply mt-6 pt-0 border-0 bg-transparent p-0;
             }
 
             .woocommerce-PaymentBox > p:first-child {
-                @apply mb-5 rounded-none border border-[#9fc5ff] bg-[#eaf2ff] text-[#1e3a8a] px-4 py-3 text-base;
+                @apply mb-6 rounded-none border border-[#bedbff] bg-[#eff6ff] text-[#364153] px-4 py-4 text-sm;
+                line-height: 20px;
+                letter-spacing: -0.01074em;
+                min-height: 54px;
+                border-radius: 0 !important;
+            }
+
+            .woocommerce-PaymentBox > p:first-child strong {
+                @apply font-medium;
+            }
+
+            .woocommerce-PaymentBox > p:first-child i,
+            .woocommerce-PaymentBox > p:first-child svg,
+            .woocommerce-PaymentBox > p:first-child [class*='icon'] {
+                display: none !important;
             }
 
             .woocommerce-PaymentBox fieldset {
-                @apply border-0 p-0 m-0 space-y-4;
+                @apply border-0 p-0 m-0;
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                column-gap: 24px;
+                row-gap: 24px;
+            }
+
+            .woocommerce-PaymentBox fieldset > .form-row-wide {
+                grid-column: 1 / -1;
             }
 
             .woocommerce-PaymentBox label {
-                @apply text-form-text text-lg font-medium mb-2;
+                @apply text-form-muted text-xs uppercase m-0;
+                line-height: 16px;
+                letter-spacing: 0.05em;
+                text-transform: uppercase !important;
             }
 
             .woocommerce-PaymentBox .input-text,
             .woocommerce-PaymentBox input[type='text'],
             .woocommerce-PaymentBox input[type='tel'],
             .woocommerce-PaymentBox input[type='number'],
+            .woocommerce-PaymentBox input[type='email'],
             .woocommerce-PaymentBox select {
-                @apply h-form-field rounded-none border border-[#e5e7eb] bg-[#f3f4f6] text-form-text text-lg px-4;
+                @apply rounded-none border border-[#d1d5dc] bg-white text-form-text px-4;
+                height: 50px;
+                width: 100%;
+                font-size: 16px;
+                line-height: 24px;
+                letter-spacing: -0.0195em;
+                border-radius: 0 !important;
             }
 
             .woocommerce-PaymentBox .wc-stripe-elements-field,
             .woocommerce-PaymentBox .stripe-card-group,
             .woocommerce-PaymentBox .wc-payment-form {
                 @apply rounded-none border-0 bg-transparent p-0;
+                width: 100%;
                 box-shadow: none;
+                border-radius: 0 !important;
+            }
+
+            .woocommerce-PaymentBox iframe,
+            .woocommerce-PaymentBox .StripeElement {
+                border-radius: 0 !important;
             }
 
             .woocommerce-PaymentBox .form-row-wide,
             .woocommerce-PaymentBox .form-row-first,
             .woocommerce-PaymentBox .form-row-last {
-                @apply mb-0;
+                @apply mb-0 mt-0;
+                float: none;
+                width: 100% !important;
+                clear: none;
+            }
+
+            .woocommerce-PaymentBox .woocommerce-SavedPaymentMethods-saveNew,
+            .woocommerce-PaymentBox .form-row.woocommerce-SavedPaymentMethods-saveNew,
+            .woocommerce-PaymentBox .save-source {
+                display: none !important;
             }
 
             .woocommerce-PaymentBox .woocommerce-form__label-for-checkbox,
             .woocommerce-PaymentBox label.checkbox {
-                @apply inline-flex items-center gap-3 m-0 text-base font-medium text-form-text;
+                @apply inline-flex items-center gap-3 m-0 text-sm font-normal text-form-muted;
+                line-height: 19.5px;
             }
 
-            .form-row {
-                @apply mt-5 mb-0;
+            .woocommerce-PaymentBox .form-row-wide + .form-row-wide,
+            .woocommerce-PaymentBox .form-row-first + .form-row-last,
+            .woocommerce-PaymentBox .form-row-last + .form-row-wide {
+                margin-top: 24px;
             }
 
             #place_order {
-                @apply w-full h-form-field rounded-none border border-form-accent bg-form-accent text-white text-xl font-medium;
-                transition: filter 180ms ease, border-color 180ms ease;
+                @apply w-full rounded-none border border-black bg-black text-white font-medium uppercase;
+                margin-top: 16px;
+                height: 36px;
+                font-size: 14px;
+                line-height: 20px;
+                letter-spacing: 0.039em;
+                transition: filter 180ms ease;
+                border-radius: 0 !important;
 
                 &:hover {
-                    @apply border-form-accent text-white;
-                    filter: brightness(1.06);
+                    @apply text-white;
+                    filter: brightness(1.08);
                 }
+            }
+
+            .wc-stripe-elements-field {
+                width: 100%;
+                border-radius: 0 !important;
+            }
+
+            /* Reset all custom styling for payment box content (notice + card fields). */
+            .woocommerce-PaymentBox,
+            .woocommerce-PaymentBox * {
+                all: revert;
+                box-sizing: border-box;
+            }
+
+            .woocommerce-PaymentBox {
+                display: block;
+                grid-column: 1 / -1;
+                margin-top: 24px;
             }
         }
 
+        .payment-methods-section--saved {
+            @apply flex flex-col;
+            gap: 32px;
+        }
+
+        .payment-methods-section--saved > .payment-methods-section__title,
+        .payment-methods-section--saved .payment-methods-section__title {
+            @apply text-xl uppercase;
+            letter-spacing: 0.07754em;
+            line-height: 28px;
+            font-weight: 400;
+        }
+
+        .payment-methods-section--saved > .payment-methods-section__body {
+            @apply border-0 p-0 bg-transparent;
+        }
+
         .payment-methods-list {
-            @apply space-y-0;
+            @apply space-y-6;
         }
 
         .payment-methods-item {
-            @apply flex items-center justify-between gap-4 py-4 sm:py-5 px-0 border-0 rounded-none bg-transparent;
-            box-shadow: none;
-        }
-
-        .payment-methods-item + .payment-methods-item {
-            @apply border-t border-form-border;
+            @apply border border-form-border bg-white px-[25px] pt-[25px] pb-[23px] rounded-none;
+            min-height: 98px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
         }
 
         .payment-methods-item__main {
-            @apply flex items-center gap-4 min-w-0;
+            @apply flex items-start min-w-0;
+            gap: 16px;
         }
 
-        .payment-methods-item__brand-image {
-            @apply w-[70px] max-w-none;
+        .payment-methods-item__brand {
+            @apply flex-none;
+        }
+
+        .payment-methods-item__brand-badge {
+            @apply inline-flex items-center justify-center border border-form-border text-xs font-bold text-[#364153];
+            width: 48px;
+            height: 32px;
+            line-height: 16px;
         }
 
         .payment-methods-item__meta {
-            @apply flex flex-col gap-1 min-w-0;
+            @apply flex flex-col min-w-0;
+            gap: 4px;
         }
 
         .payment-methods-item__title {
-            @apply text-lg font-semibold text-form-text;
+            @apply text-base font-medium text-form-text;
+            line-height: 24px;
+            letter-spacing: -0.0195em;
         }
 
         .payment-methods-item__expiry {
-            @apply text-form-muted text-base;
+            @apply text-sm font-normal text-form-muted;
+            line-height: 20px;
+            letter-spacing: -0.01074em;
         }
 
         .payment-methods-item__default-link {
-            @apply inline-flex items-center gap-1 text-sm font-semibold underline;
+            @apply inline-flex items-center text-xs text-form-muted underline;
+            line-height: 16px;
         }
 
         .payment-methods-item__actions {
             @apply flex items-center justify-end;
+            gap: 12px;
 
             a {
-                @apply inline-flex items-center justify-center w-10 h-10 rounded-none border border-transparent bg-white text-form-muted;
+                @apply inline-flex items-center justify-center rounded-full border border-transparent bg-transparent text-form-muted;
+                width: 36px;
+                height: 36px;
                 transition: border-color 180ms ease, background-color 180ms ease;
 
                 &:hover {
                     @apply border-form-focus;
-                    filter: brightness(0.97);
+                    background-color: #f9fafb;
                 }
+            }
+        }
+
+        .payment-methods-item__delete-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .payment-methods-item__default-pill {
+            @apply inline-flex items-center rounded-full bg-black text-white;
+            gap: 6px;
+            padding: 4px 12px;
+            line-height: 16px;
+            font-size: 12px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .payment-methods-item__default-icon {
+            width: 12px;
+            height: 12px;
+        }
+
+        @media (max-width: 991px) {
+            .payment-methods-header__title {
+                font-size: 34px;
+                line-height: 38px;
+            }
+
+            .payment-methods-section__title {
+                font-size: 20px;
+            }
+
+            .payment-methods-section--add .woocommerce-add-payment-method,
+            .payment-methods-section--add #add_payment_method {
+                @apply p-0;
+            }
+
+            .payment-methods-section--add .payment-methods-section__body {
+                padding: 24px 20px 1px;
+            }
+
+            .payment-methods-section--add .woocommerce-PaymentMethods > li.woocommerce-PaymentMethod {
+                grid-template-columns: 20px 1fr;
+                row-gap: 0;
+            }
+
+            .payment-methods-item {
+                min-height: 0;
+                @apply p-5;
             }
         }
     }

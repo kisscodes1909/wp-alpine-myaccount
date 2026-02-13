@@ -22,8 +22,8 @@ $account_menu_items = wc_get_account_menu_items();
 do_action( 'woocommerce_before_account_navigation' );
 ?>
 
-<div class="my-account-header flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:container md:px-8 md:mx-auto md:mb-6 mb-4">
-	<h2 class="text-center md:text-left text-base font-semibold md:text-xl md:font-normal"><?php esc_html_e( 'My Account', 'woocommerce' ); ?></h2>
+<div class="my-account-header hidden flex-col md:flex-row md:items-center md:justify-between gap-4 md:container md:px-8 md:mx-auto md:mb-6 mb-4">
+	<h2 class="text-center md:text-left text-xl font-semibold md:text-2xl"><?php esc_html_e( 'My Account', 'woocommerce' ); ?></h2>
 	<span class="text-center md:text-right text-sm md:text-base text-gray-600">
 		<?php
 		/* translators: 1: first name 2: last name */
@@ -44,7 +44,7 @@ do_action( 'woocommerce_before_account_navigation' );
 			<?php foreach ( wc_get_account_menu_items() as $endpoint => $label ) : ?>
 				<li class="flex-shrink-0 <?php echo esc_attr( wc_get_account_menu_item_classes( $endpoint ) ); ?>">
 					<a href="<?php echo esc_url( wc_get_account_endpoint_url( $endpoint ) ); ?>"
-					   class="woocommerce-MyAccount-navigation-link block py-4 px-4 md:px-6 text-sm font-medium tracking-wide text-gray-400 no-underline border-b-2 border-transparent whitespace-nowrap hover:text-gray-600 md:py-4"
+					   class="woocommerce-MyAccount-navigation-link block py-4 px-4 md:px-6 text-base font-normal tracking-wide text-gray-600 no-underline border-b-2 border-transparent whitespace-nowrap hover:text-gray-800 md:py-4"
 					   <?php echo wc_is_current_account_menu_item( $endpoint ) ? ' aria-current="page"' : ''; ?>>
 						<span class="uppercase"><?php echo esc_html( $label ); ?></span>
 					</a>

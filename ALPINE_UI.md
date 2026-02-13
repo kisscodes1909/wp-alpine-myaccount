@@ -4,9 +4,22 @@ Tài liệu mô tả bộ Alpine.js UI dùng trong theme: stores, directives, co
 
 ---
 
+## Mục tiêu & nguyên tắc thiết kế
+
+Bộ UI này được thiết kế để:
+
+- **Gọn nhẹ, tái sử dụng** – dùng lại trong nhiều dự án web khác nhau, không gắn chặt vào một stack hay theme cụ thể.
+- **Không phụ thuộc nặng** – không inject jQuery hay hàng đống thư viện; tránh “hở cái là thêm library”. Chỉ Alpine (+ Yup cho validation) và một bundle build ra.
+- **Chỉ những thứ thường cần** – component/directive cho các nhu cầu UI hay gặp (toast, popup, loading nút, validation form, v.v.) nhưng giữ đơn giản, dễ bảo trì.
+- **Tránh load cả cục JS** – không kéo theo cả framework UI nặng; mình kiểm soát từng phần (directive, store nhỏ) và chỉ load một file bundle cần thiết.
+
+Khi thêm tính năng mới: ưu tiên giải pháp tối giản (directive nhỏ, vài dòng CSS, tận dụng Alpine có sẵn) thay vì thêm dependency hay thư viện mới.
+
+---
+
 ## 1. Tổng quan
 
-- **Mục đích:** Thống nhất toast, popup, loading, validation và form (login, account, address) cho WooCommerce My Account.
+- **Mục đích:** Thống nhất toast, popup, loading, validation và form (login, account, address) cho WooCommerce My Account, trên nền một bộ UI có thể tái dùng.
 - **Stack:** Alpine.js + Yup (validation), build thành một bundle `alpine.bundle.js`, enqueue với `defer`.
 - **Nguyên tắc:** KISS, loading trong button (app-style), không full-page loader; form dùng validation directives + toast feedback.
 
@@ -79,6 +92,8 @@ Alpine.store('popup').closePopup();
 // HTML thường lấy từ template: document.getElementById('form-change-password').innerHTML
 ```
 
+**Popup + HTML động / đổi nội dung:** Nội dung popup được set qua `x-html`. HTML inject bằng `x-html` mặc định **không** được Alpine compile, nên `x-data`, `@click`, `x-model`… trong đó sẽ không chạy. Trong theme đã xử lý: sau khi set content, chạy `Alpine.initTree(container)` (trong `apl-popup.php`, qua `x-effect` + `$nextTick`) để Alpine bind lại cây DOM vừa chèn. Nhờ vậy form/button trong popup (đổi mật khẩu, edit address, login) vẫn có event và reactivity bình thường.
+
 ### User address (trong template)
 
 ```html
@@ -124,6 +139,35 @@ Spinner dùng class `.loading-icon` và `.spinner-arc` (CSS trong `structure-fil
 | **x-password-eye** | `x-password-eye="showPassword"` + `@click="showPassword=!showPassword"` | Đổi icon hiện/ẩn mật khẩu. |
 
 Expression là object `{ message, touched }` (message = string lỗi, touched = đã blur/chạm).
+
+### 4.3. Bộ directive đề xuất cho bộ UI (gợi ý mở rộng)
+
+Bảng dưới gợi ý thêm directive để tái sử dụng và thống nhất UI. Cột **Hiện trạng** = đã có / nên thêm.
+
+| Directive | Mục đích | Cú pháp gợi ý | Hiện trạng |
+|-----------|----------|----------------|------------|
+| **x-loading** | Nút: spinner + label khi loading | `x-loading="isLoading"` + `data-loading-label="Saving..."` | ✅ Có |
+| **x-validate-field** | Bật class `.error` theo validation | `x-validate-field="{ message, touched }"` | ✅ Có |
+| **x-validate-icon** | Icon tick/cross theo validation | Cùng expression với field | ✅ Có |
+| **x-validate-message** | Dòng lỗi validation | Cùng expression | ✅ Có |
+| **x-password-eye** | Icon bật/tắt hiện mật khẩu | `x-password-eye="showPassword"` | ✅ Có |
+| **x-loading-size** | Cỡ spinner (sm / md / lg) | `x-loading="expr"` + `data-loading-size="lg"` | 🔲 Nên thêm (modifier hoặc data-*) |
+| **x-copy** | Copy nội dung vào clipboard + toast | `x-copy="orderNumber"` hoặc `x-copy` (copy text của el) | 🔲 Nên thêm (order #, address, link) |
+| **x-confirm** | Xác nhận trước khi chạy action | `x-confirm="'Remove this address?'"` + `@click` gọi action | 🔲 Nên thêm (remove, cancel order) |
+| **x-tooltip** | Tooltip / title chuẩn (a11y) | `x-tooltip="'Copy order number'"` hoặc `data-tooltip` | 🔲 Tùy chọn |
+| **x-truncate** | Rút gọn text + “Show more” | `x-truncate="3"` (số dòng) hoặc max-height | 🔲 Tùy chọn (mô tả, ghi chú) |
+| **x-focus-trap** | Nhốt focus trong modal (a11y) | Gắn lên wrapper popup, bật khi open | 🔲 Nên thêm (trong popup hoặc directive) |
+| **x-skeleton** | Placeholder loading (block/layout) | `x-skeleton` hoặc `x-skeleton="lines"` (số dòng) | 🔲 Tùy chọn (danh sách orders, card) |
+| **x-numeric** | Input chỉ số (phone, qty) | `x-numeric` hoặc `x-numeric="'phone'"` (format) | 🔲 Tùy chọn (đã có format trong store) |
+| **x-debounce-click** | Chặn double submit (debounce click) | `x-debounce-click="500"` kết hợp `@click` | 🔲 Tùy chọn (thay thế một phần x-loading) |
+
+**Gợi ý ưu tiên:**
+
+1. **Đã dùng ổn:** giữ nguyên `x-loading`, `x-validate-*`, `x-password-eye`.
+2. **Nên thêm trước:** `x-loading-size`, `x-copy`, `x-confirm`, `x-focus-trap` (popup).
+3. **Tùy nhu cầu:** `x-tooltip`, `x-truncate`, `x-skeleton`, `x-numeric`, `x-debounce-click`.
+
+Implement: thêm file trong `directives/` (hoặc mở rộng file có sẵn), export hàm đăng ký, gọi trong `init.js`. Cú pháp trên chỉ là gợi ý; có thể chỉnh cho đúng với convention theme.
 
 ---
 

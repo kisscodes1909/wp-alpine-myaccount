@@ -11,8 +11,8 @@
             <?php
         }
     ?>
-    <h2 class="apl-heading-chip"><?php echo $page_heading ?? ''; ?></h2>
+    <h2 class="apl-heading-chip uppercase"><?php echo $page_heading ?? ''; ?></h2>
     <?php if (!empty($page_description)) : ?>
-        <p class="text-sm mt-3 pb-4 border-b border-gray-200"><?php echo $page_description; ?></p>
+        <p class="text-sm pb-4 border-b border-gray-200"><?php echo $page_description; ?></p>
     <?php endif; ?>
 </div>

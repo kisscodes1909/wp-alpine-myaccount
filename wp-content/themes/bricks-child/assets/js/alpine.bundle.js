@@ -6047,6 +6047,8 @@ attempted value: ${formattedValue}
     },
     saving: false,
     removing: false,
+    activeAction: "",
+    activeActionId: "",
     _inited: false,
     _autocompleteInstance: null,
     _googleApiRetries: 0,
@@ -6076,6 +6078,13 @@ attempted value: ${formattedValue}
     },
     _normalizeId(id) {
       return String(id);
+    },
+    _setActiveAction(action = "", id = "") {
+      this.activeAction = action;
+      this.activeActionId = id ? this._normalizeId(id) : "";
+    },
+    isActionLoading(action, id) {
+      return this.activeAction === action && this.activeActionId === this._normalizeId(id);
     },
     _isDefault(address) {
       return address.default === true || address.default === 1 || address.default === "1";
@@ -6160,13 +6169,20 @@ attempted value: ${formattedValue}
       this.checkMaxAddress();
     },
     async setDefault(id, syncToServer = false) {
-      this._updateDefaultFlags(this.addresses, id);
-      if (syncToServer) {
-        await this.ajaxRequest(AJAX_ACTION, this.addresses);
+      const idStr = this._normalizeId(id);
+      this._setActiveAction("set-default", idStr);
+      try {
+        this._updateDefaultFlags(this.addresses, idStr);
+        if (syncToServer) {
+          await this.ajaxRequest(AJAX_ACTION, this.addresses);
+        }
+      } finally {
+        this._setActiveAction();
       }
     },
     async remove(id) {
       const idStr = this._normalizeId(id);
+      this._setActiveAction("delete", idStr);
       const addresses = this.addresses.filter((addr) => this._normalizeId(addr.id) !== idStr);
       this.removing = true;
       try {
@@ -6177,6 +6193,7 @@ attempted value: ${formattedValue}
         this.checkMaxAddress();
       } finally {
         this.removing = false;
+        this._setActiveAction();
       }
     },
     async delete(id) {

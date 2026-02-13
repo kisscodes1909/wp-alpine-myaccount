@@ -86,7 +86,7 @@ if ( ! defined( 'YITH_WCWL' ) ) {
 							<div class="item-details-wrapper lg:flex lg:flex-row lg:justify-between">
 								<div class="space-1 md:space-y-3">
 
-                                    <h3 class="product-name text-sm sm:text-xl"><?php echo wp_kses_post( apply_filters( 'woocommerce_in_cartproduct_obj_title', $product->get_title(), $product ) ); ?></h3>
+                                    <h3 class="product-name text-lg md:text-2xl font-normal leading-tight text-gray-900"><?php echo wp_kses_post( apply_filters( 'woocommerce_in_cartproduct_obj_title', $product->get_title(), $product ) ); ?></h3>
 
                                     <?php
                                     /**
@@ -102,7 +102,7 @@ if ( ! defined( 'YITH_WCWL' ) ) {
                                     <?php if ( $show_variation || $show_dateadded || $show_price || $show_quantity || $show_stock_status ) : ?>
                                         <div class="item-details-table flex flex-col space-1 md:space-y-3">
 
-                                            <div class="flex flex-row text-sm sm:text-xl">
+                                            <div class="flex flex-row text-sm md:text-base text-gray-600">
                                             <?php if ( $show_variation && $product->is_type( 'variation' ) ) : ?>
                                                 <?php
                                                 /**
@@ -137,7 +137,7 @@ if ( ! defined( 'YITH_WCWL' ) ) {
                                             <?php endif; ?>
 
                                             <?php if ( $show_price || $show_price_variations ) : ?>
-                                               <strong class="text-sm sm:text-xl">
+                                               <strong class="text-base md:text-lg font-semibold text-gray-900 leading-tight">
                                                    <?php
                                                        if ( $show_price ) {
                                                            echo wp_kses_post( $item->get_formatted_product_price() );
