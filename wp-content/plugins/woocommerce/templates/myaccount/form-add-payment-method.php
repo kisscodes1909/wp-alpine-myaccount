@@ -49,7 +49,7 @@ if ( $available_gateways ) : ?>
 
 			<?php do_action( 'woocommerce_add_payment_method_form_bottom' ); ?>
 
-			<div class="form-row">
+			<div class="form-row mt-6">
 				<?php wp_nonce_field( 'woocommerce-add-payment-method', 'woocommerce-add-payment-method-nonce' ); ?>
 				<button type="submit" class="woocommerce-Button woocommerce-Button--alt button alt<?php echo esc_attr( wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); ?>" id="place_order" value="<?php esc_attr_e( 'Add payment method', 'woocommerce' ); ?>"><?php esc_html_e( 'Add payment method', 'woocommerce' ); ?></button>
 				<input type="hidden" name="woocommerce_add_payment_method" id="woocommerce_add_payment_method" value="1" />

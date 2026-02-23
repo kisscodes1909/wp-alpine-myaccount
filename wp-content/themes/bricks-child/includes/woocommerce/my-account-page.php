@@ -39,9 +39,9 @@ class My_Account_Page {
     function popup_container(): void
     {
         ?>
-        <div x-data id="popup-container" class="woocommerce z-[999] fixed inset-0 overflow-y-auto flex items-center justify-center p-4" x-show="$store.popup.open" x-cloak aria-hidden="true"></div>
-        <div x-data id='toast-container' class="woocommerce z-[1000]"></div>
-        <div x-data id='loader-container' class="woocommerce z-[1001]"></div>
+        <div x-data id="popup-container" class="z-[999] fixed inset-0 overflow-y-auto flex items-center justify-center p-4" x-show="$store.popup.open" x-cloak aria-hidden="true"></div>
+        <div x-data id='toast-container' class="z-[1000]"></div>
+        <div x-data id='loader-container' class="z-[1001]"></div>
         <?php
     }
 
