@@ -57,7 +57,7 @@ wp_enqueue_script( 'wc-add-payment-method' );
             <span><?php esc_html_e( 'Add Payment Method', 'woocommerce' ); ?></span>
         </h2>
         <div class="payment-methods-section__body">
-            <div class="apl-form-refined">
+            <div class="ma-form">
                 <?php
                 do_action( 'before_woocommerce_add_payment_method' );
                 wc_get_template( 'myaccount/form-add-payment-method.php' );

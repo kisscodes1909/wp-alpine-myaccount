@@ -7,11 +7,11 @@
 ?>
 <style>
 /* Place Autocomplete (New) – host + Places UI Kit custom properties (see places-ui-kit/custom-styling) */
-.apl-form-refined.apl-address-form .address-autocomplete-wrapper {
+.ma-form.apl-address-form .address-autocomplete-wrapper {
     width: 100%;
 }
 
-.apl-form-refined.apl-address-form .address-autocomplete-wrapper gmp-place-autocomplete {
+.ma-form.apl-address-form .address-autocomplete-wrapper gmp-place-autocomplete {
     width: 100%;
     min-height: 50px;
     display: block;
@@ -30,7 +30,7 @@
     --gmp-mat-font-family: inherit;
 }
 
-.apl-form-refined.apl-address-form .address-autocomplete-wrapper gmp-place-autocomplete:focus-within {
+.ma-form.apl-address-form .address-autocomplete-wrapper gmp-place-autocomplete:focus-within {
     border-color: #9ca3af;
     box-shadow: 0 0 0 1px rgba(17, 24, 39, 0.08);
 }
@@ -60,7 +60,7 @@
         </button>
     </div>
     <!-- Modal Body -->
-    <form class="apl-form-refined apl-address-form flex flex-col gap-4" x-data="{ showAddress2: false }" x-init="showAddress2 = !!$store.userAddress.editAddress.address2">
+    <form class="ma-form apl-address-form flex flex-col gap-4" x-data="{ showAddress2: false }" x-init="showAddress2 = !!$store.userAddress.editAddress.address2">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
                 <label for="first-name">First name</label>

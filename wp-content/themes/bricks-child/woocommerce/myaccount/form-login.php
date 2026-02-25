@@ -35,7 +35,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
             <form
 
                     x-data="login"
-                    class="woocommerce-form login apl-form-refined"
+                    class="woocommerce-form login ma-form"
                     method="post"
                     @submit.prevent="handleSubmit"
                     :class="isFormSubmitting ? 'loading' : ''"
@@ -118,7 +118,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
             <form
                     @submit.prevent="handleSubmit"
                     x-data="signup"
-                    class="register apl-form-refined"
+                    class="register ma-form"
                     :class="isFormSubmitting ? 'loading' : ''"
             >
 

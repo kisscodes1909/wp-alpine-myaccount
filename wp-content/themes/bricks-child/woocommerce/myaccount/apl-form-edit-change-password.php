@@ -1,7 +1,7 @@
 <template id="form-change-password" x-data>
         <form
                 x-data="passwordChangeForm()"
-                class="w-full apl-form-refined flex flex-col gap-8"
+                class="w-full ma-form flex flex-col gap-8"
                 @keyup.enter="handleSubmit()"
                 @submit.prevent="handleSubmit"
                 @keyup="validateForm()"

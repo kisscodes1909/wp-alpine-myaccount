@@ -1,0 +1,151 @@
+/* Fashion template tokens + visual overrides */
+body.myaccount-template-fashion.woocommerce-account {
+    --ma-fashion-surface: #f6f8fc;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-form label {
+    font-weight: 500;
+    letter-spacing: 0.01em;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-form .input,
+body.myaccount-template-fashion.woocommerce-account .ma-form input:not([type='submit']):not([type='checkbox']):not([type='radio']),
+body.myaccount-template-fashion.woocommerce-account .ma-form select,
+body.myaccount-template-fashion.woocommerce-account .ma-form textarea {
+    border-color: #d1d5db;
+    border-radius: 0;
+    background-color: #f8fafc;
+    color: #111827;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-form input:not([type='submit']):not([type='checkbox']):not([type='radio'])::placeholder,
+body.myaccount-template-fashion.woocommerce-account .ma-form textarea::placeholder {
+    color: #9ca3af;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-form input:not([type='submit']):not([type='checkbox']):not([type='radio']):focus,
+body.myaccount-template-fashion.woocommerce-account .ma-form select:focus,
+body.myaccount-template-fashion.woocommerce-account .ma-form textarea:focus {
+    border-color: #9ca3af;
+    --tw-ring-color: rgb(17 24 39 / 0.08);
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-form .error .input,
+body.myaccount-template-fashion.woocommerce-account .ma-form .error input:not([type='submit']):not([type='checkbox']):not([type='radio']),
+body.myaccount-template-fashion.woocommerce-account .ma-form .error select,
+body.myaccount-template-fashion.woocommerce-account .ma-form .error textarea,
+body.myaccount-template-fashion.woocommerce-account .ma-form .field-invalid {
+    border-color: #dc2626;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-form .error label {
+    color: #dc2626;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-form .button,
+body.myaccount-template-fashion.woocommerce-account .ma-form .woocommerce-button,
+body.myaccount-template-fashion.woocommerce-account .ma-form button[type='submit'],
+body.myaccount-template-fashion.woocommerce-account .ma-form input[type='submit'],
+body.myaccount-template-fashion.woocommerce-account .apl-form-actions > .button,
+body.myaccount-template-fashion.woocommerce-account .apl-form-actions > button[type='button'],
+body.myaccount-template-fashion.woocommerce-account .apl-form-actions > button[type='submit'],
+body.myaccount-template-fashion.woocommerce-account .apl-form-actions > input[type='submit'],
+body.myaccount-template-fashion.woocommerce-account .apl-form-actions > a.button {
+    border-radius: 0;
+    border-color: #111827;
+    background-color: #111827;
+    color: #ffffff;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-form .button:focus-visible,
+body.myaccount-template-fashion.woocommerce-account .ma-form .woocommerce-button:focus-visible,
+body.myaccount-template-fashion.woocommerce-account .ma-form button[type='submit']:focus-visible,
+body.myaccount-template-fashion.woocommerce-account .ma-form input[type='submit']:focus-visible {
+    outline-color: #9ca3af;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-form .button.light,
+body.myaccount-template-fashion.woocommerce-account .ma-form .woocommerce-button.light,
+body.myaccount-template-fashion.woocommerce-account .ma-form button[type='submit'].light,
+body.myaccount-template-fashion.woocommerce-account .ma-form input[type='submit'].light,
+body.myaccount-template-fashion.woocommerce-account .apl-form-actions > .button.light,
+body.myaccount-template-fashion.woocommerce-account .apl-form-actions > button[type='button'].light,
+body.myaccount-template-fashion.woocommerce-account .apl-form-actions > button[type='submit'].light,
+body.myaccount-template-fashion.woocommerce-account .apl-form-actions > input[type='submit'].light,
+body.myaccount-template-fashion.woocommerce-account .apl-form-actions > a.button.light {
+    border-color: #d1d5db;
+    background-color: #ffffff;
+    color: #111827;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-orders__item {
+    background: var(--ma-fashion-surface);
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-page-heading__description {
+    color: #6b7280;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-orders__thumbnail-more {
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.72);
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-orders__empty-text {
+    color: #1f2937;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-view-order__updates,
+body.myaccount-template-fashion.woocommerce-account .ma-account-form__section--bordered,
+body.myaccount-template-fashion.woocommerce-account .ma-account-form__actions,
+body.myaccount-template-fashion.woocommerce-account .ma-page-heading__description {
+    border-color: #e5e7eb;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-account-form__status-pill {
+    background-color: #ecfdf5;
+    color: #16a34a;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-address-book__toast {
+    background: #000000;
+    color: #ffffff;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-address-book__default-pill {
+    background: #000000;
+    color: #ffffff;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-address-book__action-button {
+    border-color: #d1d5dc !important;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-address-book__action-button--danger {
+    border-color: #ffa1ad !important;
+    color: #ec003f !important;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-address-book__empty-title {
+    color: #374151;
+}
+
+@media (min-width: 768px) {
+    .woocommerce-account .ma-page-heading__back-icon {
+        transform: scale(1);
+    }
+
+    .woocommerce-account .ma-view-order__layout {
+        grid-template-columns: repeat(10, minmax(0, 1fr));
+        gap: 90px;
+    }
+
+    .woocommerce-account .ma-view-order__summary {
+        grid-column: span 3 / span 3;
+    }
+
+    .woocommerce-account .ma-view-order__details {
+        grid-column: span 7 / span 7;
+    }
+}

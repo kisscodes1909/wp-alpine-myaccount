@@ -28,7 +28,7 @@ $active_since = $registered_timestamp ? date_i18n( 'F Y', $registered_timestamp 
 
 <?php wc_get_template('myaccount/page-heading.php', ['page_heading' => 'My Info', 'page_description' => 'Update your personal details']); ?>
 
-<form x-data="updateAccount" id="form-update-account" class="apl-form-refined woocommerce-EditAccountForm edit-account ma-account-form"
+<form x-data="updateAccount" id="form-update-account" class="ma-form woocommerce-EditAccountForm edit-account ma-account-form"
       @submit.prevent="handleSubmit"
       @keyup.enter="handleSubmit"
       @keyup="setAllowSubmit(), validateForm()"
