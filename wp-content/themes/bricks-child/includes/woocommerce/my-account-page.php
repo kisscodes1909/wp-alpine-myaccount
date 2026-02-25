@@ -29,6 +29,9 @@ class My_Account_Page {
         // Redirect account dashboard to order history
         add_action('template_redirect', [$this, 'redirect_dashboard_to_order_list']);
 
+        // Global My Account template class (fashion/a/b/c)
+        add_filter('body_class', [$this, 'add_my_account_template_class']);
+
 
         // Limit 5 orders per page
         add_filter('woocommerce_my_account_my_orders_query', [$this, 'limit_5_orders']);
@@ -62,6 +65,24 @@ class My_Account_Page {
     function redirect_to_home(): ?string
     {
         return home_url('/');
+    }
+
+    function add_my_account_template_class($classes): array
+    {
+        if (!is_account_page() || bricks_is_builder()) {
+            return $classes;
+        }
+
+        $template = get_option('myaccount_template_style', 'fashion');
+        $allowed_templates = ['fashion', 'a', 'b', 'c'];
+
+        if (!in_array($template, $allowed_templates, true)) {
+            $template = 'fashion';
+        }
+
+        $classes[] = 'myaccount-template-' . sanitize_html_class($template);
+
+        return $classes;
     }
 
     function reorder_menu_items($items): array

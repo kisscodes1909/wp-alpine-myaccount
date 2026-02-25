@@ -21,7 +21,6 @@ defined( 'ABSPATH' ) || exit;
 
 $saved_methods = wc_get_customer_saved_methods_list( get_current_user_id() );
 $has_methods   = (bool) $saved_methods;
-$types         = wc_get_account_payment_methods_types();
 
 do_action( 'woocommerce_before_account_payment_methods', $has_methods );
 
@@ -49,7 +48,7 @@ add_filter( 'woocommerce_available_payment_gateways', $filter_add_payment_gatewa
 wp_enqueue_script( 'wc-add-payment-method' );
 ?>
 
-<div class="payment-methods-page md:container mx-auto px-8">
+<div class="payment-methods-page ma-payment-methods">
     <section class="payment-methods-section payment-methods-section--add">
         <h2 class="payment-methods-section__title">
             <svg xmlns="http://www.w3.org/2000/svg" class="payment-methods-section__title-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
