@@ -43,7 +43,7 @@ do_action( 'woocommerce_before_reset_password_form' );
                 <label for="reg_password"><?php esc_html_e('New Password', 'woocommerce'); ?></label>
                 <div class="relative" x-data="{showPassword:false}">
                     <input x-model="formData.password" minlength="8" type="password"
-                           class="input-text"
+                           class="input-text ma-form__input"
                            id="reg_password" autocomplete="new-password"
                            @keyup="handler.validateField('password')"
                            :type="showPassword === true ? 'text' : 'password'"
@@ -105,7 +105,7 @@ do_action( 'woocommerce_before_reset_password_form' );
 
         <?php do_action( 'woocommerce_resetpassword_form' ); ?>
 
-        <div class="apl-form-actions">
+        <div class="ma-form-actions">
             <input type="hidden" name="wc_reset_password" value="true" />
             <button type="submit" class="woocommerce-Button button<?php echo esc_attr( wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); ?>" value="<?php esc_attr_e( 'Save', 'woocommerce' ); ?>"><?php esc_html_e( 'Save', 'woocommerce' ); ?></button>
         </div>

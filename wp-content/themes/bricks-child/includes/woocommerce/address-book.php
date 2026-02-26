@@ -22,7 +22,7 @@ class Adress_Book {
         $address_book = maybe_unserialize($serialized_data);
 
         wc_get_template('/myaccount/apl-address.php');
-        wc_get_template('/myaccount/apl-form-edit-address.php');
+        wc_get_template('/myaccount/ma-form-edit-address.php');
 
 
         $this->enqueue_scripts($address_book, $countries);

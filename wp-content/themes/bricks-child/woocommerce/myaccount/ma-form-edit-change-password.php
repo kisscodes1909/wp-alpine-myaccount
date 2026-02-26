@@ -22,11 +22,10 @@
                 <div class="relative" x-data="{showPassword:false}">
                     <input
                             x-model="currentPassword"
-                            type="password" class="woocommerce-Input woocommerce-Input--text input-text"
+                            type="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input pr-5"
                             autocomplete="username"
                             @keyup="handler.validateField('password')"
                             :type="showPassword === true ? 'text' : 'password'"
-                            class="pr-5"
                             :class="{'field-invalid': errors.currentPassword}"
 
                     />
@@ -46,11 +45,10 @@
                 <div class="relative" x-data="{showPassword:false}">
                     <input
                             x-model="newPassword"
-                            type="password" class="woocommerce-Input woocommerce-Input--text input-text"
+                            type="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input pr-5"
                             autocomplete="username"
                             @keyup="handler.validateField('password')"
                             :type="showPassword === true ? 'text' : 'password'"
-                            class="pr-5"
                             :class="{'field-invalid': errors.newPassword}"
 
                     />
@@ -70,11 +68,10 @@
                 <div class="relative" x-data="{showPassword:false}">
                     <input
                             x-model="confirmPassword"
-                            type="password" class="woocommerce-Input woocommerce-Input--text input-text"
+                            type="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input pr-5"
                             autocomplete="username"
                             @keyup="handler.validateField('password')"
                             :type="showPassword === true ? 'text' : 'password'"
-                            class="pr-5"
                             :class="{'field-invalid': errors.confirmPassword}"
 
                     />
@@ -102,7 +99,7 @@
 
             <!-- Submit Button -->
             <div class="text-center">(Password must be 8-25 characters.)</div>
-            <div class="apl-form-actions">
+            <div class="ma-form-actions">
                 <button type="submit" class="button inline-flex items-center justify-center gap-2" :disabled="isLoading" :aria-busy="isLoading" x-loading="isLoading" data-loading-label="Saving...">
                     Save
                 </button>

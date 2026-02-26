@@ -1,6 +1,22 @@
 /* Fashion template tokens + visual overrides */
 body.myaccount-template-fashion.woocommerce-account {
     --ma-fashion-surface: #f6f8fc;
+    --ma-form-color-text: #111827;
+    --ma-form-color-muted: #6b7280;
+    --ma-form-color-input: #111827;
+    --ma-form-color-border: #d1d5db;
+    --ma-form-color-surface: #f8fafc;
+    --ma-form-color-placeholder: #9ca3af;
+    --ma-form-color-focus-border: #9ca3af;
+    --ma-form-color-focus-ring: rgb(17 24 39 / 0.08);
+    --ma-form-color-error: #dc2626;
+    --ma-form-color-button-bg: #111827;
+    --ma-form-color-button-border: #111827;
+    --ma-form-color-button-text: #ffffff;
+    --ma-form-color-button-light-bg: #ffffff;
+    --ma-form-color-button-light-border: #d1d5db;
+    --ma-form-color-button-light-text: #111827;
+    --ma-form-color-outline: #9ca3af;
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-form label {
@@ -8,74 +24,72 @@ body.myaccount-template-fashion.woocommerce-account .ma-form label {
     letter-spacing: 0.01em;
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-form .input,
-body.myaccount-template-fashion.woocommerce-account .ma-form input:not([type='submit']):not([type='checkbox']):not([type='radio']),
+body.myaccount-template-fashion.woocommerce-account .ma-form .ma-form__input,
 body.myaccount-template-fashion.woocommerce-account .ma-form select,
 body.myaccount-template-fashion.woocommerce-account .ma-form textarea {
-    border-color: #d1d5db;
+    border-color: var(--ma-form-color-border);
     border-radius: 0;
-    background-color: #f8fafc;
-    color: #111827;
+    background-color: var(--ma-form-color-surface);
+    color: var(--ma-form-color-input);
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-form input:not([type='submit']):not([type='checkbox']):not([type='radio'])::placeholder,
+body.myaccount-template-fashion.woocommerce-account .ma-form .ma-form__input::placeholder,
 body.myaccount-template-fashion.woocommerce-account .ma-form textarea::placeholder {
-    color: #9ca3af;
+    color: var(--ma-form-color-placeholder);
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-form input:not([type='submit']):not([type='checkbox']):not([type='radio']):focus,
+body.myaccount-template-fashion.woocommerce-account .ma-form .ma-form__input:focus,
 body.myaccount-template-fashion.woocommerce-account .ma-form select:focus,
 body.myaccount-template-fashion.woocommerce-account .ma-form textarea:focus {
-    border-color: #9ca3af;
-    --tw-ring-color: rgb(17 24 39 / 0.08);
+    border-color: var(--ma-form-color-focus-border);
+    --tw-ring-color: var(--ma-form-color-focus-ring);
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-form .error .input,
-body.myaccount-template-fashion.woocommerce-account .ma-form .error input:not([type='submit']):not([type='checkbox']):not([type='radio']),
+body.myaccount-template-fashion.woocommerce-account .ma-form .error .ma-form__input,
 body.myaccount-template-fashion.woocommerce-account .ma-form .error select,
 body.myaccount-template-fashion.woocommerce-account .ma-form .error textarea,
 body.myaccount-template-fashion.woocommerce-account .ma-form .field-invalid {
-    border-color: #dc2626;
+    border-color: var(--ma-form-color-error);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-form .error label {
-    color: #dc2626;
+    color: var(--ma-form-color-error);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-form .button,
 body.myaccount-template-fashion.woocommerce-account .ma-form .woocommerce-button,
 body.myaccount-template-fashion.woocommerce-account .ma-form button[type='submit'],
 body.myaccount-template-fashion.woocommerce-account .ma-form input[type='submit'],
-body.myaccount-template-fashion.woocommerce-account .apl-form-actions > .button,
-body.myaccount-template-fashion.woocommerce-account .apl-form-actions > button[type='button'],
-body.myaccount-template-fashion.woocommerce-account .apl-form-actions > button[type='submit'],
-body.myaccount-template-fashion.woocommerce-account .apl-form-actions > input[type='submit'],
-body.myaccount-template-fashion.woocommerce-account .apl-form-actions > a.button {
+body.myaccount-template-fashion.woocommerce-account .ma-form-actions > .button,
+body.myaccount-template-fashion.woocommerce-account .ma-form-actions > button[type='button'],
+body.myaccount-template-fashion.woocommerce-account .ma-form-actions > button[type='submit'],
+body.myaccount-template-fashion.woocommerce-account .ma-form-actions > input[type='submit'],
+body.myaccount-template-fashion.woocommerce-account .ma-form-actions > a.button {
     border-radius: 0;
-    border-color: #111827;
-    background-color: #111827;
-    color: #ffffff;
+    border-color: var(--ma-form-color-button-border);
+    background-color: var(--ma-form-color-button-bg);
+    color: var(--ma-form-color-button-text);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-form .button:focus-visible,
 body.myaccount-template-fashion.woocommerce-account .ma-form .woocommerce-button:focus-visible,
 body.myaccount-template-fashion.woocommerce-account .ma-form button[type='submit']:focus-visible,
 body.myaccount-template-fashion.woocommerce-account .ma-form input[type='submit']:focus-visible {
-    outline-color: #9ca3af;
+    outline-color: var(--ma-form-color-outline);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-form .button.light,
 body.myaccount-template-fashion.woocommerce-account .ma-form .woocommerce-button.light,
 body.myaccount-template-fashion.woocommerce-account .ma-form button[type='submit'].light,
 body.myaccount-template-fashion.woocommerce-account .ma-form input[type='submit'].light,
-body.myaccount-template-fashion.woocommerce-account .apl-form-actions > .button.light,
-body.myaccount-template-fashion.woocommerce-account .apl-form-actions > button[type='button'].light,
-body.myaccount-template-fashion.woocommerce-account .apl-form-actions > button[type='submit'].light,
-body.myaccount-template-fashion.woocommerce-account .apl-form-actions > input[type='submit'].light,
-body.myaccount-template-fashion.woocommerce-account .apl-form-actions > a.button.light {
-    border-color: #d1d5db;
-    background-color: #ffffff;
-    color: #111827;
+body.myaccount-template-fashion.woocommerce-account .ma-form-actions > .button.light,
+body.myaccount-template-fashion.woocommerce-account .ma-form-actions > button[type='button'].light,
+body.myaccount-template-fashion.woocommerce-account .ma-form-actions > button[type='submit'].light,
+body.myaccount-template-fashion.woocommerce-account .ma-form-actions > input[type='submit'].light,
+body.myaccount-template-fashion.woocommerce-account .ma-form-actions > a.button.light {
+    border-color: var(--ma-form-color-button-light-border);
+    background-color: var(--ma-form-color-button-light-bg);
+    color: var(--ma-form-color-button-light-text);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-orders__item {
@@ -96,13 +110,13 @@ body.myaccount-template-fashion.woocommerce-account .ma-orders__empty-text {
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-view-order__updates,
-body.myaccount-template-fashion.woocommerce-account .ma-account-form__section--bordered,
-body.myaccount-template-fashion.woocommerce-account .ma-account-form__actions,
+body.myaccount-template-fashion.woocommerce-account .ma-form__section--bordered,
+body.myaccount-template-fashion.woocommerce-account .ma-form__actions,
 body.myaccount-template-fashion.woocommerce-account .ma-page-heading__description {
     border-color: #e5e7eb;
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-account-form__status-pill {
+body.myaccount-template-fashion.woocommerce-account .ma-form__status-pill {
     background-color: #ecfdf5;
     color: #16a34a;
 }

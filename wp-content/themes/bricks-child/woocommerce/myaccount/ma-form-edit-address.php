@@ -7,11 +7,11 @@
 ?>
 <style>
 /* Place Autocomplete (New) – host + Places UI Kit custom properties (see places-ui-kit/custom-styling) */
-.ma-form.apl-address-form .address-autocomplete-wrapper {
+.ma-form.ma-form-address .address-autocomplete-wrapper {
     width: 100%;
 }
 
-.ma-form.apl-address-form .address-autocomplete-wrapper gmp-place-autocomplete {
+.ma-form.ma-form-address .address-autocomplete-wrapper gmp-place-autocomplete {
     width: 100%;
     min-height: 50px;
     display: block;
@@ -30,7 +30,7 @@
     --gmp-mat-font-family: inherit;
 }
 
-.ma-form.apl-address-form .address-autocomplete-wrapper gmp-place-autocomplete:focus-within {
+.ma-form.ma-form-address .address-autocomplete-wrapper gmp-place-autocomplete:focus-within {
     border-color: #9ca3af;
     box-shadow: 0 0 0 1px rgba(17, 24, 39, 0.08);
 }
@@ -60,18 +60,18 @@
         </button>
     </div>
     <!-- Modal Body -->
-    <form class="ma-form apl-address-form flex flex-col gap-4" x-data="{ showAddress2: false }" x-init="showAddress2 = !!$store.userAddress.editAddress.address2">
+    <form class="ma-form ma-form-address flex flex-col gap-4" x-data="{ showAddress2: false }" x-init="showAddress2 = !!$store.userAddress.editAddress.address2">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
                 <label for="first-name">First name</label>
                 <div>
-                    <input x-model="$store.userAddress.editAddress.fname" type="text" name="first-name" id="first-name" autocomplete="given-name" />
+                    <input class="ma-form__input" x-model="$store.userAddress.editAddress.fname" type="text" name="first-name" id="first-name" autocomplete="given-name" />
                 </div>
             </div>
             <div>
                 <label for="last-name">Last name</label>
                 <div>
-                    <input x-model="$store.userAddress.editAddress.lname" type="text" name="last-name" id="last-name" autocomplete="family-name" />
+                    <input class="ma-form__input" x-model="$store.userAddress.editAddress.lname" type="text" name="last-name" id="last-name" autocomplete="family-name" />
                 </div>
             </div>
         </div>
@@ -83,7 +83,7 @@
             </template>
             <template x-if="!$store.userAddress.autocompleteEnabled">
                 <div>
-                    <input x-model="$store.userAddress.editAddress.address" type="text" name="address" id="address" autocomplete="street-address" />
+                    <input class="ma-form__input" x-model="$store.userAddress.editAddress.address" type="text" name="address" id="address" autocomplete="street-address" />
                 </div>
             </template>
         </div>
@@ -101,7 +101,7 @@
         <div x-show="showAddress2" x-transition>
             <label for="address2">Apartment, suite, etc. (optional)</label>
             <div>
-                <input x-model="$store.userAddress.editAddress.address2" type="text" name="address2" id="address2" autocomplete="address2">
+                <input class="ma-form__input" x-model="$store.userAddress.editAddress.address2" type="text" name="address2" id="address2" autocomplete="address2">
             </div>
         </div>
 
@@ -109,7 +109,7 @@
             <div>
                 <label for="country">Country / Region</label>
                 <div>
-                    <select x-model="$store.userAddress.editAddress.country" id="country" name="country" autocomplete="country-name">
+                    <select class="ma-form__input" x-model="$store.userAddress.editAddress.country" id="country" name="country" autocomplete="country-name">
                         <template x-for="(countryName, countryCode) in $store.userAddress.countries" :key="countryCode">
                             <option x-bind:value="countryName" x-text="countryName"></option>
                         </template>
@@ -119,13 +119,13 @@
             <div>
                 <label for="postal-code">ZIP Code</label>
                 <div>
-                    <input x-model="$store.userAddress.editAddress.postalCode" type="text" name="postal-code" id="postal-code" autocomplete="postal-code" />
+                    <input class="ma-form__input" x-model="$store.userAddress.editAddress.postalCode" type="text" name="postal-code" id="postal-code" autocomplete="postal-code" />
                 </div>
             </div>
             <div>
                 <label for="region">State</label>
                 <div>
-                    <input x-model="$store.userAddress.editAddress.region" type="text" name="region" id="region" autocomplete="address-level1" />
+                    <input class="ma-form__input" x-model="$store.userAddress.editAddress.region" type="text" name="region" id="region" autocomplete="address-level1" />
                 </div>
             </div>
         </div>
@@ -133,14 +133,14 @@
         <div>
             <label for="city">Town / City</label>
             <div>
-                <input x-model="$store.userAddress.editAddress.city" type="text" name="city" id="city" autocomplete="address-level2" />
+                <input class="ma-form__input" x-model="$store.userAddress.editAddress.city" type="text" name="city" id="city" autocomplete="address-level2" />
             </div>
         </div>
 
         <div>
             <label for="phone-number">Phone</label>
             <div>
-                <input @input="$store.userAddress.formatUSPhoneNumber()" x-model="$store.userAddress.editAddress.phone" type="text" name="phone-number" id="phone-number" maxlength="14" />
+                <input class="ma-form__input" @input="$store.userAddress.formatUSPhoneNumber()" x-model="$store.userAddress.editAddress.phone" type="text" name="phone-number" id="phone-number" maxlength="14" />
             </div>
         </div>
 
@@ -156,7 +156,7 @@
     </form>
 
     <!-- Modal Footer -->
-    <div class="apl-form-actions apl-form-actions--two">
+    <div class="ma-form-actions ma-form-actions--two">
 
         <template x-if="$store.userAddress.form.action === 'edit'">
             <button type="button"

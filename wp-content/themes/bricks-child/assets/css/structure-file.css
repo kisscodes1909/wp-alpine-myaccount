@@ -1,5 +1,5 @@
 @import "./myaccount/base.css";
-@import "./myaccount/form-base.css";
+/* @import "./myaccount/form-base.css"; */
 @import "./myaccount/fashion.css";
 
 @tailwind base;
@@ -35,6 +35,8 @@ button,
     font: inherit;
 }
 
+
+.woocom
 
 
 /* Spinner: arc moves around the circle via stroke-dashoffset (no element rotation). */
@@ -157,46 +159,6 @@ input[type='submit'],
     margin-bottom: 40px;
 }
 
-/* Checkout native controls (radio) */
-/* .woocommerce ul#shipping_method {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    @apply border border-form-border rounded-none overflow-hidden bg-form-surface;
-
-    > li {
-        @apply flex items-center gap-[10px] py-3 px-[14px] border-b border-form-border;
-        margin: 0;
-
-        &:last-child {
-            border-bottom: 0;
-        }
-
-        > input.shipping_method[type='radio'] {
-            -webkit-appearance: none;
-            appearance: none;
-            @apply w-[18px] h-[18px] border border-form-borderStrong rounded-none bg-white inline-grid place-content-center cursor-pointer flex-none;
-            margin: 0;
-
-            &:checked {
-                @apply border-form-accent;
-                background: radial-gradient(circle at center, #111827 0 4px, #ffffff 4.5px);
-            }
-
-            &:focus-visible {
-                @apply outline outline-2 outline-form-focus outline-offset-2;
-            }
-        }
-
-        > label {
-            margin: 0;
-            @apply text-form-text text-lg;
-            line-height: 1.25;
-            font-weight: 500;
-            cursor: pointer;
-        }
-    }
-} */
 
 /* Checkout native controls (payment radio + checkbox) */
 .woocommerce #payment {

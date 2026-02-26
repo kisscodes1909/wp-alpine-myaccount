@@ -28,111 +28,111 @@ $active_since = $registered_timestamp ? date_i18n( 'F Y', $registered_timestamp 
 
 <?php wc_get_template('myaccount/page-heading.php', ['page_heading' => 'My Info', 'page_description' => 'Update your personal details']); ?>
 
-<form x-data="updateAccount" id="form-update-account" class="ma-form woocommerce-EditAccountForm edit-account ma-account-form"
+<form x-data="updateAccount" id="form-update-account" class="ma-form woocommerce-EditAccountForm edit-account"
       @submit.prevent="handleSubmit"
       @keyup.enter="handleSubmit"
       @keyup="setAllowSubmit(), validateForm()"
 >
-    <div class="ma-account-form__section">
-        <div class="ma-account-form__section-head">
-            <h3 class="ma-account-form__section-title">Personal Information</h3>
-            <p class="ma-account-form__section-description">Update your personal details</p>
+    <div class="ma-form__section">
+        <div class="ma-form__section-head">
+            <h3 class="ma-form__section-title">Personal Information</h3>
+            <p class="ma-form__section-description">Update your personal details</p>
         </div>
 
-        <div class="ma-account-form__grid">
-            <div class="ma-account-form__field">
-                <label for="firstName" class="ma-account-form__label">First Name</label>
+        <div class="ma-form__grid">
+            <div class="ma-form__field">
+                <label for="firstName" class="ma-form__label">First Name</label>
                 <input
                         type="text"
                         id="firstName"
                         x-model="firstName"
-                        class="ma-account-form__input ma-account-form__input--capitalize"
+                        class="ma-form__input ma-form__input--capitalize"
                         :class="{'field-invalid': errors.firstName}"
                 />
-                <span class="ma-account-form__error" x-show="errors.firstName" x-text="errors.firstName"></span>
+                <span class="ma-form__error" x-show="errors.firstName" x-text="errors.firstName"></span>
             </div>
 
-            <div class="ma-account-form__field">
-                <label for="lastName" class="ma-account-form__label">Last Name</label>
+            <div class="ma-form__field">
+                <label for="lastName" class="ma-form__label">Last Name</label>
                 <input
                         type="text"
                         id="lastName"
                         x-model="lastName"
-                        class="ma-account-form__input ma-account-form__input--capitalize"
+                        class="ma-form__input ma-form__input--capitalize"
                         :class="{'field-invalid': errors.lastName}"
                 />
-                <span class="ma-account-form__error" x-show="errors.lastName" x-text="errors.lastName"></span>
+                <span class="ma-form__error" x-show="errors.lastName" x-text="errors.lastName"></span>
             </div>
         </div>
     </div>
 
-    <div class="ma-account-form__section ma-account-form__section--bordered">
-        <div class="ma-account-form__section-head">
-            <h3 class="ma-account-form__section-title">Contact Information</h3>
-            <p class="ma-account-form__section-description">Manage your contact details</p>
+    <div class="ma-form__section ma-form__section--bordered">
+        <div class="ma-form__section-head">
+            <h3 class="ma-form__section-title">Contact Information</h3>
+            <p class="ma-form__section-description">Manage your contact details</p>
         </div>
 
-        <div class="ma-account-form__fields">
-            <div class="ma-account-form__field">
-                <label for="email" class="ma-account-form__label">Email Address</label>
+        <div class="ma-form__fields">
+            <div class="ma-form__field">
+                <label for="email" class="ma-form__label">Email Address</label>
                 <input
                         type="text"
                         id="email"
                         x-model="email"
                         autocomplete="email"
-                        class="ma-account-form__input"
+                        class="ma-form__input"
                         :class="{'field-invalid': errors.email}"
                 />
-                <p class="ma-account-form__hint">This email is used for order confirmations and account notifications</p>
-                <span class="ma-account-form__error" x-show="errors.email" x-text="errors.email"></span>
+                <p class="ma-form__hint">This email is used for order confirmations and account notifications</p>
+                <span class="ma-form__error" x-show="errors.email" x-text="errors.email"></span>
             </div>
 
-            <div class="ma-account-form__field">
-                <label for="phone" class="ma-account-form__label">Phone Number</label>
+            <div class="ma-form__field">
+                <label for="phone" class="ma-form__label">Phone Number</label>
                 <input
                         type="text"
                         id="phone"
                         value="<?php echo esc_attr( $phone_display ); ?>"
                         readonly
-                        class="ma-account-form__input"
+                        class="ma-form__input"
                 />
-                <p class="ma-account-form__hint">Used for delivery updates and customer support</p>
+                <p class="ma-form__hint">Used for delivery updates and customer support</p>
             </div>
         </div>
     </div>
 
-    <div class="ma-account-form__section ma-account-form__section--bordered">
-        <div class="ma-account-form__section-head">
-            <h3 class="ma-account-form__section-title">Account Settings</h3>
-            <p class="ma-account-form__section-description">Manage your account security</p>
+    <div class="ma-form__section ma-form__section--bordered">
+        <div class="ma-form__section-head">
+            <h3 class="ma-form__section-title">Account Settings</h3>
+            <p class="ma-form__section-description">Manage your account security</p>
         </div>
 
-        <div class="ma-account-form__settings">
-            <div class="ma-account-form__setting-card">
-                <div class="ma-account-form__setting-meta">
-                    <p class="ma-account-form__setting-label">Password</p>
-                    <p class="ma-account-form__setting-value">••••••••</p>
+        <div class="ma-form__settings">
+            <div class="ma-form__setting-card">
+                <div class="ma-form__setting-meta">
+                    <p class="ma-form__setting-label">Password</p>
+                    <p class="ma-form__setting-value">••••••••</p>
                 </div>
                 <button
                         type="button"
                         @click="$store.popup.openPopup(document.getElementById('form-change-password').innerHTML)"
-                        class="ma-account-form__setting-action"
+                        class="ma-form__setting-action"
                 >
                     Change Password
                 </button>
             </div>
 
-            <div class="ma-account-form__setting-card">
-                <div class="ma-account-form__setting-meta">
-                    <p class="ma-account-form__setting-label">Account Status</p>
-                    <p class="ma-account-form__setting-value">Active since <?php echo esc_html( $active_since ); ?></p>
+            <div class="ma-form__setting-card">
+                <div class="ma-form__setting-meta">
+                    <p class="ma-form__setting-label">Account Status</p>
+                    <p class="ma-form__setting-value">Active since <?php echo esc_html( $active_since ); ?></p>
                 </div>
-                <span class="ma-account-form__status-pill">Active</span>
+                <span class="ma-form__status-pill">Active</span>
             </div>
         </div>
     </div>
 
-    <div class="apl-form-actions ma-account-form__actions">
+    <div class="ma-form-actions ma-form__actions">
         <button
                 type="submit"
                 class="button"
@@ -147,7 +147,7 @@ $active_since = $registered_timestamp ? date_i18n( 'F Y', $registered_timestamp 
 
 </form>
 <?php
-    wc_get_template('myaccount/apl-form-edit-change-password.php');
+    wc_get_template('myaccount/ma-form-edit-change-password.php');
 ?>
 
 <script>

@@ -47,7 +47,7 @@ do_action( 'woocommerce_before_lost_password_form' );
             <label for="reg_email"><?php esc_html_e('Email address', 'woocommerce'); ?></label>
             <div class="relative">
                 <input id="reg_email" x-model="formData.email"
-                       type="text" class="woocommerce-Input woocommerce-Input--text input-text"
+                       type="text" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input"
                        autocomplete="email"
                        @blur="handler.validateField('email')"
                        name="user_login"
@@ -61,7 +61,7 @@ do_action( 'woocommerce_before_lost_password_form' );
 
         <?php do_action( 'woocommerce_lostpassword_form' ); ?>
 
-        <div class="apl-form-actions apl-form-actions--two">
+        <div class="ma-form-actions ma-form-actions--two">
             <input type="hidden" name="wc_reset_password" value="true" />
             <button
                     :disabled="(Object.values(errors).length > 0  && Object.values(touched).length > 0) || Object.values(touched).length == 0 "

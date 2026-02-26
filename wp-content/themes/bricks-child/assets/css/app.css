@@ -2,237 +2,17 @@
 
 /* My Account BEM base layer (core endpoints)                                 */
 
-/* Blocks: ma-page-heading, ma-orders, ma-view-order, ma-account-form,        */
+/* Blocks: ma-page-heading, ma-orders, ma-view-order,                         */
 
 /*         ma-address-book, ma-payment-methods                                 */
 
 /* -------------------------------------------------------------------------- */
 
-.ma-form {
-  --apl-radio-size: 20px;
-  --apl-checkbox-size: 26px;
-  --apl-checkbox-icon-size: 18px;
-}
-
-.ma-form * {
-  font-size: 14px;
-}
-
-@media (min-width: 1280px) {
-  .ma-form * {
-    font-size: 16px;
-  }
-}
-
-.ma-form .input,
-    .ma-form input:not([type='submit']):not([type='checkbox']):not([type='radio']),
-    .ma-form select,
-    .ma-form textarea {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-
-.ma-form .input:-webkit-autofill, .ma-form input:not([type='submit']):not([type='checkbox']):not([type='radio']):-webkit-autofill, .ma-form select:-webkit-autofill, .ma-form textarea:-webkit-autofill {
-  --tw-shadow: inset 0 0 0px 1000px #fff;
-  --tw-shadow-colored: inset 0 0 0px 1000px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-}
-
-.ma-form .input:autofill,
-    .ma-form input:not([type='submit']):not([type='checkbox']):not([type='radio']):autofill,
-    .ma-form select:autofill,
-    .ma-form textarea:autofill {
-  --tw-shadow: inset 0 0 0px 1000px #fff;
-  --tw-shadow-colored: inset 0 0 0px 1000px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-}
-
-.ma-form .input,
-    .ma-form input:not([type='submit']):not([type='checkbox']):not([type='radio']),
-    .ma-form select {
-  padding-right: 2.5rem;
-}
-
-.ma-form input[type='password'] {
-  padding-right: 6rem;
-}
-
-.ma-form div[x-validate-icon] {
-  top: 0.75rem;
-  right: 0.25rem;
-}
-
-.ma-form .password-toggle {
-  position: absolute;
-  right: 0.75rem;
-  top: 50%;
-  display: flex;
-  --tw-translate-y: -50%;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.ma-form input[type='radio'],
-    .ma-form input[type='checkbox'] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-       appearance: none;
-  margin: 0;
-  display: inline-grid;
-  flex: none;
-  place-content: center;
-  border-width: 1px;
-  --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-
-.ma-form input[type='radio'] {
-  width: var(--apl-radio-size);
-  height: var(--apl-radio-size);
-  min-width: var(--apl-radio-size);
-  min-height: var(--apl-radio-size);
-  cursor: pointer;
-  border-radius: 0px;
-}
-
-.ma-form input[type='radio']:checked {
-  --tw-border-opacity: 1;
-  border-color: rgb(17 24 39 / var(--tw-border-opacity));
-  background: radial-gradient(circle at center, #111827 0 4px, #ffffff 4.5px);
-}
-
-.ma-form input[type='checkbox'] {
-  width: var(--apl-checkbox-size);
-  height: var(--apl-checkbox-size);
-  min-width: var(--apl-checkbox-size);
-  min-height: var(--apl-checkbox-size);
-  cursor: pointer;
-  border-radius: 0px;
-}
-
-.ma-form input[type='checkbox']:checked {
-  --tw-border-opacity: 1;
-  border-color: rgb(17 24 39 / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: rgb(17 24 39 / var(--tw-bg-opacity));
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: var(--apl-checkbox-icon-size) var(--apl-checkbox-icon-size);
-}
-
-.ma-form input[type='radio']:focus-visible,
-    .ma-form input[type='checkbox']:focus-visible {
-  outline-style: solid;
-  outline-width: 2px;
-  outline-offset: 2px;
-  outline-color: #9ca3af;
-}
-
-.ma-form label.jk-checkbox {
-  display: inline-flex;
-  cursor: pointer;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.ma-form .jk-checkbox-wrapper {
-  display: inline-flex;
-  cursor: pointer;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.ma-form .jk-checkbox-wrapper > input[type='checkbox'] {
-  width: 1px;
-  height: 1px;
-  position: absolute;
-  margin: 0;
-  opacity: 0;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  white-space: nowrap;
-  pointer-events: none;
-}
-
-.ma-form .jk-checkbox-wrapper > .jk-checkbox {
-  width: var(--apl-checkbox-size);
-  height: var(--apl-checkbox-size);
-  min-width: var(--apl-checkbox-size);
-  min-height: var(--apl-checkbox-size);
-  display: inline-block;
-  flex: none;
-  border-radius: 0px;
-  border-width: 1px;
-  --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-  position: relative;
-  margin-top: 0;
-}
-
-.ma-form .jk-checkbox-wrapper > input[type='checkbox']:checked + .jk-checkbox {
-  --tw-border-opacity: 1;
-  border-color: rgb(17 24 39 / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: rgb(17 24 39 / var(--tw-bg-opacity));
-}
-
-.ma-form .jk-checkbox-wrapper > input[type='checkbox']:checked + .jk-checkbox::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: var(--apl-checkbox-icon-size);
-  height: var(--apl-checkbox-icon-size);
-  transform: translate(-50%, -50%);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: var(--apl-checkbox-icon-size) var(--apl-checkbox-icon-size);
-}
-
-.ma-form .jk-checkbox-wrapper > input[type='checkbox']:focus-visible + .jk-checkbox {
-  outline-style: solid;
-  outline-width: 2px;
-  outline-offset: 2px;
-  outline-color: #9ca3af;
-}
-
-.ma-form .jk-checkbox-wrapper .jk-checkbox-label {
-  font-size: 16px;
-  line-height: 1.375;
-  --tw-text-opacity: 1;
-  color: rgb(17 24 39 / var(--tw-text-opacity));
-}
-
-.ma-form.loading input,
-        .ma-form.loading button,
-        .ma-form.loading select {
-  pointer-events: none;
-}
-
-.ma-form.loading button {
-  opacity: 0.7;
-}
-
-.woocommerce-account .ma-page-heading,
-    .woocommerce-account .ma-orders,
-    .woocommerce-account .ma-view-order,
-    .woocommerce-account .ma-address-book,
-    .woocommerce-account .ma-payment-methods {
+.woocommerce-account .woocommerce-MyAccount-content {
   margin-left: auto;
   margin-right: auto;
   width: 100%;
   max-width: 1280px;
-  padding-left: 2rem;
-  padding-right: 2rem;
 }
 
 .woocommerce-account .ma-page-heading {
@@ -603,313 +383,28 @@
   width: 1rem;
 }
 
-.woocommerce-account .ma-form label {
-  margin-bottom: 6px;
-  text-transform: none;
-}
-
-.woocommerce-account .ma-form .input,
-        .woocommerce-account .ma-form input:not([type='submit']):not([type='checkbox']):not([type='radio']),
-        .woocommerce-account .ma-form select,
-        .woocommerce-account .ma-form textarea {
-  height: 50px;
-  padding-left: 14px;
-  padding-right: 14px;
-  font-size: 18px;
-  line-height: 1.2;
-  border-width: 1px;
-  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
-}
-
-.woocommerce-account .ma-form input:not([type='submit']):not([type='checkbox']):not([type='radio']):focus,
-        .woocommerce-account .ma-form select:focus,
-        .woocommerce-account .ma-form textarea:focus {
-  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
-  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
-  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
-}
-
-.woocommerce-account .ma-form .error .input,
-            .woocommerce-account .ma-form .error input:not([type='submit']):not([type='checkbox']):not([type='radio']),
-            .woocommerce-account .ma-form .error select,
-            .woocommerce-account .ma-form .error textarea {
-  border-width: 1px;
-}
-
-.woocommerce-account .ma-form .field-invalid {
-  border-width: 1px;
-}
-
-.woocommerce-account .ma-form .button,
-        .woocommerce-account .ma-form .woocommerce-button,
-        .woocommerce-account .ma-form button[type='submit'],
-        .woocommerce-account .ma-form input[type='submit'] {
-  display: inline-flex;
-  height: 50px;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  font-size: 16px;
-  font-weight: 500;
-  border-width: 1px;
-  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
-}
-
-.woocommerce-account .ma-form .button:hover, .woocommerce-account .ma-form .woocommerce-button:hover, .woocommerce-account .ma-form button[type='submit']:hover, .woocommerce-account .ma-form input[type='submit']:hover {
-  filter: brightness(1.08);
-}
-
-.woocommerce-account .ma-form .button:focus-visible, .woocommerce-account .ma-form .woocommerce-button:focus-visible, .woocommerce-account .ma-form button[type='submit']:focus-visible, .woocommerce-account .ma-form input[type='submit']:focus-visible {
-  outline-style: solid;
-  outline-width: 2px;
-  outline-offset: 2px;
-}
-
-.woocommerce-account .ma-form .button[disabled], .woocommerce-account .ma-form .woocommerce-button[disabled], .woocommerce-account .ma-form button[type='submit'][disabled], .woocommerce-account .ma-form input[type='submit'][disabled] {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.woocommerce-account .ma-form .button.light:hover, .woocommerce-account .ma-form .woocommerce-button.light:hover, .woocommerce-account .ma-form button[type='submit'].light:hover, .woocommerce-account .ma-form input[type='submit'].light:hover {
-  filter: brightness(0.97);
-}
-
-.apl-form-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding-top: 1.5rem;
-}
-
-.apl-form-actions > .button,
-    .apl-form-actions > button[type='button'],
-    .apl-form-actions > button[type='submit'],
-    .apl-form-actions > input[type='submit'],
-    .apl-form-actions > a.button {
-  display: inline-flex;
-  height: 50px;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  font-size: 16px;
-  font-weight: 500;
-  border-width: 1px;
-  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
-}
-
-.apl-form-actions > .button:hover, .apl-form-actions > button[type='button']:hover, .apl-form-actions > button[type='submit']:hover, .apl-form-actions > input[type='submit']:hover, .apl-form-actions > a.button:hover {
-  filter: brightness(1.08);
-}
-
-.apl-form-actions > .button.light:hover, .apl-form-actions > button[type='button'].light:hover, .apl-form-actions > button[type='submit'].light:hover, .apl-form-actions > input[type='submit'].light:hover, .apl-form-actions > a.button.light:hover {
-  filter: brightness(0.97);
-}
-
-@media (min-width: 768px) {
-  .apl-form-actions.apl-form-actions--two {
-    flex-direction: row;
-  }
-
-  .apl-form-actions.apl-form-actions--two > .button,
-    .apl-form-actions.apl-form-actions--two > button,
-    .apl-form-actions.apl-form-actions--two > a.button {
-    flex: 1 1 0%;
-  }
-}
-
-.woocommerce-account .ma-account-form {
-  margin-left: auto;
-  margin-right: auto;
-  display: flex;
-  width: 100%;
-  max-width: 800px;
-  flex-direction: column;
-  gap: 4rem;
-  padding-left: 2rem;
-  padding-right: 2rem;
-}
-
-.woocommerce-account .ma-account-form__section {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.woocommerce-account .ma-account-form__section--bordered {
-  border-top-width: 1px;
-  padding-top: 65px;
-}
-
-.woocommerce-account .ma-account-form__section-head {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.woocommerce-account .ma-account-form__section-title {
-  margin: 0px;
-  font-size: 20px;
-  text-transform: uppercase;
-  line-height: 28px;
-  letter-spacing: 0.05em;
-  --tw-text-opacity: 1;
-  color: rgb(17 24 39 / var(--tw-text-opacity));
-}
-
-.woocommerce-account .ma-account-form__section-description {
-  margin: 0px;
-  font-size: 14px;
-  --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity));
-}
-
-.woocommerce-account .ma-account-form__grid {
-  display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 1.5rem;
-}
-
-@media (min-width: 768px) {
-  .woocommerce-account .ma-account-form__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-.woocommerce-account .ma-account-form__fields {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.woocommerce-account .ma-account-form__field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.woocommerce-account .ma-account-form__label {
-  margin: 0px;
-  display: block;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-  --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity));
-}
-
-.woocommerce-account .ma-account-form__input {
-  height: 50px;
-  border-width: 1px;
-  --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
-  padding-left: 1rem;
-  padding-right: 1rem;
-  --tw-text-opacity: 1;
-  color: rgb(17 24 39 / var(--tw-text-opacity));
-}
-
-.woocommerce-account .ma-account-form__input--capitalize {
-  text-transform: capitalize;
-}
-
-.woocommerce-account .ma-account-form__hint {
-  margin: 0px;
-  font-size: 12px;
-  --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity));
-}
-
-.woocommerce-account .ma-account-form__error {
-  display: block;
-  font-size: 12px;
-  --tw-text-opacity: 1;
-  color: rgb(220 38 38 / var(--tw-text-opacity));
-}
-
-.woocommerce-account .ma-account-form__settings {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.woocommerce-account .ma-account-form__setting-card {
-  display: flex;
-  min-height: 94px;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  border-width: 1px;
-  --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity));
-  padding-left: 25px;
-  padding-right: 25px;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-}
-
-.woocommerce-account .ma-account-form__setting-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.woocommerce-account .ma-account-form__setting-label {
-  margin: 0px;
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-  --tw-text-opacity: 1;
-  color: rgb(17 24 39 / var(--tw-text-opacity));
-}
-
-.woocommerce-account .ma-account-form__setting-value {
-  margin: 0px;
-  font-size: 14px;
-  --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity));
-}
-
-.woocommerce-account .ma-account-form__setting-action {
-  white-space: nowrap;
-  border-width: 0px;
-  background-color: transparent;
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-  --tw-text-opacity: 1;
-  color: rgb(17 24 39 / var(--tw-text-opacity));
-  text-decoration-line: underline;
-}
-
-.woocommerce-account .ma-account-form__status-pill {
-  display: inline-flex;
-  border-radius: 9999px;
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-}
-
-.woocommerce-account .ma-account-form__actions {
-  border-top-width: 1px;
-  padding-top: 2rem;
-}
+/* @import "./myaccount/form-base.css"; */
 
 /* Fashion template tokens + visual overrides */
 
 body.myaccount-template-fashion.woocommerce-account {
   --ma-fashion-surface: #f6f8fc;
+  --ma-form-color-text: #111827;
+  --ma-form-color-muted: #6b7280;
+  --ma-form-color-input: #111827;
+  --ma-form-color-border: #d1d5db;
+  --ma-form-color-surface: #f8fafc;
+  --ma-form-color-placeholder: #9ca3af;
+  --ma-form-color-focus-border: #9ca3af;
+  --ma-form-color-focus-ring: rgb(17 24 39 / 0.08);
+  --ma-form-color-error: #dc2626;
+  --ma-form-color-button-bg: #111827;
+  --ma-form-color-button-border: #111827;
+  --ma-form-color-button-text: #ffffff;
+  --ma-form-color-button-light-bg: #ffffff;
+  --ma-form-color-button-light-border: #d1d5db;
+  --ma-form-color-button-light-text: #111827;
+  --ma-form-color-outline: #9ca3af;
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-form label {
@@ -917,78 +412,76 @@ body.myaccount-template-fashion.woocommerce-account .ma-form label {
   letter-spacing: 0.01em;
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-form .input,
-body.myaccount-template-fashion.woocommerce-account .ma-form input:not([type='submit']):not([type='checkbox']):not([type='radio']),
+body.myaccount-template-fashion.woocommerce-account .ma-form .ma-form__input,
 body.myaccount-template-fashion.woocommerce-account .ma-form select,
 body.myaccount-template-fashion.woocommerce-account .ma-form textarea {
-  border-color: #d1d5db;
+  border-color: var(--ma-form-color-border);
   border-radius: 0;
-  background-color: #f8fafc;
-  color: #111827;
+  background-color: var(--ma-form-color-surface);
+  color: var(--ma-form-color-input);
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-form input:not([type='submit']):not([type='checkbox']):not([type='radio'])::-moz-placeholder, body.myaccount-template-fashion.woocommerce-account .ma-form textarea::-moz-placeholder {
-  color: #9ca3af;
+body.myaccount-template-fashion.woocommerce-account .ma-form .ma-form__input::-moz-placeholder, body.myaccount-template-fashion.woocommerce-account .ma-form textarea::-moz-placeholder {
+  color: var(--ma-form-color-placeholder);
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-form input:not([type='submit']):not([type='checkbox']):not([type='radio'])::placeholder,
+body.myaccount-template-fashion.woocommerce-account .ma-form .ma-form__input::placeholder,
 body.myaccount-template-fashion.woocommerce-account .ma-form textarea::placeholder {
-  color: #9ca3af;
+  color: var(--ma-form-color-placeholder);
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-form input:not([type='submit']):not([type='checkbox']):not([type='radio']):focus,
+body.myaccount-template-fashion.woocommerce-account .ma-form .ma-form__input:focus,
 body.myaccount-template-fashion.woocommerce-account .ma-form select:focus,
 body.myaccount-template-fashion.woocommerce-account .ma-form textarea:focus {
-  border-color: #9ca3af;
-  --tw-ring-color: rgb(17 24 39 / 0.08);
+  border-color: var(--ma-form-color-focus-border);
+  --tw-ring-color: var(--ma-form-color-focus-ring);
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-form .error .input,
-body.myaccount-template-fashion.woocommerce-account .ma-form .error input:not([type='submit']):not([type='checkbox']):not([type='radio']),
+body.myaccount-template-fashion.woocommerce-account .ma-form .error .ma-form__input,
 body.myaccount-template-fashion.woocommerce-account .ma-form .error select,
 body.myaccount-template-fashion.woocommerce-account .ma-form .error textarea,
 body.myaccount-template-fashion.woocommerce-account .ma-form .field-invalid {
-  border-color: #dc2626;
+  border-color: var(--ma-form-color-error);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-form .error label {
-  color: #dc2626;
+  color: var(--ma-form-color-error);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-form .button,
 body.myaccount-template-fashion.woocommerce-account .ma-form .woocommerce-button,
 body.myaccount-template-fashion.woocommerce-account .ma-form button[type='submit'],
 body.myaccount-template-fashion.woocommerce-account .ma-form input[type='submit'],
-body.myaccount-template-fashion.woocommerce-account .apl-form-actions > .button,
-body.myaccount-template-fashion.woocommerce-account .apl-form-actions > button[type='button'],
-body.myaccount-template-fashion.woocommerce-account .apl-form-actions > button[type='submit'],
-body.myaccount-template-fashion.woocommerce-account .apl-form-actions > input[type='submit'],
-body.myaccount-template-fashion.woocommerce-account .apl-form-actions > a.button {
+body.myaccount-template-fashion.woocommerce-account .ma-form-actions > .button,
+body.myaccount-template-fashion.woocommerce-account .ma-form-actions > button[type='button'],
+body.myaccount-template-fashion.woocommerce-account .ma-form-actions > button[type='submit'],
+body.myaccount-template-fashion.woocommerce-account .ma-form-actions > input[type='submit'],
+body.myaccount-template-fashion.woocommerce-account .ma-form-actions > a.button {
   border-radius: 0;
-  border-color: #111827;
-  background-color: #111827;
-  color: #ffffff;
+  border-color: var(--ma-form-color-button-border);
+  background-color: var(--ma-form-color-button-bg);
+  color: var(--ma-form-color-button-text);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-form .button:focus-visible,
 body.myaccount-template-fashion.woocommerce-account .ma-form .woocommerce-button:focus-visible,
 body.myaccount-template-fashion.woocommerce-account .ma-form button[type='submit']:focus-visible,
 body.myaccount-template-fashion.woocommerce-account .ma-form input[type='submit']:focus-visible {
-  outline-color: #9ca3af;
+  outline-color: var(--ma-form-color-outline);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-form .button.light,
 body.myaccount-template-fashion.woocommerce-account .ma-form .woocommerce-button.light,
 body.myaccount-template-fashion.woocommerce-account .ma-form button[type='submit'].light,
 body.myaccount-template-fashion.woocommerce-account .ma-form input[type='submit'].light,
-body.myaccount-template-fashion.woocommerce-account .apl-form-actions > .button.light,
-body.myaccount-template-fashion.woocommerce-account .apl-form-actions > button[type='button'].light,
-body.myaccount-template-fashion.woocommerce-account .apl-form-actions > button[type='submit'].light,
-body.myaccount-template-fashion.woocommerce-account .apl-form-actions > input[type='submit'].light,
-body.myaccount-template-fashion.woocommerce-account .apl-form-actions > a.button.light {
-  border-color: #d1d5db;
-  background-color: #ffffff;
-  color: #111827;
+body.myaccount-template-fashion.woocommerce-account .ma-form-actions > .button.light,
+body.myaccount-template-fashion.woocommerce-account .ma-form-actions > button[type='button'].light,
+body.myaccount-template-fashion.woocommerce-account .ma-form-actions > button[type='submit'].light,
+body.myaccount-template-fashion.woocommerce-account .ma-form-actions > input[type='submit'].light,
+body.myaccount-template-fashion.woocommerce-account .ma-form-actions > a.button.light {
+  border-color: var(--ma-form-color-button-light-border);
+  background-color: var(--ma-form-color-button-light-bg);
+  color: var(--ma-form-color-button-light-text);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-orders__item {
@@ -1009,13 +502,13 @@ body.myaccount-template-fashion.woocommerce-account .ma-orders__empty-text {
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-view-order__updates,
-body.myaccount-template-fashion.woocommerce-account .ma-account-form__section--bordered,
-body.myaccount-template-fashion.woocommerce-account .ma-account-form__actions,
+body.myaccount-template-fashion.woocommerce-account .ma-form__section--bordered,
+body.myaccount-template-fashion.woocommerce-account .ma-form__actions,
 body.myaccount-template-fashion.woocommerce-account .ma-page-heading__description {
   border-color: #e5e7eb;
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-account-form__status-pill {
+body.myaccount-template-fashion.woocommerce-account .ma-form__status-pill {
   background-color: #ecfdf5;
   color: #16a34a;
 }
@@ -2470,8 +1963,10 @@ button,
   font: inherit;
 }
 
-/* Spinner: arc moves around the circle via stroke-dashoffset (no element rotation). */
+.woocom
 
+
+/* Spinner: arc moves around the circle via stroke-dashoffset (no element rotation). */
 .loading-icon {
   display: inline-flex;
   align-items: center;
@@ -2638,48 +2133,6 @@ input[type='submit'],
 .woocommerce-account .woocommerce-MyAccount-content {
   margin-bottom: 40px;
 }
-
-/* Checkout native controls (radio) */
-
-/* .woocommerce ul#shipping_method {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    @apply border border-form-border rounded-none overflow-hidden bg-form-surface;
-
-    > li {
-        @apply flex items-center gap-[10px] py-3 px-[14px] border-b border-form-border;
-        margin: 0;
-
-        &:last-child {
-            border-bottom: 0;
-        }
-
-        > input.shipping_method[type='radio'] {
-            -webkit-appearance: none;
-            appearance: none;
-            @apply w-[18px] h-[18px] border border-form-borderStrong rounded-none bg-white inline-grid place-content-center cursor-pointer flex-none;
-            margin: 0;
-
-            &:checked {
-                @apply border-form-accent;
-                background: radial-gradient(circle at center, #111827 0 4px, #ffffff 4.5px);
-            }
-
-            &:focus-visible {
-                @apply outline outline-2 outline-form-focus outline-offset-2;
-            }
-        }
-
-        > label {
-            margin: 0;
-            @apply text-form-text text-lg;
-            line-height: 1.25;
-            font-weight: 500;
-            cursor: pointer;
-        }
-    }
-} */
 
 /* Checkout native controls (payment radio + checkbox) */
 

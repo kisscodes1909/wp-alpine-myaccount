@@ -52,7 +52,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
                     <label for="reg_email"><?php esc_html_e('Email address', 'woocommerce'); ?></label>
                     <div class="relative">
                         <input id="reg_email" x-model="formData.email"
-                               type="text" class="woocommerce-Input woocommerce-Input--text input-text"
+                               type="text" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input"
                                autocomplete="email"
                                @blur="handler.validateField('email')"
                         />
@@ -67,11 +67,10 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
                     <div class="relative" x-data="{showPassword:false}">
                         <input
                                 x-model="formData.password"
-                                type="password" class="woocommerce-Input woocommerce-Input--text input-text"
+                                type="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input pr-5"
                                 autocomplete="username"
                                 @keyup="handler.validateField('password')"
                                 :type="showPassword === true ? 'text' : 'password'"
-                                class="pr-5"
 
                         />
                         <div class="password-toggle">
@@ -102,7 +101,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
                     <?php
                         // TODO: Find a way for reusable this button with alpine state.
                     ?>
-                    <div class="apl-form-actions mt-12">
+                    <div class="ma-form-actions mt-12">
                         <button type="submit" class="woocommerce-button button inline-flex items-center justify-center gap-2" :disabled="isFormSubmitting" :aria-busy="isFormSubmitting" x-loading="isFormSubmitting" data-loading-label="<?php esc_attr_e( 'Signing in...', 'woocommerce' ); ?>">
                             <?php esc_html_e( 'Log in', 'woocommerce' ); ?>
                         </button>
@@ -134,7 +133,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
                     <label for="reg_firstName"><?php esc_html_e('First name', 'woocommerce'); ?></label>
                     <div class="relative">
                         <input id="reg_firstName" x-model="formData.firstName"
-                               type="text" class="woocommerce-Input woocommerce-Input--text input-text"
+                               type="text" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input"
                                autocomplete="firstName"
                                @blur="validateField('firstName')"
                         />
@@ -148,7 +147,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
                     <label for="reg_lastName"><?php esc_html_e('Last name', 'woocommerce'); ?></label>
                     <div class="relative">
                         <input id="reg_lastName" x-model="formData.lastName"
-                               type="text" class="woocommerce-Input woocommerce-Input--text input-text"
+                               type="text" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input"
                                autocomplete="lastName"
                                @blur="validateField('lastName')"
                         />
@@ -162,7 +161,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
                     <label for="reg_email"><?php esc_html_e('Email address', 'woocommerce'); ?></label>
                     <div class="relative">
                         <input id="reg_email" x-model="formData.email"
-                               type="text" class="woocommerce-Input woocommerce-Input--text input-text"
+                               type="text" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input"
                                autocomplete="email"
                                @blur="validateField('email')"
                         />
@@ -176,7 +175,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
                     <label for="reg_password"><?php esc_html_e('Password', 'woocommerce'); ?></label>
                     <div class="relative" x-data="{showPassword:false}">
                         <input x-model="formData.password" minlength="8" type="password"
-                               class="woocommerce-Input woocommerce-Input--text input-text" name="password"
+                               class="woocommerce-Input woocommerce-Input--text input-text ma-form__input" name="password"
                                id="reg_password" autocomplete="new-password"
                                @keyup="validateField('password')"
                                :type="showPassword === true ? 'text' : 'password'"
@@ -248,7 +247,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 
                 <?php do_action( 'woocommerce_register_form' ); ?>
 
-                <div class="apl-form-actions mt-12">
+                <div class="ma-form-actions mt-12">
                     <button type="submit" class="woocommerce-button button inline-flex items-center justify-center gap-2" :disabled="isFormSubmitting" :aria-busy="isFormSubmitting" x-loading="isFormSubmitting" data-loading-label="<?php esc_attr_e( 'Creating account...', 'woocommerce' ); ?>">
                         <?php esc_html_e( 'Create Account', 'woocommerce' ); ?>
                     </button>
