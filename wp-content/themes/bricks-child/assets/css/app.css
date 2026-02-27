@@ -391,7 +391,7 @@
   --ma-form-space-fields-gap: 1.5rem;
   --ma-form-space-field-gap: 0.5rem;
   --ma-form-space-grid-gap: 1.5rem;
-  --ma-form-space-bordered-top: 65px;
+  --ma-form-space-bordered-top: 30px;
   --ma-form-space-actions-top: 2rem;
   --ma-form-space-setting-card-gap: 1rem;
   --ma-form-space-setting-card-padding-x: 25px;
@@ -919,6 +919,12 @@ body.myaccount-template-fashion.woocommerce-account {
   --ma-form-color-button-light-border: #d1d5db;
   --ma-form-color-button-light-text: #111827;
   --ma-form-color-outline: #9ca3af;
+}
+
+/* My Info endpoint (edit-account): increase form rhythm for fashion variant */
+
+body.myaccount-template-fashion.woocommerce-account.woocommerce-edit-account .ma-form {
+  --ma-form-space-main-gap: 2.5rem;
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-form label {
