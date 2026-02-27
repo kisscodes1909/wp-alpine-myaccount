@@ -53,16 +53,20 @@ class Theme_Assets {
 
 	    wp_enqueue_script('wishlist');
 
-	    // Alpine bundle (includes Alpine.js + Yup + theme stores/components/directives)
-	    $alpine_bundle = CHILD_DIR . '/assets/js/alpine.bundle.js';
-	    if (file_exists($alpine_bundle)) {
-	        wp_enqueue_script(
-	            'alpine-bundle',
-	            CHILD_URL . '/assets/js/alpine.bundle.js',
-	            [],
-	            filemtime($alpine_bundle),
-	            true
-	        );
+	    $plugin_owns_myaccount_assets = function_exists( 'myaccount_core_is_plugin_owner' ) && myaccount_core_is_plugin_owner() && is_account_page();
+
+	    if ( ! $plugin_owns_myaccount_assets ) {
+	        // Alpine bundle (includes Alpine.js + Yup + theme stores/components/directives)
+	        $alpine_bundle = CHILD_DIR . '/assets/js/alpine.bundle.js';
+	        if (file_exists($alpine_bundle)) {
+	            wp_enqueue_script(
+	                'alpine-bundle',
+	                CHILD_URL . '/assets/js/alpine.bundle.js',
+	                [],
+	                filemtime($alpine_bundle),
+	                true
+	            );
+	        }
 	    }
 
 		wp_localize_script('wishlist', 'wishlistData', [

@@ -1,7 +1,10 @@
 <?php
 
 class Theme_Frontend {
+	private bool $plugin_owns_myaccount;
+
     public function __construct() {
+		$this->plugin_owns_myaccount = function_exists( 'myaccount_core_is_plugin_owner' ) && myaccount_core_is_plugin_owner();
         $this->includes();
         $this->hook_includes();
     }
@@ -17,13 +20,19 @@ class Theme_Frontend {
         }
 
         require_once CHILD_DIR . '/includes/woocommerce/user-registration.php';
-        require_once CHILD_DIR . '/includes/woocommerce/my-account-page.php';
-        require_once CHILD_DIR . '/includes/woocommerce/address-book.php';
+
+        // Core My Account is handled by plugin only in plugin ownership mode.
+        if ( ! $this->plugin_owns_myaccount ) {
+            require_once CHILD_DIR . '/includes/woocommerce/my-account-page.php';
+            require_once CHILD_DIR . '/includes/woocommerce/address-book.php';
+        }
 
     }
 
     public function hook_includes(){
-		add_action('wp_footer', [$this, 'apl_ui']);
+		if ( ! $this->plugin_owns_myaccount ) {
+			add_action('wp_footer', [$this, 'apl_ui']);
+		}
     }
 
 	function apl_ui() {

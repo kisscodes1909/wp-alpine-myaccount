@@ -3,9 +3,14 @@
 class Theme_Ajax {
     public function __construct()
     {
-        add_action('wp_ajax_save-address', [$this, 'save_address_book']);
-        add_action('wp_ajax_save_account_details', [$this,'save_account_details']);
-        add_action('wp_ajax_change_password', [$this, 'handle_change_password']);
+        $myaccount_core_active = function_exists( 'myaccount_core_is_plugin_owner' ) && myaccount_core_is_plugin_owner();
+
+        if ( ! $myaccount_core_active ) {
+            add_action('wp_ajax_save-address', [$this, 'save_address_book']);
+            add_action('wp_ajax_save_account_details', [$this,'save_account_details']);
+            add_action('wp_ajax_change_password', [$this, 'handle_change_password']);
+        }
+
         add_action('wp_ajax_handle_return_request', [$this, 'handle_return_request']);
         add_action('wp_ajax_nopriv_handle_return_request', [$this, 'handle_return_request']);
         add_action('wp_ajax_approve_return', [$this, 'handle_approve_return_ajax']);
