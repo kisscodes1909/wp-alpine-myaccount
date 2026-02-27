@@ -1,0 +1,48 @@
+@import "./myaccount/base.css";
+@import "./myaccount/form-base.css";
+@import "./myaccount/fashion.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer {
+    body {
+        @apply text-charcoal;
+    }
+}
+
+/* Minimal shared utility styles used by My Account Alpine components. */
+[x-cloak] {
+    display: none;
+}
+
+.apl-heading-chip {
+    @apply inline-flex items-center text-form-text text-xl md:text-[34px] font-semibold leading-none;
+}
+
+.apl-heading-chip-sm {
+    @apply inline-flex items-center text-form-text text-xl font-semibold leading-tight;
+}
+
+.loading-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+.loading-icon svg {
+    display: block;
+    vertical-align: middle;
+}
+
+.loading-icon .spinner-arc {
+    animation: spinner-dash 0.8s linear infinite;
+}
+
+@keyframes spinner-dash {
+    to {
+        stroke-dashoffset: -63;
+    }
+}

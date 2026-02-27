@@ -1,0 +1,418 @@
+
+
+
+.woocommerce-account {
+    .ma-form {
+        --ma-form-space-label-bottom: 6px;
+        --ma-form-space-main-gap: 1.5rem;
+        --ma-form-space-section-gap: 2rem;
+        --ma-form-space-section-head-gap: 0.5rem;
+        --ma-form-space-fields-gap: 1.5rem;
+        --ma-form-space-field-gap: 0.5rem;
+        --ma-form-space-grid-gap: 1.5rem;
+        --ma-form-space-bordered-top: 30px;
+        --ma-form-space-actions-top: 2rem;
+        --ma-form-space-setting-card-gap: 1rem;
+        --ma-form-space-setting-card-padding-x: 25px;
+        --ma-form-space-setting-card-padding-y: 1rem;
+        --ma-form-space-setting-meta-gap: 0.25rem;
+        --ma-form-space-status-pill-padding-x: 0.75rem;
+        --ma-form-space-status-pill-padding-y: 0.25rem;
+        --ma-form-space-button-gap: 0.5rem;
+        --ma-form-space-button-padding-x: 1rem;
+        --ma-form-space-field-padding-x: 1rem;
+        --ma-form-space-input-icon-padding-right: 2.5rem;
+        --ma-form-space-password-padding-right: 6rem;
+        --ma-form-space-password-toggle-right: 0.75rem;
+        --ma-form-space-password-toggle-gap: 0.25rem;
+        --ma-form-space-validate-icon-top: 0.75rem;
+        --ma-form-space-validate-icon-right: 0.25rem;
+
+        --apl-radio-size: 20px;
+        --apl-checkbox-size: 26px;
+        --apl-checkbox-icon-size: 18px;
+
+        --ma-form-font-size-xs: 1rem;
+        --ma-form-font-size-sm: 1rem;
+        --ma-form-font-size-base: 16px;
+        --ma-form-font-size-xl: 1rem;
+        --ma-form-line-height-title: 1.75rem;
+        --ma-form-font-size-checkbox-label: 1rem;
+
+        --ma-form-color-text: #111827;
+        --ma-form-color-muted: #6b7280;
+        --ma-form-color-input: #111827;
+        --ma-form-color-error: #dc2626;
+        --ma-form-color-border: #d1d5db;
+        --ma-form-color-surface: #ffffff;
+
+        @apply w-full flex flex-col;
+        gap: var(--ma-form-space-main-gap);
+
+        label {
+            margin-bottom: var(--ma-form-space-label-bottom);
+            text-transform: none;
+        }
+
+        .ma-form__input,
+        select,
+        textarea {
+            @apply transition-all autofill:shadow-[inset_0_0_0px_1000px_#fff];
+        }
+
+        .ma-form__input,
+        select {
+            padding-right: var(--ma-form-space-input-icon-padding-right);
+        }
+
+        input[type='password'] {
+            padding-right: var(--ma-form-space-password-padding-right);
+        }
+
+        div[x-validate-icon] {
+            top: var(--ma-form-space-validate-icon-top);
+            right: var(--ma-form-space-validate-icon-right);
+        }
+
+        .password-toggle {
+            @apply absolute top-1/2 -translate-y-1/2 flex items-center;
+            right: var(--ma-form-space-password-toggle-right);
+            gap: var(--ma-form-space-password-toggle-gap);
+        }
+
+        .input,
+        .ma-form__input,
+        select,
+        textarea {
+            @apply h-form-field border;
+            border-color: var(--ma-form-color-border);
+            padding-inline: var(--ma-form-space-field-padding-x);
+            color: var(--ma-form-color-input);
+            background-color: var(--ma-form-color-surface);
+            transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+        }
+
+        .ma-form__input:focus,
+        select:focus,
+        textarea:focus {
+            @apply ring-1;
+        }
+
+        .error {
+            .input,
+            .ma-form__input,
+            select,
+            textarea {
+                @apply border;
+            }
+        }
+
+        .field-invalid {
+            @apply border;
+        }
+
+        input[type='radio'],
+        input[type='checkbox'] {
+            -webkit-appearance: none;
+            appearance: none;
+            margin: 0;
+            @apply inline-grid place-content-center flex-none bg-white border border-form-border;
+        }
+
+        input[type='radio'] {
+            width: var(--apl-radio-size);
+            height: var(--apl-radio-size);
+            min-width: var(--apl-radio-size);
+            min-height: var(--apl-radio-size);
+            @apply rounded-none cursor-pointer;
+
+            &:checked {
+                @apply border-form-accent;
+                background: radial-gradient(circle at center, #111827 0 4px, #ffffff 4.5px);
+            }
+        }
+
+        input[type='checkbox'] {
+            width: var(--apl-checkbox-size);
+            height: var(--apl-checkbox-size);
+            min-width: var(--apl-checkbox-size);
+            min-height: var(--apl-checkbox-size);
+            @apply rounded-none cursor-pointer;
+
+            &:checked {
+                @apply border-form-accent bg-form-accent;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: var(--apl-checkbox-icon-size) var(--apl-checkbox-icon-size);
+            }
+        }
+
+        input[type='radio']:focus-visible,
+        input[type='checkbox']:focus-visible {
+            @apply outline outline-2 outline-form-focus outline-offset-2;
+        }
+
+        label.jk-checkbox {
+            @apply inline-flex items-center gap-3 cursor-pointer;
+        }
+
+        .jk-checkbox-wrapper {
+            @apply inline-flex items-center gap-3 cursor-pointer;
+
+            > input[type='checkbox'] {
+                width: 1px;
+                height: 1px;
+                position: absolute;
+                margin: 0;
+                opacity: 0;
+                overflow: hidden;
+                clip: rect(0 0 0 0);
+                clip-path: inset(50%);
+                white-space: nowrap;
+                pointer-events: none;
+            }
+
+            > .jk-checkbox {
+                width: var(--apl-checkbox-size);
+                height: var(--apl-checkbox-size);
+                min-width: var(--apl-checkbox-size);
+                min-height: var(--apl-checkbox-size);
+                @apply inline-block rounded-none border border-form-border bg-white flex-none;
+                position: relative;
+                margin-top: 0;
+            }
+
+            > input[type='checkbox']:checked + .jk-checkbox {
+                @apply border-form-accent bg-form-accent;
+            }
+
+            > input[type='checkbox']:checked + .jk-checkbox::after {
+                content: '';
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                width: var(--apl-checkbox-icon-size);
+                height: var(--apl-checkbox-icon-size);
+                transform: translate(-50%, -50%);
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: var(--apl-checkbox-icon-size) var(--apl-checkbox-icon-size);
+            }
+
+            > input[type='checkbox']:focus-visible + .jk-checkbox {
+                @apply outline outline-2 outline-form-focus outline-offset-2;
+            }
+
+            .jk-checkbox-label {
+                color: var(--ma-form-color-text);
+                font-size: var(--ma-form-font-size-base);
+                line-height: 1.375;
+            }
+        }
+
+        .button,
+        .woocommerce-button,
+        button[type='submit'],
+        input[type='submit'] {
+            @apply inline-flex items-center justify-center w-full h-form-field border font-medium;
+            gap: var(--ma-form-space-button-gap);
+            padding-inline: var(--ma-form-space-button-padding-x);
+            font-size: var(--ma-form-font-size-base);
+            transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
+
+            &:hover {
+                filter: brightness(1.08);
+            }
+
+            &:focus-visible {
+                @apply outline outline-2 outline-offset-2;
+            }
+
+            &[disabled] {
+                @apply opacity-50 cursor-not-allowed;
+            }
+
+            &.light {
+                &:hover {
+                    filter: brightness(0.97);
+                }
+            }
+        }
+
+        &.loading {
+            input,
+            button,
+            select {
+                @apply pointer-events-none;
+            }
+
+            button {
+                @apply opacity-70;
+            }
+        }
+    }
+}
+
+.ma-form-actions {
+    @apply flex flex-col;
+    gap: var(--ma-form-space-fields-gap, 1.5rem);
+    padding-top: var(--ma-form-space-actions-top, 2rem);
+
+    > .button,
+    > button[type='button'],
+    > button[type='submit'],
+    > input[type='submit'],
+    > a.button {
+        @apply w-full h-form-field inline-flex items-center justify-center border font-medium;
+        gap: var(--ma-form-space-button-gap, 0.5rem);
+        padding-inline: var(--ma-form-space-button-padding-x, 1rem);
+        font-size: var(--ma-form-font-size-base, 1rem);
+        transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
+
+        &:hover {
+            filter: brightness(1.08);
+        }
+
+        &.light {
+            &:hover {
+                filter: brightness(0.97);
+            }
+        }
+    }
+}
+
+.ma-form-actions.ma-form-actions--two {
+    @apply sm:flex-row;
+
+    > .button,
+    > button,
+    > a.button {
+        @apply sm:flex-1;
+    }
+}
+
+.woocommerce-account {
+    .ma-form__section {
+        @apply flex flex-col;
+        gap: var(--ma-form-space-section-gap);
+    }
+
+    .ma-form__section--bordered {
+        @apply border-t;
+        padding-top: var(--ma-form-space-bordered-top);
+    }
+
+    .ma-form__section-head {
+        @apply flex flex-col;
+        gap: var(--ma-form-space-section-head-gap);
+    }
+
+    .ma-form__section-title {
+        @apply m-0 uppercase tracking-wider;
+        font-size: var(--ma-form-font-size-base);
+        line-height: var(--ma-form-line-height-title);
+        color: var(--ma-form-color-text);
+    }
+
+    .ma-form__section-description {
+        @apply m-0;
+        font-size: var(--ma-form-font-size-base);
+        color: var(--ma-form-color-muted);
+    }
+
+    .ma-form__grid {
+        @apply grid grid-cols-1 sm:grid-cols-2;
+        gap: var(--ma-form-space-grid-gap);
+    }
+
+    .ma-form__fields {
+        @apply flex flex-col;
+        gap: var(--ma-form-space-fields-gap);
+    }
+
+    .ma-form__field {
+        @apply flex flex-col;
+        gap: var(--ma-form-space-field-gap);
+    }
+
+    .ma-form__label {
+        @apply block m-0 uppercase tracking-wide;
+        font-size: var(--ma-form-font-size-base);
+        color: var(--ma-form-color-muted);
+    }
+
+    .ma-form__input {
+        @apply h-form-field border;
+        border-color: var(--ma-form-color-border);
+        background-color: var(--ma-form-color-surface);
+        color: var(--ma-form-color-text);
+        padding-inline: var(--ma-form-space-field-padding-x);
+        font-size: var(--ma-form-font-size-base);
+    }
+
+    .ma-form__input--capitalize {
+        text-transform: capitalize;
+    }
+
+    .ma-form__hint {
+        @apply m-0;
+        font-size: var(--ma-form-font-size-base);
+        color: var(--ma-form-color-muted);
+    }
+
+    .ma-form__error {
+        @apply block;
+        font-size: var(--ma-form-font-size-base);
+        color: var(--ma-form-color-error);
+    }
+
+    .ma-form__settings {
+        @apply flex flex-col;
+        gap: var(--ma-form-space-fields-gap);
+    }
+
+    .ma-form__setting-card {
+        @apply min-h-[94px] border flex items-center justify-between;
+        border-color: var(--ma-form-color-border);
+        padding-inline: var(--ma-form-space-setting-card-padding-x);
+        padding-block: var(--ma-form-space-setting-card-padding-y);
+        gap: var(--ma-form-space-setting-card-gap);
+    }
+
+    .ma-form__setting-meta {
+        @apply flex flex-col;
+        gap: var(--ma-form-space-setting-meta-gap);
+    }
+
+    .ma-form__setting-label {
+        @apply m-0 uppercase tracking-wide;
+        font-size: var(--ma-form-font-size-base);
+        color: var(--ma-form-color-text);
+    }
+
+    .ma-form__setting-value {
+        @apply m-0;
+        font-size: var(--ma-form-font-size-base);
+        color: var(--ma-form-color-muted);
+    }
+
+    .ma-form__setting-action {
+        @apply bg-transparent border-0 uppercase tracking-wide underline whitespace-nowrap;
+        font-size: var(--ma-form-font-size-base);
+        color: var(--ma-form-color-text);
+    }
+
+    .ma-form__status-pill {
+        @apply inline-flex rounded-full uppercase tracking-wide;
+        font-size: var(--ma-form-font-size-base);
+        padding-inline: var(--ma-form-space-status-pill-padding-x);
+        padding-block: var(--ma-form-space-status-pill-padding-y);
+    }
+
+    .ma-form__actions {
+        @apply border-t;
+        padding-top: var(--ma-form-space-actions-top);
+    }
+}
