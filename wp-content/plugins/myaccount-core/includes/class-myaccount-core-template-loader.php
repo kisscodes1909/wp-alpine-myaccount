@@ -8,6 +8,7 @@ class MyAccount_Core_Template_Loader {
 	private array $managed_templates = array(
 		'myaccount/navigation.php',
 		'myaccount/page-heading.php',
+		'myaccount/form-login.php',
 		'myaccount/orders.php',
 		'myaccount/view-order.php',
 		'myaccount/form-edit-account.php',

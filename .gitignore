@@ -49,3 +49,10 @@ wp-config.php
 # Note: If you wish to whitelist themes,
 # uncomment the next line
 #/wp-content/themes
+
+# Cursor-generated project docs
+/AGENTS.md
+/PROJECT_CONTEXT.md
+/TASK_BOARD.md
+/ALPINE_UI.md
+/ALPINE_UI_OPTIMIZATION.md

@@ -27,7 +27,7 @@ class My_Account_Page {
         add_filter('woocommerce_registration_redirect', array($this, 'redirect_to_home'), 10, 1);
 
         // Redirect account dashboard to order history
-        add_action('template_redirect', [$this, 'redirect_dashboard_to_order_list']);
+        //add_action('template_redirect', [$this, 'redirect_dashboard_to_order_list']);
 
         // Global My Account template class (fashion/a/b/c)
         add_filter('body_class', [$this, 'add_my_account_template_class']);

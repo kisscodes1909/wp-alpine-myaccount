@@ -21,25 +21,21 @@ defined( 'ABSPATH' ) || exit;
 do_action( 'woocommerce_before_lost_password_form' );
 ?>
 
-<div class="md:container mx-auto my-8">
-    <?php
-        if (isset($_GET['reset-link-sent'])) {
+<div class="ma-auth-container">
+    <div class="ma-auth-container__notices">
+        <?php
+        if ( isset( $_GET['reset-link-sent'] ) ) {
             wc_print_notice( esc_html__( 'Instructions to reset your password has been emailed to you.', 'woocommerce' ), 'notice' );
         } else {
             wc_print_notices();
         }
-    ?>
-</div>
+        ?>
+    </div>
 
-<?php wc_get_template('myaccount/page-heading.php',
-    [
-        'page_heading' => 'Forgot Password',
-        'page_description' => 'Enter your email to receive a reset link',
-    ]
-); ?>
+    <div class="ma-auth">
+        <?php wc_get_template( 'myaccount/page-heading.php', array( 'page_heading' => 'Forgot Password', 'page_description' => 'Enter your email to receive a reset link' ) ); ?>
 
-<div class="md:container mx-auto px-8">
-    <form x-data="lostPassword" method="post" class="woocommerce-ResetPassword lost_reset_password ma-form sm:w-[700px] mx-auto">
+        <form x-data="lostPassword" method="post" class="woocommerce-ResetPassword lost_reset_password ma-form">
 
     <!--	<p>--><?php //echo apply_filters( 'woocommerce_lost_password_message', esc_html__( 'Lost your password? Please enter your username or email address. You will receive a link to create a new password via email.', 'woocommerce' ) ); ?><!--</p>--><?php //// @codingStandardsIgnoreLine ?>
 
@@ -71,7 +67,8 @@ do_action( 'woocommerce_before_lost_password_form' );
 
         <?php wp_nonce_field( 'lost_password', 'woocommerce-lost-password-nonce' ); ?>
 
-    </form>
+        </form>
+    </div>
 </div>
 <?php
 do_action( 'woocommerce_after_lost_password_form' );

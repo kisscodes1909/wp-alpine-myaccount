@@ -416,3 +416,116 @@
         padding-top: var(--ma-form-space-actions-top);
     }
 }
+
+/* Auth container - wraps login/signup, forgot/reset password forms */
+.woocommerce-account .ma-auth-container {
+    @apply w-full mx-auto px-4;
+    max-width: 1280px;
+}
+
+.woocommerce-account .ma-auth-container__notices {
+    margin-bottom: var(--ma-form-space-section-gap);
+}
+
+/* Page heading inside auth container - centered, constrained to ma-auth width */
+.woocommerce-account .ma-auth-container .ma-page-heading {
+    @apply flex flex-col items-center;
+    text-align: center;
+    margin-bottom: var(--ma-form-space-section-gap);
+}
+
+@media (min-width: 768px) {
+    .woocommerce-account .ma-auth-container {
+        @apply px-8;
+    }
+}
+
+.woocommerce-account .ma-auth {
+    @apply w-full mx-auto;
+    max-width: 700px;
+}
+
+/* Auth tabs (login/signup) - fashion structure */
+.woocommerce-account .ma-auth-tabs {
+    @apply flex list-none p-0 justify-center m-0 gap-5;
+    margin-bottom: var(--ma-form-space-section-gap);
+}
+
+.woocommerce-account .ma-auth-tabs__item {
+    @apply inline-block py-2 px-4 cursor-pointer bg-transparent border-b-2 border-transparent;
+    font-size: var(--ma-form-font-size-base);
+    color: var(--ma-form-color-muted);
+    transition: color 180ms ease, border-color 180ms ease;
+}
+
+.woocommerce-account .ma-auth-tabs__item:hover {
+    color: var(--ma-form-color-text);
+}
+
+.woocommerce-account .ma-auth-tabs__item--active {
+    @apply font-semibold;
+    color: var(--ma-form-color-text);
+    border-color: var(--ma-form-color-text);
+}
+
+@media (min-width: 768px) {
+    .woocommerce-account .ma-auth-tabs__item {
+        font-size: var(--ma-form-font-size-xl);
+    }
+}
+
+.woocommerce-account .ma-auth__content {
+    @apply flex flex-col;
+    gap: var(--ma-form-space-main-gap);
+}
+
+.woocommerce-account .ma-form__notice {
+    margin-bottom: var(--ma-form-space-section-gap);
+}
+
+.woocommerce-account .ma-form__notice:empty {
+    @apply hidden;
+}
+
+.woocommerce-account .ma-form__lost-password {
+    @apply m-0;
+}
+
+/* Options row: Keep me signed in (left) + Forgot password (right) */
+.woocommerce-account .ma-form__options {
+    @apply flex flex-row justify-between items-center gap-4;
+}
+
+.woocommerce-account .ma-form__password-requirements {
+    @apply grid grid-cols-1 list-none gap-2 p-0 m-0 mt-2;
+}
+
+@media (min-width: 768px) {
+    .woocommerce-account .ma-form__password-requirements {
+        @apply grid-cols-2;
+    }
+}
+
+.woocommerce-account .ma-form__password-requirement {
+    @apply flex flex-row items-center gap-3;
+}
+
+.woocommerce-account .ma-form__password-requirement-icon {
+    @apply flex-none w-8 h-8;
+}
+
+.woocommerce-account .ma-form__password-requirement-icon--pass {
+    color: #059669;
+}
+
+.woocommerce-account .ma-form__password-requirement-icon--fail {
+    color: var(--ma-form-color-error);
+}
+
+.woocommerce-account .ma-form__password-requirement-text--pass {
+    color: #059669;
+}
+
+.woocommerce-account .ma-form__password-requirement-text--fail {
+    color: var(--ma-form-color-error);
+}

@@ -20,21 +20,15 @@ defined( 'ABSPATH' ) || exit;
 do_action( 'woocommerce_before_reset_password_form' );
 ?>
 
-<div class="md:container mx-auto my-8">
-    <?php
-        wc_print_notices();
-    ?>
-</div>
+<div class="ma-auth-container">
+    <div class="ma-auth-container__notices">
+        <?php wc_print_notices(); ?>
+    </div>
 
+    <div class="ma-auth">
+        <?php wc_get_template( 'myaccount/page-heading.php', array( 'page_heading' => 'Set a New Password', 'page_description' => 'Choose a strong password for your account' ) ); ?>
 
-<?php wc_get_template('myaccount/page-heading.php',
-    [
-        'page_heading' => 'Set a New Password',
-        'page_description' => 'Choose a strong password for your account',
-    ]
-); ?>
-<div class="md:container mx-auto px-8">
-    <form x-data="resetPassword" method="post" class="ma-form sm:w-[700px] mx-auto">
+        <form x-data="resetPassword" method="post" class="ma-form">
 
 <!--        <p>--><?php //echo apply_filters( 'woocommerce_reset_password_message', esc_html__( 'Enter a new password below.', 'woocommerce' ) ); ?><!--</p>--><?php //// @codingStandardsIgnoreLine ?>
 
@@ -112,7 +106,8 @@ do_action( 'woocommerce_before_reset_password_form' );
 
         <?php wp_nonce_field( 'reset_password', 'woocommerce-reset-password-nonce' ); ?>
 
-    </form>
+        </form>
+    </div>
 </div>
 <?php
 do_action( 'woocommerce_after_reset_password_form' );
