@@ -50,7 +50,7 @@
         gap: var(--ma-form-space-main-gap);
 
         label {
-            margin-bottom: var(--ma-form-space-label-bottom);
+            margin-bottom: 0;
             text-transform: uppercase;
         }
 
@@ -209,6 +209,11 @@
                 color: var(--ma-form-color-text);
                 font-size: var(--ma-form-font-size-base);
                 line-height: 1.375;
+                text-transform: none;
+
+                &::first-letter {
+                    text-transform: uppercase;
+                }
             }
         }
 
