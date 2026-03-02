@@ -7,6 +7,7 @@
  * - x-password-eye: Toggle password visibility icon
  * - x-validate-icon: Show tick/cross icons for validation feedback
  * - x-validate-message: Display validation error messages
+ * - x-validate-error: Render reusable error icon + message block
  */
 
 export function registerValidationDirectives() {
@@ -104,6 +105,36 @@ export function registerValidationDirectives() {
                     el.style.display = 'none';
                 }
             })
+        });
+    });
+
+    // Directive: x-validate-error
+    // Usage: <span x-validate-error="{message: errors.email, touched: touched.email}"></span>
+    Alpine.directive('validate-error', (el, { expression }, { evaluateLater, effect }) => {
+        let getValidator = evaluateLater(expression);
+
+        el.classList.add('ma-form__error', 'items-center', 'gap-2');
+        el.innerHTML = `<svg class="h-5 w-5 flex-none text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" focusable="false">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0 3.75h.008v.008H12v-.008ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                        <span class="ma-form__error-text"></span>`;
+
+        const textEl = el.querySelector('.ma-form__error-text');
+        el.style.display = 'none';
+
+        effect(() => {
+            getValidator(errors => {
+                const hasTouched = errors && Object.prototype.hasOwnProperty.call(errors, 'touched');
+                const touched = hasTouched ? errors.touched : true;
+                const message = errors && errors.message ? errors.message : '';
+                const shouldShow = Boolean(message) && (touched === undefined || touched);
+
+                if (textEl) {
+                    textEl.textContent = message;
+                }
+
+                el.style.display = shouldShow ? 'inline-flex' : 'none';
+            });
         });
     });
 }

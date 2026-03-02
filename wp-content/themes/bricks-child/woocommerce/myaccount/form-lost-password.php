@@ -48,9 +48,8 @@ do_action( 'woocommerce_before_lost_password_form' );
                        @blur="handler.validateField('email')"
                        name="user_login"
                 />
-                <div x-validate-icon="{message: errors.email, touched:touched.email}" class="absolute right-0 top-0"></div>
-                <span x-validate-message="{message: errors.email, touched:touched.email}" class="text-red-600 mt-1 block"></span>
             </div>
+            <span x-validate-error="{message: errors.email, touched:touched.email}"></span>
         </div>
 
         <div class="clear"></div>

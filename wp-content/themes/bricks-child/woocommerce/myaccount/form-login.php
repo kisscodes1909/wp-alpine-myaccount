@@ -56,10 +56,8 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
                                autocomplete="email"
                                @blur="handler.validateField('email')"
                         />
-                        <div x-validate-icon="{message: errors.email, touched:touched.email}" class="absolute right-0 top-0"></div>
-                        <span
-                                x-transition:enter.duration.500ms x-validate-message="{message: errors.email, touched:touched.email}" class="text-red-600 mt-1 block"></span>
                     </div>
+                    <span x-validate-error="{message: errors.email, touched:touched.email}"></span>
                 </div>
 
                 <div class="mb-8" :class="{'error': (touched.password && errors.password)}">
@@ -74,13 +72,11 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 
                         />
                         <div class="password-toggle">
-                            <!-- Validate Field -->
-                            <div x-validate-icon="{message: errors.password, touched:touched.password}"></div>
                             <!-- Password Eye -->
                             <div class="block w-10 h-10 flex items-center justify-center" x-password-eye="showPassword" @click="showPassword=!showPassword"></div>
                         </div>
                     </div>
-                    <span class="text-red-600 mt-1 block" x-show="touched.password && errors.password" x-text="errors.password"></span>
+                    <span x-validate-error="{message: errors.password, touched:touched.password}"></span>
                 </div>
 
                 <p class="woocommerce-LostPassword lost_password text-right mb-8">
@@ -137,9 +133,8 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
                                autocomplete="firstName"
                                @blur="validateField('firstName')"
                         />
-                        <div x-validate-icon="{message: errors.firstName, touched:touched.firstName}" class="absolute right-0 top-0"></div>
-                        <span x-validate-message="{message: errors.firstName, touched:touched.firstName}" class="text-red-600 mt-1 block"></span>
                     </div>
+                    <span x-validate-error="{message: errors.firstName, touched:touched.firstName}"></span>
                 </div>
 
                 <!-- Last Name Input -->
@@ -151,9 +146,8 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
                                autocomplete="lastName"
                                @blur="validateField('lastName')"
                         />
-                        <div x-validate-icon="{message: errors.lastName, touched:touched.lastName}" class="absolute right-0 top-0"></div>
-                        <span x-validate-message="{message: errors.lastName, touched:touched.lastName}" class="text-red-600 mt-1 block"></span>
                     </div>
+                    <span x-validate-error="{message: errors.lastName, touched:touched.lastName}"></span>
                 </div>
 
                 <!-- Email Input -->
@@ -165,9 +159,8 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
                                autocomplete="email"
                                @blur="validateField('email')"
                         />
-                        <div x-validate-icon="{message: errors.email, touched:touched.email}" class="absolute right-0 top-0"></div>
-                        <span x-validate-message="{message: errors.email, touched:touched.email}" class="text-red-600 mt-1 block"></span>
                     </div>
+                    <span x-validate-error="{message: errors.email, touched:touched.email}"></span>
                 </div>
 
                 <!-- Password Input -->
@@ -192,14 +185,8 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
                       <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
                     </svg>
                 </span>
-                            <svg x-show="errors.password" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-red-600 bg-white">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                            </svg>
-                            <svg x-show="touched.password && !errors.password" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                            </svg>
                         </div>
-                        <span class="text-red-600 mt-1 block" x-show="touched.password && errors.password" x-text="errors.password"></span>
+                        <span x-validate-error="{message: errors.password, touched:touched.password}"></span>
                         <p class="mt-4">Password must contain:</p>
                         <template x-if="openTab === 'signUp'">
                             <ul class="grid grid-cols-1 md:grid-cols-2 list-none gap-4 md:gap-2">
@@ -242,7 +229,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
                         ?>
                         <span class="jk-checkbox-label">I agree to the <a class="underline" target="_blank" href="<?php echo esc_html(get_permalink($terms_page_id)) ?>">Terms of Service</a> and <a class="underline" target="_blank" href="<?php echo esc_html(get_permalink($privacy_page_id)) ?>">Privacy Policy.</a></span>
                     </label>
-                    <span class="text-red-600 mt-1 block ml-12" x-show="errors.agreeTOS" x-text="errors.agreeTOS"></span>
+                    <span x-validate-error="{message: errors.agreeTOS}"></span>
                 </div>
 
                 <?php do_action( 'woocommerce_register_form' ); ?>

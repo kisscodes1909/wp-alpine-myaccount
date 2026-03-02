@@ -5,29 +5,26 @@ var AlpineBundle = (() => {
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
   var __commonJS = (cb, mod) => function __require() {
-    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+    return mod || (0, cb[Object.keys(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
   };
   var __export = (target, all) => {
+    __markAsModule(target);
     for (var name in all)
       __defProp(target, name, { get: all[name], enumerable: true });
   };
-  var __copyProps = (to, from, except, desc) => {
-    if (from && typeof from === "object" || typeof from === "function") {
-      for (let key of __getOwnPropNames(from))
-        if (!__hasOwnProp.call(to, key) && key !== except)
-          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  var __reExport = (target, module, desc) => {
+    if (module && typeof module === "object" || typeof module === "function") {
+      for (let key of __getOwnPropNames(module))
+        if (!__hasOwnProp.call(target, key) && key !== "default")
+          __defProp(target, key, { get: () => module[key], enumerable: !(desc = __getOwnPropDesc(module, key)) || desc.enumerable });
     }
-    return to;
+    return target;
   };
-  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-    // If the importer is in node compatibility mode or this is not an ESM
-    // file that has been converted to a CommonJS file using a Babel-
-    // compatible transform (i.e. "__esModule" has not been set), then set
-    // "default" to the CommonJS "module.exports" for node compatibility.
-    isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-    mod
-  ));
+  var __toModule = (module) => {
+    return __reExport(__markAsModule(__defProp(module != null ? __create(__getProtoOf(module)) : {}, "default", module && module.__esModule && "default" in module ? { get: () => module.default, enumerable: true } : { value: module, enumerable: true })), module);
+  };
 
   // node_modules/property-expr/index.js
   var require_property_expr = __commonJS({
@@ -39,14 +36,15 @@ var AlpineBundle = (() => {
       }
       Cache.prototype.clear = function() {
         this._size = 0;
-        this._values = /* @__PURE__ */ Object.create(null);
+        this._values = Object.create(null);
       };
       Cache.prototype.get = function(key) {
         return this._values[key];
       };
       Cache.prototype.set = function(key, value) {
         this._size >= this._maxSize && this.clear();
-        if (!(key in this._values)) this._size++;
+        if (!(key in this._values))
+          this._size++;
         return this._values[key] = value;
       };
       var SPLIT_REGEX = /[^.^\]^[]+|(?=\[\]|\.\.)/g;
@@ -83,8 +81,10 @@ var AlpineBundle = (() => {
           return getCache.get(path) || getCache.set(path, function getter2(data2) {
             var index = 0, len = parts.length;
             while (index < len) {
-              if (data2 != null || !safe) data2 = data2[parts[index++]];
-              else return;
+              if (data2 != null || !safe)
+                data2 = data2[parts[index++]];
+              else
+                return;
             }
             return data2;
           });
@@ -99,12 +99,9 @@ var AlpineBundle = (() => {
         }
       };
       function normalizePath2(path) {
-        return pathCache.get(path) || pathCache.set(
-          path,
-          split2(path).map(function(part) {
-            return part.replace(CLEAN_QUOTES_REGEX, "$2");
-          })
-        );
+        return pathCache.get(path) || pathCache.set(path, split2(path).map(function(part) {
+          return part.replace(CLEAN_QUOTES_REGEX, "$2");
+        }));
       }
       function split2(path) {
         return path.match(SPLIT_REGEX) || [""];
@@ -145,10 +142,7 @@ var AlpineBundle = (() => {
       var words = (str) => str.match(reWords) || [];
       var upperFirst = (str) => str[0].toUpperCase() + str.slice(1);
       var join2 = (str, d) => words(str).join(d).toLowerCase();
-      var camelCase4 = (str) => words(str).reduce(
-        (acc, next) => `${acc}${!acc ? next.toLowerCase() : next[0].toUpperCase() + next.slice(1).toLowerCase()}`,
-        ""
-      );
+      var camelCase4 = (str) => words(str).reduce((acc, next) => `${acc}${!acc ? next.toLowerCase() : next[0].toUpperCase() + next.slice(1).toLowerCase()}`, "");
       var pascalCase = (str) => upperFirst(camelCase4(str));
       var snakeCase2 = (str) => join2(str, "_");
       var kebabCase3 = (str) => join2(str, "-");
@@ -182,7 +176,8 @@ var AlpineBundle = (() => {
           }
         });
         while (i--) {
-          if (!visited[i]) visit(nodes[i], i, /* @__PURE__ */ new Set());
+          if (!visited[i])
+            visit(nodes[i], i, new Set());
         }
         return sorted;
         function visit(node, i2, predecessors) {
@@ -198,9 +193,10 @@ var AlpineBundle = (() => {
           if (!nodesHash.has(node)) {
             throw new Error("Found unknown node. Make sure to provided all involved nodes. Unknown node: " + JSON.stringify(node));
           }
-          if (visited[i2]) return;
+          if (visited[i2])
+            return;
           visited[i2] = true;
-          var outgoing = outgoingEdges.get(node) || /* @__PURE__ */ new Set();
+          var outgoing = outgoingEdges.get(node) || new Set();
           outgoing = Array.from(outgoing);
           if (i2 = outgoing.length) {
             predecessors.add(node);
@@ -214,7 +210,7 @@ var AlpineBundle = (() => {
         }
       }
       function uniqueNodes(arr) {
-        var res = /* @__PURE__ */ new Set();
+        var res = new Set();
         for (var i = 0, len = arr.length; i < len; i++) {
           var edge = arr[i];
           res.add(edge[0]);
@@ -223,17 +219,19 @@ var AlpineBundle = (() => {
         return Array.from(res);
       }
       function makeOutgoingEdges(arr) {
-        var edges = /* @__PURE__ */ new Map();
+        var edges = new Map();
         for (var i = 0, len = arr.length; i < len; i++) {
           var edge = arr[i];
-          if (!edges.has(edge[0])) edges.set(edge[0], /* @__PURE__ */ new Set());
-          if (!edges.has(edge[1])) edges.set(edge[1], /* @__PURE__ */ new Set());
+          if (!edges.has(edge[0]))
+            edges.set(edge[0], new Set());
+          if (!edges.has(edge[1]))
+            edges.set(edge[1], new Set());
           edges.get(edge[0]).add(edge[1]);
         }
         return edges;
       }
       function makeNodesHash(arr) {
-        var res = /* @__PURE__ */ new Map();
+        var res = new Map();
         for (var i = 0, len = arr.length; i < len; i++) {
           res.set(arr[i], i);
         }
@@ -548,32 +546,20 @@ var AlpineBundle = (() => {
   }
   var mergeProxyTrap = {
     ownKeys({ objects }) {
-      return Array.from(
-        new Set(objects.flatMap((i) => Object.keys(i)))
-      );
+      return Array.from(new Set(objects.flatMap((i) => Object.keys(i))));
     },
     has({ objects }, name) {
       if (name == Symbol.unscopables)
         return false;
-      return objects.some(
-        (obj) => Object.prototype.hasOwnProperty.call(obj, name) || Reflect.has(obj, name)
-      );
+      return objects.some((obj) => Object.prototype.hasOwnProperty.call(obj, name) || Reflect.has(obj, name));
     },
     get({ objects }, name, thisProxy) {
       if (name == "toJSON")
         return collapseProxies;
-      return Reflect.get(
-        objects.find(
-          (obj) => Reflect.has(obj, name)
-        ) || {},
-        name,
-        thisProxy
-      );
+      return Reflect.get(objects.find((obj) => Reflect.has(obj, name)) || {}, name, thisProxy);
     },
     set({ objects }, name, value, thisProxy) {
-      const target = objects.find(
-        (obj) => Object.prototype.hasOwnProperty.call(obj, name)
-      ) || objects[objects.length - 1];
+      const target = objects.find((obj) => Object.prototype.hasOwnProperty.call(obj, name)) || objects[objects.length - 1];
       const descriptor = Object.getOwnPropertyDescriptor(target, name);
       if (descriptor?.set && descriptor?.get)
         return descriptor.set.call(thisProxy, value) || true;
@@ -687,10 +673,7 @@ var AlpineBundle = (() => {
     errorHandler = handler4;
   }
   function normalErrorHandler(error2, el, expression = void 0) {
-    error2 = Object.assign(
-      error2 ?? { message: "No error message given." },
-      { el, expression }
-    );
+    error2 = Object.assign(error2 ?? { message: "No error message given." }, { el, expression });
     console.warn(`Alpine Expression Error: ${error2.message}
 
 ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
@@ -750,10 +733,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     let rightSideSafeExpression = /^[\n\s]*if.*\(.*\)/.test(expression.trim()) || /^(let|const)\s/.test(expression.trim()) ? `(async()=>{ ${expression} })()` : expression;
     const safeAsyncFunction = () => {
       try {
-        let func2 = new AsyncFunction(
-          ["__self", "scope"],
-          `with (scope) { __self.result = ${rightSideSafeExpression} }; __self.finished = true; return __self.result;`
-        );
+        let func2 = new AsyncFunction(["__self", "scope"], `with (scope) { __self.result = ${rightSideSafeExpression} }; __self.finished = true; return __self.result;`);
         Object.defineProperty(func2, "name", {
           value: `[Alpine] ${expression}`
         });
@@ -814,18 +794,12 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       let AsyncFunction = Object.getPrototypeOf(async function() {
       }).constructor;
       let rightSideSafeExpression = /^[\n\s]*if.*\(.*\)/.test(expression.trim()) || /^(let|const)\s/.test(expression.trim()) ? `(async()=>{ ${expression} })()` : expression;
-      let func = new AsyncFunction(
-        ["scope"],
-        `with (scope) { let __result = ${rightSideSafeExpression}; return __result }`
-      );
+      let func = new AsyncFunction(["scope"], `with (scope) { let __result = ${rightSideSafeExpression}; return __result }`);
       let result = func.call(extras.context, scope2);
       return result;
     } else {
       let rightSideSafeExpression = /^[\n\s]*if.*\(.*\)/.test(expression.trim()) || /^(let|const)\s/.test(expression.trim()) ? `(()=>{ ${expression} })()` : expression;
-      let func = new Function(
-        ["scope"],
-        `with (scope) { let __result = ${rightSideSafeExpression}; return __result }`
-      );
+      let func = new Function(["scope"], `with (scope) { let __result = ${rightSideSafeExpression}; return __result }`);
       let result = func.call(extras.context, scope2);
       if (typeof result === "function" && shouldAutoEvaluateFunctions) {
         return result.apply(scope2, params);
@@ -999,15 +973,12 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     return directiveOrder.indexOf(typeA) - directiveOrder.indexOf(typeB);
   }
   function dispatch(el, name, detail = {}) {
-    el.dispatchEvent(
-      new CustomEvent(name, {
-        detail,
-        bubbles: true,
-        // Allows events to pass the shadow DOM barrier.
-        composed: true,
-        cancelable: true
-      })
-    );
+    el.dispatchEvent(new CustomEvent(name, {
+      detail,
+      bubbles: true,
+      composed: true,
+      cancelable: true
+    }));
   }
   function walk(el, callback) {
     if (typeof ShadowRoot === "function" && el instanceof ShadowRoot) {
@@ -1952,11 +1923,8 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     closestRoot,
     destroyTree,
     interceptor,
-    // INTERNAL: not public API and is subject to change without major release.
     transition,
-    // INTERNAL
     setStyles,
-    // INTERNAL
     mutateDom,
     directive,
     entangle,
@@ -1973,9 +1941,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     store,
     start,
     clone,
-    // INTERNAL
     cloneNode,
-    // INTERNAL
     bound: getBinding,
     $data: scope,
     watch,
@@ -2337,10 +2303,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
   var toShallow = (value) => value;
   var getProto = (v) => Reflect.getPrototypeOf(v);
   function get$1(target, key, isReadonly = false, isShallow = false) {
-    target = target[
-      "__v_raw"
-      /* RAW */
-    ];
+    target = target["__v_raw"];
     const rawTarget = toRaw(target);
     const rawKey = toRaw(key);
     if (key !== rawKey) {
@@ -2358,10 +2321,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     }
   }
   function has$1(key, isReadonly = false) {
-    const target = this[
-      "__v_raw"
-      /* RAW */
-    ];
+    const target = this["__v_raw"];
     const rawTarget = toRaw(target);
     const rawKey = toRaw(key);
     if (key !== rawKey) {
@@ -2371,10 +2331,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     return key === rawKey ? target.has(key) : target.has(key) || target.has(rawKey);
   }
   function size(target, isReadonly = false) {
-    target = target[
-      "__v_raw"
-      /* RAW */
-    ];
+    target = target["__v_raw"];
     !isReadonly && track(toRaw(target), "iterate", ITERATE_KEY);
     return Reflect.get(target, "size", target);
   }
@@ -2439,10 +2396,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
   function createForEach(isReadonly, isShallow) {
     return function forEach2(callback, thisArg) {
       const observed = this;
-      const target = observed[
-        "__v_raw"
-        /* RAW */
-      ];
+      const target = observed["__v_raw"];
       const rawTarget = toRaw(target);
       const wrap = isShallow ? toShallow : isReadonly ? toReadonly : toReactive;
       !isReadonly && track(rawTarget, "iterate", ITERATE_KEY);
@@ -2453,10 +2407,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
   }
   function createIterableMethod(method, isReadonly, isShallow) {
     return function(...args) {
-      const target = this[
-        "__v_raw"
-        /* RAW */
-      ];
+      const target = this["__v_raw"];
       const rawTarget = toRaw(target);
       const targetIsMap = isMap(rawTarget);
       const isPair = method === "entries" || method === Symbol.iterator && targetIsMap;
@@ -2465,7 +2416,6 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       const wrap = isShallow ? toShallow : isReadonly ? toReadonly : toReactive;
       !isReadonly && track(rawTarget, "iterate", isKeyOnly ? MAP_KEY_ITERATE_KEY : ITERATE_KEY);
       return {
-        // iterator protocol
         next() {
           const { value, done } = innerIterator.next();
           return done ? { value, done } : {
@@ -2473,7 +2423,6 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
             done
           };
         },
-        // iterable protocol
         [Symbol.iterator]() {
           return this;
         }
@@ -2528,22 +2477,10 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       has(key) {
         return has$1.call(this, key, true);
       },
-      add: createReadonlyMethod(
-        "add"
-        /* ADD */
-      ),
-      set: createReadonlyMethod(
-        "set"
-        /* SET */
-      ),
-      delete: createReadonlyMethod(
-        "delete"
-        /* DELETE */
-      ),
-      clear: createReadonlyMethod(
-        "clear"
-        /* CLEAR */
-      ),
+      add: createReadonlyMethod("add"),
+      set: createReadonlyMethod("set"),
+      delete: createReadonlyMethod("delete"),
+      clear: createReadonlyMethod("clear"),
       forEach: createForEach(true, false)
     };
     const shallowReadonlyInstrumentations2 = {
@@ -2556,22 +2493,10 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       has(key) {
         return has$1.call(this, key, true);
       },
-      add: createReadonlyMethod(
-        "add"
-        /* ADD */
-      ),
-      set: createReadonlyMethod(
-        "set"
-        /* SET */
-      ),
-      delete: createReadonlyMethod(
-        "delete"
-        /* DELETE */
-      ),
-      clear: createReadonlyMethod(
-        "clear"
-        /* CLEAR */
-      ),
+      add: createReadonlyMethod("add"),
+      set: createReadonlyMethod("set"),
+      delete: createReadonlyMethod("delete"),
+      clear: createReadonlyMethod("clear"),
       forEach: createForEach(true, true)
     };
     const iteratorMethods = ["keys", "values", "entries", Symbol.iterator];
@@ -2634,16 +2559,10 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     }
   }
   function getTargetType(value) {
-    return value[
-      "__v_skip"
-      /* SKIP */
-    ] || !Object.isExtensible(value) ? 0 : targetTypeMap(toRawType(value));
+    return value["__v_skip"] || !Object.isExtensible(value) ? 0 : targetTypeMap(toRawType(value));
   }
   function reactive2(target) {
-    if (target && target[
-      "__v_isReadonly"
-      /* IS_READONLY */
-    ]) {
+    if (target && target["__v_isReadonly"]) {
       return target;
     }
     return createReactiveObject(target, false, mutableHandlers, mutableCollectionHandlers, reactiveMap);
@@ -2658,13 +2577,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       }
       return target;
     }
-    if (target[
-      "__v_raw"
-      /* RAW */
-    ] && !(isReadonly && target[
-      "__v_isReactive"
-      /* IS_REACTIVE */
-    ])) {
+    if (target["__v_raw"] && !(isReadonly && target["__v_isReactive"])) {
       return target;
     }
     const existingProxy = proxyMap.get(target);
@@ -2680,10 +2593,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     return proxy;
   }
   function toRaw(observed) {
-    return observed && toRaw(observed[
-      "__v_raw"
-      /* RAW */
-    ]) || observed;
+    return observed && toRaw(observed["__v_raw"]) || observed;
   }
   function isRef(r) {
     return Boolean(r && r.__v_isRef === true);
@@ -2784,24 +2694,21 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       el._x_removeModelListeners["default"]();
       let outerGet = el._x_model.get;
       let outerSet = el._x_model.set;
-      let releaseEntanglement = entangle(
-        {
-          get() {
-            return outerGet();
-          },
-          set(value) {
-            outerSet(value);
-          }
+      let releaseEntanglement = entangle({
+        get() {
+          return outerGet();
         },
-        {
-          get() {
-            return innerGet();
-          },
-          set(value) {
-            innerSet(value);
-          }
+        set(value) {
+          outerSet(value);
         }
-      );
+      }, {
+        get() {
+          return innerGet();
+        },
+        set(value) {
+          innerSet(value);
+        }
+      });
       cleanup2(releaseEntanglement);
     });
   });
@@ -2844,12 +2751,10 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         placeInDom(el._x_teleport, target2, modifiers);
       });
     };
-    cleanup2(
-      () => mutateDom(() => {
-        clone22.remove();
-        destroyTree(clone22);
-      })
-    );
+    cleanup2(() => mutateDom(() => {
+      clone22.remove();
+      destroyTree(clone22);
+    }));
   });
   var teleportContainerDuringClone = document.createElement("div");
   function getTarget(expression) {
@@ -2966,9 +2871,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     return !Array.isArray(subject) && !isNaN(subject);
   }
   function kebabCase2(subject) {
-    if ([" ", "_"].includes(
-      subject
-    ))
+    if ([" ", "_"].includes(subject))
       return subject;
     return subject.replace(/([a-z])([A-Z])/g, "$1-$2").replace(/[_\s]/, "-").toLowerCase();
   }
@@ -3116,9 +3019,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     }
     if (modifiers.includes("fill")) {
       if ([void 0, null, ""].includes(getValue()) || isCheckbox(el) && Array.isArray(getValue()) || el.tagName.toLowerCase() === "select" && el.multiple) {
-        setValue(
-          getInputValue(el, modifiers, { target: el }, getValue())
-        );
+        setValue(getInputValue(el, modifiers, { target: el }, getValue()));
       }
     }
     if (!el._x_removeModelListeners)
@@ -3354,16 +3255,13 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       el._x_isShown = true;
     };
     let clickAwayCompatibleShow = () => setTimeout(show);
-    let toggle = once(
-      (value) => value ? show() : hide(),
-      (value) => {
-        if (typeof el._x_toggleAndCascadeWithTransitions === "function") {
-          el._x_toggleAndCascadeWithTransitions(el, value, show, hide);
-        } else {
-          value ? clickAwayCompatibleShow() : hide();
-        }
+    let toggle = once((value) => value ? show() : hide(), (value) => {
+      if (typeof el._x_toggleAndCascadeWithTransitions === "function") {
+        el._x_toggleAndCascadeWithTransitions(el, value, show, hide);
+      } else {
+        value ? clickAwayCompatibleShow() : hide();
       }
-    );
+    });
     let oldValue;
     let firstTime = true;
     effect3(() => evaluate2((value) => {
@@ -3379,21 +3277,15 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
   directive("for", (el, { expression }, { effect: effect3, cleanup: cleanup2 }) => {
     let iteratorNames = parseForExpression(expression);
     let evaluateItems = evaluateLater(el, iteratorNames.items);
-    let evaluateKey = evaluateLater(
-      el,
-      // the x-bind:key expression is stored for our use instead of evaluated.
-      el._x_keyExpression || "index"
-    );
+    let evaluateKey = evaluateLater(el, el._x_keyExpression || "index");
     el._x_prevKeys = [];
     el._x_lookup = {};
     effect3(() => loop(el, iteratorNames, evaluateItems, evaluateKey));
     cleanup2(() => {
-      Object.values(el._x_lookup).forEach((el2) => mutateDom(
-        () => {
-          destroyTree(el2);
-          el2.remove();
-        }
-      ));
+      Object.values(el._x_lookup).forEach((el2) => mutateDom(() => {
+        destroyTree(el2);
+        el2.remove();
+      }));
       delete el._x_prevKeys;
       delete el._x_lookup;
     });
@@ -3651,7 +3543,6 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     ArraySchema: () => ArraySchema,
     BooleanSchema: () => BooleanSchema,
     DateSchema: () => DateSchema,
-    LazySchema: () => Lazy,
     MixedSchema: () => MixedSchema,
     NumberSchema: () => NumberSchema,
     ObjectSchema: () => ObjectSchema,
@@ -3678,38 +3569,49 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     string: () => create$6,
     tuple: () => create$1
   });
-  var import_property_expr = __toESM(require_property_expr());
-  var import_tiny_case = __toESM(require_tiny_case());
-  var import_toposort = __toESM(require_toposort());
+  var import_property_expr = __toModule(require_property_expr());
+  var import_tiny_case = __toModule(require_tiny_case());
+  var import_toposort = __toModule(require_toposort());
   var toString = Object.prototype.toString;
   var errorToString = Error.prototype.toString;
   var regExpToString = RegExp.prototype.toString;
   var symbolToString = typeof Symbol !== "undefined" ? Symbol.prototype.toString : () => "";
   var SYMBOL_REGEXP = /^Symbol\((.*)\)(.*)$/;
   function printNumber(val) {
-    if (val != +val) return "NaN";
+    if (val != +val)
+      return "NaN";
     const isNegativeZero = val === 0 && 1 / val < 0;
     return isNegativeZero ? "-0" : "" + val;
   }
   function printSimpleValue(val, quoteStrings = false) {
-    if (val == null || val === true || val === false) return "" + val;
+    if (val == null || val === true || val === false)
+      return "" + val;
     const typeOf = typeof val;
-    if (typeOf === "number") return printNumber(val);
-    if (typeOf === "string") return quoteStrings ? `"${val}"` : val;
-    if (typeOf === "function") return "[Function " + (val.name || "anonymous") + "]";
-    if (typeOf === "symbol") return symbolToString.call(val).replace(SYMBOL_REGEXP, "Symbol($1)");
+    if (typeOf === "number")
+      return printNumber(val);
+    if (typeOf === "string")
+      return quoteStrings ? `"${val}"` : val;
+    if (typeOf === "function")
+      return "[Function " + (val.name || "anonymous") + "]";
+    if (typeOf === "symbol")
+      return symbolToString.call(val).replace(SYMBOL_REGEXP, "Symbol($1)");
     const tag = toString.call(val).slice(8, -1);
-    if (tag === "Date") return isNaN(val.getTime()) ? "" + val : val.toISOString(val);
-    if (tag === "Error" || val instanceof Error) return "[" + errorToString.call(val) + "]";
-    if (tag === "RegExp") return regExpToString.call(val);
+    if (tag === "Date")
+      return isNaN(val.getTime()) ? "" + val : val.toISOString(val);
+    if (tag === "Error" || val instanceof Error)
+      return "[" + errorToString.call(val) + "]";
+    if (tag === "RegExp")
+      return regExpToString.call(val);
     return null;
   }
   function printValue(value, quoteStrings) {
     let result = printSimpleValue(value, quoteStrings);
-    if (result !== null) return result;
+    if (result !== null)
+      return result;
     return JSON.stringify(value, function(key, value2) {
       let result2 = printSimpleValue(this[key], quoteStrings);
-      if (result2 !== null) return result2;
+      if (result2 !== null)
+        return result2;
       return value2;
     }, 2);
   }
@@ -3752,15 +3654,17 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
   };
   _Symbol$hasInstance = Symbol.hasInstance;
   _Symbol$toStringTag2 = Symbol.toStringTag;
-  var ValidationError = class _ValidationError extends Error {
+  var ValidationError = class extends Error {
     static formatError(message, params) {
       const path = params.label || params.path || "this";
-      params = Object.assign({}, params, {
-        path,
-        originalPath: params.path
-      });
-      if (typeof message === "string") return message.replace(strReg, (_, key) => printValue(params[key]));
-      if (typeof message === "function") return message(params);
+      if (path !== params.path)
+        params = Object.assign({}, params, {
+          path
+        });
+      if (typeof message === "string")
+        return message.replace(strReg, (_, key) => printValue(params[key]));
+      if (typeof message === "function")
+        return message(params);
       return message;
     }
     static isError(err) {
@@ -3787,7 +3691,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       this.errors = errorNoStack.errors;
       this.inner = errorNoStack.inner;
       if (Error.captureStackTrace) {
-        Error.captureStackTrace(this, _ValidationError);
+        Error.captureStackTrace(this, ValidationError);
       }
     }
     static [_Symbol$hasInstance](inst) {
@@ -3843,8 +3747,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     isValue: "${path} field must be ${value}"
   };
   var object = {
-    noUnknown: "${path} field has unspecified keys: ${unknown}",
-    exact: "${path} object contains unknown properties: ${properties}"
+    noUnknown: "${path} field has unspecified keys: ${unknown}"
   };
   var array = {
     min: "${path} field must have at least ${min} items",
@@ -3860,13 +3763,15 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       } = params;
       const typeLen = spec.types.length;
       if (Array.isArray(value)) {
-        if (value.length < typeLen) return `${path} tuple value has too few items, expected a length of ${typeLen} but got ${value.length} for value: \`${printValue(value, true)}\``;
-        if (value.length > typeLen) return `${path} tuple value has too many items, expected a length of ${typeLen} but got ${value.length} for value: \`${printValue(value, true)}\``;
+        if (value.length < typeLen)
+          return `${path} tuple value has too few items, expected a length of ${typeLen} but got ${value.length} for value: \`${printValue(value, true)}\``;
+        if (value.length > typeLen)
+          return `${path} tuple value has too many items, expected a length of ${typeLen} but got ${value.length} for value: \`${printValue(value, true)}\``;
       }
       return ValidationError.formatError(mixed.notType, params);
     }
   };
-  var locale = Object.assign(/* @__PURE__ */ Object.create(null), {
+  var locale = Object.assign(Object.create(null), {
     mixed,
     string,
     number,
@@ -3877,16 +3782,17 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     tuple
   });
   var isSchema = (obj) => obj && obj.__isYupSchema__;
-  var Condition = class _Condition {
+  var Condition = class {
     static fromOptions(refs, config) {
-      if (!config.then && !config.otherwise) throw new TypeError("either `then:` or `otherwise:` is required for `when()` conditions");
+      if (!config.then && !config.otherwise)
+        throw new TypeError("either `then:` or `otherwise:` is required for `when()` conditions");
       let {
         is,
         then,
         otherwise
       } = config;
       let check = typeof is === "function" ? is : (...values) => values.every((value) => value === is);
-      return new _Condition(refs, (values, schema) => {
+      return new Condition(refs, (values, schema) => {
         var _branch;
         let branch = check(...values) ? then : otherwise;
         return (_branch = branch == null ? void 0 : branch(schema)) != null ? _branch : schema;
@@ -3899,16 +3805,13 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       this.fn = builder;
     }
     resolve(base, options) {
-      let values = this.refs.map((ref) => (
-        // TODO: ? operator here?
-        ref.getValue(options == null ? void 0 : options.value, options == null ? void 0 : options.parent, options == null ? void 0 : options.context)
-      ));
+      let values = this.refs.map((ref) => ref.getValue(options == null ? void 0 : options.value, options == null ? void 0 : options.parent, options == null ? void 0 : options.context));
       let schema = this.fn(values, base, options);
-      if (schema === void 0 || // @ts-ignore this can be base
-      schema === base) {
+      if (schema === void 0 || schema === base) {
         return base;
       }
-      if (!isSchema(schema)) throw new TypeError("conditions must return a schema object");
+      if (!isSchema(schema))
+        throw new TypeError("conditions must return a schema object");
       return schema.resolve(options);
     }
   };
@@ -3928,9 +3831,11 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       this.path = void 0;
       this.getter = void 0;
       this.map = void 0;
-      if (typeof key !== "string") throw new TypeError("ref must be a string, got: " + key);
+      if (typeof key !== "string")
+        throw new TypeError("ref must be a string, got: " + key);
       this.key = key.trim();
-      if (key === "") throw new TypeError("ref must be a non-empty string");
+      if (key === "")
+        throw new TypeError("ref must be a non-empty string");
       this.isContext = this.key[0] === prefixes.context;
       this.isValue = this.key[0] === prefixes.value;
       this.isSibling = !this.isContext && !this.isValue;
@@ -3941,17 +3846,12 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     }
     getValue(value, parent, context) {
       let result = this.isContext ? context : this.isValue ? value : parent;
-      if (this.getter) result = this.getter(result || {});
-      if (this.map) result = this.map(result);
+      if (this.getter)
+        result = this.getter(result || {});
+      if (this.map)
+        result = this.map(result);
       return result;
     }
-    /**
-     *
-     * @param {*} value
-     * @param {Object} options
-     * @param {Object=} options.context
-     * @param {Object=} options.parent
-     */
     cast(value, options) {
       return this.getValue(value, options == null ? void 0 : options.parent, options == null ? void 0 : options.context);
     }
@@ -3994,20 +3894,20 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         abortEarly = schema.spec.abortEarly,
         disableStackTrace = schema.spec.disableStackTrace
       } = options;
-      const resolveOptions = {
-        value,
-        parent,
-        context
-      };
+      function resolve(item) {
+        return Reference.isRef(item) ? item.getValue(value, parent, context) : item;
+      }
       function createError(overrides = {}) {
-        const nextParams = resolveParams(Object.assign({
+        const nextParams = Object.assign({
           value,
           originalValue,
           label: schema.spec.label,
           path: overrides.path || path,
           spec: schema.spec,
           disableStackTrace: overrides.disableStackTrace || disableStackTrace
-        }, params, overrides.params), resolveOptions);
+        }, params, overrides.params);
+        for (const key of Object.keys(nextParams))
+          nextParams[key] = resolve(nextParams[key]);
         const error2 = new ValidationError(ValidationError.formatError(overrides.message || message, nextParams), value, nextParams.path, overrides.type || name, nextParams.disableStackTrace);
         error2.params = nextParams;
         return error2;
@@ -4019,21 +3919,24 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         type: name,
         from: options.from,
         createError,
-        resolve(item) {
-          return resolveMaybeRef(item, resolveOptions);
-        },
+        resolve,
         options,
         originalValue,
         schema
       };
       const handleResult = (validOrError) => {
-        if (ValidationError.isError(validOrError)) invalid(validOrError);
-        else if (!validOrError) invalid(createError());
-        else next(null);
+        if (ValidationError.isError(validOrError))
+          invalid(validOrError);
+        else if (!validOrError)
+          invalid(createError());
+        else
+          next(null);
       };
       const handleError2 = (err) => {
-        if (ValidationError.isError(err)) invalid(err);
-        else panic(err);
+        if (ValidationError.isError(err))
+          invalid(err);
+        else
+          panic(err);
       };
       const shouldSkip = skipAbsent && isAbsent(value);
       if (shouldSkip) {
@@ -4058,23 +3961,14 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     validate.OPTIONS = config;
     return validate;
   }
-  function resolveParams(params, options) {
-    if (!params) return params;
-    for (const key of Object.keys(params)) {
-      params[key] = resolveMaybeRef(params[key], options);
-    }
-    return params;
-  }
-  function resolveMaybeRef(item, options) {
-    return Reference.isRef(item) ? item.getValue(options.value, options.parent, options.context) : item;
-  }
   function getIn(schema, path, value, context = value) {
     let parent, lastPart, lastPartDebug;
-    if (!path) return {
-      parent,
-      parentPath: path,
-      schema
-    };
+    if (!path)
+      return {
+        parent,
+        parentPath: path,
+        schema
+      };
     (0, import_property_expr.forEach)(path, (_part, isBracket, isArray2) => {
       let part = isBracket ? _part.slice(1, _part.length - 1) : _part;
       schema = schema.resolve({
@@ -4085,7 +3979,8 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       let isTuple = schema.type === "tuple";
       let idx = isArray2 ? parseInt(part, 10) : 0;
       if (schema.innerType || isTuple) {
-        if (isTuple && !isArray2) throw new Error(`Yup.reach cannot implicitly index into a tuple type. the path part "${lastPartDebug}" must contain an index to the tuple element, e.g. "${lastPartDebug}[0]"`);
+        if (isTuple && !isArray2)
+          throw new Error(`Yup.reach cannot implicitly index into a tuple type. the path part "${lastPartDebug}" must contain an index to the tuple element, e.g. "${lastPartDebug}[0]"`);
         if (value && idx >= value.length) {
           throw new Error(`Yup.reach cannot resolve an array item at index: ${_part}, in the path: ${path}. because there is no value at that index. `);
         }
@@ -4094,7 +3989,8 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         schema = isTuple ? schema.spec.types[idx] : schema.innerType;
       }
       if (!isArray2) {
-        if (!schema.fields || !schema.fields[part]) throw new Error(`The schema does not contain the path: ${path}. (failed at: ${lastPartDebug} which is a type: "${schema.type}")`);
+        if (!schema.fields || !schema.fields[part])
+          throw new Error(`The schema does not contain the path: ${path}. (failed at: ${lastPartDebug} which is a type: "${schema.type}")`);
         parent = value;
         value = value && value[part];
         schema = schema.fields[part];
@@ -4111,7 +4007,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
   function reach(obj, path, value, context) {
     return getIn(obj, path, value, context).schema;
   }
-  var ReferenceSet = class _ReferenceSet extends Set {
+  var ReferenceSet = class extends Set {
     describe() {
       const description = [];
       for (const item of this.values()) {
@@ -4127,7 +4023,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       return result;
     }
     clone() {
-      return new _ReferenceSet(this.values());
+      return new ReferenceSet(this.values());
     }
     merge(newItems, removeItems) {
       const next = this.clone();
@@ -4136,9 +4032,11 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       return next;
     }
   };
-  function clone2(src, seen = /* @__PURE__ */ new Map()) {
-    if (isSchema(src) || !src || typeof src !== "object") return src;
-    if (seen.has(src)) return seen.get(src);
+  function clone2(src, seen = new Map()) {
+    if (isSchema(src) || !src || typeof src !== "object")
+      return src;
+    if (seen.has(src))
+      return seen.get(src);
     let copy;
     if (src instanceof Date) {
       copy = new Date(src.getTime());
@@ -4149,86 +4047,27 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     } else if (Array.isArray(src)) {
       copy = new Array(src.length);
       seen.set(src, copy);
-      for (let i = 0; i < src.length; i++) copy[i] = clone2(src[i], seen);
+      for (let i = 0; i < src.length; i++)
+        copy[i] = clone2(src[i], seen);
     } else if (src instanceof Map) {
-      copy = /* @__PURE__ */ new Map();
+      copy = new Map();
       seen.set(src, copy);
-      for (const [k, v] of src.entries()) copy.set(k, clone2(v, seen));
+      for (const [k, v] of src.entries())
+        copy.set(k, clone2(v, seen));
     } else if (src instanceof Set) {
-      copy = /* @__PURE__ */ new Set();
+      copy = new Set();
       seen.set(src, copy);
-      for (const v of src) copy.add(clone2(v, seen));
+      for (const v of src)
+        copy.add(clone2(v, seen));
     } else if (src instanceof Object) {
       copy = {};
       seen.set(src, copy);
-      for (const [k, v] of Object.entries(src)) copy[k] = clone2(v, seen);
+      for (const [k, v] of Object.entries(src))
+        copy[k] = clone2(v, seen);
     } else {
       throw Error(`Unable to clone ${src}`);
     }
     return copy;
-  }
-  function createStandardPath(path) {
-    if (!(path != null && path.length)) {
-      return void 0;
-    }
-    const segments = [];
-    let currentSegment = "";
-    let inBrackets = false;
-    let inQuotes = false;
-    for (let i = 0; i < path.length; i++) {
-      const char = path[i];
-      if (char === "[" && !inQuotes) {
-        if (currentSegment) {
-          segments.push(...currentSegment.split(".").filter(Boolean));
-          currentSegment = "";
-        }
-        inBrackets = true;
-        continue;
-      }
-      if (char === "]" && !inQuotes) {
-        if (currentSegment) {
-          if (/^\d+$/.test(currentSegment)) {
-            segments.push(currentSegment);
-          } else {
-            segments.push(currentSegment.replace(/^"|"$/g, ""));
-          }
-          currentSegment = "";
-        }
-        inBrackets = false;
-        continue;
-      }
-      if (char === '"') {
-        inQuotes = !inQuotes;
-        continue;
-      }
-      if (char === "." && !inBrackets && !inQuotes) {
-        if (currentSegment) {
-          segments.push(currentSegment);
-          currentSegment = "";
-        }
-        continue;
-      }
-      currentSegment += char;
-    }
-    if (currentSegment) {
-      segments.push(...currentSegment.split(".").filter(Boolean));
-    }
-    return segments;
-  }
-  function createStandardIssues(error2, parentPath) {
-    const path = parentPath ? `${parentPath}.${error2.path}` : error2.path;
-    return error2.errors.map((err) => ({
-      message: err,
-      path: createStandardPath(path)
-    }));
-  }
-  function issuesFromValidationError(error2, parentPath) {
-    var _error$inner;
-    if (!((_error$inner = error2.inner) != null && _error$inner.length) && error2.errors.length) {
-      return createStandardIssues(error2, parentPath);
-    }
-    const path = parentPath ? `${parentPath}.${error2.path}` : error2.path;
-    return error2.inner.flatMap((err) => issuesFromValidationError(err, path));
   }
   var Schema = class {
     constructor(options) {
@@ -4241,7 +4080,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       this.internalTests = {};
       this._whitelist = new ReferenceSet();
       this._blacklist = new ReferenceSet();
-      this.exclusiveTests = /* @__PURE__ */ Object.create(null);
+      this.exclusiveTests = Object.create(null);
       this._typeCheck = void 0;
       this.spec = void 0;
       this.tests = [];
@@ -4265,13 +4104,13 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         s.nonNullable();
       });
     }
-    // TODO: remove
     get _type() {
       return this.type;
     }
     clone(spec) {
       if (this._mutate) {
-        if (spec) Object.assign(this.spec, spec);
+        if (spec)
+          Object.assign(this.spec, spec);
         return this;
       }
       const next = Object.create(Object.getPrototypeOf(this));
@@ -4294,7 +4133,8 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       return next;
     }
     meta(...args) {
-      if (args.length === 0) return this.spec.meta;
+      if (args.length === 0)
+        return this.spec.meta;
       let next = this.clone();
       next.spec.meta = Object.assign(next.spec.meta || {}, args[0]);
       return next;
@@ -4307,8 +4147,10 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       return result;
     }
     concat(schema) {
-      if (!schema || schema === this) return this;
-      if (schema.type !== this.type && this.type !== "mixed") throw new TypeError(`You cannot \`concat()\` schema's of different types: ${this.type} and ${schema.type}`);
+      if (!schema || schema === this)
+        return this;
+      if (schema.type !== this.type && this.type !== "mixed")
+        throw new TypeError(`You cannot \`concat()\` schema's of different types: ${this.type} and ${schema.type}`);
       let base = this;
       let combined = schema.clone();
       const mergedSpec = Object.assign({}, base.spec, combined.spec);
@@ -4328,8 +4170,10 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     }
     isType(v) {
       if (v == null) {
-        if (this.spec.nullable && v === null) return true;
-        if (this.spec.optional && v === void 0) return true;
+        if (this.spec.nullable && v === null)
+          return true;
+        if (this.spec.optional && v === void 0)
+          return true;
         return false;
       }
       return this._typeCheck(v);
@@ -4355,15 +4199,10 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         disableStackTrace: (_options$disableStack = options.disableStackTrace) != null ? _options$disableStack : this.spec.disableStackTrace
       });
     }
-    /**
-     * Run the configured transform pipeline over an input value.
-     */
     cast(value, options = {}) {
-      let resolvedSchema = this.resolve(Object.assign({}, options, {
+      let resolvedSchema = this.resolve(Object.assign({
         value
-        // parent: options.parent,
-        // context: options.context,
-      }));
+      }, options));
       let allowOptionality = options.assert === "ignore-optionality";
       let result = resolvedSchema._cast(value, options);
       if (options.assert !== false && !resolvedSchema.isType(result)) {
@@ -4380,7 +4219,7 @@ attempted value: ${formattedValue}
       return result;
     }
     _cast(rawValue, options) {
-      let value = rawValue === void 0 ? rawValue : this.transforms.reduce((prevValue, fn) => fn.call(this, prevValue, rawValue, this, options), rawValue);
+      let value = rawValue === void 0 ? rawValue : this.transforms.reduce((prevValue, fn) => fn.call(this, prevValue, rawValue, this), rawValue);
       if (value === void 0) {
         value = this.getDefault(options);
       }
@@ -4400,7 +4239,8 @@ attempted value: ${formattedValue}
       }
       let initialTests = [];
       for (let test of Object.values(this.internalTests)) {
-        if (test) initialTests.push(test);
+        if (test)
+          initialTests.push(test);
       }
       this.runTests({
         path,
@@ -4421,10 +4261,6 @@ attempted value: ${formattedValue}
         }, panic, next);
       });
     }
-    /**
-     * Executes a set of validations, either schema, produced Tests or a nested
-     * schema validate result.
-     */
     runTests(runOptions, panic, next) {
       let fired = false;
       let {
@@ -4435,18 +4271,21 @@ attempted value: ${formattedValue}
         options
       } = runOptions;
       let panicOnce = (arg) => {
-        if (fired) return;
+        if (fired)
+          return;
         fired = true;
         panic(arg, value);
       };
       let nextOnce = (arg) => {
-        if (fired) return;
+        if (fired)
+          return;
         fired = true;
         next(arg, value);
       };
       let count = tests.length;
       let nestedErrors = [];
-      if (!count) return nextOnce([]);
+      if (!count)
+        return nextOnce([]);
       let args = {
         value,
         originalValue,
@@ -4481,17 +4320,11 @@ attempted value: ${formattedValue}
       const isIndex = typeof k === "number";
       let value = parent[k];
       const testOptions = Object.assign({}, options, {
-        // Nested validations fields are always strict:
-        //    1. parent isn't strict so the casting will also have cast inner values
-        //    2. parent is strict in which case the nested values weren't cast either
         strict: true,
         parent,
         value,
         originalValue: originalParent[k],
-        // FIXME: tests depend on `index` being passed around deeply,
-        //   we should not let the options.key/index bleed through
         key: void 0,
-        // index: undefined,
         [isIndex ? "index" : "key"]: k,
         path: isIndex || k.includes(".") ? `${parentPath || ""}[${isIndex ? k : `"${k}"`}]` : (parentPath ? `${parentPath}.` : "") + key
       });
@@ -4504,11 +4337,14 @@ attempted value: ${formattedValue}
       }));
       let disableStackTrace = (_options$disableStack2 = options == null ? void 0 : options.disableStackTrace) != null ? _options$disableStack2 : schema.spec.disableStackTrace;
       return new Promise((resolve, reject) => schema._validate(value, options, (error2, parsed) => {
-        if (ValidationError.isError(error2)) error2.value = parsed;
+        if (ValidationError.isError(error2))
+          error2.value = parsed;
         reject(error2);
       }, (errors, validated) => {
-        if (errors.length) reject(new ValidationError(errors, validated, void 0, void 0, disableStackTrace));
-        else resolve(validated);
+        if (errors.length)
+          reject(new ValidationError(errors, validated, void 0, void 0, disableStackTrace));
+        else
+          resolve(validated);
       }));
     }
     validateSync(value, options) {
@@ -4521,17 +4357,20 @@ attempted value: ${formattedValue}
       schema._validate(value, Object.assign({}, options, {
         sync: true
       }), (error2, parsed) => {
-        if (ValidationError.isError(error2)) error2.value = parsed;
+        if (ValidationError.isError(error2))
+          error2.value = parsed;
         throw error2;
       }, (errors, validated) => {
-        if (errors.length) throw new ValidationError(errors, value, void 0, void 0, disableStackTrace);
+        if (errors.length)
+          throw new ValidationError(errors, value, void 0, void 0, disableStackTrace);
         result = validated;
       });
       return result;
     }
     isValid(value, options) {
       return this.validate(value, options).then(() => true, (err) => {
-        if (ValidationError.isError(err)) return false;
+        if (ValidationError.isError(err))
+          return false;
         throw err;
       });
     }
@@ -4540,7 +4379,8 @@ attempted value: ${formattedValue}
         this.validateSync(value, options);
         return true;
       } catch (err) {
-        if (ValidationError.isError(err)) return false;
+        if (ValidationError.isError(err))
+          return false;
         throw err;
       }
     }
@@ -4618,19 +4458,6 @@ attempted value: ${formattedValue}
       next.transforms.push(fn);
       return next;
     }
-    /**
-     * Adds a test function to the schema's queue of tests.
-     * tests can be exclusive or non-exclusive.
-     *
-     * - exclusive tests, will replace any existing tests of the same name.
-     * - non-exclusive: can be stacked
-     *
-     * If a non-exclusive test is added to a schema with an exclusive test of the same name
-     * the exclusive test is removed and further tests of the same name will be stacked.
-     *
-     * If an exclusive test is added to a schema with non-exclusive tests of the same name
-     * the previous tests are removed and further tests of the same name will replace each other.
-     */
     test(...args) {
       let opts;
       if (args.length === 1) {
@@ -4653,19 +4480,25 @@ attempted value: ${formattedValue}
           test: args[2]
         };
       }
-      if (opts.message === void 0) opts.message = mixed.default;
-      if (typeof opts.test !== "function") throw new TypeError("`test` is a required parameters");
+      if (opts.message === void 0)
+        opts.message = mixed.default;
+      if (typeof opts.test !== "function")
+        throw new TypeError("`test` is a required parameters");
       let next = this.clone();
       let validate = createValidation(opts);
       let isExclusive = opts.exclusive || opts.name && next.exclusiveTests[opts.name] === true;
       if (opts.exclusive) {
-        if (!opts.name) throw new TypeError("Exclusive tests must provide a unique `name` identifying the test");
+        if (!opts.name)
+          throw new TypeError("Exclusive tests must provide a unique `name` identifying the test");
       }
-      if (opts.name) next.exclusiveTests[opts.name] = !!opts.exclusive;
+      if (opts.name)
+        next.exclusiveTests[opts.name] = !!opts.exclusive;
       next.tests = next.tests.filter((fn) => {
         if (fn.OPTIONS.name === opts.name) {
-          if (isExclusive) return false;
-          if (fn.OPTIONS.test === validate.OPTIONS.test) return false;
+          if (isExclusive)
+            return false;
+          if (fn.OPTIONS.test === validate.OPTIONS.test)
+            return false;
         }
         return true;
       });
@@ -4680,7 +4513,8 @@ attempted value: ${formattedValue}
       let next = this.clone();
       let deps = toArray(keys).map((key) => new Reference(key));
       deps.forEach((dep) => {
-        if (dep.isSibling) next.deps.push(dep.key);
+        if (dep.isSibling)
+          next.deps.push(dep.key);
       });
       next.conditions.push(typeof options === "function" ? new Condition(deps, options) : Condition.fromOptions(deps, options));
       return next;
@@ -4692,11 +4526,12 @@ attempted value: ${formattedValue}
         name: "typeError",
         skipAbsent: true,
         test(value) {
-          if (!this.schema._typeCheck(value)) return this.createError({
-            params: {
-              type: this.schema.type
-            }
-          });
+          if (!this.schema._typeCheck(value))
+            return this.createError({
+              params: {
+                type: this.schema.type
+              }
+            });
           return true;
         }
       });
@@ -4737,12 +4572,13 @@ attempted value: ${formattedValue}
         test(value) {
           let invalids = this.schema._blacklist;
           let resolved = invalids.resolveAll(this.resolve);
-          if (resolved.includes(value)) return this.createError({
-            params: {
-              values: Array.from(invalids).join(", "),
-              resolved
-            }
-          });
+          if (resolved.includes(value))
+            return this.createError({
+              params: {
+                values: Array.from(invalids).join(", "),
+                resolved
+              }
+            });
           return true;
         }
       });
@@ -4753,11 +4589,6 @@ attempted value: ${formattedValue}
       next.spec.strip = strip;
       return next;
     }
-    /**
-     * Return a serialized description of the schema including validations, flags, types etc.
-     *
-     * @param options Provide any needed context for resolving runtime schema alterations (lazy, when conditions, etc).
-     */
     describe(options) {
       const next = (options ? this.resolve(options) : this).clone();
       const {
@@ -4775,56 +4606,31 @@ attempted value: ${formattedValue}
         type: next.type,
         oneOf: next._whitelist.describe(),
         notOneOf: next._blacklist.describe(),
-        tests: next.tests.filter((n, idx, list) => list.findIndex((c) => c.OPTIONS.name === n.OPTIONS.name) === idx).map((fn) => {
-          const params = fn.OPTIONS.params && options ? resolveParams(Object.assign({}, fn.OPTIONS.params), options) : fn.OPTIONS.params;
-          return {
-            name: fn.OPTIONS.name,
-            params
-          };
-        })
+        tests: next.tests.map((fn) => ({
+          name: fn.OPTIONS.name,
+          params: fn.OPTIONS.params
+        })).filter((n, idx, list) => list.findIndex((c) => c.name === n.name) === idx)
       };
       return description;
     }
-    get ["~standard"]() {
-      const schema = this;
-      const standard = {
-        version: 1,
-        vendor: "yup",
-        async validate(value) {
-          try {
-            const result = await schema.validate(value, {
-              abortEarly: false
-            });
-            return {
-              value: result
-            };
-          } catch (err) {
-            if (err instanceof ValidationError) {
-              return {
-                issues: issuesFromValidationError(err)
-              };
-            }
-            throw err;
-          }
-        }
-      };
-      return standard;
-    }
   };
   Schema.prototype.__isYupSchema__ = true;
-  for (const method of ["validate", "validateSync"]) Schema.prototype[`${method}At`] = function(path, value, options = {}) {
-    const {
-      parent,
-      parentPath,
-      schema
-    } = getIn(this, path, value, options.context);
-    return schema[method](parent && parent[parentPath], Object.assign({}, options, {
-      parent,
-      path
-    }));
-  };
-  for (const alias of ["equals", "is"]) Schema.prototype[alias] = Schema.prototype.oneOf;
-  for (const alias of ["not", "nope"]) Schema.prototype[alias] = Schema.prototype.notOneOf;
+  for (const method of ["validate", "validateSync"])
+    Schema.prototype[`${method}At`] = function(path, value, options = {}) {
+      const {
+        parent,
+        parentPath,
+        schema
+      } = getIn(this, path, value, options.context);
+      return schema[method](parent && parent[parentPath], Object.assign({}, options, {
+        parent,
+        path
+      }));
+    };
+  for (const alias of ["equals", "is"])
+    Schema.prototype[alias] = Schema.prototype.oneOf;
+  for (const alias of ["not", "nope"])
+    Schema.prototype[alias] = Schema.prototype.notOneOf;
   var returnsTrue = () => true;
   function create$8(spec) {
     return new MixedSchema(spec);
@@ -4849,15 +4655,18 @@ attempted value: ${formattedValue}
       super({
         type: "boolean",
         check(v) {
-          if (v instanceof Boolean) v = v.valueOf();
+          if (v instanceof Boolean)
+            v = v.valueOf();
           return typeof v === "boolean";
         }
       });
       this.withMutation(() => {
-        this.transform((value, _raw) => {
-          if (this.spec.coerce && !this.isType(value)) {
-            if (/^(true|1)$/i.test(String(value))) return true;
-            if (/^(false|0)$/i.test(String(value))) return false;
+        this.transform((value, _raw, ctx) => {
+          if (ctx.spec.coerce && !ctx.isType(value)) {
+            if (/^(true|1)$/i.test(String(value)))
+              return true;
+            if (/^(false|0)$/i.test(String(value)))
+              return false;
           }
           return value;
         });
@@ -4918,21 +4727,24 @@ attempted value: ${formattedValue}
   var isoReg = /^(\d{4}|[+-]\d{6})(?:-?(\d{2})(?:-?(\d{2}))?)?(?:[ T]?(\d{2}):?(\d{2})(?::?(\d{2})(?:[,.](\d{1,}))?)?(?:(Z)|([+-])(\d{2})(?::?(\d{2}))?)?)?$/;
   function parseIsoDate(date2) {
     const struct = parseDateStruct(date2);
-    if (!struct) return Date.parse ? Date.parse(date2) : Number.NaN;
+    if (!struct)
+      return Date.parse ? Date.parse(date2) : Number.NaN;
     if (struct.z === void 0 && struct.plusMinus === void 0) {
       return new Date(struct.year, struct.month, struct.day, struct.hour, struct.minute, struct.second, struct.millisecond).valueOf();
     }
     let totalMinutesOffset = 0;
     if (struct.z !== "Z" && struct.plusMinus !== void 0) {
       totalMinutesOffset = struct.hourOffset * 60 + struct.minuteOffset;
-      if (struct.plusMinus === "+") totalMinutesOffset = 0 - totalMinutesOffset;
+      if (struct.plusMinus === "+")
+        totalMinutesOffset = 0 - totalMinutesOffset;
     }
     return Date.UTC(struct.year, struct.month, struct.day, struct.hour, struct.minute + totalMinutesOffset, struct.second, struct.millisecond);
   }
   function parseDateStruct(date2) {
     var _regexResult$7$length, _regexResult$;
     const regexResult = isoReg.exec(date2);
-    if (!regexResult) return null;
+    if (!regexResult)
+      return null;
     return {
       year: toNumber(regexResult[1]),
       month: toNumber(regexResult[2], 1) - 1,
@@ -4940,10 +4752,7 @@ attempted value: ${formattedValue}
       hour: toNumber(regexResult[4]),
       minute: toNumber(regexResult[5]),
       second: toNumber(regexResult[6]),
-      millisecond: regexResult[7] ? (
-        // allow arbitrary sub-second precision beyond milliseconds
-        toNumber(regexResult[7].substring(0, 3))
-      ) : 0,
+      millisecond: regexResult[7] ? toNumber(regexResult[7].substring(0, 3)) : 0,
       precision: (_regexResult$7$length = (_regexResult$ = regexResult[7]) == null ? void 0 : _regexResult$.length) != null ? _regexResult$7$length : void 0,
       z: regexResult[8] || void 0,
       plusMinus: regexResult[9] || void 0,
@@ -4954,14 +4763,8 @@ attempted value: ${formattedValue}
   function toNumber(str, defaultValue = 0) {
     return Number(str) || defaultValue;
   }
-  var rEmail = (
-    // eslint-disable-next-line
-    /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
-  );
-  var rUrl = (
-    // eslint-disable-next-line
-    /^((https?|ftp):)?\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i
-  );
+  var rEmail = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  var rUrl = /^((https?|ftp):)?\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
   var rUUID = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
   var yearMonthDay = "^\\d{4}-\\d{2}-\\d{2}";
   var hourMinuteSecond = "\\d{2}:\\d{2}:\\d{2}";
@@ -4977,16 +4780,20 @@ attempted value: ${formattedValue}
       super({
         type: "string",
         check(value) {
-          if (value instanceof String) value = value.valueOf();
+          if (value instanceof String)
+            value = value.valueOf();
           return typeof value === "string";
         }
       });
       this.withMutation(() => {
-        this.transform((value, _raw) => {
-          if (!this.spec.coerce || this.isType(value)) return value;
-          if (Array.isArray(value)) return value;
+        this.transform((value, _raw, ctx) => {
+          if (!ctx.spec.coerce || ctx.isType(value))
+            return value;
+          if (Array.isArray(value))
+            return value;
           const strValue = value != null && value.toString ? value.toString() : value;
-          if (strValue === objStringTag) return value;
+          if (strValue === objStringTag)
+            return value;
           return strValue;
         });
       });
@@ -5120,9 +4927,11 @@ attempted value: ${formattedValue}
         },
         skipAbsent: true,
         test: (value) => {
-          if (!value || allowOffset) return true;
+          if (!value || allowOffset)
+            return true;
           const struct = parseDateStruct(value);
-          if (!struct) return false;
+          if (!struct)
+            return false;
           return !!struct.z;
         }
       }).test({
@@ -5133,14 +4942,15 @@ attempted value: ${formattedValue}
         },
         skipAbsent: true,
         test: (value) => {
-          if (!value || precision == void 0) return true;
+          if (!value || precision == void 0)
+            return true;
           const struct = parseDateStruct(value);
-          if (!struct) return false;
+          if (!struct)
+            return false;
           return struct.precision === precision;
         }
       });
     }
-    //-- transforms --
     ensure() {
       return this.default("").transform((val) => val === null ? "" : val);
     }
@@ -5180,20 +4990,24 @@ attempted value: ${formattedValue}
       super({
         type: "number",
         check(value) {
-          if (value instanceof Number) value = value.valueOf();
+          if (value instanceof Number)
+            value = value.valueOf();
           return typeof value === "number" && !isNaN$1(value);
         }
       });
       this.withMutation(() => {
-        this.transform((value, _raw) => {
-          if (!this.spec.coerce) return value;
+        this.transform((value, _raw, ctx) => {
+          if (!ctx.spec.coerce)
+            return value;
           let parsed = value;
           if (typeof parsed === "string") {
             parsed = parsed.replace(/\s/g, "");
-            if (parsed === "") return NaN;
+            if (parsed === "")
+              return NaN;
             parsed = +parsed;
           }
-          if (this.isType(parsed) || parsed === null) return parsed;
+          if (ctx.isType(parsed) || parsed === null)
+            return parsed;
           return parseFloat(parsed);
         });
       });
@@ -5275,18 +5089,20 @@ attempted value: ${formattedValue}
       var _method;
       let avail = ["ceil", "floor", "round", "trunc"];
       method = ((_method = method) == null ? void 0 : _method.toLowerCase()) || "round";
-      if (method === "trunc") return this.truncate();
-      if (avail.indexOf(method.toLowerCase()) === -1) throw new TypeError("Only valid options for round() are: " + avail.join(", "));
+      if (method === "trunc")
+        return this.truncate();
+      if (avail.indexOf(method.toLowerCase()) === -1)
+        throw new TypeError("Only valid options for round() are: " + avail.join(", "));
       return this.transform((value) => !isAbsent(value) ? Math[method](value) : value);
     }
   };
   create$5.prototype = NumberSchema.prototype;
-  var invalidDate = /* @__PURE__ */ new Date("");
+  var invalidDate = new Date("");
   var isDate = (obj) => Object.prototype.toString.call(obj) === "[object Date]";
   function create$4() {
     return new DateSchema();
   }
-  var DateSchema = class _DateSchema extends Schema {
+  var DateSchema = class extends Schema {
     constructor() {
       super({
         type: "date",
@@ -5295,10 +5111,11 @@ attempted value: ${formattedValue}
         }
       });
       this.withMutation(() => {
-        this.transform((value, _raw) => {
-          if (!this.spec.coerce || this.isType(value) || value === null) return value;
+        this.transform((value, _raw, ctx) => {
+          if (!ctx.spec.coerce || ctx.isType(value) || value === null)
+            return value;
           value = parseIsoDate(value);
-          return !isNaN(value) ? new Date(value) : _DateSchema.INVALID_DATE;
+          return !isNaN(value) ? new Date(value) : DateSchema.INVALID_DATE;
         });
       });
     }
@@ -5306,7 +5123,8 @@ attempted value: ${formattedValue}
       let param;
       if (!Reference.isRef(ref)) {
         let cast = this.cast(ref);
-        if (!this._typeCheck(cast)) throw new TypeError(`\`${name}\` must be a Date or a value that can be \`cast()\` to a Date`);
+        if (!this._typeCheck(cast))
+          throw new TypeError(`\`${name}\` must be a Date or a value that can be \`cast()\` to a Date`);
         param = cast;
       } else {
         param = ref;
@@ -5349,18 +5167,21 @@ attempted value: ${formattedValue}
   create$4.INVALID_DATE = invalidDate;
   function sortFields(fields, excludedEdges = []) {
     let edges = [];
-    let nodes = /* @__PURE__ */ new Set();
+    let nodes = new Set();
     let excludes = new Set(excludedEdges.map(([a, b]) => `${a}-${b}`));
     function addNode(depPath, key) {
       let node = (0, import_property_expr.split)(depPath)[0];
       nodes.add(node);
-      if (!excludes.has(`${key}-${node}`)) edges.push([key, node]);
+      if (!excludes.has(`${key}-${node}`))
+        edges.push([key, node]);
     }
     for (const key of Object.keys(fields)) {
       let value = fields[key];
       nodes.add(key);
-      if (Reference.isRef(value) && value.isSibling) addNode(value.path, key);
-      else if (isSchema(value) && "deps" in value) value.deps.forEach((path) => addNode(path, key));
+      if (Reference.isRef(value) && value.isSibling)
+        addNode(value.path, key);
+      else if (isSchema(value) && "deps" in value)
+        value.deps.forEach((path) => addNode(path, key));
     }
     return import_toposort.default.array(Array.from(nodes), edges).reverse();
   }
@@ -5380,7 +5201,7 @@ attempted value: ${formattedValue}
       return findIndex(keys, a) - findIndex(keys, b);
     };
   }
-  var parseJson = (value, _, schema) => {
+  var parseJson = (value, _, ctx) => {
     if (typeof value !== "string") {
       return value;
     }
@@ -5389,7 +5210,7 @@ attempted value: ${formattedValue}
       parsed = JSON.parse(value);
     } catch (err) {
     }
-    return schema.isType(parsed) ? parsed : value;
+    return ctx.isType(parsed) ? parsed : value;
   };
   function deepPartial(schema) {
     if ("fields" in schema) {
@@ -5401,7 +5222,8 @@ attempted value: ${formattedValue}
     }
     if (schema.type === "array") {
       const nextArray = schema.optional();
-      if (nextArray.innerType) nextArray.innerType = deepPartial(nextArray.innerType);
+      if (nextArray.innerType)
+        nextArray.innerType = deepPartial(nextArray.innerType);
       return nextArray;
     }
     if (schema.type === "tuple") {
@@ -5416,7 +5238,8 @@ attempted value: ${formattedValue}
   }
   var deepHas = (obj, p) => {
     const path = [...(0, import_property_expr.normalizePath)(p)];
-    if (path.length === 1) return path[0] in obj;
+    if (path.length === 1)
+      return path[0] in obj;
     let last = path.pop();
     let parent = (0, import_property_expr.getter)((0, import_property_expr.join)(path), true)(obj);
     return !!(parent && last in parent);
@@ -5438,7 +5261,7 @@ attempted value: ${formattedValue}
           return isObject2(value) || typeof value === "function";
         }
       });
-      this.fields = /* @__PURE__ */ Object.create(null);
+      this.fields = Object.create(null);
       this._sortErrors = defaultSort;
       this._nodes = [];
       this._excludedEdges = [];
@@ -5451,8 +5274,10 @@ attempted value: ${formattedValue}
     _cast(_value, options = {}) {
       var _options$stripUnknown;
       let value = super._cast(_value, options);
-      if (value === void 0) return this.getDefault(options);
-      if (!this._typeCheck(value)) return value;
+      if (value === void 0)
+        return this.getDefault(options);
+      if (!this._typeCheck(value))
+        return value;
       let fields = this.fields;
       let strip = (_options$stripUnknown = options.stripUnknown) != null ? _options$stripUnknown : this.spec.noUnknown;
       let props = [].concat(this._nodes, Object.keys(value).filter((v) => !this._nodes.includes(v)));
@@ -5465,9 +5290,9 @@ attempted value: ${formattedValue}
       for (const prop of props) {
         let field = fields[prop];
         let exists = prop in value;
-        let inputValue = value[prop];
         if (field) {
           let fieldValue;
+          let inputValue = value[prop];
           innerOptions.path = (options.path ? `${options.path}.` : "") + prop;
           field = field.resolve({
             value: inputValue,
@@ -5480,14 +5305,14 @@ attempted value: ${formattedValue}
             isChanged = isChanged || prop in value;
             continue;
           }
-          fieldValue = !options.__validating || !strict ? field.cast(inputValue, innerOptions) : inputValue;
+          fieldValue = !options.__validating || !strict ? field.cast(value[prop], innerOptions) : value[prop];
           if (fieldValue !== void 0) {
             intermediateValue[prop] = fieldValue;
           }
         } else if (exists && !strip) {
-          intermediateValue[prop] = inputValue;
+          intermediateValue[prop] = value[prop];
         }
-        if (exists !== prop in intermediateValue || intermediateValue[prop] !== inputValue) {
+        if (exists !== prop in intermediateValue || intermediateValue[prop] !== value[prop]) {
           isChanged = true;
         }
       }
@@ -5550,10 +5375,7 @@ attempted value: ${formattedValue}
         const target = nextFields[field];
         nextFields[field] = target === void 0 ? schemaOrRef : target;
       }
-      return next.withMutation((s) => (
-        // XXX: excludes here is wrong
-        s.setFields(nextFields, [...this._excludedEdges, ...schema._excludedEdges])
-      ));
+      return next.withMutation((s) => s.setFields(nextFields, [...this._excludedEdges, ...schema._excludedEdges]));
     }
     _getDefault(options) {
       if ("default" in this.spec) {
@@ -5582,14 +5404,16 @@ attempted value: ${formattedValue}
       next.fields = shape;
       next._nodes = sortFields(shape, excludedEdges);
       next._sortErrors = sortByKeyOrder(Object.keys(shape));
-      if (excludedEdges) next._excludedEdges = excludedEdges;
+      if (excludedEdges)
+        next._excludedEdges = excludedEdges;
       return next;
     }
     shape(additions, excludes = []) {
       return this.clone().withMutation((next) => {
         let edges = next._excludedEdges;
         if (excludes.length) {
-          if (!Array.isArray(excludes[0])) excludes = [excludes];
+          if (!Array.isArray(excludes[0]))
+            excludes = [excludes];
           edges = [...next._excludedEdges, ...excludes];
         }
         return next.setFields(Object.assign(next.fields, additions), edges);
@@ -5609,14 +5433,16 @@ attempted value: ${formattedValue}
     pick(keys) {
       const picked = {};
       for (const key of keys) {
-        if (this.fields[key]) picked[key] = this.fields[key];
+        if (this.fields[key])
+          picked[key] = this.fields[key];
       }
       return this.setFields(picked, this._excludedEdges.filter(([a, b]) => keys.includes(a) && keys.includes(b)));
     }
     omit(keys) {
       const remaining = [];
       for (const key of Object.keys(this.fields)) {
-        if (keys.includes(key)) continue;
+        if (keys.includes(key))
+          continue;
         remaining.push(key);
       }
       return this.pick(remaining);
@@ -5624,43 +5450,20 @@ attempted value: ${formattedValue}
     from(from, to, alias) {
       let fromGetter = (0, import_property_expr.getter)(from, true);
       return this.transform((obj) => {
-        if (!obj) return obj;
+        if (!obj)
+          return obj;
         let newObj = obj;
         if (deepHas(obj, from)) {
           newObj = Object.assign({}, obj);
-          if (!alias) delete newObj[from];
+          if (!alias)
+            delete newObj[from];
           newObj[to] = fromGetter(obj);
         }
         return newObj;
       });
     }
-    /** Parse an input JSON string to an object */
     json() {
       return this.transform(parseJson);
-    }
-    /**
-     * Similar to `noUnknown` but only validates that an object is the right shape without stripping the unknown keys
-     */
-    exact(message) {
-      return this.test({
-        name: "exact",
-        exclusive: true,
-        message: message || object.exact,
-        test(value) {
-          if (value == null) return true;
-          const unknownKeys = unknown(this.schema, value);
-          return unknownKeys.length === 0 || this.createError({
-            params: {
-              properties: unknownKeys.join(", ")
-            }
-          });
-        }
-      });
-    }
-    stripUnknown() {
-      return this.clone({
-        noUnknown: true
-      });
     }
     noUnknown(noAllow = true, message = object.noUnknown) {
       if (typeof noAllow !== "boolean") {
@@ -5672,7 +5475,8 @@ attempted value: ${formattedValue}
         exclusive: true,
         message,
         test(value) {
-          if (value == null) return true;
+          if (value == null)
+            return true;
           const unknownKeys = unknown(this.schema, value);
           return !noAllow || unknownKeys.length === 0 || this.createError({
             params: {
@@ -5689,9 +5493,11 @@ attempted value: ${formattedValue}
     }
     transformKeys(fn) {
       return this.transform((obj) => {
-        if (!obj) return obj;
+        if (!obj)
+          return obj;
         const result = {};
-        for (const key of Object.keys(obj)) result[fn(key)] = obj[key];
+        for (const key of Object.keys(obj))
+          result[fn(key)] = obj[key];
         return result;
       });
     }
@@ -5748,11 +5554,7 @@ attempted value: ${formattedValue}
       let isChanged = false;
       const castArray = value.map((v, idx) => {
         const castElement = this.innerType.cast(v, Object.assign({}, _opts, {
-          path: `${_opts.path || ""}[${idx}]`,
-          parent: value,
-          originalValue: v,
-          value: v,
-          index: idx
+          path: `${_opts.path || ""}[${idx}]`
         }));
         if (castElement !== v) {
           isChanged = true;
@@ -5796,7 +5598,6 @@ attempted value: ${formattedValue}
       next.innerType = this.innerType;
       return next;
     }
-    /** Parse an input JSON string to an object */
     json() {
       return this.transform(parseJson);
     }
@@ -5804,15 +5605,13 @@ attempted value: ${formattedValue}
       let next = super.concat(schema);
       next.innerType = this.innerType;
       if (schema.innerType)
-        next.innerType = next.innerType ? (
-          // @ts-expect-error Lazy doesn't have concat and will break
-          next.innerType.concat(schema.innerType)
-        ) : schema.innerType;
+        next.innerType = next.innerType ? next.innerType.concat(schema.innerType) : schema.innerType;
       return next;
     }
     of(schema) {
       let next = this.clone();
-      if (!isSchema(schema)) throw new TypeError("`array.of()` sub-schema must be a valid yup schema not: " + printValue(schema));
+      if (!isSchema(schema))
+        throw new TypeError("`array.of()` sub-schema must be a valid yup schema not: " + printValue(schema));
       next.innerType = schema;
       next.spec = Object.assign({}, next.spec, {
         types: schema
@@ -5843,7 +5642,6 @@ attempted value: ${formattedValue}
           min
         },
         skipAbsent: true,
-        // FIXME(ts): Array<typeof T>
         test(value) {
           return value.length >= this.resolve(min);
         }
@@ -5866,7 +5664,8 @@ attempted value: ${formattedValue}
     }
     ensure() {
       return this.default(() => []).transform((val, original) => {
-        if (this._typeCheck(val)) return val;
+        if (this._typeCheck(val))
+          return val;
         return original == null ? [] : [].concat(original);
       });
     }
@@ -5922,13 +5721,10 @@ attempted value: ${formattedValue}
       let isChanged = false;
       const castArray = types.map((type, idx) => {
         const castElement = type.cast(value[idx], Object.assign({}, options, {
-          path: `${options.path || ""}[${idx}]`,
-          parent: value,
-          originalValue: value[idx],
-          value: value[idx],
-          index: idx
+          path: `${options.path || ""}[${idx}]`
         }));
-        if (castElement !== value[idx]) isChanged = true;
+        if (castElement !== value[idx])
+          isChanged = true;
         return castElement;
       });
       return isChanged ? castArray : value;
@@ -5981,23 +5777,17 @@ attempted value: ${formattedValue}
   function create(builder) {
     return new Lazy(builder);
   }
-  function catchValidationError(fn) {
-    try {
-      return fn();
-    } catch (err) {
-      if (ValidationError.isError(err)) return Promise.reject(err);
-      throw err;
-    }
-  }
-  var Lazy = class _Lazy {
+  var Lazy = class {
     constructor(builder) {
       this.type = "lazy";
       this.__isYupSchema__ = true;
       this.spec = void 0;
       this._resolve = (value, options = {}) => {
         let schema = this.builder(value, options);
-        if (!isSchema(schema)) throw new TypeError("lazy() functions must return a valid schema");
-        if (this.spec.optional) schema = schema.optional();
+        if (!isSchema(schema))
+          throw new TypeError("lazy() functions must return a valid schema");
+        if (this.spec.optional)
+          schema = schema.optional();
         return schema.resolve(options);
       };
       this.builder = builder;
@@ -6007,7 +5797,7 @@ attempted value: ${formattedValue}
       };
     }
     clone(spec) {
-      const next = new _Lazy(this.builder);
+      const next = new Lazy(this.builder);
       next.spec = Object.assign({}, this.spec, spec);
       return next;
     }
@@ -6040,26 +5830,19 @@ attempted value: ${formattedValue}
       })).asNestedTest(config);
     }
     validate(value, options) {
-      return catchValidationError(() => this._resolve(value, options).validate(value, options));
+      return this._resolve(value, options).validate(value, options);
     }
     validateSync(value, options) {
       return this._resolve(value, options).validateSync(value, options);
     }
     validateAt(path, value, options) {
-      return catchValidationError(() => this._resolve(value, options).validateAt(path, value, options));
+      return this._resolve(value, options).validateAt(path, value, options);
     }
     validateSyncAt(path, value, options) {
       return this._resolve(value, options).validateSyncAt(path, value, options);
     }
     isValid(value, options) {
-      try {
-        return this._resolve(value, options).isValid(value, options);
-      } catch (err) {
-        if (ValidationError.isError(err)) {
-          return Promise.resolve(false);
-        }
-        throw err;
-      }
+      return this._resolve(value, options).isValid(value, options);
     }
     isValidSync(value, options) {
       return this._resolve(value, options).isValidSync(value, options);
@@ -6072,35 +5855,11 @@ attempted value: ${formattedValue}
       };
     }
     meta(...args) {
-      if (args.length === 0) return this.spec.meta;
+      if (args.length === 0)
+        return this.spec.meta;
       let next = this.clone();
       next.spec.meta = Object.assign(next.spec.meta || {}, args[0]);
       return next;
-    }
-    get ["~standard"]() {
-      const schema = this;
-      const standard = {
-        version: 1,
-        vendor: "yup",
-        async validate(value) {
-          try {
-            const result = await schema.validate(value, {
-              abortEarly: false
-            });
-            return {
-              value: result
-            };
-          } catch (err) {
-            if (ValidationError.isError(err)) {
-              return {
-                issues: issuesFromValidationError(err)
-              };
-            }
-            throw err;
-          }
-        }
-      };
-      return standard;
     }
   };
   function setLocale(custom) {
@@ -6111,13 +5870,16 @@ attempted value: ${formattedValue}
     });
   }
   function addMethod(schemaType, name, fn) {
-    if (!schemaType || !isSchema(schemaType.prototype)) throw new TypeError("You must provide a yup schema constructor function");
-    if (typeof name !== "string") throw new TypeError("A Method name must be provided");
-    if (typeof fn !== "function") throw new TypeError("Method function must be provided");
+    if (!schemaType || !isSchema(schemaType.prototype))
+      throw new TypeError("You must provide a yup schema constructor function");
+    if (typeof name !== "string")
+      throw new TypeError("A Method name must be provided");
+    if (typeof fn !== "function")
+      throw new TypeError("Method function must be provided");
     schemaType.prototype[name] = fn;
   }
 
-  // assets/src/js/alpine/stores/toast.js
+  // assets/js/alpine/stores/toast.js
   var toast_default = {
     toasts: [],
     addToast(message, type = "default", duration = 4e3, fadeDuration = 300) {
@@ -6143,7 +5905,7 @@ attempted value: ${formattedValue}
     }
   };
 
-  // assets/src/js/alpine/stores/popup.js
+  // assets/js/alpine/stores/popup.js
   var popup_default = {
     open: false,
     content: ``,
@@ -6160,7 +5922,7 @@ attempted value: ${formattedValue}
     }
   };
 
-  // assets/src/js/alpine/stores/loader.js
+  // assets/js/alpine/stores/loader.js
   var loader_default = {
     isLoading: false,
     show() {
@@ -6171,7 +5933,7 @@ attempted value: ${formattedValue}
     }
   };
 
-  // assets/src/js/alpine/stores/wishlist.js
+  // assets/js/alpine/stores/wishlist.js
   var wishlist_default = {
     items: [],
     init() {
@@ -6181,7 +5943,8 @@ attempted value: ${formattedValue}
       window.addEventListener("handle_login_success", () => {
         sessionStorage.removeItem("wishlist");
       });
-      if (!this.isUserLoggedIn()) return;
+      if (!this.isUserLoggedIn())
+        return;
       if (sessionStorage.getItem("wishlist")) {
         this.items = JSON.parse(sessionStorage.getItem("wishlist"));
       } else {
@@ -6249,7 +6012,7 @@ attempted value: ${formattedValue}
     }
   };
 
-  // assets/src/js/alpine/stores/userAddress.js
+  // assets/js/alpine/stores/userAddress.js
   var MAX_ADDRESSES = 9;
   var DEFAULT_COUNTRY = "United States";
   var AJAX_ACTION = "save-address";
@@ -6269,9 +6032,7 @@ attempted value: ${formattedValue}
     postal_code: { field: "postalCode" }
   };
   var userAddress_default = {
-    // State
     autocompleteEnabled: AUTOCOMPLETE_ENABLED,
-    // Exposed for template (fallback address input when false)
     addresses: [],
     countries: {},
     ajaxUrl: "",
@@ -6292,9 +6053,9 @@ attempted value: ${formattedValue}
     _autocompleteInstance: null,
     _googleApiRetries: 0,
     _domRetries: 0,
-    // ==================== Initialization ====================
     init() {
-      if (this._inited) return;
+      if (this._inited)
+        return;
       const data2 = window.scriptData || {};
       this.addresses = Array.isArray(data2.addresses) ? data2.addresses : [];
       this.countries = data2.countries || {};
@@ -6305,7 +6066,8 @@ attempted value: ${formattedValue}
       this.checkMaxAddress();
     },
     ensureOneDefault() {
-      if (this.addresses.length === 0) return;
+      if (this.addresses.length === 0)
+        return;
       const hasDefault = this.addresses.some((addr) => this._isDefault(addr));
       if (!hasDefault) {
         this.addresses[0].default = true;
@@ -6314,7 +6076,6 @@ attempted value: ${formattedValue}
     checkMaxAddress() {
       this.stopAdd = this.addresses.length >= MAX_ADDRESSES;
     },
-    // ==================== Helpers ====================
     _normalizeId(id) {
       return String(id);
     },
@@ -6367,7 +6128,6 @@ attempted value: ${formattedValue}
       const random = Math.random().toString(36).substring(2, 15);
       return now + random;
     },
-    // ==================== Public Methods ====================
     startAdd() {
       this._setFormMode("add", "Add Address", "Add Address");
       this.editAddress = this._getEmptyAddress();
@@ -6439,7 +6199,6 @@ attempted value: ${formattedValue}
     async delete(id) {
       return this.remove(id);
     },
-    // ==================== AJAX ====================
     async _sendRequest(action, data2) {
       const response = await fetch(this.ajaxUrl, {
         method: "POST",
@@ -6463,29 +6222,32 @@ attempted value: ${formattedValue}
       try {
         const result = await this._sendRequest(action, data2);
         if (result.success) {
-          if (showToast) Alpine.store("toast").addToast(result.data, "success");
+          if (showToast)
+            Alpine.store("toast").addToast(result.data, "success");
           if (closePopup) {
             this.editAddress = this._getEmptyAddress();
             Alpine.store("popup").closePopup();
           }
           return result;
         } else {
-          if (showToast) Alpine.store("toast").addToast(result.data, "error");
+          if (showToast)
+            Alpine.store("toast").addToast(result.data, "error");
           throw new Error(result.data);
         }
       } catch (error2) {
-        if (showToast) Alpine.store("toast").addToast("An error occurred", "error");
+        if (showToast)
+          Alpine.store("toast").addToast("An error occurred", "error");
         console.error("AJAX error:", error2);
         throw error2;
       } finally {
         this.saving = false;
       }
     },
-    // ==================== Phone Formatting ====================
     formatUSPhoneNumber() {
       let phone = this.editAddress?.phone || "";
       phone = phone.replace(/\D/g, "");
-      if (phone.length > 10) phone = phone.slice(0, 10);
+      if (phone.length > 10)
+        phone = phone.slice(0, 10);
       if (phone.length >= 6) {
         this.editAddress.phone = `(${phone.slice(0, 3)}) ${phone.slice(3, 6)}-${phone.slice(6)}`;
       } else if (phone.length >= 3) {
@@ -6494,9 +6256,9 @@ attempted value: ${formattedValue}
         this.editAddress.phone = phone;
       }
     },
-    // ==================== Places API (New) - PlaceAutocompleteElement ====================
     async initAutocomplete() {
-      if (!AUTOCOMPLETE_ENABLED) return;
+      if (!AUTOCOMPLETE_ENABLED)
+        return;
       this._cleanupAutocomplete();
       if (typeof google === "undefined" || !google.maps) {
         if (this._googleApiRetries < GOOGLE_API_MAX_RETRIES) {
@@ -6557,14 +6319,18 @@ attempted value: ${formattedValue}
       }
     },
     _parseAddressComponentsNew(components) {
-      if (!this.editAddress) return;
+      if (!this.editAddress)
+        return;
       components.forEach((component) => {
-        if (!component.types?.length) return;
+        if (!component.types?.length)
+          return;
         component.types.forEach((type) => {
           const mapping = ADDRESS_COMPONENT_MAP[type];
-          if (!mapping) return;
+          if (!mapping)
+            return;
           const value = mapping.shortName ? component.shortText || "" : component.longText || "";
-          if (!value) return;
+          if (!value)
+            return;
           if (mapping.append) {
             this.editAddress[mapping.field] += value;
           } else if (mapping.prefix) {
@@ -6579,7 +6345,8 @@ attempted value: ${formattedValue}
       }
     },
     _cleanupAutocomplete() {
-      if (!this._autocompleteInstance) return;
+      if (!this._autocompleteInstance)
+        return;
       try {
         const popup = document.querySelector(POPUP_SELECTOR);
         const wrapper = popup?.querySelector(AUTOCOMPLETE_WRAPPER_SELECTOR);
@@ -6592,7 +6359,8 @@ attempted value: ${formattedValue}
       this._autocompleteInstance = null;
     },
     _resetAddressFields() {
-      if (!this.editAddress) return;
+      if (!this.editAddress)
+        return;
       this.editAddress.address = "";
       this.editAddress.city = "";
       this.editAddress.region = "";
@@ -6600,7 +6368,7 @@ attempted value: ${formattedValue}
     }
   };
 
-  // assets/src/js/alpine/stores/index.js
+  // assets/js/alpine/stores/index.js
   function registerStores() {
     Alpine.store("toast", toast_default);
     Alpine.store("popup", popup_default);
@@ -6609,7 +6377,7 @@ attempted value: ${formattedValue}
     Alpine.store("userAddress", userAddress_default);
   }
 
-  // assets/src/js/alpine/directives/validate.js
+  // assets/js/alpine/directives/validate.js
   function registerValidationDirectives() {
     Alpine.directive("validate-field", (el, { expression }, { evaluateLater: evaluateLater2, effect: effect3 }) => {
       let getValidator = evaluateLater2(expression);
@@ -6685,9 +6453,31 @@ attempted value: ${formattedValue}
         });
       });
     });
+    Alpine.directive("validate-error", (el, { expression }, { evaluateLater: evaluateLater2, effect: effect3 }) => {
+      let getValidator = evaluateLater2(expression);
+      el.classList.add("ma-form__error", "items-center", "gap-2");
+      el.innerHTML = `<svg class="h-5 w-5 flex-none text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" focusable="false">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0 3.75h.008v.008H12v-.008ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                        <span class="ma-form__error-text"></span>`;
+      const textEl = el.querySelector(".ma-form__error-text");
+      el.style.display = "none";
+      effect3(() => {
+        getValidator((errors) => {
+          const hasTouched = errors && Object.prototype.hasOwnProperty.call(errors, "touched");
+          const touched = hasTouched ? errors.touched : true;
+          const message = errors && errors.message ? errors.message : "";
+          const shouldShow = Boolean(message) && (touched === void 0 || touched);
+          if (textEl) {
+            textEl.textContent = message;
+          }
+          el.style.display = shouldShow ? "inline-flex" : "none";
+        });
+      });
+    });
   }
 
-  // assets/src/js/alpine/directives/loading.js
+  // assets/js/alpine/directives/loading.js
   var SPINNER_SVG = `<span class="loading-icon inline-flex items-center justify-center w-5 h-5 flex-shrink-0" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle class="spinner-arc" cx="12" cy="12" r="10" stroke-dasharray="16 46" stroke-dashoffset="0" /></svg></span>`;
   function registerLoadingDirective() {
     Alpine.directive("loading", (el, { expression }, { evaluateLater: evaluateLater2, effect: effect3 }) => {
@@ -6695,7 +6485,8 @@ attempted value: ${formattedValue}
       const loadingLabel = el.getAttribute("data-loading-label") || "Saving...";
       const contentWrap = document.createElement("span");
       contentWrap.className = "inline-flex items-center justify-center gap-2";
-      while (el.firstChild) contentWrap.appendChild(el.firstChild);
+      while (el.firstChild)
+        contentWrap.appendChild(el.firstChild);
       const loadingWrap = document.createElement("span");
       loadingWrap.className = "inline-flex items-center justify-center gap-2";
       loadingWrap.setAttribute("aria-hidden", "true");
@@ -6714,7 +6505,7 @@ attempted value: ${formattedValue}
     });
   }
 
-  // assets/src/js/BaseFormHandler.js
+  // assets/js/BaseFormHandler.js
   var BaseFormHandler = class {
     constructor(formData, additionalData = {}) {
       this.formData = formData;
@@ -6767,7 +6558,7 @@ attempted value: ${formattedValue}
     }
   };
 
-  // assets/src/js/handlers/LoginHandler.js
+  // assets/js/handlers/LoginHandler.js
   var LoginHandler = class extends BaseFormHandler {
     getValidationSchema() {
       return window.yup.object().shape({
@@ -6783,7 +6574,7 @@ attempted value: ${formattedValue}
     }
   };
 
-  // assets/src/js/alpine/components/forms/login.js
+  // assets/js/alpine/components/forms/login.js
   var login_default = () => ({
     formData: {
       email: "",
@@ -6811,7 +6602,7 @@ attempted value: ${formattedValue}
     }
   });
 
-  // assets/src/js/alpine/components/forms/signup.js
+  // assets/js/alpine/components/forms/signup.js
   var signup_default = () => ({
     formData: {
       firstName: "",
@@ -6851,6 +6642,7 @@ attempted value: ${formattedValue}
         signupNonce: this.signupNonce,
         captchaToken: token
       }).done((response) => {
+        console.log("Success:", response);
         this.notice = response.message;
         this.isFormSubmitting = false;
         window.location.reload();
@@ -6863,7 +6655,8 @@ attempted value: ${formattedValue}
     async validateForm() {
       const fields = Object.keys(this.formData);
       for (const field of fields) {
-        if (field === "receiveOfferNews") continue;
+        if (field === "receiveOfferNews")
+          continue;
         await this.validateField(field);
       }
     },
@@ -6876,7 +6669,7 @@ attempted value: ${formattedValue}
         agreeTOS: yup.boolean().required("You must accept the Terms of Service.").oneOf([true], "You must accept the Terms of Service."),
         password: yup.string().required("This field is required.").test("password-complexity", "Your password does not meet the requirements.", (value) => {
           let passedRequirements = [];
-          Object.entries(this.passwordRequirements).forEach(([, requirement]) => {
+          Object.entries(this.passwordRequirements).forEach(([key, requirement]) => {
             if (requirement.regex.test(value)) {
               passedRequirements.push(requirement.code);
             }
@@ -6895,7 +6688,7 @@ attempted value: ${formattedValue}
     }
   });
 
-  // assets/src/js/alpine/components/forms/updateAccount.js
+  // assets/js/alpine/components/forms/updateAccount.js
   var updateAccount_default = () => {
     const userData = window.accountData || {};
     const nonce = window.saveAccountDetailsNonce || "";
@@ -6911,7 +6704,8 @@ attempted value: ${formattedValue}
       errors: {},
       async handleSubmit() {
         await this.validateForm();
-        if (Object.keys(this.errors).length > 0) return;
+        if (Object.keys(this.errors).length > 0)
+          return;
         await this.ajaxSaveAccountDetails();
       },
       setAllowSubmit() {
@@ -6972,7 +6766,7 @@ attempted value: ${formattedValue}
     };
   };
 
-  // assets/src/js/alpine/components/forms/passwordChangeForm.js
+  // assets/js/alpine/components/forms/passwordChangeForm.js
   var passwordChangeForm_default = () => {
     const nonce = window.changePasswordNonce || "";
     const ajaxUrl = window.ajaxurl || "/wp-admin/admin-ajax.php";
@@ -6986,7 +6780,8 @@ attempted value: ${formattedValue}
       errors: {},
       async handleSubmit() {
         await this.validateForm();
-        if (Object.keys(this.errors).length > 0) return;
+        if (Object.keys(this.errors).length > 0)
+          return;
         this.isLoading = true;
         const data2 = {
           action: "change_password",
@@ -7041,7 +6836,7 @@ attempted value: ${formattedValue}
     };
   };
 
-  // assets/src/js/alpine/components/forms/index.js
+  // assets/js/alpine/components/forms/index.js
   function registerFormComponents() {
     Alpine.data("login", login_default);
     Alpine.data("signup", signup_default);
@@ -7049,11 +6844,11 @@ attempted value: ${formattedValue}
     Alpine.data("passwordChangeForm", passwordChangeForm_default);
   }
 
-  // assets/src/js/alpine/components/account/index.js
+  // assets/js/alpine/components/account/index.js
   function registerAccountComponents() {
   }
 
-  // assets/src/js/alpine/init.js
+  // assets/js/alpine/init.js
   window.Alpine = module_default;
   window.yup = index_esm_exports;
   if (typeof performance !== "undefined" && performance.mark) {
@@ -7077,12 +6872,12 @@ attempted value: ${formattedValue}
   var isLocalHost = window.location.hostname === "localhost" || window.location.hostname.includes("local") || window.location.hostname.endsWith(".test");
   var debugQuery = new URLSearchParams(window.location.search).get("alpine_debug");
   if (isLocalHost || debugQuery === "1") {
-    console.log("Alpine.js initialization complete");
-    console.log("Stores:", Object.keys(module_default.store));
-    console.log("Components:", Object.keys(module_default._data || {}));
+    console.log("\u2705 Alpine.js initialization complete");
+    console.log("\u{1F4E6} Stores:", Object.keys(module_default.store));
+    console.log("\u{1F3A8} Components:", Object.keys(module_default._data || {}));
     if (typeof performance !== "undefined" && performance.getEntriesByType) {
       const measures = performance.getEntriesByType("measure").filter((m) => m.name.startsWith("alpine-"));
-      measures.forEach((m) => console.log(`${m.name}: ${m.duration.toFixed(2)} ms`));
+      measures.forEach((m) => console.log(`\u23F1 ${m.name}: ${m.duration.toFixed(2)} ms`));
     }
   }
 })();

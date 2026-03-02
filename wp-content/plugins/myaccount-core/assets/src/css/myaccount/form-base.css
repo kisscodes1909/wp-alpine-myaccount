@@ -51,7 +51,7 @@
 
         label {
             margin-bottom: var(--ma-form-space-label-bottom);
-            text-transform: none;
+            text-transform: uppercase;
         }
 
         .ma-form__input,
@@ -338,7 +338,7 @@
     }
 
     .ma-form__label {
-        @apply block m-0 uppercase tracking-wide;
+        @apply block m-0 tracking-wide;
         font-size: var(--ma-form-font-size-base);
         color: var(--ma-form-color-muted);
     }

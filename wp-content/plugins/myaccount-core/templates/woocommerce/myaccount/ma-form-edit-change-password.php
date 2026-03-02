@@ -30,7 +30,7 @@
                         <div class="block w-10 h-10 flex items-center justify-center" x-password-eye="showPassword" @click="showPassword=!showPassword"></div>
                     </div>
                 </div>
-                <span class="text-red-600 mt-1 block" x-show="errors.currentPassword" x-text="errors.currentPassword"></span>
+                <span x-validate-error="{message: errors.currentPassword}"></span>
             </div>
 
             <div x-data="{showPassword:false}">
@@ -48,7 +48,7 @@
                         <div class="block w-10 h-10 flex items-center justify-center" x-password-eye="showPassword" @click="showPassword=!showPassword"></div>
                     </div>
                 </div>
-                <span class="text-red-600 mt-1 block" x-show="errors.newPassword" x-text="errors.newPassword"></span>
+                <span x-validate-error="{message: errors.newPassword}"></span>
             </div>
 
             <div x-data="{showPassword:false}">
@@ -66,7 +66,7 @@
                         <div class="block w-10 h-10 flex items-center justify-center" x-password-eye="showPassword" @click="showPassword=!showPassword"></div>
                     </div>
                 </div>
-                <span class="text-red-600 mt-1 block" x-show="errors.confirmPassword" x-text="errors.confirmPassword"></span>
+                <span x-validate-error="{message: errors.confirmPassword}"></span>
             </div>
 
             <div class="flex items-center">

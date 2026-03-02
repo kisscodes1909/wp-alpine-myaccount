@@ -49,7 +49,7 @@ $active_since = $registered_timestamp ? date_i18n( 'F Y', $registered_timestamp 
                         class="ma-form__input ma-form__input--capitalize"
                         :class="{'field-invalid': errors.firstName}"
                 />
-                <span class="ma-form__error" x-show="errors.firstName" x-text="errors.firstName"></span>
+                <span x-validate-error="{message: errors.firstName}"></span>
             </div>
 
             <div class="ma-form__field">
@@ -61,7 +61,7 @@ $active_since = $registered_timestamp ? date_i18n( 'F Y', $registered_timestamp 
                         class="ma-form__input ma-form__input--capitalize"
                         :class="{'field-invalid': errors.lastName}"
                 />
-                <span class="ma-form__error" x-show="errors.lastName" x-text="errors.lastName"></span>
+                <span x-validate-error="{message: errors.lastName}"></span>
             </div>
         </div>
     </div>
@@ -84,7 +84,7 @@ $active_since = $registered_timestamp ? date_i18n( 'F Y', $registered_timestamp 
                         :class="{'field-invalid': errors.email}"
                 />
                 <p class="ma-form__hint">This email is used for order confirmations and account notifications</p>
-                <span class="ma-form__error" x-show="errors.email" x-text="errors.email"></span>
+                <span x-validate-error="{message: errors.email}"></span>
             </div>
 
             <div class="ma-form__field">
