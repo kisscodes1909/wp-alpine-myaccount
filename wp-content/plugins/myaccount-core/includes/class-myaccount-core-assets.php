@@ -47,12 +47,37 @@ class MyAccount_Core_Assets {
 				filemtime( $js_file ),
 				true
 			);
+
+			$captcha_site_key = defined( 'CAPTCHA_SITE_KEY' ) ? CAPTCHA_SITE_KEY : '';
+			wp_localize_script(
+				'alpine-bundle',
+				'authenicationData',
+				array(
+					'wooLoginNonce' => wp_create_nonce( 'woocommerce-login' ),
+					'signupNonce'   => wp_create_nonce( 'woocommerce-register' ),
+					'captchaSiteKey' => $captcha_site_key,
+				)
+			);
+
+			if ( ! empty( $captcha_site_key ) ) {
+				wp_enqueue_script(
+					'myaccount-core-recaptcha',
+					'https://www.google.com/recaptcha/api.js?render=' . rawurlencode( $captcha_site_key ),
+					array(),
+					null,
+					true
+				);
+			}
 		}
 	}
 
 	public function add_defer_attribute( string $tag, string $handle ): string {
 		if ( 'alpine-bundle' === $handle ) {
 			return str_replace( ' src', ' defer="defer" src', $tag );
+		}
+
+		if ( 'myaccount-core-recaptcha' === $handle ) {
+			return str_replace( ' src', ' async defer src', $tag );
 		}
 
 		return $tag;

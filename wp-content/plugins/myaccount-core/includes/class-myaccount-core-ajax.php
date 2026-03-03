@@ -17,6 +17,10 @@ class MyAccount_Core_Ajax {
 		add_action( 'wp_ajax_save-address', array( $this, 'save_address_book' ) );
 		add_action( 'wp_ajax_save_account_details', array( $this, 'save_account_details' ) );
 		add_action( 'wp_ajax_change_password', array( $this, 'handle_change_password' ) );
+		add_action( 'wp_ajax_handle_login', array( $this, 'handle_login_ajax' ) );
+		add_action( 'wp_ajax_nopriv_handle_login', array( $this, 'handle_login_ajax' ) );
+		add_action( 'wp_ajax_handle_signup', array( $this, 'handle_signup' ) );
+		add_action( 'wp_ajax_nopriv_handle_signup', array( $this, 'handle_signup' ) );
 	}
 
 	public function handle_change_password(): void {
@@ -126,5 +130,146 @@ class MyAccount_Core_Ajax {
 
 		update_user_meta( $user_id, 'address_book', $serialized_data );
 		wp_send_json_success( 'Address data saved successfully' );
+	}
+
+	public function handle_signup(): void {
+		$nonce_value = isset( $_REQUEST['signupNonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['signupNonce'] ) ) : '';
+
+		if ( ! isset( $_POST['firstName'], $_POST['lastName'], $_POST['email'], $_POST['password'], $_POST['captchaToken'] ) || ! wp_verify_nonce( $nonce_value, 'woocommerce-register' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => wc_print_notice( 'Required fields are missing.', 'error', array(), true ),
+				)
+			);
+		}
+
+		$email      = sanitize_email( wp_unslash( $_POST['email'] ) );
+		$first_name = sanitize_text_field( wp_unslash( $_POST['firstName'] ) );
+		$last_name  = sanitize_text_field( wp_unslash( $_POST['lastName'] ) );
+		$password   = isset( $_POST['password'] ) ? (string) $_POST['password'] : '';
+
+		try {
+			$username          = '';
+			$validation_error  = new WP_Error();
+			$validation_error  = apply_filters( 'woocommerce_process_registration_errors', $validation_error, $username, $password, $email );
+			$validation_errors = $validation_error->get_error_messages();
+
+			$captcha_token      = sanitize_text_field( wp_unslash( $_POST['captchaToken'] ) );
+			$captcha_secret_key = '6Lemz_YpAAAAABcCKloM1gjuRKWi-Zgj18VM-kOT';
+
+			$response = wp_remote_post(
+				'https://www.google.com/recaptcha/api/siteverify',
+				array(
+					'body' => array(
+						'secret'   => $captcha_secret_key,
+						'response' => $captcha_token,
+					),
+				)
+			);
+
+			if ( is_wp_error( $response ) ) {
+				throw new Exception( 'The request is unacceptable, please contact admin!' );
+			}
+
+			$response_body = wp_remote_retrieve_body( $response );
+			$result        = json_decode( $response_body, true );
+
+			if ( ! is_array( $result ) || empty( $result['success'] ) ) {
+				throw new Exception( 'The request is unacceptable, please contact admin!' );
+			}
+
+			if ( 1 === count( $validation_errors ) ) {
+				throw new Exception( $validation_error->get_error_message() );
+			} elseif ( $validation_errors ) {
+				throw new Exception( $validation_errors[0] );
+			}
+
+			$new_customer = wc_create_new_customer(
+				sanitize_email( $email ),
+				wc_clean( $username ),
+				$password,
+				array(
+					'first_name' => $first_name,
+					'last_name'  => $last_name,
+				)
+			);
+
+			if ( is_wp_error( $new_customer ) ) {
+				throw new Exception( $new_customer->get_error_message() );
+			}
+
+			wc_set_customer_auth_cookie( $new_customer );
+
+			wp_send_json_success(
+				array(
+					'email'   => $email,
+					'message' => wc_print_notice( 'Signup Successfully', 'success', array(), true ),
+				)
+			);
+		} catch ( Exception $e ) {
+			wp_send_json_error(
+				array(
+					'message' => wc_print_notice( $e->getMessage(), 'error', array(), true ),
+				)
+			);
+		}
+	}
+
+	public function handle_login_ajax(): void {
+		$nonce_value = isset( $_REQUEST['woocommerceLoginNonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['woocommerceLoginNonce'] ) ) : '';
+
+		if ( ! wp_verify_nonce( $nonce_value, 'woocommerce-login' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => wc_print_notice( __( 'Security check failed. Please refresh and try again.', 'woocommerce' ), 'error', array(), true ),
+				)
+			);
+		}
+
+		if ( ! isset( $_POST['email'], $_POST['password'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => wc_print_notice( __( 'Required fields are missing.', 'woocommerce' ), 'error', array(), true ),
+				)
+			);
+		}
+
+		try {
+			$creds = array(
+				'user_login'    => trim( wp_unslash( $_POST['email'] ) ), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				'user_password' => $_POST['password'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+				'remember'      => isset( $_POST['rememberme'] ), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			);
+
+			$validation_error = new WP_Error();
+			$validation_error = apply_filters( 'woocommerce_process_login_errors', $validation_error, $creds['user_login'], $creds['user_password'] );
+
+			if ( $validation_error->get_error_code() ) {
+				throw new Exception( '<strong>' . __( 'Error:', 'woocommerce' ) . '</strong> ' . $validation_error->get_error_message() );
+			}
+
+			if ( empty( $creds['user_login'] ) ) {
+				throw new Exception( '<strong>' . __( 'Error:', 'woocommerce' ) . '</strong> ' . __( 'Username is required.', 'woocommerce' ) );
+			}
+
+			$user = wp_signon( apply_filters( 'woocommerce_login_credentials', $creds ), is_ssl() );
+
+			if ( is_wp_error( $user ) ) {
+				throw new Exception( $user->get_error_message() );
+			}
+
+			wp_send_json_success(
+				array(
+					'email'   => $creds['user_login'],
+					'message' => wc_print_notice( 'Login Successfully', 'success', array(), true ),
+				)
+			);
+		} catch ( Exception $e ) {
+			wp_send_json_error(
+				array(
+					'message' => wc_print_notice( $e->getMessage(), 'error', array(), true ),
+				)
+			);
+		}
 	}
 }

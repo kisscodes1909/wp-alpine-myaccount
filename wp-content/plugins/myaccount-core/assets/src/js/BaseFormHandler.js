@@ -33,6 +33,24 @@ export default class BaseFormHandler {
         throw new Error('getValidationSchema method should be implemented in the subclass');
     }
 
+    getErrorMessage(error) {
+        const responseData = error?.responseJSON?.data;
+
+        if (typeof responseData?.message === 'string' && responseData.message) {
+            return responseData.message;
+        }
+
+        if (typeof responseData === 'string' && responseData) {
+            return responseData;
+        }
+
+        if (typeof error?.message === 'string' && error.message) {
+            return error.message;
+        }
+
+        return 'Something went wrong. Please try again.';
+    }
+
     async handleSubmit(skipFields) {
         await this.validateForm(skipFields);
 
@@ -55,7 +73,7 @@ export default class BaseFormHandler {
             window.dispatchEvent(event);
 
         }).fail((error) => {
-            this.notice = error.message;
+            this.notice = this.getErrorMessage(error);
             this.isFormSubmitting = false;
         });
     }

@@ -14,10 +14,13 @@ class Theme_Ajax {
         add_action('wp_ajax_handle_return_request', [$this, 'handle_return_request']);
         add_action('wp_ajax_nopriv_handle_return_request', [$this, 'handle_return_request']);
         add_action('wp_ajax_approve_return', [$this, 'handle_approve_return_ajax']);
-        add_action('wp_ajax_handle_login', [$this, 'handle_login_ajax']);
-        add_action('wp_ajax_nopriv_handle_login', [$this, 'handle_login_ajax']);
-        add_action('wp_ajax_handle_signup', [$this, 'handle_signup']);
-        add_action('wp_ajax_nopriv_handle_signup', [$this, 'handle_signup']);
+
+        if ( ! $myaccount_core_active ) {
+            add_action('wp_ajax_handle_login', [$this, 'handle_login_ajax']);
+            add_action('wp_ajax_nopriv_handle_login', [$this, 'handle_login_ajax']);
+            add_action('wp_ajax_handle_signup', [$this, 'handle_signup']);
+            add_action('wp_ajax_nopriv_handle_signup', [$this, 'handle_signup']);
+        }
 
 //	    add_action('wc_ajax_nopriv_update_cart_item_quantity', [$this, 'update_cart_item_quantity']);
 //
