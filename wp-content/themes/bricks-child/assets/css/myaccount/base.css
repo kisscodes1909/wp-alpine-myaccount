@@ -41,34 +41,159 @@
         @apply flex flex-col gap-10;
     }
 
+    /* Order list item card (Figma: image left, content right) */
     .ma-orders__item {
-        @apply flex flex-col justify-between gap-3 p-8 md:p-14 md:flex-row md:gap-10;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #e5e7eb;
     }
 
-    .ma-orders__summary {
-        @apply flex items-center gap-6 md:gap-16;
+    @media (min-width: 768px) {
+        .ma-orders__item {
+            flex-direction: row;
+        }
     }
 
-    .ma-orders__thumbnails {
-        @apply flex gap-2 list-none m-0 p-0;
+    .ma-orders__item-image {
+        flex-shrink: 0;
+        width: 100%;
+        min-height: 155px;
+        background-color: #f9fafb;
+        overflow: hidden;
     }
 
-    .ma-orders__thumbnail {
-        @apply relative overflow-hidden;
-        width: 35px;
-        max-width: 35px;
+    .ma-orders__item-image img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        min-height: 155px;
+        object-fit: cover;
     }
 
-    .ma-orders__thumbnail img {
-        @apply block w-full h-auto;
+    @media (min-width: 768px) {
+        .ma-orders__item-image {
+            width: 112px;
+            min-width: 112px;
+            min-height: 155px;
+        }
+
+        .ma-orders__item-image img {
+            min-height: 155px;
+        }
     }
 
-    .ma-orders__thumbnail-more {
-        @apply pointer-events-none absolute inset-0 inline-flex items-center justify-center text-sm;
+    .ma-orders__item-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 20px;
+        flex: 1;
+        min-width: 0;
     }
 
-    .ma-orders__actions {
-        @apply flex flex-col gap-2;
+    .ma-orders__item-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .ma-orders__item-order-number {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        color: #0a0a0a;
+        letter-spacing: -0.15px;
+    }
+
+    .ma-orders__item-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 5px 10px;
+        background-color: #eff6ff;
+        border: 1px solid #bedbff;
+        font-size: 12px;
+        line-height: 16px;
+        font-weight: 400;
+        color: #155dfc;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        flex-shrink: 0;
+    }
+
+    .ma-orders__item-status-dot {
+        width: 6px;
+        height: 6px;
+        background-color: #2b7fff;
+        border-radius: 50%;
+    }
+
+    .ma-orders__item-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 32px;
+        align-items: center;
+    }
+
+    .ma-orders__item-meta-group {
+        margin: 0;
+    }
+
+    .ma-orders__item-meta-label {
+        margin: 0 0 2px 0;
+        font-size: 12px;
+        line-height: 16px;
+        color: #99a1af;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+    }
+
+    .ma-orders__item-meta-value {
+        margin: 0;
+        font-size: 12px;
+        line-height: 16px;
+        color: #364153;
+    }
+
+    .ma-orders__item-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 12px;
+        margin-top: 4px;
+        border-top: 1px solid #f3f4f6;
+    }
+
+    .ma-orders__item-total {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        color: #0a0a0a;
+        letter-spacing: -0.15px;
+    }
+
+    .ma-orders__item-view-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        line-height: 16px;
+        color: #99a1af;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        text-decoration: none;
+    }
+
+    .ma-orders__item-view-link:hover {
+        color: #364153;
+    }
+
+    .ma-orders__item-view-icon {
+        width: 14px;
+        height: 14px;
     }
 
     .ma-orders__pagination {

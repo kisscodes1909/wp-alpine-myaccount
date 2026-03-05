@@ -18,44 +18,28 @@ do_action( 'woocommerce_before_account_orders', $has_orders );
 	<div class="ma-orders">
 		<?php
 		foreach ( $customer_orders->orders as $customer_order ) {
-			$order = wc_get_order( $customer_order ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-			$items = array_values( $order->get_items() );
+			$order  = wc_get_order( $customer_order ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			$items  = array_values( $order->get_items() );
+			$first_item = ! empty( $items ) ? $items[0] : null;
+			if ( $first_item && is_object( $first_item ) ) {
+				$product = $first_item->get_product();
+				$image   = $product ? $product->get_image( 'thumbnail' ) : wp_sprintf( '<img src="%s" alt="" />', esc_url( wc_placeholder_img_src( 'thumbnail' ) ) );
+			} else {
+				$image = wp_sprintf( '<img src="%s" alt="" />', esc_url( wc_placeholder_img_src( 'thumbnail' ) ) );
+			}
 			?>
-
 			<div class="ma-orders__item">
-				<?php wc_get_template( 'order/order-meta-data.php', array( 'order' => $order ) ); ?>
-				<div class="ma-orders__summary">
-					<ul class="ma-orders__thumbnails">
-						<?php foreach ( $items as $index => $item ) : ?>
-							<?php
-							$product = $item->get_product();
-
-							if ( $product ) {
-								$image = $product->get_image( 'thumbnail' );
-							} else {
-								$image = wp_sprintf( '<img src="%s"/>', wc_placeholder_img_src( 'thumbnail' ) );
-							}
-							?>
-
-							<?php if ( count( $items ) < 5 ) : ?>
-								<li class="ma-orders__thumbnail"><?php echo $image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></li>
-							<?php else : ?>
-								<?php if ( $index < 3 ) : ?>
-									<li class="ma-orders__thumbnail"><?php echo $image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></li>
-								<?php else : ?>
-									<li class="ma-orders__thumbnail">
-										<span class="ma-orders__thumbnail-more">+<?php echo esc_html( count( $items ) - 4 ); ?></span>
-										<?php echo $image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-									</li>
-									<?php break; ?>
-								<?php endif; ?>
-							<?php endif; ?>
-
-						<?php endforeach; ?>
-					</ul>
-					<div class="ma-orders__actions">
-						<?php wc_get_template( 'order/order-actions.php', array( 'order' => $order, 'wp_button_class' => $wp_button_class ) ); ?>
-					</div>
+				<div class="ma-orders__item-image">
+					<?php echo $image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- product image or placeholder HTML ?>
+					<?php if ( count( $items ) > 1 ) : ?>
+						<div class="ma-orders__item-image-overlay" aria-hidden="true">
+							<span class="ma-orders__item-image-overlay-count">+<?php echo esc_html( (string) ( count( $items ) - 1 ) ); ?></span>
+							<span class="ma-orders__item-image-overlay-label"><?php esc_html_e( 'more', 'woocommerce' ); ?></span>
+						</div>
+					<?php endif; ?>
+				</div>
+				<div class="ma-orders__item-body">
+					<?php wc_get_template( 'order/order-list-item-content.php', array( 'order' => $order ) ); ?>
 				</div>
 			</div>
 		<?php } ?>

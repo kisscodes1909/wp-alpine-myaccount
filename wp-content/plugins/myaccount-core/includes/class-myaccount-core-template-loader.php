@@ -18,6 +18,7 @@ class MyAccount_Core_Template_Loader {
 		'myaccount/ma-form-edit-change-password.php',
 		'order/order-meta-data.php',
 		'order/order-actions.php',
+		'order/order-list-item-content.php',
 		'order/order-total.php',
 		'order/order-details-customer.php',
 		'ui/apl-toast.php',

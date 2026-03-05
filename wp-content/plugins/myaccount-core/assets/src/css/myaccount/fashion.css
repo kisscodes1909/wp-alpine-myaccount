@@ -98,16 +98,11 @@ body.myaccount-template-fashion.woocommerce-account .ma-form-actions > a.button.
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-orders__item {
-    background: var(--ma-fashion-surface);
+    background: transparent;
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-page-heading__description {
     color: #6b7280;
-}
-
-body.myaccount-template-fashion.woocommerce-account .ma-orders__thumbnail-more {
-    color: #ffffff;
-    background: rgba(0, 0, 0, 0.72);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-orders__empty-text {
