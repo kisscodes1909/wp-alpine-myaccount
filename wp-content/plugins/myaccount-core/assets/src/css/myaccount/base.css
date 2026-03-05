@@ -1,6 +1,7 @@
 /* -------------------------------------------------------------------------- */
 /* My Account BEM base layer (core endpoints)                                 */
 /* Blocks: ma-page-heading, ma-orders, ma-view-order,                         */
+/*         ma-order-details-header, ma-order-status-card, ma-order-details-items-summary */
 /*         ma-address-book, ma-payment-methods                                 */
 /* -------------------------------------------------------------------------- */
 
@@ -80,17 +81,17 @@
     }
 
     .ma-orders__item-image-overlay-count {
-        font-size: 18px;
+        font-size: 1.8rem;
         font-weight: 500;
-        line-height: 18px;
+        line-height: 1.8rem;
         color: #fff;
         letter-spacing: -0.44px;
     }
 
     .ma-orders__item-image-overlay-label {
-        font-size: 12px;
+        font-size: 1.2rem;
         font-weight: 400;
-        line-height: 16px;
+        line-height: 1.6rem;
         color: rgba(255, 255, 255, 0.8);
     }
 
@@ -137,9 +138,9 @@
 
     .ma-orders__item-order-number {
         margin: 0;
-        font-size: 14px;
+        font-size: 1.4rem;
         font-weight: 500;
-        line-height: 20px;
+        line-height: 2rem;
         color: #0a0a0a;
         letter-spacing: -0.15px;
     }
@@ -150,8 +151,8 @@
         gap: 10px;
         padding: 5px 10px;
         border: 1px solid transparent;
-        font-size: 12px;
-        line-height: 16px;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
         font-weight: 400;
         text-transform: uppercase;
         letter-spacing: 0.6px;
@@ -217,8 +218,8 @@
 
     .ma-orders__item-meta-label {
         margin: 0 0 2px 0;
-        font-size: 12px;
-        line-height: 16px;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
         color: #99a1af;
         text-transform: uppercase;
         letter-spacing: 0.6px;
@@ -242,9 +243,9 @@
 
     .ma-orders__item-total {
         margin: 0;
-        font-size: 14px;
+        font-size: 1.4rem;
         font-weight: 500;
-        line-height: 20px;
+        line-height: 2rem;
         color: #0a0a0a;
         letter-spacing: -0.15px;
     }
@@ -253,8 +254,8 @@
         display: inline-flex;
         align-items: center;
         gap: 4px;
-        font-size: 12px;
-        line-height: 16px;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
         color: #99a1af;
         text-transform: uppercase;
         letter-spacing: 1.2px;
@@ -302,6 +303,858 @@
 
     .ma-view-order__layout {
         @apply grid grid-cols-1 gap-8;
+    }
+
+    /* Section 1: Order details header */
+    .ma-order-details-header {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        padding-bottom: 1px;
+    }
+
+    .ma-order-details-header__inner {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding-top: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+        .ma-order-details-header__inner {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
+            min-height: 124px;
+        }
+    }
+
+    .ma-order-details-header__left,
+    .ma-order-details-header__right {
+        flex-shrink: 0;
+    }
+
+    .ma-order-details-header__number {
+        margin: 0;
+        font-size: 3.2rem;
+        line-height: 4.8rem;
+        font-weight: 400;
+        color: #0a0a0a;
+        letter-spacing: -0.02em;
+    }
+
+    @media (min-width: 768px) {
+        .ma-order-details-header__number {
+            font-size: 4.8rem;
+            line-height: 4.8rem;
+        }
+    }
+
+    .ma-order-details-header__date {
+        margin: 0.5rem 0 0 0;
+        font-size: 1.4rem;
+        line-height: 2rem;
+        color: #99a1af;
+    }
+
+    .ma-order-details-header__total-label {
+        margin: 0;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        color: #99a1af;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        text-align: right;
+    }
+
+    .ma-order-details-header__total-value {
+        margin: 0.25rem 0 0 0;
+        font-size: 3.2rem;
+        line-height: 4.8rem;
+        font-weight: 400;
+        color: #0a0a0a;
+        text-align: right;
+    }
+
+    @media (min-width: 768px) {
+        .ma-order-details-header__total-value {
+            font-size: 4.8rem;
+        }
+    }
+
+    .ma-order-details-header__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: flex-end;
+        margin-top: 1rem;
+        align-items: center;
+    }
+
+    .ma-order-details-header__btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        border: 1px solid #d1d5dc;
+        background: transparent;
+        color: #0a0a0a;
+        cursor: pointer;
+        text-decoration: none;
+        border-radius: 0;
+    }
+
+    .ma-order-details-header__btn--danger {
+        border-color: #ffa1ad;
+        color: #ec003f;
+        letter-spacing: 0.12em;
+    }
+
+    .ma-order-details-header__btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .ma-order-details-header__icon {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+    }
+
+    .ma-order-details-header__cancel-form {
+        margin: 0;
+    }
+
+    /* Section 2: Order status card + timeline */
+    .ma-order-status-card {
+        border: 1px solid #e5e7eb;
+        margin-top: 3.5rem;
+    }
+
+    .ma-order-status-card__header {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1.5rem 1.75rem;
+        border-bottom: 1px solid #e5e7eb;
+        background: rgba(249, 250, 251, 0.7);
+    }
+
+    @media (min-width: 768px) {
+        .ma-order-status-card__header {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 97px;
+        }
+    }
+
+    .ma-order-status-card__header-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .ma-order-status-card__icon-wrap {
+        width: 48px;
+        height: 48px;
+        flex-shrink: 0;
+        background: #2b7fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .ma-order-status-card__icon {
+        width: 24px;
+        height: 24px;
+        color: #fff;
+    }
+
+    .ma-order-status-card__header-text {
+        min-width: 0;
+    }
+
+    .ma-order-status-card__title-row {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .ma-order-status-card__title {
+        margin: 0;
+        font-size: 1.6rem;
+        line-height: 2.4rem;
+        font-weight: 400;
+        color: #0a0a0a;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    .ma-order-status-card__pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.5rem;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        background: #eff6ff;
+        border: 1px solid #bedbff;
+        color: #155dfc;
+    }
+
+    .ma-order-status-card__description {
+        margin: 0;
+        font-size: 1.4rem;
+        line-height: 2rem;
+        color: #6a7282;
+    }
+
+    .ma-order-status-card__est-delivery {
+        text-align: right;
+    }
+
+    .ma-order-status-card__est-label {
+        margin: 0;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        color: #99a1af;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+    }
+
+    .ma-order-status-card__est-date {
+        margin: 0.125rem 0 0 0;
+        font-size: 1.6rem;
+        line-height: 2.4rem;
+        color: #0a0a0a;
+    }
+
+    .ma-order-status-card__timeline {
+        padding: 1.5rem 1.75rem;
+        background: transparent;
+    }
+
+    /* Mobile: vertical timeline (line from Placed dot to Delivered dot). */
+    .ma-order-status-card__timeline-track {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        position: relative;
+    }
+
+    .ma-order-status-card__timeline-line {
+        position: absolute;
+        left: 6px;
+        top: 6px;
+        bottom: 6px;
+        width: 1px;
+        background: #e5e7eb;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .ma-order-status-card__timeline-line-fill {
+        position: absolute;
+        left: 6px;
+        top: 6px;
+        width: 1px;
+        height: calc((100% - 12px) * var(--ma-timeline-progress, 0) / 100);
+        background: #0a0a0a;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .ma-order-status-card__step {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        flex: 0 0 auto;
+        min-width: 0;
+        position: relative;
+        z-index: 1;
+        gap: 0.75rem;
+    }
+
+    .ma-order-status-card__step-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #e5e7eb;
+        flex-shrink: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .ma-order-status-card__step-labels {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .ma-order-status-card__step--active .ma-order-status-card__step-dot {
+        background: #0a0a0a;
+    }
+
+    .ma-order-status-card__step-label {
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #99a1af;
+    }
+
+    .ma-order-status-card__step--active .ma-order-status-card__step-label {
+        color: #0a0a0a;
+    }
+
+    .ma-order-status-card__step-sublabel {
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        color: #6a7282;
+    }
+
+    .ma-order-status-card__step--current .ma-order-status-card__step-sublabel {
+        color: #0a0a0a;
+    }
+
+    .ma-order-status-card__step--active:not(.ma-order-status-card__step--current) .ma-order-status-card__step-sublabel {
+        color: #d1d5dc;
+    }
+
+    .ma-order-status-card__step-date {
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        color: #99a1af;
+    }
+
+    .ma-order-status-card__step--current .ma-order-status-card__step-date {
+        color: #0a0a0a;
+    }
+
+    .ma-order-status-card__step--active:not(.ma-order-status-card__step--current) .ma-order-status-card__step-date {
+        color: #d1d5dc;
+    }
+
+    /* Desktop: horizontal timeline (line from Placed dot to Delivered dot). */
+    @media (min-width: 768px) {
+        .ma-order-status-card__timeline-track {
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .ma-order-status-card__timeline-line {
+            left: 12.5%;
+            width: 75%;
+            top: 6px;
+            bottom: auto;
+            height: 1px;
+        }
+
+        .ma-order-status-card__timeline-line-fill {
+            left: 12.5%;
+            top: 6px;
+            width: calc(75% * var(--ma-timeline-progress, 0) / 100);
+            height: 1px;
+        }
+
+        .ma-order-status-card__step {
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            gap: 0;
+        }
+
+        .ma-order-status-card__step-dot {
+            margin-bottom: 0.5rem;
+        }
+
+        .ma-order-status-card__step-labels {
+            align-items: center;
+            text-align: center;
+        }
+    }
+
+    /* Section 3: Items + shipping + summary */
+    .ma-order-details-items-summary {
+        margin-top: 3.5rem;
+    }
+
+    .ma-order-details-items-summary__grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .ma-order-details-items-summary__main,
+    .ma-order-details-items-summary__summary {
+        min-width: 0;
+    }
+
+    @media (min-width: 1024px) {
+        .ma-order-details-items-summary__grid {
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+            gap: 4rem;
+        }
+
+        .ma-order-details-items-summary__main {
+            grid-column: span 8;
+        }
+
+        .ma-order-details-items-summary__summary {
+            grid-column: span 4;
+        }
+    }
+
+    .ma-order-details-items-summary__items-title {
+        margin: 0 0 1.5rem 0;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        color: #99a1af;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+    }
+
+    .ma-order-details-items-summary__items-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        min-width: 0;
+    }
+
+    .ma-order-details-items-summary__item {
+        display: flex;
+        flex-direction: row;
+        gap: 0;
+        border: 1px solid #e5e7eb;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .ma-order-details-items-summary__item-image {
+        width: 128px;
+        min-width: 128px;
+        flex-shrink: 0;
+        overflow: hidden;
+        background: #f9fafb;
+    }
+
+    .ma-order-details-items-summary__item-image img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        min-height: 120px;
+        object-fit: cover;
+    }
+
+    .ma-order-details-items-summary__item-image-placeholder {
+        display: block;
+        width: 100%;
+        min-height: 120px;
+        background: #f3f4f6;
+    }
+
+    .ma-order-details-items-summary__item-body {
+        flex: 1 1 0;
+        min-width: 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .ma-order-details-items-summary__item-name {
+        margin: 0;
+        font-size: 1.4rem;
+        line-height: 1.35;
+        color: #0a0a0a;
+        font-weight: 400;
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+
+    .ma-order-details-items-summary__item-name a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .ma-order-details-items-summary__item-name a:hover {
+        text-decoration: underline;
+    }
+
+    .ma-order-details-items-summary__item-meta,
+    .ma-order-details-items-summary__item-qty {
+        margin: 0;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        color: #0a0a0a;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+    }
+
+    .ma-order-details-items-summary__item-price {
+        margin: 0.75rem 0 0 0;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        color: #101828;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+    }
+
+    .ma-order-details-items-summary__item-purchase-note {
+        margin-top: 0.5rem;
+        padding: 1rem;
+        font-size: 0.875rem;
+        color: #6a7282;
+        border-left: 3px solid #e5e7eb;
+        background: #f9fafb;
+    }
+
+    @media (max-width: 767px) {
+        .ma-order-details-items-summary__item {
+            flex-direction: column;
+        }
+
+        .ma-order-details-items-summary__item-image {
+            width: 100%;
+            min-width: 0;
+            min-height: 120px;
+        }
+
+        .ma-order-details-items-summary__item-image img,
+        .ma-order-details-items-summary__item-image-placeholder {
+            min-height: 120px;
+        }
+    }
+
+    .ma-order-details-items-summary__shipping {
+        margin-top: 2.25rem;
+        padding-top: 2.25rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .ma-order-details-items-summary__shipping-title {
+        margin: 0 0 1rem 0;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        color: #99a1af;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+    }
+
+    .ma-order-details-items-summary__shipping-inner {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0;
+        border: 1px solid #e5e7eb;
+        min-width: 0;
+    }
+
+    @media (min-width: 768px) {
+        .ma-order-details-items-summary__shipping-inner {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .ma-order-details-items-summary__shipping-deliver {
+            border-right: 1px solid #e5e7eb;
+        }
+    }
+
+    .ma-order-details-items-summary__shipping-deliver,
+    .ma-order-details-items-summary__shipping-contact {
+        min-width: 0;
+        padding: 24px;
+    }
+
+    .ma-order-details-items-summary__shipping-label {
+        margin: 0 0 1rem 0;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        color: #99a1af;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+    }
+
+    .ma-order-details-items-summary__shipping-address-block {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        min-width: 0;
+    }
+
+    .ma-order-details-items-summary__shipping-icon {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        flex-shrink: 0;
+        border: 1px solid #f3f4f6;
+        background: #f9fafb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .ma-order-details-items-summary__shipping-icon svg {
+        width: 14px;
+        height: 14px;
+        color: #6a7282;
+    }
+
+    .ma-order-details-items-summary__shipping-content {
+        min-width: 0;
+    }
+
+    .ma-order-details-items-summary__shipping-name {
+        margin: 0;
+        font-size: 1.4rem;
+        line-height: 2rem;
+        color: #0a0a0a;
+    }
+
+    .ma-order-details-items-summary__shipping-address {
+        margin: 0.25rem 0 0 0;
+        font-size: 1.4rem;
+        line-height: 1.6;
+        color: #6a7282;
+    }
+
+    .ma-order-details-items-summary__shipping-contact-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .ma-order-details-items-summary__contact-line {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 1.4rem;
+        line-height: 2rem;
+        color: #4a5565;
+    }
+
+    .ma-order-details-items-summary__contact-icon-wrap {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        flex-shrink: 0;
+        border: 1px solid #f3f4f6;
+        background: #f9fafb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .ma-order-details-items-summary__contact-icon {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+        color: #6a7282;
+    }
+
+    /* Summary card (Figma: border, header strip, totals, payment, actions) */
+    .ma-order-details-items-summary__summary-card {
+        border: 0.1rem solid #e5e7eb;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
+
+    .ma-order-details-items-summary__summary-header {
+        background: #f9fafb;
+        border-bottom: 0.1rem solid #f3f4f6;
+        padding: 1.6rem 2.4rem 0.1rem;
+    }
+
+    .ma-order-details-items-summary__summary-title {
+        margin: 0;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        font-weight: 400;
+        color: #6a7282;
+        text-transform: uppercase;
+        letter-spacing: 0.12rem;
+    }
+
+    .ma-order-details-items-summary__summary-inner {
+        display: flex;
+        flex-direction: column;
+        gap: 1.4rem;
+        padding: 2.4rem;
+        border-bottom: 0.1rem solid #f3f4f6;
+    }
+
+    .ma-order-details-items-summary__summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1.4rem;
+        line-height: 2rem;
+    }
+
+    .ma-order-details-items-summary__summary-row--total {
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        font-weight: 400;
+        padding-top: 1.4rem;
+        margin-top: 0;
+        border-top: 0.1rem solid rgba(0, 0, 0, 0.1);
+    }
+
+    .ma-order-details-items-summary__summary-row--total .ma-order-details-items-summary__summary-label {
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12rem;
+        color: #0a0a0a;
+    }
+
+    .ma-order-details-items-summary__summary-row--total .ma-order-details-items-summary__summary-value {
+        font-size: 2.4rem;
+        line-height: 3.2rem;
+        color: #0a0a0a;
+    }
+
+    .ma-order-details-items-summary__summary-label {
+        color: #6a7282;
+    }
+
+    .ma-order-details-items-summary__summary-value {
+        color: #0a0a0a;
+    }
+
+    /* Payment block (Figma: label + icon + method + masked) */
+    .ma-order-details-items-summary__payment {
+        padding: 2rem 2.4rem;
+        border-bottom: 0.1rem solid #f3f4f6;
+    }
+
+    .ma-order-details-items-summary__payment-label {
+        margin: 0 0 1.2rem 0;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        font-weight: 400;
+        color: #99a1af;
+        text-transform: uppercase;
+        letter-spacing: 0.12rem;
+    }
+
+    .ma-order-details-items-summary__payment-inner {
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+    }
+
+    .ma-order-details-items-summary__payment-icon {
+        width: 3.2rem;
+        height: 3.2rem;
+        min-width: 3.2rem;
+        flex-shrink: 0;
+        border: 0.1rem solid #e5e7eb;
+        background: #f9fafb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .ma-order-details-items-summary__payment-icon svg {
+        width: 1.4rem;
+        height: 1.4rem;
+        color: #6a7282;
+    }
+
+    .ma-order-details-items-summary__payment-details {
+        min-width: 0;
+    }
+
+    .ma-order-details-items-summary__payment-method {
+        margin: 0;
+        font-size: 1.4rem;
+        line-height: 2rem;
+        color: #0a0a0a;
+    }
+
+    .ma-order-details-items-summary__payment-masked {
+        margin: 0;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        color: #99a1af;
+    }
+
+    /* Action buttons (Figma: stacked, full-width, gap 1rem) */
+    .ma-order-details-items-summary__actions {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 2rem 2.4rem;
+    }
+
+    /* Same font-size, line-height, padding for all buttons so height stays in sync */
+    .ma-order-details-items-summary__btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+        width: 100%;
+        padding: 1.2rem 1.6rem;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 0.12rem;
+        text-decoration: none;
+        border: 0.1rem solid #e5e7eb;
+        background: #ffffff;
+        color: #0a0a0a;
+        cursor: pointer;
+        transition: border-color 0.2s, color 0.2s;
+    }
+
+    /* Override browser/theme defaults on button so text matches anchor buttons (specificity over theme global button) */
+    .woocommerce-account .ma-order-details-items-summary__actions button.ma-order-details-items-summary__btn {
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        font-weight: 400;
+        font-family: inherit;
+        border-radius: 0;
+    }
+
+    .ma-order-details-items-summary__btn:hover {
+        border-color: #d1d5db;
+    }
+
+    .ma-order-details-items-summary__btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .ma-order-details-items-summary__btn--danger {
+        border-color: #ffa1ad;
+        color: #ec003f;
+    }
+
+    .ma-order-details-items-summary__btn--danger:hover:not(:disabled) {
+        border-color: #ff8090;
+    }
+
+    .ma-order-details-items-summary__btn-icon {
+        width: 1.4rem;
+        height: 1.4rem;
+        flex-shrink: 0;
+    }
+
+    /* Shipment status title (in order-details.php) */
+    .ma-order-details__shipments-title {
+        margin: 2rem 0 1rem 0;
+        font-size: 1.6rem;
+        line-height: 2.4rem;
+        font-weight: 500;
+        color: #0a0a0a;
     }
 
     .ma-view-order__updates {
@@ -359,7 +1212,7 @@
 
     .ma-address-book__default-pill {
         @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs uppercase tracking-wide whitespace-nowrap;
-        line-height: 1rem;
+        line-height: 1.6rem;
     }
 
     .ma-address-book__default-icon {

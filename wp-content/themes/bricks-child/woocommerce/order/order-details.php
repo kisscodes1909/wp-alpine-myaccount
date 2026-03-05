@@ -38,15 +38,13 @@ if ( $show_downloads ) {
     );
 }
 
-$shipments = aftership_get_shipment($order_id);
+$shipments = aftership_get_shipment( $order_id );
 
 ?>
-        <!-- Item Summary - Shipment -->
-        <?php wc_get_template('myaccount/page-heading.php',
-            [
-                'page_heading' => 'Item Summary',
-            ]
-        ); ?>
+        <!-- Shipment status (main items + summary are in view-order Section 3) -->
+        <?php if ( ! empty( $shipments ) ) : ?>
+            <h2 class="ma-order-details__shipments-title"><?php esc_html_e( 'Shipment status', 'woocommerce' ); ?></h2>
+        <?php endif; ?>
 
         <?php
             $shipment_index = 1;
@@ -107,7 +105,7 @@ $shipments = aftership_get_shipment($order_id);
 
                         <form action="" method="post">
                             <?php wp_nonce_field('cancel_order_action_nonce', 'cancel_order_nonce'); ?>
-                            <input type="hidden" value="<?php echo $order->get_id(); ?>" name="order_id"  />
+                            <input type="hidden" value="<?php echo esc_attr( $order->get_id() ); ?>" name="order_id" />
 
                             <div class="flex flex-col sm:flex-row gap-5 items-center">
                                 <button class="px-6 text-sm button slim w-[300px]" type="submit" <?php echo $request_order_cancellation ? 'disabled' : ''; ?>>Cancel Order</button>
@@ -122,7 +120,7 @@ $shipments = aftership_get_shipment($order_id);
 
             <?php if($order->get_status() === 'shipped'): ?>
                 <div class="mt-14 text-center md:text-left">
-                    <a href="<?php echo wc_get_endpoint_url('return-order', $order->get_id()) ?>" class="px-6 text-sm button slim w-[200px] md:w-[300px]" type="submit">Return Order</a>
+                    <a href="<?php echo esc_url( wc_get_endpoint_url( 'return-order', $order->get_id() ) ); ?>" class="px-6 text-sm button slim w-[200px] md:w-[300px]" type="submit">Return Order</a>
                 </div>
             <?php endif; ?>
         </div>

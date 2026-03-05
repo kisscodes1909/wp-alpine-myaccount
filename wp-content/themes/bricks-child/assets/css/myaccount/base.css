@@ -100,9 +100,9 @@
 
     .ma-orders__item-order-number {
         margin: 0;
-        font-size: 14px;
+        font-size: 1.4rem;
         font-weight: 500;
-        line-height: 20px;
+        line-height: 2rem;
         color: #0a0a0a;
         letter-spacing: -0.15px;
     }
@@ -114,8 +114,8 @@
         padding: 5px 10px;
         background-color: #eff6ff;
         border: 1px solid #bedbff;
-        font-size: 12px;
-        line-height: 16px;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
         font-weight: 400;
         color: #155dfc;
         text-transform: uppercase;
@@ -143,8 +143,8 @@
 
     .ma-orders__item-meta-label {
         margin: 0 0 2px 0;
-        font-size: 12px;
-        line-height: 16px;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
         color: #99a1af;
         text-transform: uppercase;
         letter-spacing: 0.6px;
@@ -152,8 +152,8 @@
 
     .ma-orders__item-meta-value {
         margin: 0;
-        font-size: 12px;
-        line-height: 16px;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
         color: #364153;
     }
 
@@ -168,9 +168,9 @@
 
     .ma-orders__item-total {
         margin: 0;
-        font-size: 14px;
+        font-size: 1.4rem;
         font-weight: 500;
-        line-height: 20px;
+        line-height: 2rem;
         color: #0a0a0a;
         letter-spacing: -0.15px;
     }
@@ -179,8 +179,8 @@
         display: inline-flex;
         align-items: center;
         gap: 4px;
-        font-size: 12px;
-        line-height: 16px;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
         color: #99a1af;
         text-transform: uppercase;
         letter-spacing: 1.2px;

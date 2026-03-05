@@ -132,13 +132,13 @@ body.myaccount-template-fashion.woocommerce-account .ma-address-book__default-pi
     color: #ffffff;
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-address-book__action-button {
-    border-color: #d1d5dc !important;
+body.myaccount-template-fashion.woocommerce-account .ma-address-book .ma-address-book__action-button {
+    border-color: #d1d5dc;
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-address-book__action-button--danger {
-    border-color: #ffa1ad !important;
-    color: #ec003f !important;
+body.myaccount-template-fashion.woocommerce-account .ma-address-book .ma-address-book__action-button--danger {
+    border-color: #ffa1ad;
+    color: #ec003f;
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-address-book__empty-title {

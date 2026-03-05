@@ -23,6 +23,10 @@ wp-config.php
 # Cursor IDE (rules, skills – local only)
 .cursor/
 
+# Cursor plan files
+*.plan.md
+.cursor/plans/
+
 # Example themes
 /wp-content/themes/twenty*/
 

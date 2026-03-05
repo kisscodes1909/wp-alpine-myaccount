@@ -8,8 +8,8 @@
     --ma-notice-padding-right: 2.5rem;
     --ma-notice-border-width: 1px;
     --ma-notice-border-radius: 0;
-    --ma-notice-font-size: 16px;
-    --ma-notice-font-size-desktop: 16px;
+    --ma-notice-font-size: 1.6rem;
+    --ma-notice-font-size-desktop: 1.6rem;
     --ma-notice-line-height: 1.5;
 
     /* Semantic color tokens (reusable: notice, order status, pills, etc.) */
@@ -29,7 +29,7 @@
     --ma-info-border: #bfdbfe;
     --ma-info-text: #1e3a8a;
 
-    --ma-notice-icon-size: 20px;
+    --ma-notice-icon-size: 2rem;
     --ma-notice-success-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'/%3E%3C/svg%3E");
     --ma-notice-error-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'/%3E%3C/svg%3E");
     --ma-notice-warning-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 9v3.75m0 3.75h.008v.008H12v-.008Zm8.24 3.72H3.76c-1.38 0-2.24-1.5-1.55-2.7L10.45 3.3c.69-1.2 2.41-1.2 3.1 0l8.24 14.28c.69 1.2-.17 2.7-1.55 2.7Z'/%3E%3C/svg%3E");
@@ -65,12 +65,12 @@
         --apl-checkbox-size: 26px;
         --apl-checkbox-icon-size: 18px;
 
-        --ma-form-font-size-xs: 1rem;
-        --ma-form-font-size-sm: 1rem;
-        --ma-form-font-size-base: 16px;
-        --ma-form-font-size-xl: 1rem;
-        --ma-form-line-height-title: 1.75rem;
-        --ma-form-font-size-checkbox-label: 1rem;
+        --ma-form-font-size-xs: 1.4rem;
+        --ma-form-font-size-sm: 1.4rem;
+        --ma-form-font-size-base: 1.6rem;
+        --ma-form-font-size-xl: 1.6rem;
+        --ma-form-line-height-title: 2.8rem;
+        --ma-form-font-size-checkbox-label: 1.6rem;
 
         --ma-form-color-text: #111827;
         --ma-form-color-muted: #6b7280;
@@ -306,7 +306,7 @@
         @apply w-full h-form-field inline-flex items-center justify-center border font-medium;
         gap: var(--ma-form-space-button-gap, 0.5rem);
         padding-inline: var(--ma-form-space-button-padding-x, 1rem);
-        font-size: var(--ma-form-font-size-base, 1rem);
+        font-size: var(--ma-form-font-size-base, 1.6rem);
         transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
 
         &:hover {

@@ -122,18 +122,18 @@ button,
     }
 }
 
-/* Global button shape: flat across the entire theme */
-button,
-.button,
-a.button,
-input[type='button'],
-input[type='submit'],
-.woocommerce a.button,
-.woocommerce button.button,
-.woocommerce input.button {
-    border-radius: 0 !important;
-    font-size: 16px !important;
-    line-height: 24px !important;
+/* Global button shape: flat across the entire theme. No !important; use body for specificity over WC/Bricks base so forms and other pages keep this style. Overrides (e.g. .woocommerce-account .ma-order-details-items-summary__actions button) win via higher specificity. */
+body button,
+body .button,
+body a.button,
+body input[type='button'],
+body input[type='submit'],
+body .woocommerce a.button,
+body .woocommerce button.button,
+body .woocommerce input.button {
+    border-radius: 0;
+    font-size: 1.6rem;
+    line-height: 2.4rem;
 }
 
 

@@ -132,17 +132,146 @@ body.myaccount-template-fashion.woocommerce-account .ma-address-book__default-pi
     color: #ffffff;
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-address-book__action-button {
-    border-color: #d1d5dc !important;
+body.myaccount-template-fashion.woocommerce-account .ma-address-book .ma-address-book__action-button {
+    border-color: #d1d5dc;
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-address-book__action-button--danger {
-    border-color: #ffa1ad !important;
-    color: #ec003f !important;
+body.myaccount-template-fashion.woocommerce-account .ma-address-book .ma-address-book__action-button--danger {
+    border-color: #ffa1ad;
+    color: #ec003f;
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-address-book__empty-title {
     color: #374151;
+}
+
+/* Order details (view-order) fashion overrides */
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-header {
+    border-color: #e5e7eb;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-header__btn--danger {
+    border-color: #ffa1ad;
+    color: #ec003f;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-status-card {
+    border-color: #e5e7eb;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-status-card__header {
+    background: var(--ma-fashion-surface);
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__shipping-icon {
+    border-color: #e5e7eb;
+}
+
+/* Section 3: Items list – Figma card and typography */
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__items-title {
+    font-size: 12px;
+    line-height: 16px;
+    color: #99a1af;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item {
+    background: rgba(249, 250, 251, 0.6);
+    border-color: #f3f4f6;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-name {
+    font-size: 14px;
+    line-height: 1.35;
+    color: #0a0a0a;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-meta,
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-qty {
+    font-size: 12px;
+    line-height: 16px;
+    color: #0a0a0a;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-price {
+    font-size: 12px;
+    line-height: 16px;
+    color: #101828;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+}
+
+/* Section 3: Shipping – Figma two-column colors */
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__shipping-inner {
+    border-color: #e5e7eb;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__shipping-label {
+    font-size: 12px;
+    color: #99a1af;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__shipping-icon,
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__contact-icon-wrap {
+    background: #f9fafb;
+    border-color: #f3f4f6;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__shipping-name {
+    color: #0a0a0a;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__shipping-address {
+    color: #6a7282;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__contact-line {
+    color: #4a5565;
+}
+
+/* Section 3: Summary card – Figma (header, totals, total row, payment, actions) */
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-card {
+    border-color: #e5e7eb;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-header {
+    background: #f9fafb;
+    border-bottom-color: #f3f4f6;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-title {
+    color: #6a7282;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-label {
+    color: #6a7282;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-value {
+    color: #0a0a0a;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-row--total .ma-order-details-items-summary__summary-label,
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-row--total .ma-order-details-items-summary__summary-value {
+    color: #0a0a0a;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__payment-label {
+    color: #99a1af;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__payment-masked {
+    color: #99a1af;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__btn--danger {
+    border-color: #ffa1ad;
+    color: #ec003f;
 }
 
 @media (min-width: 768px) {
