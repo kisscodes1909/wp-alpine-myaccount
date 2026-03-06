@@ -1,0 +1,8 @@
+/* -------------------------------------------------------------------------- */
+/* My Account endpoint styles: Edit Account                                   */
+/* -------------------------------------------------------------------------- */
+
+/* Fashion variant: increase form rhythm for My Info endpoint */
+body.myaccount-template-fashion.woocommerce-account.woocommerce-edit-account .ma-form {
+    --ma-form-space-main-gap: 2.5rem;
+}

@@ -1,5 +1,15 @@
 @import "./myaccount/base.css";
+@import "./myaccount/order-history.css";
+@import "./myaccount/view-order.css";
+@import "./myaccount/payment-methods.css";
 @import "./myaccount/form-base.css";
+@import "./myaccount/auth-shell.css";
+@import "./myaccount/notices.css";
+@import "./myaccount/login-register.css";
+@import "./myaccount/lost-password.css";
+@import "./myaccount/reset-password.css";
+@import "./myaccount/edit-account.css";
+@import "./myaccount/address-book.css";
 @import "./myaccount/fashion.css";
 
 @tailwind base;

@@ -9,6 +9,8 @@ class MyAccount_Core_Template_Loader {
 		'myaccount/navigation.php',
 		'myaccount/page-heading.php',
 		'myaccount/form-login.php',
+		'myaccount/form-lost-password.php',
+		'myaccount/form-reset-password.php',
 		'myaccount/orders.php',
 		'myaccount/view-order.php',
 		'myaccount/form-edit-account.php',

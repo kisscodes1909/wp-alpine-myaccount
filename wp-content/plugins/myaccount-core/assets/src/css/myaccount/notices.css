@@ -1,0 +1,150 @@
+/* -------------------------------------------------------------------------- */
+/* My Account shared notices styles                                           */
+/* -------------------------------------------------------------------------- */
+
+.woocommerce-account .woocommerce-notices-wrapper,
+.woocommerce-account .ma-form__notice {
+    @apply flex flex-col;
+    gap: var(--ma-notice-space-gap);
+}
+
+.woocommerce-account .ma-form__notice {
+    margin-bottom: var(--ma-form-space-section-gap);
+}
+
+.woocommerce-account .ma-form__notice:empty {
+    @apply hidden;
+}
+
+.woocommerce-account .woocommerce-message,
+.woocommerce-account .woocommerce-info,
+.woocommerce-account .woocommerce-warning,
+.woocommerce-account .ma-notice--warning {
+    @apply relative list-none m-0;
+    @apply flex items-center;
+    gap: 0.5rem;
+    padding: var(--ma-notice-padding-y) var(--ma-notice-padding-right) var(--ma-notice-padding-y) var(--ma-notice-padding-x);
+    border-width: var(--ma-notice-border-width);
+    border-radius: var(--ma-notice-border-radius);
+    font-size: var(--ma-notice-font-size);
+    line-height: var(--ma-notice-line-height);
+    font-weight: 500;
+}
+
+@media (min-width: 768px) {
+    .woocommerce-account .woocommerce-message,
+    .woocommerce-account .woocommerce-info,
+    .woocommerce-account .woocommerce-warning,
+    .woocommerce-account .ma-notice--warning {
+        font-size: var(--ma-notice-font-size-desktop);
+    }
+}
+
+.woocommerce-account .woocommerce-error {
+    @apply relative list-none m-0;
+    @apply flex flex-col;
+    gap: 0.5rem;
+    padding: var(--ma-notice-padding-y) var(--ma-notice-padding-right) var(--ma-notice-padding-y) var(--ma-notice-padding-x);
+    padding-left: calc(var(--ma-notice-padding-x) + var(--ma-notice-icon-size) + 0.5rem);
+    border-width: var(--ma-notice-border-width);
+    border-radius: var(--ma-notice-border-radius);
+    font-size: var(--ma-notice-font-size);
+    line-height: var(--ma-notice-line-height);
+    font-weight: 500;
+}
+
+@media (min-width: 768px) {
+    .woocommerce-account .woocommerce-error {
+        font-size: var(--ma-notice-font-size-desktop);
+    }
+}
+
+.woocommerce-account .woocommerce-message {
+    background-color: var(--ma-success-bg);
+    border-color: var(--ma-success-border);
+    color: var(--ma-success-text);
+}
+
+.woocommerce-account .woocommerce-error {
+    background-color: var(--ma-error-bg);
+    border-color: var(--ma-error-border);
+    color: var(--ma-error-text);
+}
+
+.woocommerce-account .woocommerce-info {
+    background-color: var(--ma-info-bg);
+    border-color: var(--ma-info-border);
+    color: var(--ma-info-text);
+}
+
+.woocommerce-account .woocommerce-warning,
+.woocommerce-account .ma-notice--warning {
+    background-color: var(--ma-warning-bg);
+    border-color: var(--ma-warning-border);
+    color: var(--ma-warning-text);
+}
+
+.woocommerce-account .woocommerce-error li {
+    @apply list-none;
+}
+
+.woocommerce-account .woocommerce-message::before,
+.woocommerce-account .woocommerce-info::before,
+.woocommerce-account .woocommerce-warning::before,
+.woocommerce-account .ma-notice--warning::before {
+    @apply inline-block flex-none;
+    content: '';
+    width: var(--ma-notice-icon-size);
+    height: var(--ma-notice-icon-size);
+    margin-right: 0.5rem;
+    background-color: currentColor;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+}
+
+.woocommerce-account .woocommerce-message::before {
+    -webkit-mask-image: var(--ma-notice-success-icon-mask);
+    mask-image: var(--ma-notice-success-icon-mask);
+}
+
+.woocommerce-account .woocommerce-error::before {
+    @apply absolute;
+    content: '';
+    width: var(--ma-notice-icon-size);
+    height: var(--ma-notice-icon-size);
+    left: var(--ma-notice-padding-x);
+    top: calc(var(--ma-notice-padding-y) + 0.0625rem);
+    background-color: currentColor;
+    -webkit-mask-image: var(--ma-notice-error-icon-mask);
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+    mask-image: var(--ma-notice-error-icon-mask);
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+}
+
+.woocommerce-account .woocommerce-info::before {
+    -webkit-mask-image: var(--ma-notice-info-icon-mask);
+    mask-image: var(--ma-notice-info-icon-mask);
+}
+
+.woocommerce-account .woocommerce-warning::before,
+.woocommerce-account .ma-notice--warning::before {
+    -webkit-mask-image: var(--ma-notice-warning-icon-mask);
+    mask-image: var(--ma-notice-warning-icon-mask);
+}
+
+.woocommerce-account .woocommerce-message a,
+.woocommerce-account .woocommerce-error a,
+.woocommerce-account .woocommerce-info a,
+.woocommerce-account .woocommerce-warning a,
+.woocommerce-account .ma-notice--warning a {
+    color: inherit;
+    text-decoration: underline;
+}

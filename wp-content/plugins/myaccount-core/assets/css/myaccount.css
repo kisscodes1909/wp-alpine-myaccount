@@ -10,6 +10,14 @@
 
 /* -------------------------------------------------------------------------- */
 
+.woocommerce-account {
+  /* ma-orders: moved to base-order-history.css */
+  /* Payment methods page – shared base layout (Add + Saved sections) */
+  /* payment-methods endpoint styles: moved to payment-methods.css */
+  /* view-order endpoint styles: moved to view-order.css */
+  /* address-book endpoint styles: moved to address-book.css */
+}
+
 .woocommerce-account .woocommerce-MyAccount-content {
   margin-left: auto;
   margin-right: auto;
@@ -87,6 +95,12 @@
   font-size: 14px;
   line-height: 1.4;
 }
+
+/* -------------------------------------------------------------------------- */
+
+/* My Account endpoint base layer: Order History (ma-orders)                  */
+
+/* -------------------------------------------------------------------------- */
 
 .woocommerce-account .ma-orders {
   display: flex;
@@ -368,6 +382,12 @@
   width: 1rem;
 }
 
+/* -------------------------------------------------------------------------- */
+
+/* My Account endpoint base layer: View Order                                 */
+
+/* -------------------------------------------------------------------------- */
+
 .woocommerce-account .ma-view-order__layout {
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
@@ -386,7 +406,7 @@
   flex-direction: column;
   align-items: stretch;
   gap: 1.5rem;
-  padding-top: 1.5rem;
+  padding: 2.5rem 0;
 }
 
 .woocommerce-account .ma-order-details-header__left,
@@ -1384,169 +1404,222 @@
   color: rgb(107 114 128 / var(--tw-text-opacity, 1));
 }
 
-.woocommerce-account .ma-address-book {
+/* -------------------------------------------------------------------------- */
+
+/* My Account endpoint styles: Payment Methods                                */
+
+/* -------------------------------------------------------------------------- */
+
+.woocommerce-account .payment-methods-page {
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 64px;
 }
 
-.woocommerce-account .ma-address-book__toast {
-  position: fixed;
-  z-index: 1000;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-  top: 56px;
-  right: 20px;
+.woocommerce-account .payment-methods-page .payment-methods-section__title-icon {
+  width: 20px;
+  height: 20px;
 }
 
-.woocommerce-account .ma-address-book__list {
-  display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 1.5rem;
+.woocommerce-account .payment-methods-page .payment-methods-section__title {
+  margin: 0px;
+  display: inline-flex;
+  align-items: center;
+  text-transform: uppercase;
+  --tw-text-opacity: 1;
+  color: rgb(17 24 39 / var(--tw-text-opacity, 1));
+  gap: 12px;
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 500;
 }
 
-@media (min-width: 1280px) {
-  .woocommerce-account .ma-address-book__list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
+/* Same section layout and title-to-body spacing for add and saved */
 
-.woocommerce-account .ma-address-book__card {
+.woocommerce-account .payment-methods-page .payment-methods-section--add,
+        .woocommerce-account .payment-methods-page .payment-methods-section--saved {
   display: flex;
   flex-direction: column;
+  gap: 32px;
+}
+
+.woocommerce-account .payment-methods-page .payment-methods-section--saved > .payment-methods-section__title,
+        .woocommerce-account .payment-methods-page .payment-methods-section--saved .payment-methods-section__title {
+  font-size: 20px;
+  letter-spacing: 0.07754em;
+  line-height: 28px;
+  font-weight: 400;
+}
+
+.woocommerce-account .payment-methods-page .payment-methods-section--saved > .payment-methods-section__body {
+  border-width: 0px;
+  background-color: transparent;
+  padding: 0px;
+}
+
+.woocommerce-account .payment-methods-page .payment-methods-list > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
+}
+
+.woocommerce-account .payment-methods-page .payment-methods-item {
+  border-radius: 0px;
   border-width: 1px;
   --tw-border-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
-  padding-left: 2rem;
-  padding-right: 2rem;
-  padding-top: 2rem;
-  padding-bottom: 1.5rem;
-}
-
-.woocommerce-account .ma-address-book__card-head {
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-top: 25px;
+  padding-bottom: 23px;
+  min-height: 98px;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: 16px;
 }
 
-.woocommerce-account .ma-address-book__identity {
+.woocommerce-account .payment-methods-page .payment-methods-item__main {
+  display: flex;
   min-width: 0px;
+  align-items: flex-start;
+  gap: 16px;
 }
 
-.woocommerce-account .ma-address-book__name {
-  margin: 0px;
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 1.75rem;
-  --tw-text-opacity: 1;
-  color: rgb(17 24 39 / var(--tw-text-opacity, 1));
+.woocommerce-account .payment-methods-page .payment-methods-item__brand {
+  flex: none;
 }
 
-.woocommerce-account .ma-address-book__phone {
-  margin-top: 0.5rem;
-  margin-bottom: 0px;
-  font-size: 16px;
-  line-height: 1.5rem;
-  --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
-}
-
-.woocommerce-account .ma-address-book__default-pill {
+.woocommerce-account .payment-methods-page .payment-methods-item__brand-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  white-space: nowrap;
-  border-radius: 9999px;
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
+  justify-content: center;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
   font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-  line-height: 1.6rem;
+  font-weight: 700;
+  --tw-text-opacity: 1;
+  color: rgb(54 65 83 / var(--tw-text-opacity, 1));
+  width: 48px;
+  height: 32px;
+  line-height: 16px;
 }
 
-.woocommerce-account .ma-address-book__default-icon {
+.woocommerce-account .payment-methods-page .payment-methods-item__meta {
+  display: flex;
+  min-width: 0px;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.woocommerce-account .payment-methods-page .payment-methods-item__title {
+  font-size: 16px;
+  font-weight: 500;
+  --tw-text-opacity: 1;
+  color: rgb(17 24 39 / var(--tw-text-opacity, 1));
+  line-height: 24px;
+  letter-spacing: -0.0195em;
+}
+
+.woocommerce-account .payment-methods-page .payment-methods-item__expiry {
+  font-size: 14px;
+  font-weight: 400;
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
+  line-height: 20px;
+  letter-spacing: -0.01074em;
+}
+
+.woocommerce-account .payment-methods-page .payment-methods-item__default-link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
+  text-decoration-line: underline;
+  line-height: 16px;
+}
+
+.woocommerce-account .payment-methods-page .payment-methods-item__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.woocommerce-account .payment-methods-page .payment-methods-item__actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border-width: 1px;
+  border-color: transparent;
+  background-color: transparent;
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
+  width: 36px;
+  height: 36px;
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+.woocommerce-account .payment-methods-page .payment-methods-item__actions a:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(156 163 175 / var(--tw-border-opacity, 1));
+  background-color: #f9fafb;
+}
+
+.woocommerce-account .payment-methods-page .payment-methods-item__delete-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.woocommerce-account .payment-methods-page .payment-methods-item__default-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+  gap: 6px;
+  padding: 4px 12px;
+  line-height: 16px;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.woocommerce-account .payment-methods-page .payment-methods-item__default-icon {
   width: 12px;
   height: 12px;
 }
 
-.woocommerce-account .ma-address-book__content {
-  margin-top: 1.5rem;
-  display: flex;
-  flex: 1 1 0%;
-  flex-direction: column;
-  font-size: 16px;
-  line-height: 1.5rem;
-  --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
-  gap: 0.125rem;
-}
+@media (max-width: 991px) {
+  .woocommerce-account .payment-methods-page .payment-methods-section__title {
+    font-size: 20px;
+  }
 
-.woocommerce-account .ma-address-book__content p {
-  margin: 0px;
-}
+  .woocommerce-account .payment-methods-page .payment-methods-section--add .woocommerce-add-payment-method,
+            .woocommerce-account .payment-methods-page .payment-methods-section--add #add_payment_method {
+    padding: 0px;
+  }
 
-.woocommerce-account .ma-address-book__actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 0.75rem;
-  padding-top: 1rem;
-}
+  .woocommerce-account .payment-methods-page .payment-methods-section--add .payment-methods-section__body {
+    padding: 24px 20px 1px;
+  }
 
-.woocommerce-account .ma-address-book__action-button {
-  width: 140px;
-  justify-content: center;
-}
+  .woocommerce-account .payment-methods-page .payment-methods-section--add .woocommerce-PaymentMethods > li.woocommerce-PaymentMethod {
+    grid-template-columns: 20px 1fr;
+    row-gap: 0;
+  }
 
-.woocommerce-account .ma-address-book__empty {
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
-  padding: 1rem;
-}
-
-.woocommerce-account .ma-address-book__empty-title {
-  margin: 0px;
-  text-align: center;
-  font-size: 18px;
-}
-
-.woocommerce-account .ma-address-book__footer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.woocommerce-account .ma-address-book__limit-message {
-  margin-bottom: 0.5rem;
-  text-align: center;
-  font-size: 14px;
-  --tw-text-opacity: 1;
-  color: rgb(220 38 38 / var(--tw-text-opacity, 1));
-}
-
-.woocommerce-account .ma-address-book__add-button {
-  display: inline-flex;
-  width: 100%;
-  max-width: 450px;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  font-weight: 400;
-}
-
-.woocommerce-account .ma-address-book__add-icon {
-  height: 1rem;
-  width: 1rem;
+  .woocommerce-account .payment-methods-page .payment-methods-item {
+    min-height: 0;
+    padding: 1.25rem;
+  }
 }
 
 .woocommerce-account {
@@ -2099,7 +2172,23 @@
   padding-top: var(--ma-form-space-actions-top);
 }
 
-/* Auth container - wraps login/signup form */
+/* auth-shell styles: moved to auth-shell.css */
+
+/* notices styles: moved to notices.css */
+
+/* login-register auth styles: moved to login-register.css */
+
+/* lost-password endpoint styles: moved to lost-password.css */
+
+/* reset-password endpoint styles: moved to reset-password.css */
+
+/* -------------------------------------------------------------------------- */
+
+/* My Account shared auth shell styles                                        */
+
+/* -------------------------------------------------------------------------- */
+
+/* Auth container - wraps login/signup/lost/reset forms */
 
 .woocommerce-account .ma-auth-container {
   margin-left: auto;
@@ -2134,57 +2223,29 @@
   margin-bottom: var(--ma-form-space-section-gap);
 }
 
-/* Auth tabs (login/signup) - fashion structure */
-
-.woocommerce-account .ma-auth-tabs {
-  margin: 0px;
-  display: flex;
-  list-style-type: none;
-  justify-content: center;
-  gap: 1.25rem;
-  padding: 0px;
-  margin-bottom: var(--ma-form-space-section-gap);
-}
-
-.woocommerce-account .ma-auth-tabs__item {
-  display: inline-block;
-  cursor: pointer;
-  border-bottom-width: 2px;
-  border-color: transparent;
-  background-color: transparent;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  font-size: var(--ma-form-font-size-base);
-  color: var(--ma-form-color-muted);
-  transition: color 180ms ease, border-color 180ms ease;
-}
-
-.woocommerce-account .ma-auth-tabs__item:hover {
-  color: var(--ma-form-color-text);
-}
-
-.woocommerce-account .ma-auth-tabs__item--active {
-  font-weight: 600;
-  color: var(--ma-form-color-text);
-  border-color: var(--ma-form-color-text);
-}
-
-@media (min-width: 768px) {
-  .woocommerce-account .ma-auth-tabs__item {
-    font-size: var(--ma-form-font-size-xl);
-  }
-}
-
 .woocommerce-account .ma-auth__content {
   display: flex;
   flex-direction: column;
   gap: var(--ma-form-space-main-gap);
 }
 
+.woocommerce-account .ma-auth-container__notices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ma-notice-space-gap);
+}
+
+.woocommerce-account .ma-auth-container__notices:empty {
+  display: none;
+}
+
+/* -------------------------------------------------------------------------- */
+
+/* My Account shared notices styles                                           */
+
+/* -------------------------------------------------------------------------- */
+
 .woocommerce-account .woocommerce-notices-wrapper,
-.woocommerce-account .ma-auth-container__notices,
 .woocommerce-account .ma-form__notice {
   display: flex;
   flex-direction: column;
@@ -2195,7 +2256,6 @@
   margin-bottom: var(--ma-form-space-section-gap);
 }
 
-.woocommerce-account .ma-auth-container__notices:empty,
 .woocommerce-account .ma-form__notice:empty {
   display: none;
 }
@@ -2340,6 +2400,55 @@
   text-decoration: underline;
 }
 
+/* -------------------------------------------------------------------------- */
+
+/* My Account endpoint styles: Login & Register                               */
+
+/* -------------------------------------------------------------------------- */
+
+/* Auth tabs (login/signup) - fashion structure */
+
+.woocommerce-account .ma-auth-tabs {
+  margin: 0px;
+  display: flex;
+  list-style-type: none;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 0px;
+  margin-bottom: var(--ma-form-space-section-gap);
+}
+
+.woocommerce-account .ma-auth-tabs__item {
+  display: inline-block;
+  cursor: pointer;
+  border-bottom-width: 2px;
+  border-color: transparent;
+  background-color: transparent;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-size: var(--ma-form-font-size-base);
+  color: var(--ma-form-color-muted);
+  transition: color 180ms ease, border-color 180ms ease;
+}
+
+.woocommerce-account .ma-auth-tabs__item:hover {
+  color: var(--ma-form-color-text);
+}
+
+.woocommerce-account .ma-auth-tabs__item--active {
+  font-weight: 600;
+  color: var(--ma-form-color-text);
+  border-color: var(--ma-form-color-text);
+}
+
+@media (min-width: 768px) {
+  .woocommerce-account .ma-auth-tabs__item {
+    font-size: var(--ma-form-font-size-xl);
+  }
+}
+
 .woocommerce-account .ma-form__lost-password {
   margin: 0px;
 }
@@ -2399,6 +2508,205 @@
   color: var(--ma-form-color-error);
 }
 
+/* -------------------------------------------------------------------------- */
+
+/* My Account endpoint styles: Lost Password                                  */
+
+/* -------------------------------------------------------------------------- */
+
+/* Endpoint-specific styles are reserved here if needed. */
+
+/* -------------------------------------------------------------------------- */
+
+/* My Account endpoint styles: Reset Password                                 */
+
+/* -------------------------------------------------------------------------- */
+
+/* Endpoint-specific styles are reserved here if needed. */
+
+/* -------------------------------------------------------------------------- */
+
+/* My Account endpoint styles: Edit Account                                   */
+
+/* -------------------------------------------------------------------------- */
+
+/* Fashion variant: increase form rhythm for My Info endpoint */
+
+body.myaccount-template-fashion.woocommerce-account.woocommerce-edit-account .ma-form {
+  --ma-form-space-main-gap: 2.5rem;
+}
+
+/* -------------------------------------------------------------------------- */
+
+/* My Account endpoint styles: Address Book                                   */
+
+/* -------------------------------------------------------------------------- */
+
+.woocommerce-account .ma-address-book {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.woocommerce-account .ma-address-book__toast {
+  position: fixed;
+  z-index: 1000;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  top: 56px;
+  right: 20px;
+}
+
+.woocommerce-account .ma-address-book__list {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+@media (min-width: 1280px) {
+  .woocommerce-account .ma-address-book__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.woocommerce-account .ma-address-book__card {
+  display: flex;
+  flex-direction: column;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 2rem;
+  padding-bottom: 1.5rem;
+}
+
+.woocommerce-account .ma-address-book__card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.woocommerce-account .ma-address-book__identity {
+  min-width: 0px;
+}
+
+.woocommerce-account .ma-address-book__name {
+  margin: 0px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.75rem;
+  --tw-text-opacity: 1;
+  color: rgb(17 24 39 / var(--tw-text-opacity, 1));
+}
+
+.woocommerce-account .ma-address-book__phone {
+  margin-top: 0.5rem;
+  margin-bottom: 0px;
+  font-size: 16px;
+  line-height: 1.5rem;
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
+}
+
+.woocommerce-account .ma-address-book__default-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+  border-radius: 9999px;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  line-height: 1.6rem;
+}
+
+.woocommerce-account .ma-address-book__default-icon {
+  width: 12px;
+  height: 12px;
+}
+
+.woocommerce-account .ma-address-book__content {
+  margin-top: 1.5rem;
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+  font-size: 16px;
+  line-height: 1.5rem;
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
+  gap: 0.125rem;
+}
+
+.woocommerce-account .ma-address-book__content p {
+  margin: 0px;
+}
+
+.woocommerce-account .ma-address-book__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  padding-top: 1rem;
+}
+
+.woocommerce-account .ma-address-book__action-button {
+  width: 140px;
+  justify-content: center;
+}
+
+.woocommerce-account .ma-address-book__empty {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+  padding: 1rem;
+}
+
+.woocommerce-account .ma-address-book__empty-title {
+  margin: 0px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.woocommerce-account .ma-address-book__footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.woocommerce-account .ma-address-book__limit-message {
+  margin-bottom: 0.5rem;
+  text-align: center;
+  font-size: 14px;
+  --tw-text-opacity: 1;
+  color: rgb(220 38 38 / var(--tw-text-opacity, 1));
+}
+
+.woocommerce-account .ma-address-book__add-button {
+  display: inline-flex;
+  width: 100%;
+  max-width: 450px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 400;
+}
+
+.woocommerce-account .ma-address-book__add-icon {
+  height: 1rem;
+  width: 1rem;
+}
+
 /* Fashion template tokens + visual overrides */
 
 body.myaccount-template-fashion.woocommerce-account {
@@ -2419,12 +2727,6 @@ body.myaccount-template-fashion.woocommerce-account {
   --ma-form-color-button-light-border: #d1d5db;
   --ma-form-color-button-light-text: #111827;
   --ma-form-color-outline: #9ca3af;
-}
-
-/* My Info endpoint (edit-account): increase form rhythm for fashion variant */
-
-body.myaccount-template-fashion.woocommerce-account.woocommerce-edit-account .ma-form {
-  --ma-form-space-main-gap: 2.5rem;
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-form label {
@@ -3098,6 +3400,10 @@ input:where([type='file']):focus {
   margin-right: auto;
 }
 
+.mb-10 {
+  margin-bottom: 2.5rem;
+}
+
 .mb-2 {
   margin-bottom: 0.5rem;
 }
@@ -3124,6 +3430,10 @@ input:where([type='file']):focus {
 
 .mt-14 {
   margin-top: 3.5rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
 }
 
 .block {
@@ -3163,12 +3473,20 @@ input:where([type='file']):focus {
   height: 1rem;
 }
 
+.h-8 {
+  height: 2rem;
+}
+
 .w-10 {
   width: 2.5rem;
 }
 
 .w-4 {
   width: 1rem;
+}
+
+.w-8 {
+  width: 2rem;
 }
 
 .w-\[200px\] {
@@ -3224,6 +3542,10 @@ input:where([type='file']):focus {
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
+.flex-row {
+  flex-direction: row;
+}
+
 .flex-col {
   flex-direction: column;
 }
@@ -3258,6 +3580,10 @@ input:where([type='file']):focus {
 
 .gap-2 {
   gap: 0.5rem;
+}
+
+.gap-3 {
+  gap: 0.75rem;
 }
 
 .gap-4 {
@@ -3737,6 +4063,10 @@ input:where([type='file']):focus {
     width: 300px;
   }
 
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .md\:flex-row {
     flex-direction: row;
   }
@@ -3747,6 +4077,10 @@ input:where([type='file']):focus {
 
   .md\:justify-between {
     justify-content: space-between;
+  }
+
+  .md\:gap-2 {
+    gap: 0.5rem;
   }
 
   .md\:overflow-visible {
