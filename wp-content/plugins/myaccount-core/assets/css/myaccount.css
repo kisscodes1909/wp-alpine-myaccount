@@ -17,6 +17,24 @@
   max-width: 1280px;
 }
 
+/* Horizontal padding on main content blocks (ensures spacing even when theme does not use .woocommerce-MyAccount-content) */
+
+.woocommerce-account .ma-page-heading,
+    .woocommerce-account .ma-orders,
+    .woocommerce-account .ma-view-order {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 768px) {
+  .woocommerce-account .ma-page-heading,
+        .woocommerce-account .ma-orders,
+        .woocommerce-account .ma-view-order {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
 .woocommerce-account .ma-page-heading {
   margin-top: 2rem;
   margin-bottom: 2rem;
@@ -263,8 +281,8 @@
 
 .woocommerce-account .ma-orders__item-meta-value {
   margin: 0;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 1.2rem;
+  line-height: 1.6rem;
   color: #364153;
 }
 
@@ -356,7 +374,7 @@
   gap: 2rem;
 }
 
-/* Section 1: Order details header */
+/* Section 1: Order details header (mobile-first: column + align left, then row at 768px) */
 
 .woocommerce-account .ma-order-details-header {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -366,17 +384,9 @@
 .woocommerce-account .ma-order-details-header__inner {
   display: flex;
   flex-direction: column;
+  align-items: stretch;
   gap: 1.5rem;
   padding-top: 1.5rem;
-}
-
-@media (min-width: 768px) {
-  .woocommerce-account .ma-order-details-header__inner {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    min-height: 124px;
-  }
 }
 
 .woocommerce-account .ma-order-details-header__left,
@@ -384,28 +394,35 @@
   flex-shrink: 0;
 }
 
+/* Figma 36:1502 – label above order number (min 1.2rem) */
+
+.woocommerce-account .ma-order-details-header__label {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.2rem;
+  line-height: 1.6rem;
+  font-weight: 400;
+  color: #99a1af;
+  text-transform: uppercase;
+  letter-spacing: 0.075rem;
+}
+
 .woocommerce-account .ma-order-details-header__number {
   margin: 0;
-  font-size: 3.2rem;
-  line-height: 4.8rem;
+  font-size: 3rem;
+  line-height: 3rem;
   font-weight: 400;
   color: #0a0a0a;
   letter-spacing: -0.02em;
 }
 
-@media (min-width: 768px) {
-  .woocommerce-account .ma-order-details-header__number {
-    font-size: 4.8rem;
-    line-height: 4.8rem;
-  }
-}
-
 .woocommerce-account .ma-order-details-header__date {
   margin: 0.5rem 0 0 0;
-  font-size: 1.4rem;
-  line-height: 2rem;
+  font-size: 1.2rem;
+  line-height: 1.6rem;
   color: #99a1af;
 }
+
+/* Mobile: align left */
 
 .woocommerce-account .ma-order-details-header__total-label {
   margin: 0;
@@ -414,37 +431,52 @@
   color: #99a1af;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  text-align: right;
+  text-align: left;
 }
 
 .woocommerce-account .ma-order-details-header__total-value {
   margin: 0.25rem 0 0 0;
-  font-size: 3.2rem;
-  line-height: 4.8rem;
+  font-size: 3rem;
+  line-height: 3rem;
   font-weight: 400;
   color: #0a0a0a;
-  text-align: right;
-}
-
-@media (min-width: 768px) {
-  .woocommerce-account .ma-order-details-header__total-value {
-    font-size: 4.8rem;
-  }
+  text-align: left;
 }
 
 .woocommerce-account .ma-order-details-header__actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  justify-content: flex-end;
+  justify-content: flex-start;
   margin-top: 1rem;
   align-items: center;
+}
+
+/* Desktop: row layout, total and actions align right */
+
+@media (min-width: 768px) {
+  .woocommerce-account .ma-order-details-header__inner {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    min-height: 7.75rem;
+  }
+
+  .woocommerce-account .ma-order-details-header__total-label,
+        .woocommerce-account .ma-order-details-header__total-value {
+    text-align: right;
+  }
+
+  .woocommerce-account .ma-order-details-header__actions {
+    justify-content: flex-end;
+  }
 }
 
 .woocommerce-account .ma-order-details-header__btn {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  min-height: 2.375rem;
   padding: 0.5rem 1rem;
   font-size: 1.2rem;
   line-height: 1.6rem;
@@ -470,13 +502,87 @@
 }
 
 .woocommerce-account .ma-order-details-header__icon {
-  width: 14px;
-  height: 14px;
+  width: 0.875rem;
+  height: 0.875rem;
   flex-shrink: 0;
 }
 
 .woocommerce-account .ma-order-details-header__cancel-form {
   margin: 0;
+}
+
+/* Section 1–4: small screen tweaks (max-width 480px) */
+
+@media (max-width: 480px) {
+  .woocommerce-account .ma-order-details-header__number {
+    font-size: 2rem;
+    line-height: 2.4rem;
+  }
+
+  .woocommerce-account .ma-order-details-header__total-value {
+    font-size: 2rem;
+    line-height: 2.4rem;
+  }
+
+  .woocommerce-account .ma-order-details-header__actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .woocommerce-account .ma-order-status-card__header {
+    padding: 1rem 1.25rem;
+  }
+
+  .woocommerce-account .ma-order-status-card__timeline {
+    padding: 1rem 1.25rem;
+  }
+
+  .woocommerce-account .ma-order-status-card__title-row {
+    flex-wrap: wrap;
+  }
+
+  .woocommerce-account .ma-order-status-card__header-text {
+    min-width: 0;
+  }
+
+  .woocommerce-account .ma-order-details-items-summary {
+    margin-top: 1.5rem;
+  }
+
+  .woocommerce-account .ma-order-details-items-summary__grid {
+    gap: 1.5rem;
+  }
+
+  .woocommerce-account .ma-order-details-items-summary__item-body {
+    padding: 1rem;
+  }
+
+  .woocommerce-account .ma-order-details-items-summary__shipping-deliver,
+        .woocommerce-account .ma-order-details-items-summary__shipping-contact {
+    padding: 16px;
+  }
+
+  .woocommerce-account .ma-order-details-items-summary__summary-header {
+    padding: 1.5rem 1.25rem 0.1rem;
+  }
+
+  .woocommerce-account .ma-order-details-items-summary__summary-inner {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .woocommerce-account .ma-order-details-items-summary__payment {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .woocommerce-account .ma-order-details-items-summary__actions {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .woocommerce-account .ma-view-order__updates {
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+  }
 }
 
 /* Section 2: Order status card + timeline */
@@ -592,7 +698,8 @@
   background: transparent;
 }
 
-/* Mobile: vertical timeline (line from Placed dot to Delivered dot). */
+/* Mobile: vertical timeline centered (line and dots in the middle, labels to the right). */
+
 .woocommerce-account .ma-order-status-card__timeline-track {
   display: flex;
   flex-direction: column;
@@ -602,10 +709,11 @@
 
 .woocommerce-account .ma-order-status-card__timeline-line {
   position: absolute;
-  left: 6px;
+  left: 50%;
   top: 6px;
   bottom: 6px;
   width: 1px;
+  transform: translateX(-50%);
   background: #e5e7eb;
   z-index: 0;
   pointer-events: none;
@@ -613,10 +721,11 @@
 
 .woocommerce-account .ma-order-status-card__timeline-line-fill {
   position: absolute;
-  left: 6px;
+  left: 50%;
   top: 6px;
   width: 1px;
   height: calc((100% - 12px) * var(--ma-timeline-progress, 0) / 100);
+  transform: translateX(-50%);
   background: #0a0a0a;
   z-index: 0;
   pointer-events: none;
@@ -631,9 +740,13 @@
   position: relative;
   z-index: 1;
   gap: 0.75rem;
+  padding-left: calc(50% + 0.75rem);
 }
 
 .woocommerce-account .ma-order-status-card__step-dot {
+  position: absolute;
+  left: calc(50% - 6px);
+  top: 0;
   width: 12px;
   height: 12px;
   border-radius: 50%;
@@ -643,15 +756,15 @@
   margin-bottom: 0;
 }
 
-.woocommerce-account .ma-order-status-card__step--active .ma-order-status-card__step-dot {
-  background: #0a0a0a;
-}
-
 .woocommerce-account .ma-order-status-card__step-labels {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
+}
+
+.woocommerce-account .ma-order-status-card__step--active .ma-order-status-card__step-dot {
+  background: #0a0a0a;
 }
 
 .woocommerce-account .ma-order-status-card__step-label {
@@ -694,11 +807,25 @@
   color: #d1d5dc;
 }
 
-/* Desktop: horizontal timeline (line from Placed dot to Delivered dot). */
+/* Desktop: horizontal timeline (line + 4 steps); no max-width so it uses full width. */
+
 @media (min-width: 768px) {
+  .woocommerce-account {
+    /* Line from center of first dot (12.5%) to center of last dot (87.5%); no translate so it aligns. */
+  }
+
   .woocommerce-account .ma-order-status-card__timeline-track {
+    position: relative;
     flex-direction: row;
     justify-content: space-between;
+  }
+
+  .woocommerce-account .ma-order-status-card__step {
+    padding-left: 0;
+  }
+
+  .woocommerce-account .ma-order-status-card__step-dot {
+    position: static;
   }
 
   .woocommerce-account .ma-order-status-card__timeline-line {
@@ -707,6 +834,7 @@
     top: 6px;
     bottom: auto;
     height: 1px;
+    transform: none;
   }
 
   .woocommerce-account .ma-order-status-card__timeline-line-fill {
@@ -714,6 +842,7 @@
     top: 6px;
     width: calc(75% * var(--ma-timeline-progress, 0) / 100);
     height: 1px;
+    transform: none;
   }
 
   .woocommerce-account .ma-order-status-card__step {
@@ -774,6 +903,8 @@
   letter-spacing: 0.12em;
 }
 
+/* Order details items: list layout on all viewports (mobile-first) */
+
 .woocommerce-account .ma-order-details-items-summary__items-list {
   display: flex;
   flex-direction: column;
@@ -790,9 +921,11 @@
   overflow: hidden;
 }
 
+/* Mobile: list row with smaller image */
+
 .woocommerce-account .ma-order-details-items-summary__item-image {
-  width: 128px;
-  min-width: 128px;
+  width: 80px;
+  min-width: 80px;
   flex-shrink: 0;
   overflow: hidden;
   background: #f9fafb;
@@ -802,7 +935,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  min-height: 120px;
+  min-height: 96px;
   -o-object-fit: cover;
      object-fit: cover;
 }
@@ -810,14 +943,14 @@
 .woocommerce-account .ma-order-details-items-summary__item-image-placeholder {
   display: block;
   width: 100%;
-  min-height: 120px;
+  min-height: 96px;
   background: #f3f4f6;
 }
 
 .woocommerce-account .ma-order-details-items-summary__item-body {
   flex: 1 1 0;
   min-width: 0;
-  padding: 20px;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -864,26 +997,27 @@
 .woocommerce-account .ma-order-details-items-summary__item-purchase-note {
   margin-top: 0.5rem;
   padding: 1rem;
-  font-size: 0.875rem;
+  font-size: 1.2rem;
   color: #6a7282;
   border-left: 3px solid #e5e7eb;
   background: #f9fafb;
 }
 
-@media (max-width: 767px) {
-  .woocommerce-account .ma-order-details-items-summary__item {
-    flex-direction: column;
-  }
+/* Desktop: larger image and body padding */
 
+@media (min-width: 768px) {
   .woocommerce-account .ma-order-details-items-summary__item-image {
-    width: 100%;
-    min-width: 0;
-    min-height: 120px;
+    width: 128px;
+    min-width: 128px;
   }
 
   .woocommerce-account .ma-order-details-items-summary__item-image img,
         .woocommerce-account .ma-order-details-items-summary__item-image-placeholder {
     min-height: 120px;
+  }
+
+  .woocommerce-account .ma-order-details-items-summary__item-body {
+    padding: 20px;
   }
 }
 
@@ -2418,11 +2552,13 @@ body.myaccount-template-fashion.woocommerce-account .ma-address-book__empty-titl
   color: #374151;
 }
 
-/* Order details (view-order) fashion overrides */
+/* Order details (view-order) fashion overrides – Figma 36:1502 */
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-header {
   border-color: #e5e7eb;
 }
+
+/* Label (.ma-order-details-header__label) uses base layer; no override needed. */
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-header__btn--danger {
   border-color: #ffa1ad;
@@ -2441,11 +2577,11 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
   border-color: #e5e7eb;
 }
 
-/* Section 3: Items list – Figma card and typography */
+/* Section 3: Items list – Figma card and typography (min font-size 1.2rem) */
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__items-title {
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 1.2rem;
+  line-height: 1.6rem;
   color: #99a1af;
   text-transform: uppercase;
   letter-spacing: 1.2px;
@@ -2457,23 +2593,23 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-name {
-  font-size: 14px;
+  font-size: 1.2rem;
   line-height: 1.35;
   color: #0a0a0a;
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-meta,
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-qty {
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 1.2rem;
+  line-height: 1.6rem;
   color: #0a0a0a;
   text-transform: uppercase;
   letter-spacing: 1.2px;
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-price {
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 1.2rem;
+  line-height: 1.6rem;
   color: #101828;
   text-transform: uppercase;
   letter-spacing: 1.2px;
@@ -2486,7 +2622,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__shipping-label {
-  font-size: 12px;
+  font-size: 1.2rem;
   color: #99a1af;
   text-transform: uppercase;
   letter-spacing: 1.2px;

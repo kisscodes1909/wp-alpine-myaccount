@@ -9,16 +9,18 @@ defined( 'ABSPATH' ) || exit;
 
 $notes = $order->get_customer_order_notes();
 
+// Option A: no big title here; "Order Details" is the label inside order-details-header (Figma 36:1502).
 wc_get_template(
 	'myaccount/page-heading.php',
 	array(
-		'page_heading' => __( 'Order Details', 'woocommerce' ),
+		'page_heading' => '',
 		'prev_page'    => array(
 			'title' => __( 'Order History', 'woocommerce' ),
 			'url'   => wc_get_endpoint_url( 'orders', '', wc_get_page_permalink( 'myaccount' ) ),
 		),
 	)
 );
+
 ?>
 
 <div class="ma-view-order">

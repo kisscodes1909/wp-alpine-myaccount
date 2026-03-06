@@ -111,8 +111,8 @@ class MyAccount_Core_Hooks {
 		return wc_get_endpoint_url( 'orders', '', wc_get_page_permalink( 'myaccount' ) );
 	}
 
-	public function limit_orders_per_page( array $args ): array {
-		$args['limit'] = 2;
+		public function limit_orders_per_page( array $args ): array {
+		$args['limit'] = 6;
 		return $args;
 	}
 

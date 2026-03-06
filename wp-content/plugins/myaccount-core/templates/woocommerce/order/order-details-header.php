@@ -13,6 +13,7 @@ $can_cancel = in_array( $order->get_status(), apply_filters( 'woocommerce_valid_
 <div class="ma-order-details-header">
 	<div class="ma-order-details-header__inner">
 		<div class="ma-order-details-header__left">
+			<p class="ma-order-details-header__label"><?php esc_html_e( 'Order Details', 'woocommerce' ); ?></p>
 			<p class="ma-order-details-header__number">#<?php echo esc_html( $order->get_order_number() ); ?></p>
 			<p class="ma-order-details-header__date">
 				<time datetime="<?php echo esc_attr( $order->get_date_created()->date( 'c' ) ); ?>">

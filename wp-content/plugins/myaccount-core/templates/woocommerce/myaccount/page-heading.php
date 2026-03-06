@@ -11,7 +11,9 @@
             <?php
         }
     ?>
-    <h2 class="apl-heading-chip ma-page-heading__title"><?php echo esc_html( $page_heading ?? '' ); ?></h2>
+    <?php if ( ! empty( $page_heading ) ) : ?>
+    <h2 class="apl-heading-chip ma-page-heading__title"><?php echo esc_html( $page_heading ); ?></h2>
+    <?php endif; ?>
     <?php if ( ! empty( $page_description ) ) : ?>
         <p class="ma-page-heading__description"><?php echo esc_html( $page_description ); ?></p>
     <?php endif; ?>

@@ -33,7 +33,7 @@ class My_Account_Page {
         add_filter('body_class', [$this, 'add_my_account_template_class']);
 
 
-        // Limit 5 orders per page
+        // Limit 6 orders per page
         add_filter('woocommerce_my_account_my_orders_query', [$this, 'limit_5_orders']);
 
         add_action('wp_footer', [$this, 'popup_container'], 5);
@@ -49,7 +49,7 @@ class My_Account_Page {
     }
 
     function limit_5_orders($args) {
-        $args['limit'] = 2;
+        $args['limit'] = 6;
         return $args;
     }
 
