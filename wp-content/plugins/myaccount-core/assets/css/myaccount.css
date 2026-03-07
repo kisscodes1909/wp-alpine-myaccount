@@ -29,6 +29,15 @@
   --ma-font-xl: calc(var(--ma-base) * 1.6);
   --ma-font-2xl: calc(var(--ma-base) * 2);
   --ma-font-3xl: calc(var(--ma-base) * 3);
+  --ma-line-tight: calc(var(--ma-base) * 1.35);
+  --ma-line-snug: calc(var(--ma-base) * 1.4);
+  --ma-line-normal: calc(var(--ma-base) * 1.5);
+  --ma-line-md: calc(var(--ma-base) * 1.6);
+  --ma-line-lg: calc(var(--ma-base) * 1.8);
+  --ma-line-xl: calc(var(--ma-base) * 2);
+  --ma-line-2xl: calc(var(--ma-base) * 2.4);
+  --ma-line-3xl: calc(var(--ma-base) * 3);
+  --ma-line-3_2xl: calc(var(--ma-base) * 3.2);
   /* Shared color tokens for My Account endpoints */
   --ma-text-primary: #0a0a0a;
   --ma-text-muted: #99a1af;
@@ -155,7 +164,7 @@
 }
 
 .woocommerce-account .ma-page-heading__back-label {
-  line-height: 1.4;
+  line-height: var(--ma-line-snug);
 }
 
 .woocommerce-account .ma-page-heading__title {
@@ -167,7 +176,7 @@
   border-bottom-width: 1px;
   padding-bottom: 1rem;
   font-size: 14px;
-  line-height: 1.4;
+  line-height: var(--ma-line-snug);
 }
 
 .woocommerce-account .ma-nav-header {
@@ -325,7 +334,7 @@
   text-decoration: none;
   text-transform: uppercase;
   font-size: var(--ma-font-base);
-  line-height: calc(var(--ma-base) * 1.5);
+  line-height: var(--ma-line-normal);
   font-weight: 400;
   letter-spacing: calc(var(--ma-base) * 0.078125);
   color: var(--ma-text-muted);
@@ -454,7 +463,7 @@
 .woocommerce-account .ma-orders__item-image-overlay-count {
   font-size: var(--ma-font-2xl);
   font-weight: 500;
-  line-height: calc(var(--ma-base) * 1.8);
+  line-height: var(--ma-line-lg);
   color: var(--ma-text-inverse);
   letter-spacing: -0.44px;
 }
@@ -462,7 +471,7 @@
 .woocommerce-account .ma-orders__item-image-overlay-label {
   font-size: var(--ma-font-md);
   font-weight: 400;
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   color: var(--ma-text-inverse-soft);
 }
 
@@ -512,7 +521,7 @@
   margin: 0;
   font-size: var(--ma-font-lg);
   font-weight: 500;
-  line-height: calc(var(--ma-base) * 2);
+  line-height: var(--ma-line-xl);
   color: var(--ma-text-primary);
   letter-spacing: -0.15px;
 }
@@ -524,7 +533,7 @@
   padding: 5px 10px;
   border: 1px solid transparent;
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.6px;
@@ -591,7 +600,7 @@
 .woocommerce-account .ma-orders__item-meta-label {
   margin: 0 0 2px 0;
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   color: var(--ma-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.6px;
@@ -600,7 +609,7 @@
 .woocommerce-account .ma-orders__item-meta-value {
   margin: 0;
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   color: var(--ma-text-muted-dark);
 }
 
@@ -617,7 +626,7 @@
   margin: 0;
   font-size: var(--ma-font-lg);
   font-weight: 500;
-  line-height: calc(var(--ma-base) * 2);
+  line-height: var(--ma-line-xl);
   color: var(--ma-text-primary);
   letter-spacing: -0.15px;
 }
@@ -627,7 +636,7 @@
   align-items: center;
   gap: 4px;
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   color: var(--ma-text-muted);
   text-transform: uppercase;
   letter-spacing: 1.2px;
@@ -723,7 +732,7 @@
 .woocommerce-account .ma-order-details-header__label {
   margin: 0 0 calc(var(--ma-base) * 1.5) 0;
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   font-weight: 400;
   color: var(--ma-text-muted);
   text-transform: uppercase;
@@ -733,7 +742,7 @@
 .woocommerce-account .ma-order-details-header__number {
   margin: 0;
   font-size: var(--ma-font-3xl);
-  line-height: calc(var(--ma-base) * 3);
+  line-height: var(--ma-line-3xl);
   font-weight: 400;
   color: var(--ma-text-primary);
   letter-spacing: -0.02em;
@@ -742,7 +751,7 @@
 .woocommerce-account .ma-order-details-header__date {
   margin: calc(var(--ma-base) * 0.5) 0 0 0;
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   color: var(--ma-text-muted);
 }
 
@@ -751,7 +760,7 @@
 .woocommerce-account .ma-order-details-header__total-label {
   margin: 0;
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   color: var(--ma-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -761,7 +770,7 @@
 .woocommerce-account .ma-order-details-header__total-value {
   margin: calc(var(--ma-base) * 0.25) 0 0 0;
   font-size: var(--ma-font-3xl);
-  line-height: calc(var(--ma-base) * 3);
+  line-height: var(--ma-line-3xl);
   font-weight: 400;
   color: var(--ma-text-primary);
   text-align: left;
@@ -803,7 +812,7 @@
   min-height: calc(var(--ma-base) * 2.375);
   padding: calc(var(--ma-base) * 0.5) calc(var(--ma-base) * 1);
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   border: 1px solid var(--ma-border);
@@ -840,12 +849,12 @@
 @media (max-width: 480px) {
   .woocommerce-account .ma-order-details-header__number {
     font-size: var(--ma-font-2xl);
-    line-height: calc(var(--ma-base) * 2.4);
+    line-height: var(--ma-line-2xl);
   }
 
   .woocommerce-account .ma-order-details-header__total-value {
     font-size: var(--ma-font-2xl);
-    line-height: calc(var(--ma-base) * 2.4);
+    line-height: var(--ma-line-2xl);
   }
 
   .woocommerce-account .ma-order-details-header__actions {
@@ -970,7 +979,7 @@
 .woocommerce-account .ma-order-status-card__title {
   margin: 0;
   font-size: var(--ma-font-xl);
-  line-height: calc(var(--ma-base) * 2.4);
+  line-height: var(--ma-line-2xl);
   font-weight: 400;
   color: var(--ma-text-primary);
   text-transform: uppercase;
@@ -982,7 +991,7 @@
   align-items: center;
   padding: calc(var(--ma-base) * 0.25) calc(var(--ma-base) * 0.5);
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   background: var(--ma-accent-bg);
@@ -993,7 +1002,7 @@
 .woocommerce-account .ma-order-status-card__description {
   margin: 0;
   font-size: var(--ma-font-lg);
-  line-height: calc(var(--ma-base) * 2);
+  line-height: var(--ma-line-xl);
   color: var(--ma-text-muted-dark);
 }
 
@@ -1004,7 +1013,7 @@
 .woocommerce-account .ma-order-status-card__est-label {
   margin: 0;
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   color: var(--ma-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -1013,7 +1022,7 @@
 .woocommerce-account .ma-order-status-card__est-date {
   margin: calc(var(--ma-base) * 0.125) 0 0 0;
   font-size: var(--ma-font-xl);
-  line-height: calc(var(--ma-base) * 2.4);
+  line-height: var(--ma-line-2xl);
   color: var(--ma-text-primary);
 }
 
@@ -1093,7 +1102,7 @@
 
 .woocommerce-account .ma-order-status-card__step-label {
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--ma-text-muted);
@@ -1105,7 +1114,7 @@
 
 .woocommerce-account .ma-order-status-card__step-sublabel {
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   color: var(--ma-text-muted-dark);
 }
 
@@ -1119,7 +1128,7 @@
 
 .woocommerce-account .ma-order-status-card__step-date {
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   color: var(--ma-text-muted);
 }
 
@@ -1221,7 +1230,7 @@
 .woocommerce-account .ma-order-details-items-summary__items-title {
   margin: 0 0 calc(var(--ma-base) * 1.5) 0;
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   color: var(--ma-text-primary);
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -1284,7 +1293,7 @@
 .woocommerce-account .ma-order-details-items-summary__item-name {
   margin: 0;
   font-size: var(--ma-font-lg);
-  line-height: 1.35;
+  line-height: var(--ma-line-tight);
   font-weight: 400;
   overflow-wrap: break-word;
   word-break: break-word;
@@ -1303,7 +1312,7 @@
     .woocommerce-account .ma-order-details-items-summary__item-qty {
   margin: 0;
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   text-transform: uppercase;
   letter-spacing: 0.12em;
 }
@@ -1311,7 +1320,7 @@
 .woocommerce-account .ma-order-details-items-summary__item-price {
   margin: calc(var(--ma-base) * 0.75) 0 0 0;
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   color: var(--ma-text-primary);
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -1353,7 +1362,7 @@
 .woocommerce-account .ma-order-details-items-summary__shipping-title {
   margin: 0 0 calc(var(--ma-base) * 1) 0;
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   color: var(--ma-text-primary);
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -1386,7 +1395,7 @@
 .woocommerce-account .ma-order-details-items-summary__shipping-label {
   margin: 0 0 calc(var(--ma-base) * 1) 0;
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   color: var(--ma-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -1424,14 +1433,14 @@
 .woocommerce-account .ma-order-details-items-summary__shipping-name {
   margin: 0;
   font-size: var(--ma-font-lg);
-  line-height: calc(var(--ma-base) * 2);
+  line-height: var(--ma-line-xl);
   color: var(--ma-text-primary);
 }
 
 .woocommerce-account .ma-order-details-items-summary__shipping-address {
   margin: calc(var(--ma-base) * 0.25) 0 0 0;
   font-size: var(--ma-font-lg);
-  line-height: 1.6;
+  line-height: var(--ma-line-md);
   color: var(--ma-text-muted-dark);
 }
 
@@ -1446,7 +1455,7 @@
   align-items: center;
   gap: 12px;
   font-size: var(--ma-font-lg);
-  line-height: calc(var(--ma-base) * 2);
+  line-height: var(--ma-line-xl);
   color: var(--ma-text-muted-dark);
 }
 
@@ -1487,7 +1496,7 @@
 .woocommerce-account .ma-order-details-items-summary__summary-title {
   margin: 0;
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   font-weight: 400;
   color: var(--ma-text-primary);
   text-transform: uppercase;
@@ -1507,12 +1516,12 @@
   justify-content: space-between;
   align-items: center;
   font-size: var(--ma-font-lg);
-  line-height: calc(var(--ma-base) * 2);
+  line-height: var(--ma-line-xl);
 }
 
 .woocommerce-account .ma-order-details-items-summary__summary-row--total {
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   font-weight: 400;
   padding-top: calc(var(--ma-base) * 1.4);
   margin-top: 0;
@@ -1522,14 +1531,14 @@
 
 .woocommerce-account .ma-order-details-items-summary__summary-row--total .ma-order-details-items-summary__summary-label {
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   text-transform: uppercase;
   letter-spacing: calc(var(--ma-base) * 0.12);
 }
 
 .woocommerce-account .ma-order-details-items-summary__summary-row--total .ma-order-details-items-summary__summary-value {
   font-size: var(--ma-font-2xl);
-  line-height: calc(var(--ma-base) * 3.2);
+  line-height: var(--ma-line-3_2xl);
 }
 
 .woocommerce-account .ma-order-details-items-summary__summary-label {
@@ -1550,7 +1559,7 @@
 .woocommerce-account .ma-order-details-items-summary__payment-label {
   margin: 0 0 calc(var(--ma-base) * 1.2) 0;
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   font-weight: 400;
   color: var(--ma-text-muted);
   text-transform: uppercase;
@@ -1588,14 +1597,14 @@
 .woocommerce-account .ma-order-details-items-summary__payment-method {
   margin: 0;
   font-size: var(--ma-font-lg);
-  line-height: calc(var(--ma-base) * 2);
+  line-height: var(--ma-line-xl);
   color: var(--ma-text-primary);
 }
 
 .woocommerce-account .ma-order-details-items-summary__payment-masked {
   margin: 0;
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   color: var(--ma-text-muted);
 }
 
@@ -1618,7 +1627,7 @@
   width: 100%;
   padding: calc(var(--ma-base) * 1.2) calc(var(--ma-base) * 1.6);
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: calc(var(--ma-base) * 0.12);
@@ -1634,7 +1643,7 @@
 
 .woocommerce-account .woocommerce-account .ma-order-details-items-summary__actions button.ma-order-details-items-summary__btn {
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   font-weight: 400;
   font-family: inherit;
   border-radius: 0;
@@ -1669,7 +1678,7 @@
 .woocommerce-account .ma-order-details__shipments-title {
   margin: calc(var(--ma-base) * 2) 0 calc(var(--ma-base) * 1) 0;
   font-size: var(--ma-font-xl);
-  line-height: calc(var(--ma-base) * 2.4);
+  line-height: var(--ma-line-2xl);
   font-weight: 500;
   color: var(--ma-text-primary);
 }
@@ -1733,7 +1742,7 @@
   color: rgb(17 24 39 / var(--tw-text-opacity, 1));
   gap: 12px;
   font-size: var(--ma-font-md);
-  line-height: 28px;
+  line-height: var(--ma-line-3xl);
   font-weight: 500;
   color: var(--ma-text-primary);
 }
@@ -1751,7 +1760,7 @@
         .woocommerce-account .payment-methods-page .payment-methods-section--saved .payment-methods-section__title {
   font-size: 20px;
   letter-spacing: 0.07754em;
-  line-height: 28px;
+  line-height: var(--ma-line-3xl);
   font-weight: 400;
 }
 
@@ -1807,7 +1816,7 @@
   color: var(--ma-text-muted-dark);
   width: 48px;
   height: 32px;
-  line-height: 16px;
+  line-height: var(--ma-line-md);
 }
 
 .woocommerce-account .payment-methods-page .payment-methods-item__meta {
@@ -1822,7 +1831,7 @@
   font-weight: 500;
   --tw-text-opacity: 1;
   color: rgb(17 24 39 / var(--tw-text-opacity, 1));
-  line-height: 24px;
+  line-height: var(--ma-line-2xl);
   letter-spacing: -0.0195em;
   color: var(--ma-text-primary);
 }
@@ -1832,7 +1841,7 @@
   font-weight: 400;
   --tw-text-opacity: 1;
   color: rgb(107 114 128 / var(--tw-text-opacity, 1));
-  line-height: 20px;
+  line-height: var(--ma-line-xl);
   letter-spacing: -0.01074em;
 }
 
@@ -1843,7 +1852,7 @@
   --tw-text-opacity: 1;
   color: rgb(107 114 128 / var(--tw-text-opacity, 1));
   text-decoration-line: underline;
-  line-height: 16px;
+  line-height: var(--ma-line-md);
 }
 
 .woocommerce-account .payment-methods-page .payment-methods-item__actions {
@@ -1889,7 +1898,7 @@
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
   gap: 6px;
   padding: 4px 12px;
-  line-height: 16px;
+  line-height: var(--ma-line-md);
   font-size: var(--ma-font-xs);
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -1934,7 +1943,7 @@
   --ma-notice-border-radius: 0;
   --ma-notice-font-size: var(--ma-font-xl);
   --ma-notice-font-size-desktop: var(--ma-font-xl);
-  --ma-notice-line-height: 1.5;
+  --ma-notice-line-height: var(--ma-line-normal);
   --ma-notice-icon-size: calc(var(--ma-base) * 2);
   --ma-notice-success-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'/%3E%3C/svg%3E");
   --ma-notice-error-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'/%3E%3C/svg%3E");
@@ -1974,7 +1983,7 @@
   --ma-form-font-size-sm: var(--ma-font-lg);
   --ma-form-font-size-base: var(--ma-font-xl);
   --ma-form-font-size-xl: var(--ma-font-xl);
-  --ma-form-line-height-title: calc(var(--ma-base) * 2.8);
+  --ma-form-line-height-title: var(--ma-line-3xl);
   --ma-form-font-size-checkbox-label: var(--ma-font-xl);
   --ma-form-color-text: var(--ma-text-primary);
   --ma-form-color-muted: var(--ma-text-muted);
@@ -2050,6 +2059,8 @@
   padding-inline: var(--ma-form-space-field-padding-x);
   color: var(--ma-form-color-input);
   background-color: var(--ma-form-color-surface);
+  font-size: var(--ma-font-base);
+  line-height: var(--ma-line-normal);
   transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
 }
 
@@ -2205,8 +2216,8 @@
 
 .woocommerce-account .ma-form .jk-checkbox-wrapper .jk-checkbox-label {
   color: var(--ma-form-color-text);
-  font-size: var(--ma-form-font-size-base);
-  line-height: 1.375;
+  font-size: var(--ma-font-base);
+  line-height: var(--ma-line-normal);
   text-transform: none;
 }
 
@@ -2368,7 +2379,8 @@
   margin: 0px;
   display: block;
   letter-spacing: 0.025em;
-  font-size: var(--ma-form-font-size-base);
+  font-size: var(--ma-font-base);
+  line-height: var(--ma-line-normal);
   color: var(--ma-form-color-muted);
 }
 
@@ -2379,7 +2391,8 @@
   background-color: var(--ma-form-color-surface);
   color: var(--ma-form-color-text);
   padding-inline: var(--ma-form-space-field-padding-x);
-  font-size: var(--ma-form-font-size-base);
+  font-size: var(--ma-font-base);
+  line-height: var(--ma-line-normal);
 }
 
 .woocommerce-account .ma-form__input--capitalize {
@@ -2388,7 +2401,8 @@
 
 .woocommerce-account .ma-form__hint {
   margin: 0px;
-  font-size: var(--ma-form-font-size-base);
+  font-size: var(--ma-font-sm);
+  line-height: var(--ma-line-normal);
   color: var(--ma-form-color-muted);
 }
 
@@ -2426,13 +2440,15 @@
   margin: 0px;
   text-transform: uppercase;
   letter-spacing: 0.025em;
-  font-size: var(--ma-form-font-size-base);
+  font-size: var(--ma-font-base);
+  line-height: var(--ma-line-normal);
   color: var(--ma-form-color-text);
 }
 
 .woocommerce-account .ma-form__setting-value {
   margin: 0px;
-  font-size: var(--ma-form-font-size-base);
+  font-size: var(--ma-font-base);
+  line-height: var(--ma-line-normal);
   color: var(--ma-form-color-muted);
 }
 
@@ -2443,7 +2459,8 @@
   text-transform: uppercase;
   letter-spacing: 0.025em;
   text-decoration-line: underline;
-  font-size: var(--ma-form-font-size-base);
+  font-size: var(--ma-font-base);
+  line-height: var(--ma-line-normal);
   color: var(--ma-form-color-text);
 }
 
@@ -2452,7 +2469,8 @@
   border-radius: 9999px;
   text-transform: uppercase;
   letter-spacing: 0.025em;
-  font-size: var(--ma-form-font-size-base);
+  font-size: var(--ma-font-base);
+  line-height: var(--ma-line-normal);
   padding-inline: var(--ma-form-space-status-pill-padding-x);
   padding-block: var(--ma-form-space-status-pill-padding-y);
 }
@@ -2916,7 +2934,7 @@ body.myaccount-template-fashion.woocommerce-account.woocommerce-edit-account .ma
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.025em;
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
 }
 
 .woocommerce-account .ma-address-book__default-icon {
@@ -3172,7 +3190,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__items-title {
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   color: var(--ma-text-primary);
   text-transform: uppercase;
   letter-spacing: 1.2px;
@@ -3189,20 +3207,20 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-name {
   font-size: var(--ma-font-md);
-  line-height: 1.35;
+  line-height: var(--ma-line-tight);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-meta,
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-qty {
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   text-transform: uppercase;
   letter-spacing: 1.2px;
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-price {
   font-size: var(--ma-font-md);
-  line-height: calc(var(--ma-base) * 1.6);
+  line-height: var(--ma-line-md);
   color: var(--ma-text-primary);
   text-transform: uppercase;
   letter-spacing: 1.2px;

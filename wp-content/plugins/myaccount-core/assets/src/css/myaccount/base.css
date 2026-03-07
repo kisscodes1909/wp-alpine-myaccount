@@ -24,6 +24,15 @@
     --ma-font-xl: calc(var(--ma-base) * 1.6);
     --ma-font-2xl: calc(var(--ma-base) * 2);
     --ma-font-3xl: calc(var(--ma-base) * 3);
+    --ma-line-tight: calc(var(--ma-base) * 1.35);
+    --ma-line-snug: calc(var(--ma-base) * 1.4);
+    --ma-line-normal: calc(var(--ma-base) * 1.5);
+    --ma-line-md: calc(var(--ma-base) * 1.6);
+    --ma-line-lg: calc(var(--ma-base) * 1.8);
+    --ma-line-xl: calc(var(--ma-base) * 2);
+    --ma-line-2xl: calc(var(--ma-base) * 2.4);
+    --ma-line-3xl: calc(var(--ma-base) * 3);
+    --ma-line-3_2xl: calc(var(--ma-base) * 3.2);
 
     /* Shared color tokens for My Account endpoints */
     --ma-text-primary: #0a0a0a;
@@ -132,7 +141,7 @@
 
     .ma-page-heading__back-label {
         @apply text-sm sm:text-base;
-        line-height: 1.4;
+        line-height: var(--ma-line-snug);
     }
 
     .ma-page-heading__title {
@@ -142,7 +151,7 @@
 
     .ma-page-heading__description {
         @apply text-sm pb-4 border-b;
-        line-height: 1.4;
+        line-height: var(--ma-line-snug);
     }
 
     /* ma-orders: moved to base-order-history.css */

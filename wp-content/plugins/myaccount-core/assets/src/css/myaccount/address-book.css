@@ -39,7 +39,7 @@
 
     .ma-address-book__default-pill {
         @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs uppercase tracking-wide whitespace-nowrap;
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
     }
 
     .ma-address-book__default-icon {

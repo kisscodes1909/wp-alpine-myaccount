@@ -60,7 +60,7 @@
         text-decoration: none;
         text-transform: uppercase;
         font-size: var(--ma-font-base);
-        line-height: calc(var(--ma-base) * 1.5);
+        line-height: var(--ma-line-normal);
         font-weight: 400;
         letter-spacing: calc(var(--ma-base) * 0.078125);
         color: var(--ma-text-muted);

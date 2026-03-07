@@ -167,7 +167,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
 /* Section 3: Items list – Figma card and typography (min font-size calc(var(--ma-base) * 1.2)) */
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__items-title {
     font-size: var(--ma-font-md);
-    line-height: calc(var(--ma-base) * 1.6);
+    line-height: var(--ma-line-md);
     color: var(--ma-text-primary);
     text-transform: uppercase;
     letter-spacing: 1.2px;
@@ -184,20 +184,20 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-name {
     font-size: var(--ma-font-md);
-    line-height: 1.35;
+    line-height: var(--ma-line-tight);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-meta,
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-qty {
     font-size: var(--ma-font-md);
-    line-height: calc(var(--ma-base) * 1.6);
+    line-height: var(--ma-line-md);
     text-transform: uppercase;
     letter-spacing: 1.2px;
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-price {
     font-size: var(--ma-font-md);
-    line-height: calc(var(--ma-base) * 1.6);
+    line-height: var(--ma-line-md);
     color: var(--ma-text-primary);
     text-transform: uppercase;
     letter-spacing: 1.2px;

@@ -30,7 +30,7 @@
     .ma-order-details-header__label {
         margin: 0 0 calc(var(--ma-base) * 1.5) 0;
         font-size: var(--ma-font-md);
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
         font-weight: 400;
         color: var(--ma-text-muted);
         text-transform: uppercase;
@@ -40,7 +40,7 @@
     .ma-order-details-header__number {
         margin: 0;
         font-size: var(--ma-font-3xl);
-        line-height: calc(var(--ma-base) * 3);
+        line-height: var(--ma-line-3xl);
         font-weight: 400;
         color: var(--ma-text-primary);
         letter-spacing: -0.02em;
@@ -49,7 +49,7 @@
     .ma-order-details-header__date {
         margin: calc(var(--ma-base) * 0.5) 0 0 0;
         font-size: var(--ma-font-md);
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
         color: var(--ma-text-muted);
     }
 
@@ -57,7 +57,7 @@
     .ma-order-details-header__total-label {
         margin: 0;
         font-size: var(--ma-font-md);
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
         color: var(--ma-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.12em;
@@ -67,7 +67,7 @@
     .ma-order-details-header__total-value {
         margin: calc(var(--ma-base) * 0.25) 0 0 0;
         font-size: var(--ma-font-3xl);
-        line-height: calc(var(--ma-base) * 3);
+        line-height: var(--ma-line-3xl);
         font-weight: 400;
         color: var(--ma-text-primary);
         text-align: left;
@@ -108,7 +108,7 @@
         min-height: calc(var(--ma-base) * 2.375);
         padding: calc(var(--ma-base) * 0.5) calc(var(--ma-base) * 1);
         font-size: var(--ma-font-md);
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
         text-transform: uppercase;
         letter-spacing: 0.06em;
         border: 1px solid var(--ma-border);
@@ -144,12 +144,12 @@
     @media (max-width: 480px) {
         .ma-order-details-header__number {
             font-size: var(--ma-font-2xl);
-            line-height: calc(var(--ma-base) * 2.4);
+            line-height: var(--ma-line-2xl);
         }
 
         .ma-order-details-header__total-value {
             font-size: var(--ma-font-2xl);
-            line-height: calc(var(--ma-base) * 2.4);
+            line-height: var(--ma-line-2xl);
         }
 
         .ma-order-details-header__actions {
@@ -273,7 +273,7 @@
     .ma-order-status-card__title {
         margin: 0;
         font-size: var(--ma-font-xl);
-        line-height: calc(var(--ma-base) * 2.4);
+        line-height: var(--ma-line-2xl);
         font-weight: 400;
         color: var(--ma-text-primary);
         text-transform: uppercase;
@@ -285,7 +285,7 @@
         align-items: center;
         padding: calc(var(--ma-base) * 0.25) calc(var(--ma-base) * 0.5);
         font-size: var(--ma-font-md);
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
         text-transform: uppercase;
         letter-spacing: 0.06em;
         background: var(--ma-accent-bg);
@@ -296,7 +296,7 @@
     .ma-order-status-card__description {
         margin: 0;
         font-size: var(--ma-font-lg);
-        line-height: calc(var(--ma-base) * 2);
+        line-height: var(--ma-line-xl);
         color: var(--ma-text-muted-dark);
     }
 
@@ -307,7 +307,7 @@
     .ma-order-status-card__est-label {
         margin: 0;
         font-size: var(--ma-font-md);
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
         color: var(--ma-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.12em;
@@ -316,7 +316,7 @@
     .ma-order-status-card__est-date {
         margin: calc(var(--ma-base) * 0.125) 0 0 0;
         font-size: var(--ma-font-xl);
-        line-height: calc(var(--ma-base) * 2.4);
+        line-height: var(--ma-line-2xl);
         color: var(--ma-text-primary);
     }
 
@@ -395,7 +395,7 @@
 
     .ma-order-status-card__step-label {
         font-size: var(--ma-font-md);
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
         text-transform: uppercase;
         letter-spacing: 0.12em;
         color: var(--ma-text-muted);
@@ -407,7 +407,7 @@
 
     .ma-order-status-card__step-sublabel {
         font-size: var(--ma-font-md);
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
         color: var(--ma-text-muted-dark);
     }
 
@@ -421,7 +421,7 @@
 
     .ma-order-status-card__step-date {
         font-size: var(--ma-font-md);
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
         color: var(--ma-text-muted);
     }
 
@@ -518,7 +518,7 @@
     .ma-order-details-items-summary__items-title {
         margin: 0 0 calc(var(--ma-base) * 1.5) 0;
         font-size: var(--ma-font-md);
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
         color: var(--ma-text-primary);
         text-transform: uppercase;
         letter-spacing: 0.12em;
@@ -578,7 +578,7 @@
     .ma-order-details-items-summary__item-name {
         margin: 0;
         font-size: var(--ma-font-lg);
-        line-height: 1.35;
+        line-height: var(--ma-line-tight);
         font-weight: 400;
         overflow-wrap: break-word;
         word-break: break-word;
@@ -597,7 +597,7 @@
     .ma-order-details-items-summary__item-qty {
         margin: 0;
         font-size: var(--ma-font-md);
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
         text-transform: uppercase;
         letter-spacing: 0.12em;
     }
@@ -605,7 +605,7 @@
     .ma-order-details-items-summary__item-price {
         margin: calc(var(--ma-base) * 0.75) 0 0 0;
         font-size: var(--ma-font-md);
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
         color: var(--ma-text-primary);
         text-transform: uppercase;
         letter-spacing: 0.12em;
@@ -646,7 +646,7 @@
     .ma-order-details-items-summary__shipping-title {
         margin: 0 0 calc(var(--ma-base) * 1) 0;
         font-size: var(--ma-font-md);
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
         color: var(--ma-text-primary);
         text-transform: uppercase;
         letter-spacing: 0.12em;
@@ -679,7 +679,7 @@
     .ma-order-details-items-summary__shipping-label {
         margin: 0 0 calc(var(--ma-base) * 1) 0;
         font-size: var(--ma-font-md);
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
         color: var(--ma-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.12em;
@@ -717,14 +717,14 @@
     .ma-order-details-items-summary__shipping-name {
         margin: 0;
         font-size: var(--ma-font-lg);
-        line-height: calc(var(--ma-base) * 2);
+        line-height: var(--ma-line-xl);
         color: var(--ma-text-primary);
     }
 
     .ma-order-details-items-summary__shipping-address {
         margin: calc(var(--ma-base) * 0.25) 0 0 0;
         font-size: var(--ma-font-lg);
-        line-height: 1.6;
+        line-height: var(--ma-line-md);
         color: var(--ma-text-muted-dark);
     }
 
@@ -739,7 +739,7 @@
         align-items: center;
         gap: 12px;
         font-size: var(--ma-font-lg);
-        line-height: calc(var(--ma-base) * 2);
+        line-height: var(--ma-line-xl);
         color: var(--ma-text-muted-dark);
     }
 
@@ -779,7 +779,7 @@
     .ma-order-details-items-summary__summary-title {
         margin: 0;
         font-size: var(--ma-font-md);
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
         font-weight: 400;
         color: var(--ma-text-primary);
         text-transform: uppercase;
@@ -799,12 +799,12 @@
         justify-content: space-between;
         align-items: center;
         font-size: var(--ma-font-lg);
-        line-height: calc(var(--ma-base) * 2);
+        line-height: var(--ma-line-xl);
     }
 
     .ma-order-details-items-summary__summary-row--total {
         font-size: var(--ma-font-md);
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
         font-weight: 400;
         padding-top: calc(var(--ma-base) * 1.4);
         margin-top: 0;
@@ -814,14 +814,14 @@
 
     .ma-order-details-items-summary__summary-row--total .ma-order-details-items-summary__summary-label {
         font-size: var(--ma-font-md);
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
         text-transform: uppercase;
         letter-spacing: calc(var(--ma-base) * 0.12);
     }
 
     .ma-order-details-items-summary__summary-row--total .ma-order-details-items-summary__summary-value {
         font-size: var(--ma-font-2xl);
-        line-height: calc(var(--ma-base) * 3.2);
+        line-height: var(--ma-line-3_2xl);
     }
 
     .ma-order-details-items-summary__summary-label {
@@ -841,7 +841,7 @@
     .ma-order-details-items-summary__payment-label {
         margin: 0 0 calc(var(--ma-base) * 1.2) 0;
         font-size: var(--ma-font-md);
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
         font-weight: 400;
         color: var(--ma-text-muted);
         text-transform: uppercase;
@@ -879,14 +879,14 @@
     .ma-order-details-items-summary__payment-method {
         margin: 0;
         font-size: var(--ma-font-lg);
-        line-height: calc(var(--ma-base) * 2);
+        line-height: var(--ma-line-xl);
         color: var(--ma-text-primary);
     }
 
     .ma-order-details-items-summary__payment-masked {
         margin: 0;
         font-size: var(--ma-font-md);
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
         color: var(--ma-text-muted);
     }
 
@@ -907,7 +907,7 @@
         width: 100%;
         padding: calc(var(--ma-base) * 1.2) calc(var(--ma-base) * 1.6);
         font-size: var(--ma-font-md);
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
         font-weight: 400;
         text-transform: uppercase;
         letter-spacing: calc(var(--ma-base) * 0.12);
@@ -922,7 +922,7 @@
     /* Override browser/theme defaults on button so text matches anchor buttons (specificity over theme global button) */
     .woocommerce-account .ma-order-details-items-summary__actions button.ma-order-details-items-summary__btn {
         font-size: var(--ma-font-md);
-        line-height: calc(var(--ma-base) * 1.6);
+        line-height: var(--ma-line-md);
         font-weight: 400;
         font-family: inherit;
         border-radius: 0;
@@ -956,7 +956,7 @@
     .ma-order-details__shipments-title {
         margin: calc(var(--ma-base) * 2) 0 calc(var(--ma-base) * 1) 0;
         font-size: var(--ma-font-xl);
-        line-height: calc(var(--ma-base) * 2.4);
+        line-height: var(--ma-line-2xl);
         font-weight: 500;
         color: var(--ma-text-primary);
     }
