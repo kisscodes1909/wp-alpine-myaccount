@@ -6,6 +6,26 @@
 /* -------------------------------------------------------------------------- */
 
 .woocommerce-account {
+    /* Shared full-bleed utility for My Account bands inside constrained containers. */
+    .ma-fullbleed-band {
+        position: relative;
+        isolation: isolate;
+        --ma-fullbleed-bg: transparent;
+        --ma-fullbleed-border-top: 0;
+        --ma-fullbleed-border-bottom: 0;
+    }
+
+    .ma-fullbleed-band::before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        inset-block: 0;
+        inset-inline: -100vmax;
+        background: var(--ma-fullbleed-bg, transparent);
+        border-top: var(--ma-fullbleed-border-top, 0);
+        border-bottom: var(--ma-fullbleed-border-bottom, 0);
+    }
+
     .woocommerce-MyAccount-content {
         @apply w-full max-w-[1280px] mx-auto;
     }

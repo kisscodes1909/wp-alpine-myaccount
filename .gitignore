@@ -32,7 +32,16 @@ wp-config.php
 /wp-content/themes/hello-elementor/
 /wp-content/themes/kadence/
 /wp-content/themes/astra/
-
+/wp-content/themes/generatepress/
+/wp-content/themes/hello-commerce/
+/wp-content/themes/neve/
+/wp-content/themes/oceanwp/
+/wp-content/themes/twentytwenty/
+/wp-content/themes/twentytwentyone/
+/wp-content/themes/twentytwentytwo/
+/wp-content/themes/twentytwentythree/
+/wp-content/themes/twentytwentyfour/
+/wp-content/themes/twentytwentyfive/
 # Example plugin
 /wp-content/plugins/hello.php
 

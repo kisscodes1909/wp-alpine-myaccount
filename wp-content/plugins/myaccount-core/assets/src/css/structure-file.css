@@ -1,4 +1,5 @@
 @import "./myaccount/base.css";
+@import "./myaccount/navigation.css";
 @import "./myaccount/order-history.css";
 @import "./myaccount/view-order.css";
 @import "./myaccount/payment-methods.css";
