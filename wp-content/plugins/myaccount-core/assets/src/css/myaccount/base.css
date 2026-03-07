@@ -48,7 +48,7 @@
     }
 
     .ma-page-heading {
-        @apply my-8 md:my-20;
+        @apply my-8;
     }
 
     .ma-page-heading__back-link {

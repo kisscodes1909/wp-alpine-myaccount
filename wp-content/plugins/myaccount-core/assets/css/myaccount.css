@@ -69,13 +69,6 @@
   margin-bottom: 2rem;
 }
 
-@media (min-width: 992px) {
-  .woocommerce-account .ma-page-heading {
-    margin-top: 5rem;
-    margin-bottom: 5rem;
-  }
-}
-
 .woocommerce-account .ma-page-heading__back-link {
   margin-bottom: 0.75rem;
   display: inline-flex;
@@ -4237,3 +4230,5 @@ input:where([type='file']):focus {
     line-height: 28px;
   }
 }
+
+/*# sourceMappingURL=myaccount.css.map */
