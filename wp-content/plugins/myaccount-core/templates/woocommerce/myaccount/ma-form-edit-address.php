@@ -3,6 +3,7 @@
  * Alpine Data
  * const userAddress
  */
+require_once __DIR__ . '/partials/form-field-icons.php';
 ?>
 <style>
 .ma-form.ma-form-address .address-autocomplete-wrapper {
@@ -59,13 +60,15 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
                 <label for="first-name">First name</label>
-                <div>
+                <div class="ma-form__input-wrap">
+                    <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_user(); ?></span>
                     <input class="ma-form__input" x-model="$store.userAddress.editAddress.fname" type="text" name="first-name" id="first-name" autocomplete="given-name" />
                 </div>
             </div>
             <div>
                 <label for="last-name">Last name</label>
-                <div>
+                <div class="ma-form__input-wrap">
+                    <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_user(); ?></span>
                     <input class="ma-form__input" x-model="$store.userAddress.editAddress.lname" type="text" name="last-name" id="last-name" autocomplete="family-name" />
                 </div>
             </div>
@@ -77,7 +80,8 @@
                 <div class="address-autocomplete-wrapper"></div>
             </template>
             <template x-if="!$store.userAddress.autocompleteEnabled">
-                <div>
+                <div class="ma-form__input-wrap">
+                    <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_map_pin(); ?></span>
                     <input class="ma-form__input" x-model="$store.userAddress.editAddress.address" type="text" name="address" id="address" autocomplete="street-address" />
                 </div>
             </template>
@@ -95,7 +99,8 @@
 
         <div x-show="showAddress2" x-transition>
             <label for="address2">Apartment, suite, etc. (optional)</label>
-            <div>
+            <div class="ma-form__input-wrap">
+                <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_map_pin(); ?></span>
                 <input class="ma-form__input" x-model="$store.userAddress.editAddress.address2" type="text" name="address2" id="address2" autocomplete="address2">
             </div>
         </div>
@@ -103,7 +108,8 @@
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
                 <label for="country">Country / Region</label>
-                <div>
+                <div class="ma-form__input-wrap">
+                    <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_globe_alt(); ?></span>
                     <select class="ma-form__input" x-model="$store.userAddress.editAddress.country" id="country" name="country" autocomplete="country-name">
                         <template x-for="(countryName, countryCode) in $store.userAddress.countries" :key="countryCode">
                             <option x-bind:value="countryName" x-text="countryName"></option>
@@ -113,13 +119,15 @@
             </div>
             <div>
                 <label for="postal-code">ZIP Code</label>
-                <div>
+                <div class="ma-form__input-wrap">
+                    <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_map_pin(); ?></span>
                     <input class="ma-form__input" x-model="$store.userAddress.editAddress.postalCode" type="text" name="postal-code" id="postal-code" autocomplete="postal-code" />
                 </div>
             </div>
             <div>
                 <label for="region">State</label>
-                <div>
+                <div class="ma-form__input-wrap">
+                    <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_map_pin(); ?></span>
                     <input class="ma-form__input" x-model="$store.userAddress.editAddress.region" type="text" name="region" id="region" autocomplete="address-level1" />
                 </div>
             </div>
@@ -127,14 +135,16 @@
 
         <div>
             <label for="city">Town / City</label>
-            <div>
+            <div class="ma-form__input-wrap">
+                <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_map_pin(); ?></span>
                 <input class="ma-form__input" x-model="$store.userAddress.editAddress.city" type="text" name="city" id="city" autocomplete="address-level2" />
             </div>
         </div>
 
         <div>
             <label for="phone-number">Phone</label>
-            <div>
+            <div class="ma-form__input-wrap">
+                <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_phone(); ?></span>
                 <input class="ma-form__input" @input="$store.userAddress.formatUSPhoneNumber()" x-model="$store.userAddress.editAddress.phone" type="text" name="phone-number" id="phone-number" maxlength="14" />
             </div>
         </div>

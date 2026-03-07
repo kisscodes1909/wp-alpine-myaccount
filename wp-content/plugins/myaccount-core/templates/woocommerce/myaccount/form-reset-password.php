@@ -18,6 +18,7 @@
 defined( 'ABSPATH' ) || exit;
 
 do_action( 'woocommerce_before_reset_password_form' );
+require_once __DIR__ . '/partials/form-field-icons.php';
 ?>
 
 <div class="ma-auth-container">
@@ -35,7 +36,8 @@ do_action( 'woocommerce_before_reset_password_form' );
         <div class="mb-8">
             <div class="mb-10" :class="{'error': (touched.password && errors.password)}">
                 <label for="reg_password"><?php esc_html_e('New Password', 'woocommerce'); ?></label>
-                <div class="relative" x-data="{showPassword:false}">
+                <div class="ma-form__input-wrap" x-data="{showPassword:false}">
+                    <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
                     <input x-model="formData.password" minlength="8" type="password"
                            class="input-text ma-form__input"
                            id="reg_password" autocomplete="new-password"

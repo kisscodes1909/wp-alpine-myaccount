@@ -17,8 +17,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-
 do_action( 'woocommerce_before_lost_password_form' );
+require_once __DIR__ . '/partials/form-field-icons.php';
 ?>
 
 <div class="ma-auth-container">
@@ -41,7 +41,8 @@ do_action( 'woocommerce_before_lost_password_form' );
 
         <div class="mb-8" x-validate-field="{message: errors.email, touched:touched.email}">
             <label for="reg_email"><?php esc_html_e('Email address', 'woocommerce'); ?></label>
-            <div class="relative">
+            <div class="ma-form__input-wrap">
+                <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_envelope(); ?></span>
                 <input id="reg_email" x-model="formData.email"
                        type="text" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input"
                        autocomplete="email"

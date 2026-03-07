@@ -7,7 +7,7 @@
 
 .woocommerce-account {
     /* Scale foundation: theme can override --ma-base to adapt to html font-size. */
-    --ma-base: 1rem;
+    --ma-base: 1em;
     --ma-space-2xs: calc(var(--ma-base) * 0.0625);
     --ma-space-xs: calc(var(--ma-base) * 0.25);
     --ma-space-sm: calc(var(--ma-base) * 0.5);

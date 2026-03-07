@@ -19,7 +19,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-do_action( 'woocommerce_before_customer_login_form' ); ?>
+do_action( 'woocommerce_before_customer_login_form' );
+require_once __DIR__ . '/partials/form-field-icons.php';
+?>
 
 <div class="ma-auth-container">
 	<div x-data="{ openTab: 'login' }" class="ma-auth">
@@ -51,7 +53,8 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 					<div class="ma-form__fields">
 						<div class="ma-form__field" x-validate-field="{message: errors.email, touched:touched.email}" :class="{ 'error': (touched.email && errors.email) }">
 							<label for="login_email" class="ma-form__label"><?php esc_html_e( 'Email address', 'woocommerce' ); ?></label>
-							<div class="relative">
+							<div class="ma-form__input-wrap">
+								<span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_envelope(); ?></span>
 								<input id="login_email" x-model="formData.email" type="text" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input" autocomplete="email" @blur="handler.validateField('email')" />
 							</div>
 							<span x-validate-error="{message: errors.email, touched: touched.email}"></span>
@@ -59,7 +62,8 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 
 						<div class="ma-form__field" :class="{ 'error': (touched.password && errors.password) }">
 							<label for="login_password" class="ma-form__label"><?php esc_html_e( 'Password', 'woocommerce' ); ?></label>
-							<div class="relative" x-data="{showPassword:false}">
+							<div class="ma-form__input-wrap" x-data="{showPassword:false}">
+								<span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
 								<input id="login_password" x-model="formData.password" type="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input" autocomplete="username" @keyup="handler.validateField('password')" :type="showPassword === true ? 'text' : 'password'" />
 								<div class="password-toggle">
 									<div class="block w-10 h-10 flex items-center justify-center" x-password-eye="showPassword" @click="showPassword=!showPassword"></div>
@@ -113,7 +117,8 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 					<div class="ma-form__fields">
 						<div class="ma-form__field" x-validate-field="{message: errors.firstName, touched:touched.firstName}" :class="{ 'error': (touched.firstName && errors.firstName) }">
 							<label for="reg_firstName" class="ma-form__label"><?php esc_html_e( 'First name', 'woocommerce' ); ?></label>
-							<div class="relative">
+							<div class="ma-form__input-wrap">
+								<span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_user(); ?></span>
 								<input id="reg_firstName" x-model="formData.firstName" type="text" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input" autocomplete="firstName" @blur="validateField('firstName')" />
 							</div>
 							<span x-validate-error="{message: errors.firstName, touched: touched.firstName}"></span>
@@ -121,7 +126,8 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 
 						<div class="ma-form__field" x-validate-field="{message: errors.lastName, touched:touched.lastName}" :class="{ 'error': (touched.lastName && errors.lastName) }">
 							<label for="reg_lastName" class="ma-form__label"><?php esc_html_e( 'Last name', 'woocommerce' ); ?></label>
-							<div class="relative">
+							<div class="ma-form__input-wrap">
+								<span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_user(); ?></span>
 								<input id="reg_lastName" x-model="formData.lastName" type="text" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input" autocomplete="lastName" @blur="validateField('lastName')" />
 							</div>
 							<span x-validate-error="{message: errors.lastName, touched: touched.lastName}"></span>
@@ -129,7 +135,8 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 
 						<div class="ma-form__field" x-validate-field="{message: errors.email, touched:touched.email}" :class="{ 'error': (touched.email && errors.email) }">
 							<label for="reg_email" class="ma-form__label"><?php esc_html_e( 'Email address', 'woocommerce' ); ?></label>
-							<div class="relative">
+							<div class="ma-form__input-wrap">
+								<span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_envelope(); ?></span>
 								<input id="reg_email" x-model="formData.email" type="text" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input" autocomplete="email" @blur="validateField('email')" />
 							</div>
 							<span x-validate-error="{message: errors.email, touched: touched.email}"></span>
@@ -137,7 +144,8 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 
 						<div class="ma-form__field" :class="{ 'error': (touched.password && errors.password) }">
 							<label for="reg_password" class="ma-form__label"><?php esc_html_e( 'Password', 'woocommerce' ); ?></label>
-							<div class="relative" x-data="{showPassword:false}">
+							<div class="ma-form__input-wrap" x-data="{showPassword:false}">
+								<span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
 								<input id="reg_password" x-model="formData.password" minlength="8" type="password" name="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input" autocomplete="new-password" @keyup="validateField('password')" :type="showPassword === true ? 'text' : 'password'" />
 								<div class="password-toggle">
 									<span class="block w-10 h-10 flex items-center justify-center">

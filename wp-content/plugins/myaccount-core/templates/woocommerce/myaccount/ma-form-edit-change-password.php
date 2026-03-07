@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/partials/form-field-icons.php'; ?>
 <template id="form-change-password" x-data>
         <form
                 x-data="passwordChangeForm()"
@@ -17,7 +18,8 @@
 
             <div x-data="{showPassword:false}">
                 <label for="password"><?php esc_html_e( 'Password', 'woocommerce' ); ?></label>
-                <div class="relative" x-data="{showPassword:false}">
+                <div class="ma-form__input-wrap" x-data="{showPassword:false}">
+                    <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
                     <input
                             x-model="currentPassword"
                             type="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input pr-5"
@@ -35,7 +37,8 @@
 
             <div x-data="{showPassword:false}">
                 <label for="password"><?php esc_html_e( 'New Password', 'woocommerce' ); ?></label>
-                <div class="relative" x-data="{showPassword:false}">
+                <div class="ma-form__input-wrap" x-data="{showPassword:false}">
+                    <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
                     <input
                             x-model="newPassword"
                             type="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input pr-5"
@@ -53,7 +56,8 @@
 
             <div x-data="{showPassword:false}">
                 <label for="password"><?php esc_html_e( 'Confirm Password', 'woocommerce' ); ?></label>
-                <div class="relative" x-data="{showPassword:false}">
+                <div class="ma-form__input-wrap" x-data="{showPassword:false}">
+                    <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
                     <input
                             x-model="confirmPassword"
                             type="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input pr-5"

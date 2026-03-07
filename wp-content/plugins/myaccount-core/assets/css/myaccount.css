@@ -12,7 +12,7 @@
 
 .woocommerce-account {
   /* Scale foundation: theme can override --ma-base to adapt to html font-size. */
-  --ma-base: 1rem;
+  --ma-base: 1em;
   --ma-space-2xs: calc(var(--ma-base) * 0.0625);
   --ma-space-xs: calc(var(--ma-base) * 0.25);
   --ma-space-sm: calc(var(--ma-base) * 0.5);
@@ -1964,6 +1964,7 @@
   --ma-form-space-button-gap: calc(var(--ma-base) * 0.5);
   --ma-form-space-button-padding-x: calc(var(--ma-base) * 1);
   --ma-form-space-field-padding-x: calc(var(--ma-base) * 1);
+  --ma-form-space-input-icon-left: calc(var(--ma-base) * 2.5);
   --ma-form-space-input-icon-padding-right: calc(var(--ma-base) * 2.5);
   --ma-form-space-password-padding-right: calc(var(--ma-base) * 6);
   --ma-form-space-password-toggle-right: calc(var(--ma-base) * 0.75);
@@ -2050,6 +2051,34 @@
   align-items: center;
   right: var(--ma-form-space-password-toggle-right);
   gap: var(--ma-form-space-password-toggle-gap);
+}
+
+.woocommerce-account .ma-form .ma-form__input-wrap {
+  position: relative;
+}
+
+.woocommerce-account .ma-form .ma-form__input-icon--left {
+  pointer-events: none;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  left: calc(var(--ma-base) * 0.75);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ma-form-color-muted);
+  width: calc(var(--ma-base) * 1.5);
+  height: calc(var(--ma-base) * 1.5);
+}
+
+.woocommerce-account .ma-form .ma-form__input-icon--left .ma-form__input-icon-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.woocommerce-account .ma-form .ma-form__input-wrap .ma-form__input,
+        .woocommerce-account .ma-form .ma-form__input-wrap select {
+  padding-left: var(--ma-form-space-input-icon-left);
 }
 
 .woocommerce-account .ma-form .input,
@@ -4097,6 +4126,10 @@ input:where([type='file']):focus {
   --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.outline {
+  outline-style: solid;
 }
 
 .filter {

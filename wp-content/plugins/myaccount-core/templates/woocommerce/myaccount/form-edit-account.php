@@ -15,7 +15,10 @@ $registered_timestamp  = strtotime( $user->user_registered );
 $active_since          = $registered_timestamp ? date_i18n( 'F Y', $registered_timestamp ) : date_i18n( 'F Y' );
 ?>
 
-<?php wc_get_template( 'myaccount/page-heading.php', array( 'page_heading' => 'My Info', 'page_description' => 'Update your personal details' ) ); ?>
+<?php
+require_once __DIR__ . '/partials/form-field-icons.php';
+wc_get_template( 'myaccount/page-heading.php', array( 'page_heading' => 'My Info', 'page_description' => 'Update your personal details' ) );
+?>
 
 <form x-data="updateAccount" id="form-update-account" class="ma-form woocommerce-EditAccountForm edit-account"
       @submit.prevent="handleSubmit"
@@ -31,25 +34,31 @@ $active_since          = $registered_timestamp ? date_i18n( 'F Y', $registered_t
         <div class="ma-form__grid">
             <div class="ma-form__field">
                 <label for="firstName" class="ma-form__label">First Name</label>
-                <input
-                        type="text"
-                        id="firstName"
-                        x-model="firstName"
-                        class="ma-form__input ma-form__input--capitalize"
-                        :class="{'field-invalid': errors.firstName}"
-                />
+                <div class="ma-form__input-wrap">
+                    <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_user(); ?></span>
+                    <input
+                            type="text"
+                            id="firstName"
+                            x-model="firstName"
+                            class="ma-form__input ma-form__input--capitalize"
+                            :class="{'field-invalid': errors.firstName}"
+                    />
+                </div>
                 <span x-validate-error="{message: errors.firstName}"></span>
             </div>
 
             <div class="ma-form__field">
                 <label for="lastName" class="ma-form__label">Last Name</label>
-                <input
-                        type="text"
-                        id="lastName"
-                        x-model="lastName"
-                        class="ma-form__input ma-form__input--capitalize"
-                        :class="{'field-invalid': errors.lastName}"
-                />
+                <div class="ma-form__input-wrap">
+                    <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_user(); ?></span>
+                    <input
+                            type="text"
+                            id="lastName"
+                            x-model="lastName"
+                            class="ma-form__input ma-form__input--capitalize"
+                            :class="{'field-invalid': errors.lastName}"
+                    />
+                </div>
                 <span x-validate-error="{message: errors.lastName}"></span>
             </div>
         </div>
@@ -64,27 +73,33 @@ $active_since          = $registered_timestamp ? date_i18n( 'F Y', $registered_t
         <div class="ma-form__fields">
             <div class="ma-form__field">
                 <label for="email" class="ma-form__label">Email Address</label>
-                <input
-                        type="text"
-                        id="email"
-                        x-model="email"
-                        autocomplete="email"
-                        class="ma-form__input"
-                        :class="{'field-invalid': errors.email}"
-                />
+                <div class="ma-form__input-wrap">
+                    <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_envelope(); ?></span>
+                    <input
+                            type="text"
+                            id="email"
+                            x-model="email"
+                            autocomplete="email"
+                            class="ma-form__input"
+                            :class="{'field-invalid': errors.email}"
+                    />
+                </div>
                 <p class="ma-form__hint">This email is used for order confirmations and account notifications</p>
                 <span x-validate-error="{message: errors.email}"></span>
             </div>
 
             <div class="ma-form__field">
                 <label for="phone" class="ma-form__label">Phone Number</label>
-                <input
-                        type="text"
-                        id="phone"
-                        value="<?php echo esc_attr( $phone_display ); ?>"
-                        readonly
-                        class="ma-form__input"
-                />
+                <div class="ma-form__input-wrap">
+                    <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_phone(); ?></span>
+                    <input
+                            type="text"
+                            id="phone"
+                            value="<?php echo esc_attr( $phone_display ); ?>"
+                            readonly
+                            class="ma-form__input"
+                    />
+                </div>
                 <p class="ma-form__hint">Used for delivery updates and customer support</p>
             </div>
         </div>
