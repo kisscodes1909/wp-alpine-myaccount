@@ -19,9 +19,11 @@ body.myaccount-template-fashion.woocommerce-account {
     --ma-form-color-outline: #9ca3af;
 }
 
-/* My Info endpoint (edit-account): increase form rhythm for fashion variant */
+/* My Info endpoint (edit-account): increase form rhythm for fashion variant; border-top balanced with gap */
 body.myaccount-template-fashion.woocommerce-account.woocommerce-edit-account .ma-form {
     --ma-form-space-main-gap: 2.5rem;
+    --ma-form-space-section-gap: 2.5rem;
+    --ma-form-space-bordered-top: 2.5rem;
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-form label {
