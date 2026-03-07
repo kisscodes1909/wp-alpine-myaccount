@@ -56,11 +56,21 @@
         --ma-form-font-size-checkbox-label: var(--ma-font-xl);
 
         --ma-form-color-text: var(--ma-text-primary);
-        --ma-form-color-muted: var(--ma-text-muted);
+        --ma-form-color-muted: var(--ma-text-muted-dark);
         --ma-form-color-input: var(--ma-text-primary);
         --ma-form-color-error: var(--ma-danger-text);
         --ma-form-color-border: var(--ma-border);
         --ma-form-color-surface: var(--ma-surface);
+        --ma-form-color-placeholder: var(--ma-text-muted);
+        --ma-form-color-focus-border: var(--ma-text-muted);
+        --ma-form-color-focus-ring: var(--ma-border-divider);
+        --ma-form-color-button-bg: var(--ma-btn-primary-bg);
+        --ma-form-color-button-border: var(--ma-btn-primary-border);
+        --ma-form-color-button-text: var(--ma-btn-primary-text);
+        --ma-form-color-button-light-bg: var(--ma-surface);
+        --ma-form-color-button-light-border: var(--ma-border);
+        --ma-form-color-button-light-text: var(--ma-text-primary);
+        --ma-form-color-outline: var(--ma-text-muted);
 
         @apply w-full flex flex-col;
         gap: var(--ma-form-space-main-gap);
@@ -73,7 +83,20 @@
         .ma-form__input,
         select,
         textarea {
-            @apply transition-all autofill:shadow-[inset_0_0_0px_1000px_#fff];
+            @apply transition-all;
+        }
+
+        .ma-form__input:-webkit-autofill,
+        .ma-form__input:-webkit-autofill:hover,
+        .ma-form__input:-webkit-autofill:focus,
+        select:-webkit-autofill,
+        select:-webkit-autofill:hover,
+        select:-webkit-autofill:focus,
+        textarea:-webkit-autofill,
+        textarea:-webkit-autofill:hover,
+        textarea:-webkit-autofill:focus {
+            -webkit-text-fill-color: var(--ma-form-color-input);
+            box-shadow: inset 0 0 0 1000px var(--ma-form-color-surface);
         }
 
         .ma-form__input,
@@ -100,8 +123,8 @@
         .ma-form__input,
         select,
         textarea {
-            @apply h-form-field border;
-            border-color: var(--ma-form-color-border);
+            @apply h-form-field;
+            border: 1px solid var(--ma-form-color-border);
             padding-inline: var(--ma-form-space-field-padding-x);
             color: var(--ma-form-color-input);
             background-color: var(--ma-form-color-surface);
@@ -368,8 +391,8 @@
     }
 
     .ma-form__input {
-        @apply h-form-field border;
-        border-color: var(--ma-form-color-border);
+        @apply h-form-field;
+        border: 1px solid var(--ma-form-color-border);
         background-color: var(--ma-form-color-surface);
         color: var(--ma-form-color-text);
         padding-inline: var(--ma-form-space-field-padding-x);
@@ -400,8 +423,8 @@
     }
 
     .ma-form__setting-card {
-        @apply min-h-[94px] border flex items-center justify-between;
-        border-color: var(--ma-form-color-border);
+        @apply min-h-[94px] flex items-center justify-between;
+        border: 1px solid var(--ma-form-color-border);
         padding-inline: var(--ma-form-space-setting-card-padding-x);
         padding-block: var(--ma-form-space-setting-card-padding-y);
         gap: var(--ma-form-space-setting-card-gap);

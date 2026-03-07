@@ -24,7 +24,6 @@
     @apply flex items-center;
     gap: var(--ma-space-sm);
     padding: var(--ma-notice-padding-y) var(--ma-notice-padding-right) var(--ma-notice-padding-y) var(--ma-notice-padding-x);
-    border-width: var(--ma-notice-border-width);
     border-radius: var(--ma-notice-border-radius);
     font-size: var(--ma-notice-font-size);
     line-height: var(--ma-notice-line-height);
@@ -44,9 +43,7 @@
     @apply relative list-none m-0;
     @apply flex flex-col;
     gap: var(--ma-space-sm);
-    padding: var(--ma-notice-padding-y) var(--ma-notice-padding-right) var(--ma-notice-padding-y) var(--ma-notice-padding-x);
-    padding-left: calc(var(--ma-notice-padding-x) + var(--ma-notice-icon-size) + var(--ma-space-sm));
-    border-width: var(--ma-notice-border-width);
+    padding: var(--ma-notice-padding-y) var(--ma-notice-padding-right) var(--ma-notice-padding-y) calc(var(--ma-notice-padding-x) + var(--ma-notice-icon-size) + var(--ma-space-sm));
     border-radius: var(--ma-notice-border-radius);
     font-size: var(--ma-notice-font-size);
     line-height: var(--ma-notice-line-height);
@@ -61,26 +58,26 @@
 
 .woocommerce-account .woocommerce-message {
     background-color: var(--ma-success-bg);
-    border-color: var(--ma-success-border);
+    border: var(--ma-notice-border-width) solid var(--ma-success-border);
     color: var(--ma-success-text);
 }
 
 .woocommerce-account .woocommerce-error {
     background-color: var(--ma-danger-bg);
-    border-color: var(--ma-danger-border);
+    border: var(--ma-notice-border-width) solid var(--ma-danger-border);
     color: var(--ma-danger-text);
 }
 
 .woocommerce-account .woocommerce-info {
     background-color: var(--ma-info-bg);
-    border-color: var(--ma-info-border);
+    border: var(--ma-notice-border-width) solid var(--ma-info-border);
     color: var(--ma-info-text);
 }
 
 .woocommerce-account .woocommerce-warning,
 .woocommerce-account .ma-notice--warning {
     background-color: var(--ma-warning-bg);
-    border-color: var(--ma-warning-border);
+    border: var(--ma-notice-border-width) solid var(--ma-warning-border);
     color: var(--ma-warning-text);
 }
 

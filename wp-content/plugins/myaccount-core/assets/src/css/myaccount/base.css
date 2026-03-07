@@ -36,16 +36,20 @@
 
     /* Shared color tokens for My Account endpoints */
     --ma-text-primary: #0a0a0a;
+    --ma-text-charcoal: #4d4d4d;
+    --ma-text-strong: #111827;
     --ma-text-muted: #99a1af;
     --ma-text-muted-dark: #6a7282;
     --ma-text-inverse: #ffffff;
     --ma-text-inverse-soft: rgba(255, 255, 255, 0.8);
 
     --ma-border: #e5e7eb;
+    --ma-border-focus: #9ca3af;
     --ma-border-divider: rgba(0, 0, 0, 0.1);
 
     --ma-surface: #ffffff;
     --ma-surface-alt: #f9fafb;
+    --ma-surface-soft: #f8fafc;
     --ma-surface-overlay: rgba(0, 0, 0, 0.5);
 
     --ma-accent-bg: #eff6ff;
@@ -112,16 +116,14 @@
     .ma-page-heading,
     .ma-orders,
     .ma-view-order {
-        padding-left: var(--ma-space-md);
-        padding-right: var(--ma-space-md);
+        padding-inline: var(--ma-space-md);
     }
 
     @media (min-width: 768px) {
         .ma-page-heading,
         .ma-orders,
         .ma-view-order {
-            padding-left: var(--ma-space-lg);
-            padding-right: var(--ma-space-lg);
+            padding-inline: var(--ma-space-lg);
         }
     }
 
@@ -130,7 +132,8 @@
     }
 
     .ma-page-heading__back-link {
-        @apply inline-flex items-center gap-1 mb-3 text-charcoal no-underline;
+        @apply inline-flex items-center gap-1 mb-3 no-underline;
+        color: var(--ma-text-charcoal);
     }
 
     .ma-page-heading__back-icon {

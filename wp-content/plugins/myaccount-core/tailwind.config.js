@@ -53,17 +53,18 @@ module.exports = {
           500: '#CAA15F',
         },
         charcoal: '#4d4d4d',
+        /* Form colors aligned with base.css --ma-* variables */
         form: {
-          text: '#111827',
-          muted: '#6b7280',
-          border: '#d1d5db',
+          text: '#0a0a0a',        /* --ma-text-primary */
+          muted: '#6a7282',        /* --ma-text-muted-dark */
+          border: '#e5e7eb',       /* --ma-border */
           borderStrong: '#c7cdd4',
-          focus: '#9ca3af',
-          surface: '#f3f4f6',
-          field: '#f8fafc',
-          accent: '#111827',
-          danger: '#dc2626',
-          ring: 'rgb(17 24 39 / 0.08)',
+          focus: '#99a1af',       /* --ma-text-muted */
+          surface: '#f9fafb',      /* --ma-surface-alt */
+          field: '#f9fafb',        /* --ma-surface-alt */
+          accent: '#111827',       /* --ma-btn-primary-bg */
+          danger: '#ec003f',       /* --ma-danger-text */
+          ring: 'rgba(0, 0, 0, 0.1)', /* --ma-border-divider */
         },
       },
       backgroundImage: {

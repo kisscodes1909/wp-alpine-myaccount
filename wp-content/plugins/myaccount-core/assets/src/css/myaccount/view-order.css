@@ -28,7 +28,7 @@
 
     /* Figma 36:1502 – label above order number (min calc(var(--ma-base) * 1.2)) */
     .ma-order-details-header__label {
-        margin: 0 0 calc(var(--ma-base) * 1.5) 0;
+        margin-bottom: calc(var(--ma-base) * 1.5);
         font-size: var(--ma-font-md);
         line-height: var(--ma-line-md);
         font-weight: 400;
@@ -47,7 +47,7 @@
     }
 
     .ma-order-details-header__date {
-        margin: calc(var(--ma-base) * 0.5) 0 0 0;
+        margin-top: calc(var(--ma-base) * 0.5);
         font-size: var(--ma-font-md);
         line-height: var(--ma-line-md);
         color: var(--ma-text-muted);
@@ -65,7 +65,7 @@
     }
 
     .ma-order-details-header__total-value {
-        margin: calc(var(--ma-base) * 0.25) 0 0 0;
+        margin-top: calc(var(--ma-base) * 0.25);
         font-size: var(--ma-font-3xl);
         line-height: var(--ma-line-3xl);
         font-weight: 400;
@@ -314,7 +314,7 @@
     }
 
     .ma-order-status-card__est-date {
-        margin: calc(var(--ma-base) * 0.125) 0 0 0;
+        margin-top: calc(var(--ma-base) * 0.125);
         font-size: var(--ma-font-xl);
         line-height: var(--ma-line-2xl);
         color: var(--ma-text-primary);
@@ -378,8 +378,7 @@
         border-radius: 50%;
         background: var(--ma-border);
         flex-shrink: 0;
-        margin-top: 0;
-        margin-bottom: 0;
+        margin: 0;
     }
 
     .ma-order-status-card__step-labels {
@@ -516,7 +515,7 @@
     }
 
     .ma-order-details-items-summary__items-title {
-        margin: 0 0 calc(var(--ma-base) * 1.5) 0;
+        margin-bottom: calc(var(--ma-base) * 1.5);
         font-size: var(--ma-font-md);
         line-height: var(--ma-line-md);
         color: var(--ma-text-primary);
@@ -603,7 +602,7 @@
     }
 
     .ma-order-details-items-summary__item-price {
-        margin: calc(var(--ma-base) * 0.75) 0 0 0;
+        margin-top: calc(var(--ma-base) * 0.75);
         font-size: var(--ma-font-md);
         line-height: var(--ma-line-md);
         color: var(--ma-text-primary);
@@ -644,7 +643,7 @@
     }
 
     .ma-order-details-items-summary__shipping-title {
-        margin: 0 0 calc(var(--ma-base) * 1) 0;
+        margin-bottom: calc(var(--ma-base) * 1);
         font-size: var(--ma-font-md);
         line-height: var(--ma-line-md);
         color: var(--ma-text-primary);
@@ -677,7 +676,7 @@
     }
 
     .ma-order-details-items-summary__shipping-label {
-        margin: 0 0 calc(var(--ma-base) * 1) 0;
+        margin-bottom: calc(var(--ma-base) * 1);
         font-size: var(--ma-font-md);
         line-height: var(--ma-line-md);
         color: var(--ma-text-muted);
@@ -722,7 +721,7 @@
     }
 
     .ma-order-details-items-summary__shipping-address {
-        margin: calc(var(--ma-base) * 0.25) 0 0 0;
+        margin-top: calc(var(--ma-base) * 0.25);
         font-size: var(--ma-font-lg);
         line-height: var(--ma-line-md);
         color: var(--ma-text-muted-dark);
@@ -839,7 +838,7 @@
     }
 
     .ma-order-details-items-summary__payment-label {
-        margin: 0 0 calc(var(--ma-base) * 1.2) 0;
+        margin-bottom: calc(var(--ma-base) * 1.2);
         font-size: var(--ma-font-md);
         line-height: var(--ma-line-md);
         font-weight: 400;

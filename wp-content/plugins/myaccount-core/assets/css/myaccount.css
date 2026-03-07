@@ -40,14 +40,18 @@
   --ma-line-3_2xl: calc(var(--ma-base) * 3.2);
   /* Shared color tokens for My Account endpoints */
   --ma-text-primary: #0a0a0a;
+  --ma-text-charcoal: #4d4d4d;
+  --ma-text-strong: #111827;
   --ma-text-muted: #99a1af;
   --ma-text-muted-dark: #6a7282;
   --ma-text-inverse: #ffffff;
   --ma-text-inverse-soft: rgba(255, 255, 255, 0.8);
   --ma-border: #e5e7eb;
+  --ma-border-focus: #9ca3af;
   --ma-border-divider: rgba(0, 0, 0, 0.1);
   --ma-surface: #ffffff;
   --ma-surface-alt: #f9fafb;
+  --ma-surface-soft: #f8fafc;
   --ma-surface-overlay: rgba(0, 0, 0, 0.5);
   --ma-accent-bg: #eff6ff;
   --ma-accent-border: #bedbff;
@@ -119,16 +123,14 @@
 .woocommerce-account .ma-page-heading,
     .woocommerce-account .ma-orders,
     .woocommerce-account .ma-view-order {
-  padding-left: var(--ma-space-md);
-  padding-right: var(--ma-space-md);
+  padding-inline: var(--ma-space-md);
 }
 
 @media (min-width: 768px) {
   .woocommerce-account .ma-page-heading,
         .woocommerce-account .ma-orders,
         .woocommerce-account .ma-view-order {
-    padding-left: var(--ma-space-lg);
-    padding-right: var(--ma-space-lg);
+    padding-inline: var(--ma-space-lg);
   }
 }
 
@@ -142,9 +144,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  --tw-text-opacity: 1;
-  color: rgb(77 77 77 / var(--tw-text-opacity, 1));
   text-decoration-line: none;
+  color: var(--ma-text-charcoal);
 }
 
 .woocommerce-account .ma-page-heading__back-icon {
@@ -598,7 +599,7 @@
 }
 
 .woocommerce-account .ma-orders__item-meta-label {
-  margin: 0 0 2px 0;
+  margin-bottom: 2px;
   font-size: var(--ma-font-md);
   line-height: var(--ma-line-md);
   color: var(--ma-text-muted);
@@ -730,7 +731,7 @@
 /* Figma 36:1502 – label above order number (min calc(var(--ma-base) * 1.2)) */
 
 .woocommerce-account .ma-order-details-header__label {
-  margin: 0 0 calc(var(--ma-base) * 1.5) 0;
+  margin-bottom: calc(var(--ma-base) * 1.5);
   font-size: var(--ma-font-md);
   line-height: var(--ma-line-md);
   font-weight: 400;
@@ -749,7 +750,7 @@
 }
 
 .woocommerce-account .ma-order-details-header__date {
-  margin: calc(var(--ma-base) * 0.5) 0 0 0;
+  margin-top: calc(var(--ma-base) * 0.5);
   font-size: var(--ma-font-md);
   line-height: var(--ma-line-md);
   color: var(--ma-text-muted);
@@ -768,7 +769,7 @@
 }
 
 .woocommerce-account .ma-order-details-header__total-value {
-  margin: calc(var(--ma-base) * 0.25) 0 0 0;
+  margin-top: calc(var(--ma-base) * 0.25);
   font-size: var(--ma-font-3xl);
   line-height: var(--ma-line-3xl);
   font-weight: 400;
@@ -1020,7 +1021,7 @@
 }
 
 .woocommerce-account .ma-order-status-card__est-date {
-  margin: calc(var(--ma-base) * 0.125) 0 0 0;
+  margin-top: calc(var(--ma-base) * 0.125);
   font-size: var(--ma-font-xl);
   line-height: var(--ma-line-2xl);
   color: var(--ma-text-primary);
@@ -1085,8 +1086,7 @@
   border-radius: 50%;
   background: var(--ma-border);
   flex-shrink: 0;
-  margin-top: 0;
-  margin-bottom: 0;
+  margin: 0;
 }
 
 .woocommerce-account .ma-order-status-card__step-labels {
@@ -1228,7 +1228,7 @@
 }
 
 .woocommerce-account .ma-order-details-items-summary__items-title {
-  margin: 0 0 calc(var(--ma-base) * 1.5) 0;
+  margin-bottom: calc(var(--ma-base) * 1.5);
   font-size: var(--ma-font-md);
   line-height: var(--ma-line-md);
   color: var(--ma-text-primary);
@@ -1318,7 +1318,7 @@
 }
 
 .woocommerce-account .ma-order-details-items-summary__item-price {
-  margin: calc(var(--ma-base) * 0.75) 0 0 0;
+  margin-top: calc(var(--ma-base) * 0.75);
   font-size: var(--ma-font-md);
   line-height: var(--ma-line-md);
   color: var(--ma-text-primary);
@@ -1360,7 +1360,7 @@
 }
 
 .woocommerce-account .ma-order-details-items-summary__shipping-title {
-  margin: 0 0 calc(var(--ma-base) * 1) 0;
+  margin-bottom: calc(var(--ma-base) * 1);
   font-size: var(--ma-font-md);
   line-height: var(--ma-line-md);
   color: var(--ma-text-primary);
@@ -1393,7 +1393,7 @@
 }
 
 .woocommerce-account .ma-order-details-items-summary__shipping-label {
-  margin: 0 0 calc(var(--ma-base) * 1) 0;
+  margin-bottom: calc(var(--ma-base) * 1);
   font-size: var(--ma-font-md);
   line-height: var(--ma-line-md);
   color: var(--ma-text-muted);
@@ -1438,7 +1438,7 @@
 }
 
 .woocommerce-account .ma-order-details-items-summary__shipping-address {
-  margin: calc(var(--ma-base) * 0.25) 0 0 0;
+  margin-top: calc(var(--ma-base) * 0.25);
   font-size: var(--ma-font-lg);
   line-height: var(--ma-line-md);
   color: var(--ma-text-muted-dark);
@@ -1557,7 +1557,7 @@
 }
 
 .woocommerce-account .ma-order-details-items-summary__payment-label {
-  margin: 0 0 calc(var(--ma-base) * 1.2) 0;
+  margin-bottom: calc(var(--ma-base) * 1.2);
   font-size: var(--ma-font-md);
   line-height: var(--ma-line-md);
   font-weight: 400;
@@ -1696,7 +1696,7 @@
   text-transform: uppercase;
   letter-spacing: 0.025em;
   --tw-text-opacity: 1;
-  color: rgb(17 24 39 / var(--tw-text-opacity, 1));
+  color: rgb(10 10 10 / var(--tw-text-opacity, 1));
   color: var(--ma-text-primary);
 }
 
@@ -1713,7 +1713,7 @@
 .woocommerce-account .ma-view-order__updates-meta {
   font-size: 14px;
   --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
+  color: rgb(106 114 130 / var(--tw-text-opacity, 1));
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1739,7 +1739,7 @@
   align-items: center;
   text-transform: uppercase;
   --tw-text-opacity: 1;
-  color: rgb(17 24 39 / var(--tw-text-opacity, 1));
+  color: rgb(10 10 10 / var(--tw-text-opacity, 1));
   gap: 12px;
   font-size: var(--ma-font-md);
   line-height: var(--ma-line-3xl);
@@ -1778,16 +1778,11 @@
 
 .woocommerce-account .payment-methods-page .payment-methods-item {
   border-radius: 0px;
-  border-width: 1px;
-  --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
-  padding-left: 25px;
-  padding-right: 25px;
-  padding-top: 25px;
-  padding-bottom: 23px;
   min-height: 98px;
+  border: 1px solid var(--ma-border);
+  padding: 25px 25px 23px;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -1809,10 +1804,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-width: 1px;
   font-size: 12px;
   font-weight: 700;
-  border-color: var(--ma-border);
+  border: 1px solid var(--ma-border);
   color: var(--ma-text-muted-dark);
   width: 48px;
   height: 32px;
@@ -1830,7 +1824,7 @@
   font-size: 16px;
   font-weight: 500;
   --tw-text-opacity: 1;
-  color: rgb(17 24 39 / var(--tw-text-opacity, 1));
+  color: rgb(10 10 10 / var(--tw-text-opacity, 1));
   line-height: var(--ma-line-2xl);
   letter-spacing: -0.0195em;
   color: var(--ma-text-primary);
@@ -1840,7 +1834,7 @@
   font-size: 14px;
   font-weight: 400;
   --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
+  color: rgb(106 114 130 / var(--tw-text-opacity, 1));
   line-height: var(--ma-line-xl);
   letter-spacing: -0.01074em;
 }
@@ -1850,7 +1844,7 @@
   align-items: center;
   font-size: 12px;
   --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
+  color: rgb(106 114 130 / var(--tw-text-opacity, 1));
   text-decoration-line: underline;
   line-height: var(--ma-line-md);
 }
@@ -1871,7 +1865,7 @@
   border-color: transparent;
   background-color: transparent;
   --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
+  color: rgb(106 114 130 / var(--tw-text-opacity, 1));
   width: 36px;
   height: 36px;
   transition: border-color 180ms ease, background-color 180ms ease;
@@ -1879,7 +1873,7 @@
 
 .woocommerce-account .payment-methods-page .payment-methods-item__actions a:hover {
   --tw-border-opacity: 1;
-  border-color: rgb(156 163 175 / var(--tw-border-opacity, 1));
+  border-color: rgb(153 161 175 / var(--tw-border-opacity, 1));
   background-color: var(--ma-surface-alt);
 }
 
@@ -1986,11 +1980,21 @@
   --ma-form-line-height-title: var(--ma-line-3xl);
   --ma-form-font-size-checkbox-label: var(--ma-font-xl);
   --ma-form-color-text: var(--ma-text-primary);
-  --ma-form-color-muted: var(--ma-text-muted);
+  --ma-form-color-muted: var(--ma-text-muted-dark);
   --ma-form-color-input: var(--ma-text-primary);
   --ma-form-color-error: var(--ma-danger-text);
   --ma-form-color-border: var(--ma-border);
   --ma-form-color-surface: var(--ma-surface);
+  --ma-form-color-placeholder: var(--ma-text-muted);
+  --ma-form-color-focus-border: var(--ma-text-muted);
+  --ma-form-color-focus-ring: var(--ma-border-divider);
+  --ma-form-color-button-bg: var(--ma-btn-primary-bg);
+  --ma-form-color-button-border: var(--ma-btn-primary-border);
+  --ma-form-color-button-text: var(--ma-btn-primary-text);
+  --ma-form-color-button-light-bg: var(--ma-surface);
+  --ma-form-color-button-light-border: var(--ma-border);
+  --ma-form-color-button-light-text: var(--ma-text-primary);
+  --ma-form-color-outline: var(--ma-text-muted);
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -2010,18 +2014,17 @@
   transition-duration: 150ms;
 }
 
-.woocommerce-account .ma-form .ma-form__input:-webkit-autofill, .woocommerce-account .ma-form select:-webkit-autofill, .woocommerce-account .ma-form textarea:-webkit-autofill {
-  --tw-shadow: inset 0 0 0px 1000px #fff;
-  --tw-shadow-colored: inset 0 0 0px 1000px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-}
-
-.woocommerce-account .ma-form .ma-form__input:autofill,
-        .woocommerce-account .ma-form select:autofill,
-        .woocommerce-account .ma-form textarea:autofill {
-  --tw-shadow: inset 0 0 0px 1000px #fff;
-  --tw-shadow-colored: inset 0 0 0px 1000px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+.woocommerce-account .ma-form .ma-form__input:-webkit-autofill,
+        .woocommerce-account .ma-form .ma-form__input:-webkit-autofill:hover,
+        .woocommerce-account .ma-form .ma-form__input:-webkit-autofill:focus,
+        .woocommerce-account .ma-form select:-webkit-autofill,
+        .woocommerce-account .ma-form select:-webkit-autofill:hover,
+        .woocommerce-account .ma-form select:-webkit-autofill:focus,
+        .woocommerce-account .ma-form textarea:-webkit-autofill,
+        .woocommerce-account .ma-form textarea:-webkit-autofill:hover,
+        .woocommerce-account .ma-form textarea:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--ma-form-color-input);
+  box-shadow: inset 0 0 0 1000px var(--ma-form-color-surface);
 }
 
 .woocommerce-account .ma-form .ma-form__input,
@@ -2054,8 +2057,7 @@
         .woocommerce-account .ma-form select,
         .woocommerce-account .ma-form textarea {
   height: 50px;
-  border-width: 1px;
-  border-color: var(--ma-form-color-border);
+  border: 1px solid var(--ma-form-color-border);
   padding-inline: var(--ma-form-space-field-padding-x);
   color: var(--ma-form-color-input);
   background-color: var(--ma-form-color-surface);
@@ -2094,7 +2096,7 @@
   place-content: center;
   border-width: 1px;
   --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
+  border-color: rgb(229 231 235 / var(--tw-border-opacity, 1));
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
@@ -2139,7 +2141,7 @@
   outline-style: solid;
   outline-width: 2px;
   outline-offset: 2px;
-  outline-color: #9ca3af;
+  outline-color: #99a1af;
 }
 
 .woocommerce-account .ma-form label.jk-checkbox {
@@ -2179,7 +2181,7 @@
   border-radius: 0px;
   border-width: 1px;
   --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
+  border-color: rgb(229 231 235 / var(--tw-border-opacity, 1));
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
   position: relative;
@@ -2211,7 +2213,7 @@
   outline-style: solid;
   outline-width: 2px;
   outline-offset: 2px;
-  outline-color: #9ca3af;
+  outline-color: #99a1af;
 }
 
 .woocommerce-account .ma-form .jk-checkbox-wrapper .jk-checkbox-label {
@@ -2386,8 +2388,7 @@
 
 .woocommerce-account .ma-form__input {
   height: 50px;
-  border-width: 1px;
-  border-color: var(--ma-form-color-border);
+  border: 1px solid var(--ma-form-color-border);
   background-color: var(--ma-form-color-surface);
   color: var(--ma-form-color-text);
   padding-inline: var(--ma-form-space-field-padding-x);
@@ -2423,8 +2424,7 @@
   min-height: 94px;
   align-items: center;
   justify-content: space-between;
-  border-width: 1px;
-  border-color: var(--ma-form-color-border);
+  border: 1px solid var(--ma-form-color-border);
   padding-inline: var(--ma-form-space-setting-card-padding-x);
   padding-block: var(--ma-form-space-setting-card-padding-y);
   gap: var(--ma-form-space-setting-card-gap);
@@ -2579,7 +2579,6 @@
   align-items: center;
   gap: var(--ma-space-sm);
   padding: var(--ma-notice-padding-y) var(--ma-notice-padding-right) var(--ma-notice-padding-y) var(--ma-notice-padding-x);
-  border-width: var(--ma-notice-border-width);
   border-radius: var(--ma-notice-border-radius);
   font-size: var(--ma-notice-font-size);
   line-height: var(--ma-notice-line-height);
@@ -2602,9 +2601,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--ma-space-sm);
-  padding: var(--ma-notice-padding-y) var(--ma-notice-padding-right) var(--ma-notice-padding-y) var(--ma-notice-padding-x);
-  padding-left: calc(var(--ma-notice-padding-x) + var(--ma-notice-icon-size) + var(--ma-space-sm));
-  border-width: var(--ma-notice-border-width);
+  padding: var(--ma-notice-padding-y) var(--ma-notice-padding-right) var(--ma-notice-padding-y) calc(var(--ma-notice-padding-x) + var(--ma-notice-icon-size) + var(--ma-space-sm));
   border-radius: var(--ma-notice-border-radius);
   font-size: var(--ma-notice-font-size);
   line-height: var(--ma-notice-line-height);
@@ -2619,26 +2616,26 @@
 
 .woocommerce-account .woocommerce-message {
   background-color: var(--ma-success-bg);
-  border-color: var(--ma-success-border);
+  border: var(--ma-notice-border-width) solid var(--ma-success-border);
   color: var(--ma-success-text);
 }
 
 .woocommerce-account .woocommerce-error {
   background-color: var(--ma-danger-bg);
-  border-color: var(--ma-danger-border);
+  border: var(--ma-notice-border-width) solid var(--ma-danger-border);
   color: var(--ma-danger-text);
 }
 
 .woocommerce-account .woocommerce-info {
   background-color: var(--ma-info-bg);
-  border-color: var(--ma-info-border);
+  border: var(--ma-notice-border-width) solid var(--ma-info-border);
   color: var(--ma-info-text);
 }
 
 .woocommerce-account .woocommerce-warning,
 .woocommerce-account .ma-notice--warning {
   background-color: var(--ma-warning-bg);
-  border-color: var(--ma-warning-border);
+  border: var(--ma-notice-border-width) solid var(--ma-warning-border);
   color: var(--ma-warning-text);
 }
 
@@ -2859,12 +2856,9 @@ body.myaccount-template-fashion.woocommerce-account.woocommerce-edit-account .ma
 .woocommerce-account .ma-address-book__toast {
   position: fixed;
   z-index: 1000;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
   top: 56px;
   right: 20px;
+  padding: 0.75rem 1rem;
 }
 
 .woocommerce-account .ma-address-book__list {
@@ -2882,14 +2876,9 @@ body.myaccount-template-fashion.woocommerce-account.woocommerce-edit-account .ma
 .woocommerce-account .ma-address-book__card {
   display: flex;
   flex-direction: column;
-  border-width: 1px;
-  --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
   background-color: var(--ma-surface);
-  padding-left: 2rem;
-  padding-right: 2rem;
-  padding-top: 2rem;
-  padding-bottom: 1.5rem;
+  border: 1px solid var(--ma-border);
+  padding: var(--ma-space-xl) var(--ma-space-xl) var(--ma-space-lg) var(--ma-space-xl);
 }
 
 .woocommerce-account .ma-address-book__card-head {
@@ -2909,16 +2898,15 @@ body.myaccount-template-fashion.woocommerce-account.woocommerce-edit-account .ma
   font-weight: 500;
   line-height: 1.75rem;
   --tw-text-opacity: 1;
-  color: rgb(17 24 39 / var(--tw-text-opacity, 1));
+  color: rgb(10 10 10 / var(--tw-text-opacity, 1));
 }
 
 .woocommerce-account .ma-address-book__phone {
-  margin-top: 0.5rem;
-  margin-bottom: 0px;
   font-size: 16px;
   line-height: 1.5rem;
   --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
+  color: rgb(106 114 130 / var(--tw-text-opacity, 1));
+  margin-block: 0.5rem 0;
 }
 
 .woocommerce-account .ma-address-book__default-pill {
@@ -2943,14 +2931,14 @@ body.myaccount-template-fashion.woocommerce-account.woocommerce-edit-account .ma
 }
 
 .woocommerce-account .ma-address-book__content {
-  margin-top: 1.5rem;
   display: flex;
   flex: 1 1 0%;
   flex-direction: column;
   font-size: 16px;
   line-height: 1.5rem;
   --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
+  color: rgb(106 114 130 / var(--tw-text-opacity, 1));
+  margin-top: var(--ma-space-lg);
   gap: calc(var(--ma-base) * 0.125);
 }
 
@@ -2964,7 +2952,7 @@ body.myaccount-template-fashion.woocommerce-account.woocommerce-edit-account .ma
   align-items: center;
   justify-content: flex-start;
   gap: 0.75rem;
-  padding-top: 1rem;
+  padding-top: var(--ma-space-md);
 }
 
 .woocommerce-account .ma-address-book__action-button {
@@ -2974,7 +2962,7 @@ body.myaccount-template-fashion.woocommerce-account.woocommerce-edit-account .ma
 
 .woocommerce-account .ma-address-book__empty {
   background-color: var(--ma-surface);
-  padding: 1rem;
+  padding: var(--ma-space-md);
 }
 
 .woocommerce-account .ma-address-book__empty-title {
@@ -2992,11 +2980,11 @@ body.myaccount-template-fashion.woocommerce-account.woocommerce-edit-account .ma
 }
 
 .woocommerce-account .ma-address-book__limit-message {
-  margin-bottom: 0.5rem;
   text-align: center;
   font-size: 14px;
   --tw-text-opacity: 1;
   color: rgb(220 38 38 / var(--tw-text-opacity, 1));
+  margin-bottom: 0.5rem;
 }
 
 .woocommerce-account .ma-address-book__add-button {
@@ -3014,26 +3002,13 @@ body.myaccount-template-fashion.woocommerce-account.woocommerce-edit-account .ma
   width: 1rem;
 }
 
-/* Fashion template tokens + visual overrides */
+/* Fashion template tokens + visual overrides.
+ * Form colors inherit from form-base.css (base variables).
+ * Override only surface tokens for fashion template. */
 
 body.myaccount-template-fashion.woocommerce-account {
-  --ma-fashion-surface: #f6f8fc;
-  --ma-form-color-text: #111827;
-  --ma-form-color-muted: #6b7280;
-  --ma-form-color-input: #111827;
-  --ma-form-color-border: #d1d5db;
-  --ma-form-color-surface: #f8fafc;
-  --ma-form-color-placeholder: #9ca3af;
-  --ma-form-color-focus-border: #9ca3af;
-  --ma-form-color-focus-ring: rgb(17 24 39 / 0.08);
-  --ma-form-color-error: #dc2626;
-  --ma-form-color-button-bg: #111827;
-  --ma-form-color-button-border: #111827;
-  --ma-form-color-button-text: #ffffff;
-  --ma-form-color-button-light-bg: #ffffff;
-  --ma-form-color-button-light-border: #d1d5db;
-  --ma-form-color-button-light-text: #111827;
-  --ma-form-color-outline: #9ca3af;
+  --ma-fashion-surface: var(--ma-surface-alt);
+  --ma-form-color-surface: var(--ma-surface-alt);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-form label {
@@ -3044,7 +3019,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-form label {
 body.myaccount-template-fashion.woocommerce-account .ma-form .ma-form__input,
 body.myaccount-template-fashion.woocommerce-account .ma-form select,
 body.myaccount-template-fashion.woocommerce-account .ma-form textarea {
-  border-color: var(--ma-form-color-border);
+  border: 1px solid var(--ma-form-color-border);
   border-radius: 0;
   background-color: var(--ma-form-color-surface);
   color: var(--ma-form-color-input);
@@ -3062,7 +3037,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-form textarea::placehold
 body.myaccount-template-fashion.woocommerce-account .ma-form .ma-form__input:focus,
 body.myaccount-template-fashion.woocommerce-account .ma-form select:focus,
 body.myaccount-template-fashion.woocommerce-account .ma-form textarea:focus {
-  border-color: var(--ma-form-color-focus-border);
+  border: 1px solid var(--ma-form-color-focus-border);
   --tw-ring-color: var(--ma-form-color-focus-ring);
 }
 
@@ -3070,7 +3045,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-form .error .ma-form__in
 body.myaccount-template-fashion.woocommerce-account .ma-form .error select,
 body.myaccount-template-fashion.woocommerce-account .ma-form .error textarea,
 body.myaccount-template-fashion.woocommerce-account .ma-form .field-invalid {
-  border-color: var(--ma-form-color-error);
+  border: 1px solid var(--ma-form-color-error);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-form .error label {
@@ -3087,7 +3062,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-form-actions > button[ty
 body.myaccount-template-fashion.woocommerce-account .ma-form-actions > input[type='submit'],
 body.myaccount-template-fashion.woocommerce-account .ma-form-actions > a.button {
   border-radius: 0;
-  border-color: var(--ma-form-color-button-border);
+  border: 1px solid var(--ma-form-color-button-border);
   background-color: var(--ma-form-color-button-bg);
   color: var(--ma-form-color-button-text);
 }
@@ -3108,7 +3083,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-form-actions > button[ty
 body.myaccount-template-fashion.woocommerce-account .ma-form-actions > button[type='submit'].light,
 body.myaccount-template-fashion.woocommerce-account .ma-form-actions > input[type='submit'].light,
 body.myaccount-template-fashion.woocommerce-account .ma-form-actions > a.button.light {
-  border-color: var(--ma-form-color-button-light-border);
+  border: 1px solid var(--ma-form-color-button-light-border);
   background-color: var(--ma-form-color-button-light-bg);
   color: var(--ma-form-color-button-light-text);
 }
@@ -4156,7 +4131,7 @@ input:where([type='file']):focus {
   font-weight: 600;
   line-height: 1;
   --tw-text-opacity: 1;
-  color: rgb(17 24 39 / var(--tw-text-opacity, 1));
+  color: rgb(10 10 10 / var(--tw-text-opacity, 1));
 }
 
 @media (min-width: 992px) {
@@ -4172,7 +4147,7 @@ input:where([type='file']):focus {
   font-weight: 600;
   line-height: 1.25;
   --tw-text-opacity: 1;
-  color: rgb(17 24 39 / var(--tw-text-opacity, 1));
+  color: rgb(10 10 10 / var(--tw-text-opacity, 1));
 }
 
 .loading-icon {

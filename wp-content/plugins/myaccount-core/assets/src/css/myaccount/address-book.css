@@ -8,9 +8,10 @@
     }
 
     .ma-address-book__toast {
-        @apply fixed px-4 py-3 z-[1000];
+        @apply fixed z-[1000];
         top: 56px;
         right: 20px;
+        padding: 0.75rem 1rem;
     }
 
     .ma-address-book__list {
@@ -18,7 +19,9 @@
     }
 
     .ma-address-book__card {
-        @apply border border-form-border bg-[var(--ma-surface)] px-8 pt-8 pb-6 flex flex-col;
+        @apply bg-[var(--ma-surface)] flex flex-col;
+        border: 1px solid var(--ma-border);
+        padding: var(--ma-space-xl) var(--ma-space-xl) var(--ma-space-lg) var(--ma-space-xl);
     }
 
     .ma-address-book__card-head {
@@ -34,7 +37,8 @@
     }
 
     .ma-address-book__phone {
-        @apply mt-2 mb-0 text-base leading-6 text-form-muted;
+        @apply text-base leading-6 text-form-muted;
+        margin-block: 0.5rem 0;
     }
 
     .ma-address-book__default-pill {
@@ -48,7 +52,8 @@
     }
 
     .ma-address-book__content {
-        @apply mt-6 flex-1 text-base leading-6 text-form-muted flex flex-col;
+        @apply flex-1 text-base leading-6 text-form-muted flex flex-col;
+        margin-top: var(--ma-space-lg);
         gap: calc(var(--ma-base) * 0.125);
         p {
             @apply m-0;
@@ -56,7 +61,8 @@
     }
 
     .ma-address-book__actions {
-        @apply pt-4 flex items-center justify-start gap-3 flex-wrap;
+        @apply flex items-center justify-start gap-3 flex-wrap;
+        padding-top: var(--ma-space-md);
     }
 
     .ma-address-book__action-button {
@@ -65,7 +71,8 @@
     }
 
     .ma-address-book__empty {
-        @apply p-4 bg-[var(--ma-surface)];
+        @apply bg-[var(--ma-surface)];
+        padding: var(--ma-space-md);
     }
 
     .ma-address-book__empty-title {
@@ -78,7 +85,8 @@
     }
 
     .ma-address-book__limit-message {
-        @apply mb-2 text-sm text-center text-red-600;
+        @apply text-sm text-center text-red-600;
+        margin-bottom: 0.5rem;
     }
 
     .ma-address-book__add-button {

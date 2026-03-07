@@ -1,22 +1,9 @@
-/* Fashion template tokens + visual overrides */
+/* Fashion template tokens + visual overrides.
+ * Form colors inherit from form-base.css (base variables).
+ * Override only surface tokens for fashion template. */
 body.myaccount-template-fashion.woocommerce-account {
-    --ma-fashion-surface: #f6f8fc;
-    --ma-form-color-text: #111827;
-    --ma-form-color-muted: #6b7280;
-    --ma-form-color-input: #111827;
-    --ma-form-color-border: #d1d5db;
-    --ma-form-color-surface: #f8fafc;
-    --ma-form-color-placeholder: #9ca3af;
-    --ma-form-color-focus-border: #9ca3af;
-    --ma-form-color-focus-ring: rgb(17 24 39 / 0.08);
-    --ma-form-color-error: #dc2626;
-    --ma-form-color-button-bg: #111827;
-    --ma-form-color-button-border: #111827;
-    --ma-form-color-button-text: #ffffff;
-    --ma-form-color-button-light-bg: #ffffff;
-    --ma-form-color-button-light-border: #d1d5db;
-    --ma-form-color-button-light-text: #111827;
-    --ma-form-color-outline: #9ca3af;
+    --ma-fashion-surface: var(--ma-surface-alt);
+    --ma-form-color-surface: var(--ma-surface-alt);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-form label {
@@ -27,7 +14,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-form label {
 body.myaccount-template-fashion.woocommerce-account .ma-form .ma-form__input,
 body.myaccount-template-fashion.woocommerce-account .ma-form select,
 body.myaccount-template-fashion.woocommerce-account .ma-form textarea {
-    border-color: var(--ma-form-color-border);
+    border: 1px solid var(--ma-form-color-border);
     border-radius: 0;
     background-color: var(--ma-form-color-surface);
     color: var(--ma-form-color-input);
@@ -41,7 +28,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-form textarea::placehold
 body.myaccount-template-fashion.woocommerce-account .ma-form .ma-form__input:focus,
 body.myaccount-template-fashion.woocommerce-account .ma-form select:focus,
 body.myaccount-template-fashion.woocommerce-account .ma-form textarea:focus {
-    border-color: var(--ma-form-color-focus-border);
+    border: 1px solid var(--ma-form-color-focus-border);
     --tw-ring-color: var(--ma-form-color-focus-ring);
 }
 
@@ -49,7 +36,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-form .error .ma-form__in
 body.myaccount-template-fashion.woocommerce-account .ma-form .error select,
 body.myaccount-template-fashion.woocommerce-account .ma-form .error textarea,
 body.myaccount-template-fashion.woocommerce-account .ma-form .field-invalid {
-    border-color: var(--ma-form-color-error);
+    border: 1px solid var(--ma-form-color-error);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-form .error label {
@@ -66,7 +53,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-form-actions > button[ty
 body.myaccount-template-fashion.woocommerce-account .ma-form-actions > input[type='submit'],
 body.myaccount-template-fashion.woocommerce-account .ma-form-actions > a.button {
     border-radius: 0;
-    border-color: var(--ma-form-color-button-border);
+    border: 1px solid var(--ma-form-color-button-border);
     background-color: var(--ma-form-color-button-bg);
     color: var(--ma-form-color-button-text);
 }
@@ -87,7 +74,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-form-actions > button[ty
 body.myaccount-template-fashion.woocommerce-account .ma-form-actions > button[type='submit'].light,
 body.myaccount-template-fashion.woocommerce-account .ma-form-actions > input[type='submit'].light,
 body.myaccount-template-fashion.woocommerce-account .ma-form-actions > a.button.light {
-    border-color: var(--ma-form-color-button-light-border);
+    border: 1px solid var(--ma-form-color-button-light-border);
     background-color: var(--ma-form-color-button-light-bg);
     color: var(--ma-form-color-button-light-text);
 }

@@ -182,7 +182,7 @@
     }
 
     .ma-orders__item-meta-label {
-        margin: 0 0 2px 0;
+        margin-bottom: 2px;
         font-size: var(--ma-font-md);
         line-height: var(--ma-line-md);
         color: var(--ma-text-muted);
