@@ -2,17 +2,17 @@
 
 
 .woocommerce-account {
-    --ma-notice-space-gap: 1rem;
-    --ma-notice-padding-y: 1rem;
-    --ma-notice-padding-x: 1rem;
-    --ma-notice-padding-right: 2.5rem;
+    --ma-notice-space-gap: calc(var(--ma-base) * 1);
+    --ma-notice-padding-y: calc(var(--ma-base) * 1);
+    --ma-notice-padding-x: calc(var(--ma-base) * 1);
+    --ma-notice-padding-right: calc(var(--ma-base) * 2.5);
     --ma-notice-border-width: 1px;
     --ma-notice-border-radius: 0;
-    --ma-notice-font-size: 1.6rem;
-    --ma-notice-font-size-desktop: 1.6rem;
+    --ma-notice-font-size: var(--ma-font-xl);
+    --ma-notice-font-size-desktop: var(--ma-font-xl);
     --ma-notice-line-height: 1.5;
 
-    --ma-notice-icon-size: 2rem;
+    --ma-notice-icon-size: calc(var(--ma-base) * 2);
     --ma-notice-success-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'/%3E%3C/svg%3E");
     --ma-notice-error-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'/%3E%3C/svg%3E");
     --ma-notice-warning-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 9v3.75m0 3.75h.008v.008H12v-.008Zm8.24 3.72H3.76c-1.38 0-2.24-1.5-1.55-2.7L10.45 3.3c.69-1.2 2.41-1.2 3.1 0l8.24 14.28c.69 1.2-.17 2.7-1.55 2.7Z'/%3E%3C/svg%3E");
@@ -20,40 +20,40 @@
 
     .ma-form {
         --ma-form-space-label-bottom: 6px;
-        --ma-form-space-main-gap: 1.5rem;
-        --ma-form-space-section-gap: 2rem;
-        --ma-form-space-section-head-gap: 0.5rem;
-        --ma-form-space-fields-gap: 1.5rem;
-        --ma-form-space-field-gap: 0.5rem;
-        --ma-form-space-grid-gap: 1.5rem;
+        --ma-form-space-main-gap: calc(var(--ma-base) * 1.5);
+        --ma-form-space-section-gap: calc(var(--ma-base) * 2);
+        --ma-form-space-section-head-gap: calc(var(--ma-base) * 0.5);
+        --ma-form-space-fields-gap: calc(var(--ma-base) * 1.5);
+        --ma-form-space-field-gap: calc(var(--ma-base) * 0.5);
+        --ma-form-space-grid-gap: calc(var(--ma-base) * 1.5);
         --ma-form-space-bordered-top: 30px;
-        --ma-form-space-actions-top: 2rem;
-        --ma-form-space-setting-card-gap: 1rem;
+        --ma-form-space-actions-top: calc(var(--ma-base) * 2);
+        --ma-form-space-setting-card-gap: calc(var(--ma-base) * 1);
         --ma-form-space-setting-card-padding-x: 25px;
-        --ma-form-space-setting-card-padding-y: 1rem;
-        --ma-form-space-setting-meta-gap: 0.25rem;
-        --ma-form-space-status-pill-padding-x: 0.75rem;
-        --ma-form-space-status-pill-padding-y: 0.25rem;
-        --ma-form-space-button-gap: 0.5rem;
-        --ma-form-space-button-padding-x: 1rem;
-        --ma-form-space-field-padding-x: 1rem;
-        --ma-form-space-input-icon-padding-right: 2.5rem;
-        --ma-form-space-password-padding-right: 6rem;
-        --ma-form-space-password-toggle-right: 0.75rem;
-        --ma-form-space-password-toggle-gap: 0.25rem;
-        --ma-form-space-validate-icon-top: 0.75rem;
-        --ma-form-space-validate-icon-right: 0.25rem;
+        --ma-form-space-setting-card-padding-y: calc(var(--ma-base) * 1);
+        --ma-form-space-setting-meta-gap: calc(var(--ma-base) * 0.25);
+        --ma-form-space-status-pill-padding-x: calc(var(--ma-base) * 0.75);
+        --ma-form-space-status-pill-padding-y: calc(var(--ma-base) * 0.25);
+        --ma-form-space-button-gap: calc(var(--ma-base) * 0.5);
+        --ma-form-space-button-padding-x: calc(var(--ma-base) * 1);
+        --ma-form-space-field-padding-x: calc(var(--ma-base) * 1);
+        --ma-form-space-input-icon-padding-right: calc(var(--ma-base) * 2.5);
+        --ma-form-space-password-padding-right: calc(var(--ma-base) * 6);
+        --ma-form-space-password-toggle-right: calc(var(--ma-base) * 0.75);
+        --ma-form-space-password-toggle-gap: calc(var(--ma-base) * 0.25);
+        --ma-form-space-validate-icon-top: calc(var(--ma-base) * 0.75);
+        --ma-form-space-validate-icon-right: calc(var(--ma-base) * 0.25);
 
         --apl-radio-size: 20px;
         --apl-checkbox-size: 26px;
         --apl-checkbox-icon-size: 18px;
 
-        --ma-form-font-size-xs: 1.4rem;
-        --ma-form-font-size-sm: 1.4rem;
-        --ma-form-font-size-base: 1.6rem;
-        --ma-form-font-size-xl: 1.6rem;
-        --ma-form-line-height-title: 2.8rem;
-        --ma-form-font-size-checkbox-label: 1.6rem;
+        --ma-form-font-size-xs: var(--ma-font-lg);
+        --ma-form-font-size-sm: var(--ma-font-lg);
+        --ma-form-font-size-base: var(--ma-font-xl);
+        --ma-form-font-size-xl: var(--ma-font-xl);
+        --ma-form-line-height-title: calc(var(--ma-base) * 2.8);
+        --ma-form-font-size-checkbox-label: var(--ma-font-xl);
 
         --ma-form-color-text: var(--ma-text-primary);
         --ma-form-color-muted: var(--ma-text-muted);
@@ -278,8 +278,8 @@
 
 .ma-form-actions {
     @apply flex flex-col;
-    gap: var(--ma-form-space-fields-gap, 1.5rem);
-    padding-top: var(--ma-form-space-actions-top, 2rem);
+    gap: var(--ma-form-space-fields-gap, calc(var(--ma-base) * 1.5));
+    padding-top: var(--ma-form-space-actions-top, calc(var(--ma-base) * 2));
 
     > .button,
     > button[type='button'],
@@ -287,9 +287,9 @@
     > input[type='submit'],
     > a.button {
         @apply w-full h-form-field inline-flex items-center justify-center border font-medium;
-        gap: var(--ma-form-space-button-gap, 0.5rem);
-        padding-inline: var(--ma-form-space-button-padding-x, 1rem);
-        font-size: var(--ma-form-font-size-base, 1.6rem);
+        gap: var(--ma-form-space-button-gap, calc(var(--ma-base) * 0.5));
+        padding-inline: var(--ma-form-space-button-padding-x, calc(var(--ma-base) * 1));
+        font-size: var(--ma-form-font-size-base);
         transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
 
         &:hover {

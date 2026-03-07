@@ -17,8 +17,8 @@
         display: flex;
         flex-direction: column;
         align-items: stretch;
-        gap: 1.5rem;
-        padding: 2.5rem 0;
+        gap: calc(var(--ma-base) * 1.5);
+        padding: calc(var(--ma-base) * 2.5) 0;
     }
 
     .ma-order-details-header__left,
@@ -26,38 +26,38 @@
         flex-shrink: 0;
     }
 
-    /* Figma 36:1502 – label above order number (min 1.2rem) */
+    /* Figma 36:1502 – label above order number (min calc(var(--ma-base) * 1.2)) */
     .ma-order-details-header__label {
-        margin: 0 0 1.5rem 0;
-        font-size: 1.2rem;
-        line-height: 1.6rem;
+        margin: 0 0 calc(var(--ma-base) * 1.5) 0;
+        font-size: var(--ma-font-md);
+        line-height: calc(var(--ma-base) * 1.6);
         font-weight: 400;
         color: var(--ma-text-muted);
         text-transform: uppercase;
-        letter-spacing: 0.075rem;
+        letter-spacing: calc(var(--ma-base) * 0.075);
     }
 
     .ma-order-details-header__number {
         margin: 0;
-        font-size: 3rem;
-        line-height: 3rem;
+        font-size: var(--ma-font-3xl);
+        line-height: calc(var(--ma-base) * 3);
         font-weight: 400;
         color: var(--ma-text-primary);
         letter-spacing: -0.02em;
     }
 
     .ma-order-details-header__date {
-        margin: 0.5rem 0 0 0;
-        font-size: 1.2rem;
-        line-height: 1.6rem;
+        margin: calc(var(--ma-base) * 0.5) 0 0 0;
+        font-size: var(--ma-font-md);
+        line-height: calc(var(--ma-base) * 1.6);
         color: var(--ma-text-muted);
     }
 
     /* Mobile: align left */
     .ma-order-details-header__total-label {
         margin: 0;
-        font-size: 1.2rem;
-        line-height: 1.6rem;
+        font-size: var(--ma-font-md);
+        line-height: calc(var(--ma-base) * 1.6);
         color: var(--ma-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.12em;
@@ -65,9 +65,9 @@
     }
 
     .ma-order-details-header__total-value {
-        margin: 0.25rem 0 0 0;
-        font-size: 3rem;
-        line-height: 3rem;
+        margin: calc(var(--ma-base) * 0.25) 0 0 0;
+        font-size: var(--ma-font-3xl);
+        line-height: calc(var(--ma-base) * 3);
         font-weight: 400;
         color: var(--ma-text-primary);
         text-align: left;
@@ -76,9 +76,9 @@
     .ma-order-details-header__actions {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5rem;
+        gap: calc(var(--ma-base) * 0.5);
         justify-content: flex-start;
-        margin-top: 1rem;
+        margin-top: calc(var(--ma-base) * 1);
         align-items: center;
     }
 
@@ -88,7 +88,7 @@
             flex-direction: row;
             justify-content: space-between;
             align-items: flex-start;
-            min-height: 7.75rem;
+            min-height: calc(var(--ma-base) * 7.75);
         }
 
         .ma-order-details-header__total-label,
@@ -104,11 +104,11 @@
     .ma-order-details-header__btn {
         display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
-        min-height: 2.375rem;
-        padding: 0.5rem 1rem;
-        font-size: 1.2rem;
-        line-height: 1.6rem;
+        gap: calc(var(--ma-base) * 0.5);
+        min-height: calc(var(--ma-base) * 2.375);
+        padding: calc(var(--ma-base) * 0.5) calc(var(--ma-base) * 1);
+        font-size: var(--ma-font-md);
+        line-height: calc(var(--ma-base) * 1.6);
         text-transform: uppercase;
         letter-spacing: 0.06em;
         border: 1px solid var(--ma-border);
@@ -131,8 +131,8 @@
     }
 
     .ma-order-details-header__icon {
-        width: 0.875rem;
-        height: 0.875rem;
+        width: calc(var(--ma-base) * 0.875);
+        height: calc(var(--ma-base) * 0.875);
         flex-shrink: 0;
     }
 
@@ -143,27 +143,27 @@
     /* Section 1–4: small screen tweaks (max-width 480px) */
     @media (max-width: 480px) {
         .ma-order-details-header__number {
-            font-size: 2rem;
-            line-height: 2.4rem;
+            font-size: var(--ma-font-2xl);
+            line-height: calc(var(--ma-base) * 2.4);
         }
 
         .ma-order-details-header__total-value {
-            font-size: 2rem;
-            line-height: 2.4rem;
+            font-size: var(--ma-font-2xl);
+            line-height: calc(var(--ma-base) * 2.4);
         }
 
         .ma-order-details-header__actions {
             flex-direction: column;
             align-items: stretch;
-            gap: 0.75rem;
+            gap: calc(var(--ma-base) * 0.75);
         }
 
         .ma-order-status-card__header {
-            padding: 1rem 1.25rem;
+            padding: calc(var(--ma-base) * 1) calc(var(--ma-base) * 1.25);
         }
 
         .ma-order-status-card__timeline {
-            padding: 1rem 1.25rem;
+            padding: calc(var(--ma-base) * 1) calc(var(--ma-base) * 1.25);
         }
 
         .ma-order-status-card__title-row {
@@ -175,15 +175,15 @@
         }
 
         .ma-order-details-items-summary {
-            margin-top: 1.5rem;
+            margin-top: calc(var(--ma-base) * 1.5);
         }
 
         .ma-order-details-items-summary__grid {
-            gap: 1.5rem;
+            gap: calc(var(--ma-base) * 1.5);
         }
 
         .ma-order-details-items-summary__item-body {
-            padding: 1rem;
+            padding: calc(var(--ma-base) * 1);
         }
 
         .ma-order-details-items-summary__shipping-deliver,
@@ -192,38 +192,38 @@
         }
 
         .ma-order-details-items-summary__summary-header {
-            padding: 1.5rem 1.25rem 0.1rem;
+            padding: calc(var(--ma-base) * 1.5) calc(var(--ma-base) * 1.25) calc(var(--ma-base) * 0.1);
         }
 
         .ma-order-details-items-summary__summary-inner {
-            padding: 1.5rem 1.25rem;
+            padding: calc(var(--ma-base) * 1.5) calc(var(--ma-base) * 1.25);
         }
 
         .ma-order-details-items-summary__payment {
-            padding: 1.5rem 1.25rem;
+            padding: calc(var(--ma-base) * 1.5) calc(var(--ma-base) * 1.25);
         }
 
         .ma-order-details-items-summary__actions {
-            padding: 1.5rem 1.25rem;
+            padding: calc(var(--ma-base) * 1.5) calc(var(--ma-base) * 1.25);
         }
 
         .ma-view-order__updates {
-            padding-top: 1.5rem;
-            margin-top: 1.5rem;
+            padding-top: calc(var(--ma-base) * 1.5);
+            margin-top: calc(var(--ma-base) * 1.5);
         }
     }
 
     /* Section 2: Order status card + timeline */
     .ma-order-status-card {
         border: 1px solid var(--ma-border);
-        margin-top: 3.5rem;
+        margin-top: calc(var(--ma-base) * 3.5);
     }
 
     .ma-order-status-card__header {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
-        padding: 1.5rem 1.75rem;
+        gap: calc(var(--ma-base) * 1);
+        padding: calc(var(--ma-base) * 1.5) calc(var(--ma-base) * 1.75);
         border-bottom: 1px solid var(--ma-border);
         background: var(--ma-surface-alt);
     }
@@ -240,7 +240,7 @@
     .ma-order-status-card__header-left {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: calc(var(--ma-base) * 1);
     }
 
     .ma-order-status-card__icon-wrap {
@@ -266,14 +266,14 @@
     .ma-order-status-card__title-row {
         display: flex;
         align-items: center;
-        gap: 0.625rem;
-        margin-bottom: 0.25rem;
+        gap: calc(var(--ma-base) * 0.625);
+        margin-bottom: calc(var(--ma-base) * 0.25);
     }
 
     .ma-order-status-card__title {
         margin: 0;
-        font-size: 1.6rem;
-        line-height: 2.4rem;
+        font-size: var(--ma-font-xl);
+        line-height: calc(var(--ma-base) * 2.4);
         font-weight: 400;
         color: var(--ma-text-primary);
         text-transform: uppercase;
@@ -283,9 +283,9 @@
     .ma-order-status-card__pill {
         display: inline-flex;
         align-items: center;
-        padding: 0.25rem 0.5rem;
-        font-size: 1.2rem;
-        line-height: 1.6rem;
+        padding: calc(var(--ma-base) * 0.25) calc(var(--ma-base) * 0.5);
+        font-size: var(--ma-font-md);
+        line-height: calc(var(--ma-base) * 1.6);
         text-transform: uppercase;
         letter-spacing: 0.06em;
         background: var(--ma-accent-bg);
@@ -295,8 +295,8 @@
 
     .ma-order-status-card__description {
         margin: 0;
-        font-size: 1.4rem;
-        line-height: 2rem;
+        font-size: var(--ma-font-lg);
+        line-height: calc(var(--ma-base) * 2);
         color: var(--ma-text-muted-dark);
     }
 
@@ -306,22 +306,22 @@
 
     .ma-order-status-card__est-label {
         margin: 0;
-        font-size: 1.2rem;
-        line-height: 1.6rem;
+        font-size: var(--ma-font-md);
+        line-height: calc(var(--ma-base) * 1.6);
         color: var(--ma-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.12em;
     }
 
     .ma-order-status-card__est-date {
-        margin: 0.125rem 0 0 0;
-        font-size: 1.6rem;
-        line-height: 2.4rem;
+        margin: calc(var(--ma-base) * 0.125) 0 0 0;
+        font-size: var(--ma-font-xl);
+        line-height: calc(var(--ma-base) * 2.4);
         color: var(--ma-text-primary);
     }
 
     .ma-order-status-card__timeline {
-        padding: 1.5rem 1.75rem;
+        padding: calc(var(--ma-base) * 1.5) calc(var(--ma-base) * 1.75);
         background: transparent;
     }
 
@@ -365,8 +365,8 @@
         min-width: 0;
         position: relative;
         z-index: 1;
-        gap: 0.75rem;
-        padding-left: calc(50% + 0.75rem);
+        gap: calc(var(--ma-base) * 0.75);
+        padding-left: calc(50% + var(--ma-font-xs));
     }
 
     .ma-order-status-card__step-dot {
@@ -394,8 +394,8 @@
     }
 
     .ma-order-status-card__step-label {
-        font-size: 1.2rem;
-        line-height: 1.6rem;
+        font-size: var(--ma-font-md);
+        line-height: calc(var(--ma-base) * 1.6);
         text-transform: uppercase;
         letter-spacing: 0.12em;
         color: var(--ma-text-muted);
@@ -406,8 +406,8 @@
     }
 
     .ma-order-status-card__step-sublabel {
-        font-size: 1.2rem;
-        line-height: 1.6rem;
+        font-size: var(--ma-font-md);
+        line-height: calc(var(--ma-base) * 1.6);
         color: var(--ma-text-muted-dark);
     }
 
@@ -420,8 +420,8 @@
     }
 
     .ma-order-status-card__step-date {
-        font-size: 1.2rem;
-        line-height: 1.6rem;
+        font-size: var(--ma-font-md);
+        line-height: calc(var(--ma-base) * 1.6);
         color: var(--ma-text-muted);
     }
 
@@ -475,7 +475,7 @@
         }
 
         .ma-order-status-card__step-dot {
-            margin-bottom: 0.5rem;
+            margin-bottom: calc(var(--ma-base) * 0.5);
         }
 
         .ma-order-status-card__step-labels {
@@ -486,13 +486,13 @@
 
     /* Section 3: Items + shipping + summary */
     .ma-order-details-items-summary {
-        margin-top: 3.5rem;
+        margin-top: calc(var(--ma-base) * 3.5);
     }
 
     .ma-order-details-items-summary__grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 2rem;
+        gap: calc(var(--ma-base) * 2);
     }
 
     .ma-order-details-items-summary__main,
@@ -503,7 +503,7 @@
     @media (min-width: 1024px) {
         .ma-order-details-items-summary__grid {
             grid-template-columns: repeat(12, minmax(0, 1fr));
-            gap: 4rem;
+            gap: calc(var(--ma-base) * 4);
         }
 
         .ma-order-details-items-summary__main {
@@ -516,9 +516,9 @@
     }
 
     .ma-order-details-items-summary__items-title {
-        margin: 0 0 1.5rem 0;
-        font-size: 1.2rem;
-        line-height: 1.6rem;
+        margin: 0 0 calc(var(--ma-base) * 1.5) 0;
+        font-size: var(--ma-font-md);
+        line-height: calc(var(--ma-base) * 1.6);
         color: var(--ma-text-primary);
         text-transform: uppercase;
         letter-spacing: 0.12em;
@@ -528,7 +528,7 @@
     .ma-order-details-items-summary__items-list {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: calc(var(--ma-base) * 1);
         min-width: 0;
     }
 
@@ -568,16 +568,16 @@
     .ma-order-details-items-summary__item-body {
         flex: 1 1 0;
         min-width: 0;
-        padding: 1rem;
+        padding: calc(var(--ma-base) * 1);
         display: flex;
         flex-direction: column;
-        gap: 0.25rem;
+        gap: calc(var(--ma-base) * 0.25);
         color: var(--ma-text-primary);
     }
 
     .ma-order-details-items-summary__item-name {
         margin: 0;
-        font-size: 1.4rem;
+        font-size: var(--ma-font-lg);
         line-height: 1.35;
         font-weight: 400;
         overflow-wrap: break-word;
@@ -596,25 +596,25 @@
     .ma-order-details-items-summary__item-meta,
     .ma-order-details-items-summary__item-qty {
         margin: 0;
-        font-size: 1.2rem;
-        line-height: 1.6rem;
+        font-size: var(--ma-font-md);
+        line-height: calc(var(--ma-base) * 1.6);
         text-transform: uppercase;
         letter-spacing: 0.12em;
     }
 
     .ma-order-details-items-summary__item-price {
-        margin: 0.75rem 0 0 0;
-        font-size: 1.2rem;
-        line-height: 1.6rem;
+        margin: calc(var(--ma-base) * 0.75) 0 0 0;
+        font-size: var(--ma-font-md);
+        line-height: calc(var(--ma-base) * 1.6);
         color: var(--ma-text-primary);
         text-transform: uppercase;
         letter-spacing: 0.12em;
     }
 
     .ma-order-details-items-summary__item-purchase-note {
-        margin-top: 0.5rem;
-        padding: 1rem;
-        font-size: 1.2rem;
+        margin-top: calc(var(--ma-base) * 0.5);
+        padding: calc(var(--ma-base) * 1);
+        font-size: var(--ma-font-md);
         color: var(--ma-text-muted-dark);
         border-left: 3px solid var(--ma-border);
         background: var(--ma-surface-alt);
@@ -638,15 +638,15 @@
     }
 
     .ma-order-details-items-summary__shipping {
-        margin-top: 2.25rem;
-        padding-top: 2.25rem;
+        margin-top: calc(var(--ma-base) * 2.25);
+        padding-top: calc(var(--ma-base) * 2.25);
         border-top: 1px solid var(--ma-border-divider);
     }
 
     .ma-order-details-items-summary__shipping-title {
-        margin: 0 0 1rem 0;
-        font-size: 1.2rem;
-        line-height: 1.6rem;
+        margin: 0 0 calc(var(--ma-base) * 1) 0;
+        font-size: var(--ma-font-md);
+        line-height: calc(var(--ma-base) * 1.6);
         color: var(--ma-text-primary);
         text-transform: uppercase;
         letter-spacing: 0.12em;
@@ -677,9 +677,9 @@
     }
 
     .ma-order-details-items-summary__shipping-label {
-        margin: 0 0 1rem 0;
-        font-size: 1.2rem;
-        line-height: 1.6rem;
+        margin: 0 0 calc(var(--ma-base) * 1) 0;
+        font-size: var(--ma-font-md);
+        line-height: calc(var(--ma-base) * 1.6);
         color: var(--ma-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.12em;
@@ -716,14 +716,14 @@
 
     .ma-order-details-items-summary__shipping-name {
         margin: 0;
-        font-size: 1.4rem;
-        line-height: 2rem;
+        font-size: var(--ma-font-lg);
+        line-height: calc(var(--ma-base) * 2);
         color: var(--ma-text-primary);
     }
 
     .ma-order-details-items-summary__shipping-address {
-        margin: 0.25rem 0 0 0;
-        font-size: 1.4rem;
+        margin: calc(var(--ma-base) * 0.25) 0 0 0;
+        font-size: var(--ma-font-lg);
         line-height: 1.6;
         color: var(--ma-text-muted-dark);
     }
@@ -738,8 +738,8 @@
         display: inline-flex;
         align-items: center;
         gap: 12px;
-        font-size: 1.4rem;
-        line-height: 2rem;
+        font-size: var(--ma-font-lg);
+        line-height: calc(var(--ma-base) * 2);
         color: var(--ma-text-muted-dark);
     }
 
@@ -764,7 +764,7 @@
 
     /* Summary card (Figma: border, header strip, totals, payment, actions) */
     .ma-order-details-items-summary__summary-card {
-        border: 0.1rem solid var(--ma-border);
+        border: calc(var(--ma-base) * 0.1) solid var(--ma-border);
         display: flex;
         flex-direction: column;
         min-width: 0;
@@ -772,56 +772,56 @@
 
     .ma-order-details-items-summary__summary-header {
         background: var(--ma-surface-alt);
-        border-bottom: 0.1rem solid var(--ma-border);
-        padding: 1.6rem 2.4rem 0.1rem;
+        border-bottom: calc(var(--ma-base) * 0.1) solid var(--ma-border);
+        padding: calc(var(--ma-base) * 1.6) calc(var(--ma-base) * 2.4) calc(var(--ma-base) * 0.1);
     }
 
     .ma-order-details-items-summary__summary-title {
         margin: 0;
-        font-size: 1.2rem;
-        line-height: 1.6rem;
+        font-size: var(--ma-font-md);
+        line-height: calc(var(--ma-base) * 1.6);
         font-weight: 400;
         color: var(--ma-text-primary);
         text-transform: uppercase;
-        letter-spacing: 0.12rem;
+        letter-spacing: calc(var(--ma-base) * 0.12);
     }
 
     .ma-order-details-items-summary__summary-inner {
         display: flex;
         flex-direction: column;
-        gap: 1.4rem;
-        padding: 2.4rem;
-        border-bottom: 0.1rem solid var(--ma-border);
+        gap: calc(var(--ma-base) * 1.4);
+        padding: calc(var(--ma-base) * 2.4);
+        border-bottom: calc(var(--ma-base) * 0.1) solid var(--ma-border);
     }
 
     .ma-order-details-items-summary__summary-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 1.4rem;
-        line-height: 2rem;
+        font-size: var(--ma-font-lg);
+        line-height: calc(var(--ma-base) * 2);
     }
 
     .ma-order-details-items-summary__summary-row--total {
-        font-size: 1.2rem;
-        line-height: 1.6rem;
+        font-size: var(--ma-font-md);
+        line-height: calc(var(--ma-base) * 1.6);
         font-weight: 400;
-        padding-top: 1.4rem;
+        padding-top: calc(var(--ma-base) * 1.4);
         margin-top: 0;
-        border-top: 0.1rem solid var(--ma-border-divider);
+        border-top: calc(var(--ma-base) * 0.1) solid var(--ma-border-divider);
         color: var(--ma-text-primary);
     }
 
     .ma-order-details-items-summary__summary-row--total .ma-order-details-items-summary__summary-label {
-        font-size: 1.2rem;
-        line-height: 1.6rem;
+        font-size: var(--ma-font-md);
+        line-height: calc(var(--ma-base) * 1.6);
         text-transform: uppercase;
-        letter-spacing: 0.12rem;
+        letter-spacing: calc(var(--ma-base) * 0.12);
     }
 
     .ma-order-details-items-summary__summary-row--total .ma-order-details-items-summary__summary-value {
-        font-size: 2.4rem;
-        line-height: 3.2rem;
+        font-size: var(--ma-font-2xl);
+        line-height: calc(var(--ma-base) * 3.2);
     }
 
     .ma-order-details-items-summary__summary-label {
@@ -834,32 +834,32 @@
 
     /* Payment block (Figma: label + icon + method + masked) */
     .ma-order-details-items-summary__payment {
-        padding: 2rem 2.4rem;
-        border-bottom: 0.1rem solid var(--ma-border);
+        padding: calc(var(--ma-base) * 2) calc(var(--ma-base) * 2.4);
+        border-bottom: calc(var(--ma-base) * 0.1) solid var(--ma-border);
     }
 
     .ma-order-details-items-summary__payment-label {
-        margin: 0 0 1.2rem 0;
-        font-size: 1.2rem;
-        line-height: 1.6rem;
+        margin: 0 0 calc(var(--ma-base) * 1.2) 0;
+        font-size: var(--ma-font-md);
+        line-height: calc(var(--ma-base) * 1.6);
         font-weight: 400;
         color: var(--ma-text-muted);
         text-transform: uppercase;
-        letter-spacing: 0.12rem;
+        letter-spacing: calc(var(--ma-base) * 0.12);
     }
 
     .ma-order-details-items-summary__payment-inner {
         display: flex;
         align-items: center;
-        gap: 1.2rem;
+        gap: calc(var(--ma-base) * 1.2);
     }
 
     .ma-order-details-items-summary__payment-icon {
-        width: 3.2rem;
-        height: 3.2rem;
-        min-width: 3.2rem;
+        width: calc(var(--ma-base) * 3.2);
+        height: calc(var(--ma-base) * 3.2);
+        min-width: calc(var(--ma-base) * 3.2);
         flex-shrink: 0;
-        border: 0.1rem solid var(--ma-border);
+        border: calc(var(--ma-base) * 0.1) solid var(--ma-border);
         background: var(--ma-surface-alt);
         display: flex;
         align-items: center;
@@ -867,8 +867,8 @@
     }
 
     .ma-order-details-items-summary__payment-icon svg {
-        width: 1.4rem;
-        height: 1.4rem;
+        width: calc(var(--ma-base) * 1.4);
+        height: calc(var(--ma-base) * 1.4);
         color: var(--ma-text-muted-dark);
     }
 
@@ -878,24 +878,24 @@
 
     .ma-order-details-items-summary__payment-method {
         margin: 0;
-        font-size: 1.4rem;
-        line-height: 2rem;
+        font-size: var(--ma-font-lg);
+        line-height: calc(var(--ma-base) * 2);
         color: var(--ma-text-primary);
     }
 
     .ma-order-details-items-summary__payment-masked {
         margin: 0;
-        font-size: 1.2rem;
-        line-height: 1.6rem;
+        font-size: var(--ma-font-md);
+        line-height: calc(var(--ma-base) * 1.6);
         color: var(--ma-text-muted);
     }
 
-    /* Action buttons (Figma: stacked, full-width, gap 1rem) */
+    /* Action buttons (Figma: stacked, full-width, gap calc(var(--ma-base) * 1)) */
     .ma-order-details-items-summary__actions {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
-        padding: 2rem 2.4rem;
+        gap: calc(var(--ma-base) * 1);
+        padding: calc(var(--ma-base) * 2) calc(var(--ma-base) * 2.4);
     }
 
     /* Same font-size, line-height, padding for all buttons so height stays in sync */
@@ -903,16 +903,16 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 0.8rem;
+        gap: calc(var(--ma-base) * 0.8);
         width: 100%;
-        padding: 1.2rem 1.6rem;
-        font-size: 1.2rem;
-        line-height: 1.6rem;
+        padding: calc(var(--ma-base) * 1.2) calc(var(--ma-base) * 1.6);
+        font-size: var(--ma-font-md);
+        line-height: calc(var(--ma-base) * 1.6);
         font-weight: 400;
         text-transform: uppercase;
-        letter-spacing: 0.12rem;
+        letter-spacing: calc(var(--ma-base) * 0.12);
         text-decoration: none;
-        border: 0.1rem solid var(--ma-btn-secondary-border);
+        border: calc(var(--ma-base) * 0.1) solid var(--ma-btn-secondary-border);
         background: var(--ma-btn-secondary-bg);
         color: var(--ma-btn-secondary-text);
         cursor: pointer;
@@ -921,8 +921,8 @@
 
     /* Override browser/theme defaults on button so text matches anchor buttons (specificity over theme global button) */
     .woocommerce-account .ma-order-details-items-summary__actions button.ma-order-details-items-summary__btn {
-        font-size: 1.2rem;
-        line-height: 1.6rem;
+        font-size: var(--ma-font-md);
+        line-height: calc(var(--ma-base) * 1.6);
         font-weight: 400;
         font-family: inherit;
         border-radius: 0;
@@ -947,16 +947,16 @@
     }
 
     .ma-order-details-items-summary__btn-icon {
-        width: 1.4rem;
-        height: 1.4rem;
+        width: calc(var(--ma-base) * 1.4);
+        height: calc(var(--ma-base) * 1.4);
         flex-shrink: 0;
     }
 
     /* Shipment status title (in order-details.php) */
     .ma-order-details__shipments-title {
-        margin: 2rem 0 1rem 0;
-        font-size: 1.6rem;
-        line-height: 2.4rem;
+        margin: calc(var(--ma-base) * 2) 0 calc(var(--ma-base) * 1) 0;
+        font-size: var(--ma-font-xl);
+        line-height: calc(var(--ma-base) * 2.4);
         font-weight: 500;
         color: var(--ma-text-primary);
     }
@@ -973,7 +973,7 @@
     .ma-view-order__updates-list {
         @apply list-none m-0 p-0;
         > li + li {
-            margin-top: 1rem;
+            margin-top: calc(var(--ma-base) * 1);
         }
     }
 

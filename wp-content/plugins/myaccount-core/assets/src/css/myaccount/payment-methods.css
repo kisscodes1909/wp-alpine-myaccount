@@ -15,7 +15,7 @@
         .payment-methods-section__title {
             @apply inline-flex items-center text-form-text m-0 uppercase;
             gap: 12px;
-            font-size: 18px;
+            font-size: var(--ma-font-md);
             line-height: 28px;
             font-weight: 500;
             color: var(--ma-text-primary);
@@ -121,7 +121,7 @@
             gap: 6px;
             padding: 4px 12px;
             line-height: 16px;
-            font-size: 12px;
+            font-size: var(--ma-font-xs);
             letter-spacing: 0.05em;
             text-transform: uppercase;
         }
@@ -133,7 +133,7 @@
 
         @media (max-width: 991px) {
             .payment-methods-section__title {
-                font-size: 20px;
+                font-size: var(--ma-font-md);
             }
 
             .payment-methods-section--add .woocommerce-add-payment-method,

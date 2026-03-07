@@ -4,5 +4,5 @@
 
 /* Fashion variant: increase form rhythm for My Info endpoint */
 body.myaccount-template-fashion.woocommerce-account.woocommerce-edit-account .ma-form {
-    --ma-form-space-main-gap: 2.5rem;
+    --ma-form-space-main-gap: calc(var(--ma-base) * 2.5);
 }

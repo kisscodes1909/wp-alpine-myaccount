@@ -22,7 +22,7 @@
 .woocommerce-account .ma-notice--warning {
     @apply relative list-none m-0;
     @apply flex items-center;
-    gap: 0.5rem;
+    gap: var(--ma-space-sm);
     padding: var(--ma-notice-padding-y) var(--ma-notice-padding-right) var(--ma-notice-padding-y) var(--ma-notice-padding-x);
     border-width: var(--ma-notice-border-width);
     border-radius: var(--ma-notice-border-radius);
@@ -43,9 +43,9 @@
 .woocommerce-account .woocommerce-error {
     @apply relative list-none m-0;
     @apply flex flex-col;
-    gap: 0.5rem;
+    gap: var(--ma-space-sm);
     padding: var(--ma-notice-padding-y) var(--ma-notice-padding-right) var(--ma-notice-padding-y) var(--ma-notice-padding-x);
-    padding-left: calc(var(--ma-notice-padding-x) + var(--ma-notice-icon-size) + 0.5rem);
+    padding-left: calc(var(--ma-notice-padding-x) + var(--ma-notice-icon-size) + var(--ma-space-sm));
     border-width: var(--ma-notice-border-width);
     border-radius: var(--ma-notice-border-radius);
     font-size: var(--ma-notice-font-size);
@@ -96,7 +96,7 @@
     content: '';
     width: var(--ma-notice-icon-size);
     height: var(--ma-notice-icon-size);
-    margin-right: 0.5rem;
+    margin-right: var(--ma-space-sm);
     background-color: currentColor;
     -webkit-mask-repeat: no-repeat;
     -webkit-mask-position: center;
@@ -117,7 +117,7 @@
     width: var(--ma-notice-icon-size);
     height: var(--ma-notice-icon-size);
     left: var(--ma-notice-padding-x);
-    top: calc(var(--ma-notice-padding-y) + 0.0625rem);
+    top: calc(var(--ma-notice-padding-y) + var(--ma-space-2xs));
     background-color: currentColor;
     -webkit-mask-image: var(--ma-notice-error-icon-mask);
     -webkit-mask-repeat: no-repeat;

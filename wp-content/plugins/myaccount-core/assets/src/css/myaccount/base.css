@@ -6,8 +6,27 @@
 /* -------------------------------------------------------------------------- */
 
 .woocommerce-account {
+    /* Scale foundation: theme can override --ma-base to adapt to html font-size. */
+    --ma-base: 1rem;
+    --ma-space-2xs: calc(var(--ma-base) * 0.0625);
+    --ma-space-xs: calc(var(--ma-base) * 0.25);
+    --ma-space-sm: calc(var(--ma-base) * 0.5);
+    --ma-space-md: var(--ma-base);
+    --ma-space-lg: calc(var(--ma-base) * 1.5);
+    --ma-space-xl: calc(var(--ma-base) * 2);
+    --ma-space-2xl: calc(var(--ma-base) * 3);
+    --ma-space-3xl: calc(var(--ma-base) * 4);
+    --ma-font-xs: calc(var(--ma-base) * 0.75);
+    --ma-font-sm: calc(var(--ma-base) * 0.875);
+    --ma-font-base: var(--ma-base);
+    --ma-font-md: calc(var(--ma-base) * 1.2);
+    --ma-font-lg: calc(var(--ma-base) * 1.4);
+    --ma-font-xl: calc(var(--ma-base) * 1.6);
+    --ma-font-2xl: calc(var(--ma-base) * 2);
+    --ma-font-3xl: calc(var(--ma-base) * 3);
+
     /* Shared color tokens for My Account endpoints */
-    --ma-text-primary: red;
+    --ma-text-primary: #0a0a0a;
     --ma-text-muted: #99a1af;
     --ma-text-muted-dark: #6a7282;
     --ma-text-inverse: #ffffff;
@@ -84,16 +103,16 @@
     .ma-page-heading,
     .ma-orders,
     .ma-view-order {
-        padding-left: 1rem;
-        padding-right: 1rem;
+        padding-left: var(--ma-space-md);
+        padding-right: var(--ma-space-md);
     }
 
     @media (min-width: 768px) {
         .ma-page-heading,
         .ma-orders,
         .ma-view-order {
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
+            padding-left: var(--ma-space-lg);
+            padding-right: var(--ma-space-lg);
         }
     }
 
