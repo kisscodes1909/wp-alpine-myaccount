@@ -97,63 +97,63 @@ body.myaccount-template-fashion.woocommerce-account .ma-orders__item {
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-page-heading__description {
-    color: #6b7280;
+    color: var(--ma-text-muted);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-orders__empty-text {
-    color: #1f2937;
+    color: var(--ma-text-muted-dark);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-view-order__updates,
 body.myaccount-template-fashion.woocommerce-account .ma-form__section--bordered,
 body.myaccount-template-fashion.woocommerce-account .ma-form__actions,
 body.myaccount-template-fashion.woocommerce-account .ma-page-heading__description {
-    border-color: #e5e7eb;
+    border-color: var(--ma-border);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-form__status-pill {
-    background-color: #ecfdf5;
-    color: #16a34a;
+    background-color: var(--ma-success-bg);
+    color: var(--ma-success-text);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-address-book__toast {
-    background: #000000;
-    color: #ffffff;
+    background: var(--ma-btn-pill-bg);
+    color: var(--ma-btn-pill-text);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-address-book__default-pill {
-    background: #000000;
-    color: #ffffff;
+    background: var(--ma-btn-pill-bg);
+    color: var(--ma-btn-pill-text);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-address-book .ma-address-book__action-button {
-    border-color: #d1d5dc;
+    border-color: var(--ma-border);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-address-book .ma-address-book__action-button--danger {
-    border-color: #ffa1ad;
-    color: #ec003f;
+    border-color: var(--ma-btn-danger-border);
+    color: var(--ma-btn-danger-text);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-address-book__empty-title {
-    color: #374151;
+    color: var(--ma-text-primary);
 }
 
 /* Order details (view-order) fashion overrides – Figma 36:1502 */
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-header {
-    border-color: #e5e7eb;
+    border-color: var(--ma-border);
 }
 
 /* Label (.ma-order-details-header__label) uses base layer; no override needed. */
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-header__btn--danger {
-    border-color: #ffa1ad;
-    color: #ec003f;
+    border-color: var(--ma-btn-danger-border);
+    color: var(--ma-btn-danger-text);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-status-card {
-    border-color: #e5e7eb;
+    border-color: var(--ma-border);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-status-card__header {
@@ -161,34 +161,36 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-status-card__heade
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__shipping-icon {
-    border-color: #e5e7eb;
+    border-color: var(--ma-border);
 }
 
 /* Section 3: Items list – Figma card and typography (min font-size 1.2rem) */
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__items-title {
     font-size: 1.2rem;
     line-height: 1.6rem;
-    color: #99a1af;
+    color: var(--ma-text-primary);
     text-transform: uppercase;
     letter-spacing: 1.2px;
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item {
-    background: rgba(249, 250, 251, 0.6);
-    border-color: #f3f4f6;
+    background: var(--ma-surface-alt);
+    border-color: var(--ma-border);
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-body {
+    color: var(--ma-text-primary);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-name {
     font-size: 1.2rem;
     line-height: 1.35;
-    color: #0a0a0a;
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-meta,
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-qty {
     font-size: 1.2rem;
     line-height: 1.6rem;
-    color: #0a0a0a;
     text-transform: uppercase;
     letter-spacing: 1.2px;
 }
@@ -196,79 +198,83 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-price {
     font-size: 1.2rem;
     line-height: 1.6rem;
-    color: #101828;
+    color: var(--ma-text-primary);
     text-transform: uppercase;
     letter-spacing: 1.2px;
 }
 
 /* Section 3: Shipping – Figma two-column colors */
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__shipping-inner {
-    border-color: #e5e7eb;
+    border-color: var(--ma-border);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__shipping-label {
     font-size: 1.2rem;
-    color: #99a1af;
+    color: var(--ma-text-muted);
     text-transform: uppercase;
     letter-spacing: 1.2px;
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__shipping-icon,
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__contact-icon-wrap {
-    background: #f9fafb;
-    border-color: #f3f4f6;
+    background: var(--ma-surface-alt);
+    border-color: var(--ma-border);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__shipping-name {
-    color: #0a0a0a;
+    color: var(--ma-text-primary);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__shipping-address {
-    color: #6a7282;
+    color: var(--ma-text-muted-dark);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__contact-line {
-    color: #4a5565;
+    color: var(--ma-text-muted-dark);
 }
 
 /* Section 3: Summary card – Figma (header, totals, total row, payment, actions) */
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-card {
-    border-color: #e5e7eb;
+    border-color: var(--ma-border);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-header {
-    background: #f9fafb;
-    border-bottom-color: #f3f4f6;
+    background: var(--ma-surface-alt);
+    border-bottom-color: var(--ma-border);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-title {
-    color: #6a7282;
+    color: var(--ma-text-primary);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-label {
-    color: #6a7282;
+    color: var(--ma-text-muted-dark);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-value {
-    color: #0a0a0a;
+    color: var(--ma-text-primary);
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-row--total {
+    color: var(--ma-text-primary);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-row--total .ma-order-details-items-summary__summary-label,
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-row--total .ma-order-details-items-summary__summary-value {
-    color: #0a0a0a;
+    color: inherit;
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__payment-label {
-    color: #99a1af;
+    color: var(--ma-text-muted);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__payment-masked {
-    color: #99a1af;
+    color: var(--ma-text-muted);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__btn--danger {
-    border-color: #ffa1ad;
-    color: #ec003f;
+    border-color: var(--ma-btn-danger-border);
+    color: var(--ma-btn-danger-text);
 }
 
 @media (min-width: 768px) {

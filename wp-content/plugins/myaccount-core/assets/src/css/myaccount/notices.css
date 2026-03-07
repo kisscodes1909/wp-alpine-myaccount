@@ -66,9 +66,9 @@
 }
 
 .woocommerce-account .woocommerce-error {
-    background-color: var(--ma-error-bg);
-    border-color: var(--ma-error-border);
-    color: var(--ma-error-text);
+    background-color: var(--ma-danger-bg);
+    border-color: var(--ma-danger-border);
+    color: var(--ma-danger-text);
 }
 
 .woocommerce-account .woocommerce-info {

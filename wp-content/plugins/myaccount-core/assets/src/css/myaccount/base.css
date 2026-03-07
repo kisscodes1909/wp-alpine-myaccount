@@ -6,6 +6,56 @@
 /* -------------------------------------------------------------------------- */
 
 .woocommerce-account {
+    /* Shared color tokens for My Account endpoints */
+    --ma-text-primary: red;
+    --ma-text-muted: #99a1af;
+    --ma-text-muted-dark: #6a7282;
+    --ma-text-inverse: #ffffff;
+    --ma-text-inverse-soft: rgba(255, 255, 255, 0.8);
+
+    --ma-border: #e5e7eb;
+    --ma-border-divider: rgba(0, 0, 0, 0.1);
+
+    --ma-surface: #ffffff;
+    --ma-surface-alt: #f9fafb;
+    --ma-surface-overlay: rgba(0, 0, 0, 0.5);
+
+    --ma-accent-bg: #eff6ff;
+    --ma-accent-border: #bedbff;
+    --ma-accent-text: #155dfc;
+    --ma-accent-icon: #2b7fff;
+
+    --ma-success-bg: #ecfdf5;
+    --ma-success-border: #a7f3d0;
+    --ma-success-text: #064e3b;
+
+    --ma-danger-bg: #fff1f2;
+    --ma-danger-border: #ffa1ad;
+    --ma-danger-border-hover: #ff8090;
+    --ma-danger-text: #ec003f;
+
+    --ma-warning-bg: #fffbeb;
+    --ma-warning-border: #fde68a;
+    --ma-warning-text: #78350f;
+
+    --ma-info-bg: #eff6ff;
+    --ma-info-border: #bfdbfe;
+    --ma-info-text: #1e3a8a;
+
+    --ma-btn-primary-bg: #111827;
+    --ma-btn-primary-border: #111827;
+    --ma-btn-primary-text: #ffffff;
+    --ma-btn-secondary-bg: transparent;
+    --ma-btn-secondary-border: var(--ma-border);
+    --ma-btn-secondary-text: var(--ma-text-primary);
+    --ma-btn-secondary-border-hover: var(--ma-border);
+    --ma-btn-danger-bg: transparent;
+    --ma-btn-danger-border: var(--ma-danger-border);
+    --ma-btn-danger-text: var(--ma-danger-text);
+    --ma-btn-danger-border-hover: var(--ma-danger-border-hover);
+    --ma-btn-pill-bg: #000000;
+    --ma-btn-pill-text: #ffffff;
+
     /* Shared full-bleed utility for My Account bands inside constrained containers. */
     .ma-fullbleed-band {
         position: relative;
@@ -68,6 +118,7 @@
 
     .ma-page-heading__title {
         @apply uppercase;
+        color: var(--ma-text-primary);
     }
 
     .ma-page-heading__description {

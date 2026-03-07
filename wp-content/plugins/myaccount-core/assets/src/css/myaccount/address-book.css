@@ -18,7 +18,7 @@
     }
 
     .ma-address-book__card {
-        @apply border border-form-border bg-white px-8 pt-8 pb-6 flex flex-col;
+        @apply border border-form-border bg-[var(--ma-surface)] px-8 pt-8 pb-6 flex flex-col;
     }
 
     .ma-address-book__card-head {
@@ -65,11 +65,12 @@
     }
 
     .ma-address-book__empty {
-        @apply p-4 bg-white;
+        @apply p-4 bg-[var(--ma-surface)];
     }
 
     .ma-address-book__empty-title {
         @apply m-0 text-lg text-center;
+        color: var(--ma-text-primary);
     }
 
     .ma-address-book__footer {

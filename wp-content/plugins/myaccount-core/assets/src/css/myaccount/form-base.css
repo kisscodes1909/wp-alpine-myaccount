@@ -12,23 +12,6 @@
     --ma-notice-font-size-desktop: 1.6rem;
     --ma-notice-line-height: 1.5;
 
-    /* Semantic color tokens (reusable: notice, order status, pills, etc.) */
-    --ma-success-bg: #ecfdf5;
-    --ma-success-border: #a7f3d0;
-    --ma-success-text: #064e3b;
-
-    --ma-error-bg: #fff1f2;
-    --ma-error-border: #fecdd3;
-    --ma-error-text: #881337;
-
-    --ma-warning-bg: #fffbeb;
-    --ma-warning-border: #fde68a;
-    --ma-warning-text: #78350f;
-
-    --ma-info-bg: #eff6ff;
-    --ma-info-border: #bfdbfe;
-    --ma-info-text: #1e3a8a;
-
     --ma-notice-icon-size: 2rem;
     --ma-notice-success-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'/%3E%3C/svg%3E");
     --ma-notice-error-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'/%3E%3C/svg%3E");
@@ -72,12 +55,12 @@
         --ma-form-line-height-title: 2.8rem;
         --ma-form-font-size-checkbox-label: 1.6rem;
 
-        --ma-form-color-text: #111827;
-        --ma-form-color-muted: #6b7280;
-        --ma-form-color-input: #111827;
-        --ma-form-color-error: #dc2626;
-        --ma-form-color-border: #d1d5db;
-        --ma-form-color-surface: #ffffff;
+        --ma-form-color-text: var(--ma-text-primary);
+        --ma-form-color-muted: var(--ma-text-muted);
+        --ma-form-color-input: var(--ma-text-primary);
+        --ma-form-color-error: var(--ma-danger-text);
+        --ma-form-color-border: var(--ma-border);
+        --ma-form-color-surface: var(--ma-surface);
 
         @apply w-full flex flex-col;
         gap: var(--ma-form-space-main-gap);
@@ -161,7 +144,7 @@
 
             &:checked {
                 @apply border-form-accent;
-                background: radial-gradient(circle at center, #111827 0 4px, #ffffff 4.5px);
+                background: radial-gradient(circle at center, var(--ma-form-color-text) 0 4px, var(--ma-form-color-surface) 4.5px);
             }
         }
 
@@ -351,7 +334,7 @@
         @apply m-0 uppercase tracking-wider;
         font-size: var(--ma-form-font-size-base);
         line-height: var(--ma-form-line-height-title);
-        color: var(--ma-form-color-text);
+        color: var(--ma-text-primary);
     }
 
     .ma-form__section-description {

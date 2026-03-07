@@ -4,11 +4,12 @@
     }
 
     .ma-nav-header.ma-fullbleed-band {
-        --ma-fullbleed-bg: #fff;
+        --ma-fullbleed-bg: var(--ma-surface);
     }
 
     .ma-nav-header__title {
         @apply text-center text-xl font-semibold md:text-left md:text-2xl;
+        color: var(--ma-text-primary);
     }
 
     .ma-nav-header__user {
@@ -24,8 +25,8 @@
     }
 
     .woocommerce-MyAccount-navigation-wrapper {
-        --ma-fullbleed-border-top: 0.0625rem solid rgba(0, 0, 0, 0.1);
-        --ma-fullbleed-border-bottom: 0.0625rem solid rgba(0, 0, 0, 0.1);
+        --ma-fullbleed-border-top: 0.0625rem solid var(--ma-border-divider);
+        --ma-fullbleed-border-bottom: 0.0625rem solid var(--ma-border-divider);
         @apply flex;
     }
 
@@ -60,7 +61,7 @@
         line-height: 1.25rem;
         font-weight: 400;
         letter-spacing: 0.078125rem;
-        color: #99a1af;
+        color: var(--ma-text-muted);
     }
 
     .woocommerce-MyAccount-navigation-link::before {
@@ -114,16 +115,16 @@
     }
 
     .woocommerce-MyAccount-navigation-list li:hover .woocommerce-MyAccount-navigation-link {
-        color: #6b7280;
+        color: var(--ma-text-muted);
     }
 
     .woocommerce-MyAccount-navigation-list li.is-active .woocommerce-MyAccount-navigation-link {
-        color: #0a0a0a;
+        color: var(--ma-text-primary);
         background:none;
     }
 
     .woocommerce-MyAccount-navigation-list li.is-active {
-        border-bottom-color: #000;
+        border-bottom-color: var(--ma-text-primary);
     }
 
     @media (min-width: 62rem) {

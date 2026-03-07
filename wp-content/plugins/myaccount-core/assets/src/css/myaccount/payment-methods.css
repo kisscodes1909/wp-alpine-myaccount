@@ -18,6 +18,7 @@
             font-size: 18px;
             line-height: 28px;
             font-weight: 500;
+            color: var(--ma-text-primary);
         }
 
         /* Same section layout and title-to-body spacing for add and saved */
@@ -62,7 +63,9 @@
         }
 
         .payment-methods-item__brand-badge {
-            @apply inline-flex items-center justify-center border border-form-border text-xs font-bold text-[#364153];
+            @apply inline-flex items-center justify-center border text-xs font-bold;
+            border-color: var(--ma-border);
+            color: var(--ma-text-muted-dark);
             width: 48px;
             height: 32px;
             line-height: 16px;
@@ -77,6 +80,7 @@
             @apply text-base font-medium text-form-text;
             line-height: 24px;
             letter-spacing: -0.0195em;
+            color: var(--ma-text-primary);
         }
 
         .payment-methods-item__expiry {
@@ -102,7 +106,7 @@
 
                 &:hover {
                     @apply border-form-focus;
-                    background-color: #f9fafb;
+                    background-color: var(--ma-surface-alt);
                 }
             }
         }

@@ -59,17 +59,17 @@
 }
 
 .woocommerce-account .ma-form__password-requirement-icon--pass {
-    color: #059669;
+    color: var(--ma-success-text);
 }
 
 .woocommerce-account .ma-form__password-requirement-icon--fail {
-    color: var(--ma-form-color-error);
+    color: var(--ma-danger-text);
 }
 
 .woocommerce-account .ma-form__password-requirement-text--pass {
-    color: #059669;
+    color: var(--ma-success-text);
 }
 
 .woocommerce-account .ma-form__password-requirement-text--fail {
-    color: var(--ma-form-color-error);
+    color: var(--ma-danger-text);
 }
