@@ -15,7 +15,9 @@ body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAcc
 }
 
 body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAccount-content {
-    @apply w-full max-w-[1280px] mx-auto;
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
 }
 
 /* Navigation styles when stacked: full-bleed band, flex row, list, links, icons, hover/active. */
@@ -132,7 +134,7 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lis
     border-bottom-color: var(--ma-text-primary);
 }
 
-@media (min-width: 62rem) {
+@media (min-width: 992px) {
     body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation.ma-fullbleed-band {
         padding-inline: calc(var(--ma-base) * 7.5625);
     }

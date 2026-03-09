@@ -20,6 +20,7 @@ class MyAccount_Core_Assets {
 		$this->plugin_url = trailingslashit( $plugin_url );
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ), 20 );
+		add_filter( 'body_class', array( $this, 'add_endpoint_body_class' ) );
 		add_filter( 'script_loader_tag', array( $this, 'add_defer_attribute' ), 10, 2 );
 	}
 
@@ -28,13 +29,36 @@ class MyAccount_Core_Assets {
 			return;
 		}
 
-		$css_file = $this->plugin_dir . 'assets/css/myaccount.css';
-		if ( file_exists( $css_file ) ) {
-			wp_enqueue_style(
+		$endpoint      = $this->get_account_endpoint();
+		$shared_loaded = $this->enqueue_style_if_exists(
+			'myaccount-core-css-shared',
+			'assets/css/ma-shared.css'
+		);
+
+		$endpoint_file   = $this->resolve_endpoint_css_file( $endpoint );
+		$endpoint_loaded = false;
+		$endpoint_deps   = $shared_loaded ? array( 'myaccount-core-css-shared' ) : array();
+
+		if ( '' !== $endpoint_file ) {
+			$endpoint_loaded = $this->enqueue_style_if_exists(
+				'myaccount-core-css-endpoint',
+				'assets/css/' . $endpoint_file,
+				$endpoint_deps
+			);
+		}
+
+		if ( ! $endpoint_loaded && 'ma-auth.css' !== $endpoint_file ) {
+			$endpoint_loaded = $this->enqueue_style_if_exists(
+				'myaccount-core-css-endpoint-auth-fallback',
+				'assets/css/ma-auth.css',
+				$endpoint_deps
+			);
+		}
+
+		if ( ! $shared_loaded || ! $endpoint_loaded ) {
+			$this->enqueue_style_if_exists(
 				'myaccount-core-css',
-				$this->plugin_url . 'assets/css/myaccount.css',
-				array(),
-				filemtime( $css_file )
+				'assets/css/myaccount.css'
 			);
 		}
 
@@ -81,5 +105,78 @@ class MyAccount_Core_Assets {
 		}
 
 		return $tag;
+	}
+
+	public function add_endpoint_body_class( array $classes ): array {
+		if ( ! is_account_page() ) {
+			return $classes;
+		}
+
+		$endpoint = $this->get_account_endpoint();
+		$classes[] = 'ma-endpoint-' . sanitize_html_class( $endpoint );
+		$classes[] = 'ma-shared-scope';
+
+		return $classes;
+	}
+
+	private function get_account_endpoint(): string {
+		$endpoint_keys = array(
+			'orders',
+			'view-order',
+			'payment-methods',
+			'add-payment-method',
+			'edit-account',
+			'edit-address',
+			'lost-password',
+			'reset-password',
+			'customer-logout',
+			'address',
+		);
+
+		foreach ( $endpoint_keys as $endpoint_key ) {
+			if ( is_wc_endpoint_url( $endpoint_key ) ) {
+				return $endpoint_key;
+			}
+		}
+
+		if ( is_wc_endpoint_url() ) {
+			return 'unknown';
+		}
+
+		return 'dashboard';
+	}
+
+	private function resolve_endpoint_css_file( string $endpoint ): string {
+		$map = array(
+			'orders'             => 'ma-orders.css',
+			'view-order'         => 'ma-view-order.css',
+			'payment-methods'    => 'ma-payment-methods.css',
+			'add-payment-method' => 'ma-payment-methods.css',
+			'edit-account'       => 'ma-edit-account.css',
+			'edit-address'       => 'ma-edit-account.css',
+			'address'            => 'ma-address.css',
+			'lost-password'      => 'ma-auth.css',
+			'reset-password'     => 'ma-auth.css',
+			'dashboard'          => 'ma-auth.css',
+			'unknown'            => 'ma-auth.css',
+		);
+
+		return isset( $map[ $endpoint ] ) ? $map[ $endpoint ] : 'ma-auth.css';
+	}
+
+	private function enqueue_style_if_exists( string $handle, string $relative_path, array $deps = array() ): bool {
+		$file = $this->plugin_dir . $relative_path;
+		if ( ! file_exists( $file ) ) {
+			return false;
+		}
+
+		wp_enqueue_style(
+			$handle,
+			$this->plugin_url . $relative_path,
+			$deps,
+			filemtime( $file )
+		);
+
+		return true;
 	}
 }

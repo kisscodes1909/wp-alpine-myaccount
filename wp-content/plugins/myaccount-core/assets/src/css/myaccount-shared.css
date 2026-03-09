@@ -1,0 +1,101 @@
+@import "./myaccount/base.css";
+@import "./myaccount/ui-overlays.css";
+@import "./myaccount/navigation.css";
+@import "./myaccount/layout.css";
+@import "./myaccount/form-base.css";
+@import "./myaccount/auth-shell.css";
+@import "./myaccount/notices.css";
+@import "./myaccount/fashion.css";
+
+body {
+    color: #4d4d4d;
+}
+
+/* Shared utility layer (layout/spacing/helpers only) */
+.ma-u-flex {
+    display: flex;
+}
+
+.ma-u-flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.ma-u-items-center {
+    align-items: center;
+}
+
+.ma-u-justify-between {
+    justify-content: space-between;
+}
+
+.ma-u-gap-sm {
+    gap: var(--ma-space-sm);
+}
+
+.ma-u-gap-md {
+    gap: var(--ma-space-md);
+}
+
+.ma-u-gap-lg {
+    gap: var(--ma-space-lg);
+}
+
+.ma-u-section-space {
+    padding-block: var(--ma-space-xl);
+}
+
+.ma-u-muted {
+    color: var(--ma-text-muted-dark);
+}
+
+/* Minimal shared utility styles used by My Account Alpine components. */
+[x-cloak] {
+    display: none;
+}
+
+.apl-heading-chip {
+    display: inline-flex;
+    align-items: center;
+    color: var(--ma-text-primary);
+    font-size: var(--ma-font-xl);
+    line-height: 1;
+    font-weight: 600;
+}
+
+@media (min-width: 992px) {
+    .apl-heading-chip {
+        font-size: 34px;
+    }
+}
+
+.apl-heading-chip-sm {
+    display: inline-flex;
+    align-items: center;
+    color: var(--ma-text-primary);
+    font-size: var(--ma-font-xl);
+    line-height: var(--ma-line-tight);
+    font-weight: 600;
+}
+
+.loading-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+.loading-icon svg {
+    display: block;
+    vertical-align: middle;
+}
+
+.loading-icon .spinner-arc {
+    animation: spinner-dash 0.8s linear infinite;
+}
+
+@keyframes spinner-dash {
+    to {
+        stroke-dashoffset: -63;
+    }
+}

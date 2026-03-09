@@ -73,7 +73,9 @@
         --ma-form-color-button-light-text: var(--ma-text-primary);
         --ma-form-color-outline: var(--ma-text-muted);
 
-        @apply w-full flex flex-col;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
         gap: var(--ma-form-space-main-gap);
 
         label {
@@ -84,7 +86,7 @@
         .ma-form__input,
         select,
         textarea {
-            @apply transition-all;
+            transition: all 180ms ease;
         }
 
         .ma-form__input:-webkit-autofill,
@@ -115,17 +117,25 @@
         }
 
         .password-toggle {
-            @apply absolute top-1/2 -translate-y-1/2 flex items-center;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
             right: var(--ma-form-space-password-toggle-right);
             gap: var(--ma-form-space-password-toggle-gap);
         }
 
         .ma-form__input-wrap {
-            @apply relative;
+            position: relative;
         }
 
         .ma-form__input-icon--left {
-            @apply absolute flex items-center justify-center pointer-events-none;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
             left: calc(var(--ma-base) * 0.75);
             top: 50%;
             transform: translateY(-50%);
@@ -148,7 +158,7 @@
         .ma-form__input,
         select,
         textarea {
-            @apply h-form-field;
+            height: 50px;
             border: 1px solid var(--ma-form-color-border);
             padding-inline: var(--ma-form-space-field-padding-x);
             color: var(--ma-form-color-input);
@@ -161,7 +171,7 @@
         .ma-form__input:focus,
         select:focus,
         textarea:focus {
-            @apply ring-1;
+            box-shadow: 0 0 0 1px var(--ma-form-color-focus-ring);
         }
 
         .error {
@@ -169,12 +179,12 @@
             .ma-form__input,
             select,
             textarea {
-                @apply border;
+                border: 1px solid var(--ma-form-color-error);
             }
         }
 
         .field-invalid {
-            @apply border;
+            border: 1px solid var(--ma-form-color-error);
         }
 
         input[type='radio'],
@@ -182,7 +192,11 @@
             -webkit-appearance: none;
             appearance: none;
             margin: 0;
-            @apply inline-grid place-content-center flex-none bg-white border border-form-border;
+            display: inline-grid;
+            place-content: center;
+            flex: none;
+            background: #fff;
+            border: 1px solid var(--ma-form-color-border);
         }
 
         input[type='radio'] {
@@ -190,10 +204,11 @@
             height: var(--apl-radio-size);
             min-width: var(--apl-radio-size);
             min-height: var(--apl-radio-size);
-            @apply rounded-none cursor-pointer;
+            border-radius: 0;
+            cursor: pointer;
 
             &:checked {
-                @apply border-form-accent;
+                border-color: var(--ma-form-color-text);
                 background: radial-gradient(circle at center, var(--ma-form-color-text) 0 4px, var(--ma-form-color-surface) 4.5px);
             }
         }
@@ -203,10 +218,12 @@
             height: var(--apl-checkbox-size);
             min-width: var(--apl-checkbox-size);
             min-height: var(--apl-checkbox-size);
-            @apply rounded-none cursor-pointer;
+            border-radius: 0;
+            cursor: pointer;
 
             &:checked {
-                @apply border-form-accent bg-form-accent;
+                border-color: var(--ma-form-color-text);
+                background-color: var(--ma-form-color-text);
                 background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
                 background-repeat: no-repeat;
                 background-position: center;
@@ -216,15 +233,22 @@
 
         input[type='radio']:focus-visible,
         input[type='checkbox']:focus-visible {
-            @apply outline outline-2 outline-form-focus outline-offset-2;
+            outline: 2px solid var(--ma-form-color-focus-border);
+            outline-offset: 2px;
         }
 
         label.jk-checkbox {
-            @apply inline-flex items-center gap-3 cursor-pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: calc(var(--ma-base) * 0.75);
+            cursor: pointer;
         }
 
         .jk-checkbox-wrapper {
-            @apply inline-flex items-center gap-3 cursor-pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: calc(var(--ma-base) * 0.75);
+            cursor: pointer;
 
             > input[type='checkbox'] {
                 width: 1px;
@@ -244,13 +268,18 @@
                 height: var(--apl-checkbox-size);
                 min-width: var(--apl-checkbox-size);
                 min-height: var(--apl-checkbox-size);
-                @apply inline-block rounded-none border border-form-border bg-white flex-none;
+                display: inline-block;
+                border-radius: 0;
+                border: 1px solid var(--ma-form-color-border);
+                background: #fff;
+                flex: none;
                 position: relative;
                 margin-top: 0;
             }
 
             > input[type='checkbox']:checked + .jk-checkbox {
-                @apply border-form-accent bg-form-accent;
+                border-color: var(--ma-form-color-text);
+                background-color: var(--ma-form-color-text);
             }
 
             > input[type='checkbox']:checked + .jk-checkbox::after {
@@ -268,7 +297,8 @@
             }
 
             > input[type='checkbox']:focus-visible + .jk-checkbox {
-                @apply outline outline-2 outline-form-focus outline-offset-2;
+                outline: 2px solid var(--ma-form-color-focus-border);
+                outline-offset: 2px;
             }
 
             .jk-checkbox-label {
@@ -287,7 +317,13 @@
         .woocommerce-button,
         button[type='submit'],
         input[type='submit'] {
-            @apply inline-flex items-center justify-center w-full h-form-field border font-medium;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 50px;
+            border: 1px solid currentColor;
+            font-weight: 500;
             gap: var(--ma-form-space-button-gap);
             padding-inline: var(--ma-form-space-button-padding-x);
             font-size: var(--ma-form-font-size-base);
@@ -298,11 +334,13 @@
             }
 
             &:focus-visible {
-                @apply outline outline-2 outline-offset-2;
+                outline: 2px solid currentColor;
+                outline-offset: 2px;
             }
 
             &[disabled] {
-                @apply opacity-50 cursor-not-allowed;
+                opacity: 0.5;
+                cursor: not-allowed;
             }
 
             &.light {
@@ -316,18 +354,19 @@
             input,
             button,
             select {
-                @apply pointer-events-none;
+                pointer-events: none;
             }
 
             button {
-                @apply opacity-70;
+                opacity: 0.7;
             }
         }
     }
 }
 
 .ma-form-actions {
-    @apply flex flex-col;
+    display: flex;
+    flex-direction: column;
     gap: var(--ma-form-space-fields-gap, calc(var(--ma-base) * 1.5));
     padding-top: var(--ma-form-space-actions-top, calc(var(--ma-base) * 2));
 
@@ -336,7 +375,13 @@
     > button[type='submit'],
     > input[type='submit'],
     > a.button {
-        @apply w-full h-form-field inline-flex items-center justify-center border font-medium;
+        width: 100%;
+        height: 50px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid currentColor;
+        font-weight: 500;
         gap: var(--ma-form-space-button-gap, calc(var(--ma-base) * 0.5));
         padding-inline: var(--ma-form-space-button-padding-x, calc(var(--ma-base) * 1));
         font-size: var(--ma-form-font-size-base);
@@ -355,68 +400,87 @@
 }
 
 .ma-form-actions.ma-form-actions--two {
-    @apply sm:flex-row;
+    @media (min-width: 768px) {
+        flex-direction: row;
+    }
 
     > .button,
     > button,
     > a.button {
-        @apply sm:flex-1;
+        @media (min-width: 768px) {
+            flex: 1;
+        }
     }
 }
 
 .woocommerce-account {
     .ma-form__section {
-        @apply flex flex-col;
+        display: flex;
+        flex-direction: column;
         gap: var(--ma-form-space-section-gap);
     }
 
-    .ma-form__section--bordered {
-        @apply border-t;
+    .ma-form__section--divided {
+        border-top: 1px solid var(--ma-border);
         padding-top: var(--ma-form-space-bordered-top);
     }
 
     .ma-form__section-head {
-        @apply flex flex-col;
+        display: flex;
+        flex-direction: column;
         gap: var(--ma-form-space-section-head-gap);
     }
 
     .ma-form__section-title {
-        @apply m-0 uppercase tracking-wider;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
         font-size: var(--ma-form-font-size-base);
         line-height: var(--ma-form-line-height-title);
         color: var(--ma-text-primary);
     }
 
     .ma-form__section-description {
-        @apply m-0;
+        margin: 0;
         font-size: var(--ma-form-font-size-base);
         color: var(--ma-form-color-muted);
     }
 
     .ma-form__grid {
-        @apply grid grid-cols-1 sm:grid-cols-2;
+        display: grid;
+        grid-template-columns: 1fr;
         gap: var(--ma-form-space-grid-gap);
     }
 
+    @media (min-width: 768px) {
+        .ma-form__grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
     .ma-form__fields {
-        @apply flex flex-col;
+        display: flex;
+        flex-direction: column;
         gap: var(--ma-form-space-fields-gap);
     }
 
     .ma-form__field {
-        @apply flex flex-col;
+        display: flex;
+        flex-direction: column;
         gap: var(--ma-form-space-field-gap);
     }
 
     .ma-form__label {
-        @apply block m-0 tracking-wide;
+        display: block;
+        margin: 0;
+        letter-spacing: 0.05em;
         font-size: var(--ma-font-base);
         line-height: var(--ma-line-normal);
         color: var(--ma-form-color-muted);
     }
 
     .ma-form__input {
-        @apply h-form-field;
+        height: 50px;
         border: 1px solid var(--ma-form-color-border);
         background-color: var(--ma-form-color-surface);
         color: var(--ma-form-color-text);
@@ -430,25 +494,29 @@
     }
 
     .ma-form__hint {
-        @apply m-0;
+        margin: 0;
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
         color: var(--ma-form-color-muted);
     }
 
     .ma-form__error {
-        @apply block;
+        display: block;
         font-size: var(--ma-form-font-size-base);
         color: var(--ma-form-color-error);
     }
 
     .ma-form__settings {
-        @apply flex flex-col;
+        display: flex;
+        flex-direction: column;
         gap: var(--ma-form-space-fields-gap);
     }
 
     .ma-form__setting-card {
-        @apply min-h-[94px] flex items-center justify-between;
+        min-height: 94px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         border: 1px solid var(--ma-form-color-border);
         padding-inline: var(--ma-form-space-setting-card-padding-x);
         padding-block: var(--ma-form-space-setting-card-padding-y);
@@ -456,33 +524,44 @@
     }
 
     .ma-form__setting-meta {
-        @apply flex flex-col;
+        display: flex;
+        flex-direction: column;
         gap: var(--ma-form-space-setting-meta-gap);
     }
 
     .ma-form__setting-label {
-        @apply m-0 uppercase tracking-wide;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
         font-size: var(--ma-font-base);
         line-height: var(--ma-line-normal);
         color: var(--ma-form-color-text);
     }
 
     .ma-form__setting-value {
-        @apply m-0;
+        margin: 0;
         font-size: var(--ma-font-base);
         line-height: var(--ma-line-normal);
         color: var(--ma-form-color-muted);
     }
 
     .ma-form__setting-action {
-        @apply bg-transparent border-0 uppercase tracking-wide underline whitespace-nowrap;
+        background: transparent;
+        border: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        text-decoration: underline;
+        white-space: nowrap;
         font-size: var(--ma-font-base);
         line-height: var(--ma-line-normal);
         color: var(--ma-form-color-text);
     }
 
     .ma-form__status-pill {
-        @apply inline-flex rounded-full uppercase tracking-wide;
+        display: inline-flex;
+        border-radius: 9999px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
         font-size: var(--ma-font-base);
         line-height: var(--ma-line-normal);
         padding-inline: var(--ma-form-space-status-pill-padding-x);
@@ -490,8 +569,33 @@
     }
 
     .ma-form__actions {
-        @apply border-t;
+        border-top: 1px solid var(--ma-border);
         padding-top: var(--ma-form-space-actions-top);
+    }
+}
+
+.woocommerce-account {
+    .ma-form__eye-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+    }
+
+    .ma-form__eye-icon {
+        cursor: pointer;
+        width: calc(var(--ma-base) * 2);
+        height: calc(var(--ma-base) * 2);
+    }
+
+    .ma-form__checkbox-stack {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .ma-link-underline {
+        text-decoration: underline;
     }
 }
 

@@ -1,7 +1,6 @@
 /* -------------------------------------------------------------------------- */
 /* My Account endpoint styles: Login & Register                               */
 /* -------------------------------------------------------------------------- */
-
 /* Auth tabs (login/signup) - fashion structure */
 .woocommerce-account .ma-auth-tabs {
     display: flex;
@@ -12,7 +11,6 @@
     gap: calc(var(--ma-base) * 1.25);
     margin-bottom: var(--ma-form-space-section-gap);
 }
-
 .woocommerce-account .ma-auth-tabs__item {
     display: inline-block;
     padding: calc(var(--ma-base) * 0.5) var(--ma-space-md);
@@ -23,27 +21,22 @@
     color: var(--ma-form-color-muted);
     transition: color 180ms ease, border-color 180ms ease;
 }
-
 .woocommerce-account .ma-auth-tabs__item:hover {
     color: var(--ma-form-color-text);
 }
-
 .woocommerce-account .ma-auth-tabs__item--active {
     font-weight: 600;
     color: var(--ma-form-color-text);
     border-color: var(--ma-form-color-text);
 }
-
 @media (min-width: 768px) {
     .woocommerce-account .ma-auth-tabs__item {
         font-size: var(--ma-form-font-size-xl);
     }
 }
-
 .woocommerce-account .ma-form__lost-password {
     margin: 0;
 }
-
 /* Options row: Keep me signed in (left) + Forgot password (right) */
 .woocommerce-account .ma-form__options {
     display: flex;
@@ -52,7 +45,6 @@
     align-items: center;
     gap: var(--ma-space-sm);
 }
-
 .woocommerce-account .ma-form__password-requirements {
     display: grid;
     grid-template-columns: 1fr;
@@ -62,38 +54,82 @@
     margin: 0;
     margin-top: var(--ma-space-xs);
 }
-
 @media (min-width: 768px) {
     .woocommerce-account .ma-form__password-requirements {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
-
 .woocommerce-account .ma-form__password-requirement {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: calc(var(--ma-base) * 0.75);
 }
-
 .woocommerce-account .ma-form__password-requirement-icon {
     flex: none;
     width: calc(var(--ma-base) * 2);
     height: calc(var(--ma-base) * 2);
 }
-
 .woocommerce-account .ma-form__password-requirement-icon--pass {
     color: var(--ma-success-text);
 }
-
 .woocommerce-account .ma-form__password-requirement-icon--fail {
     color: var(--ma-danger-text);
 }
-
 .woocommerce-account .ma-form__password-requirement-text--pass {
     color: var(--ma-success-text);
 }
-
 .woocommerce-account .ma-form__password-requirement-text--fail {
     color: var(--ma-danger-text);
 }
+/* -------------------------------------------------------------------------- */
+/* My Account endpoint styles: Lost Password                                  */
+/* -------------------------------------------------------------------------- */
+.woocommerce-account .ma-lost-password__field {
+    margin-bottom: calc(var(--ma-base) * 2);
+}
+/* -------------------------------------------------------------------------- */
+/* My Account endpoint styles: Reset Password                                 */
+/* -------------------------------------------------------------------------- */
+.woocommerce-account .ma-reset-password__section {
+        margin-bottom: calc(var(--ma-base) * 2);
+    }
+.woocommerce-account .ma-reset-password__field {
+        margin-bottom: calc(var(--ma-base) * 2.5);
+    }
+.woocommerce-account .ma-reset-password__requirements-hint {
+        margin-top: var(--ma-space-sm);
+    }
+.woocommerce-account .ma-reset-password__requirements {
+        display: grid;
+        grid-template-columns: 1fr;
+        list-style: none;
+        gap: var(--ma-space-sm);
+        margin: 0;
+        padding: 0;
+    }
+@media (min-width: 992px) {
+        .woocommerce-account .ma-reset-password__requirements {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: var(--ma-space-xs);
+        }
+    }
+.woocommerce-account .ma-reset-password__requirement {
+        display: flex;
+        align-items: center;
+        gap: calc(var(--ma-base) * 0.75);
+    }
+.woocommerce-account .ma-reset-password__requirement-icon {
+        width: calc(var(--ma-base) * 2);
+        height: calc(var(--ma-base) * 2);
+    }
+.woocommerce-account .ma-reset-password__requirement-icon--pass,
+    .woocommerce-account .ma-reset-password__requirement-text--pass {
+        color: var(--ma-success-text);
+    }
+.woocommerce-account .ma-reset-password__requirement-icon--fail,
+    .woocommerce-account .ma-reset-password__requirement-text--fail {
+        color: var(--ma-danger-text);
+    }
+
+/*# sourceMappingURL=ma-auth.css.map */

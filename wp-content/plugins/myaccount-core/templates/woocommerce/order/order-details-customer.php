@@ -11,12 +11,12 @@ $shipping_details = $order->get_address( 'shipping' );
 $billing_details  = $order->get_address( 'billing' );
 ?>
 <section>
-    <div class="grid sm:grid-cols-2 sm:gap-5 gap-14">
-        <address class="leading-9 capitalize">
-            <div class="md:mb-12 mb-6">
-                <span class="text-base md:text-xl md:mb-12 mb-5 block">Shipping Info:</span>
-                <div class="text-sm md:text-base">
-                    <div class="md:mb-12">Contact Info:</div>
+    <div class="ma-order-customer">
+        <address class="ma-order-customer__col">
+            <div class="ma-order-customer__section">
+                <span class="ma-order-customer__title">Shipping Info:</span>
+                <div class="ma-order-customer__text">
+                    <div class="ma-order-customer__subtitle">Contact Info:</div>
                     <p>
                         <?php echo esc_html( $shipping_details['first_name'] . ' ' . $shipping_details['last_name'] ); ?> <br />
                         <?php echo esc_html( $billing_details['email'] ); ?> <br />
@@ -25,8 +25,8 @@ $billing_details  = $order->get_address( 'billing' );
                 </div>
             </div>
 
-            <div class="md:mb-12 mb-6 text-sm md:text-base">
-                <div class="md:mb-12 block">Address:</div>
+            <div class="ma-order-customer__section ma-order-customer__text">
+                <div class="ma-order-customer__subtitle">Address:</div>
                 <p>
                     <?php echo esc_html( $shipping_details['address_1'] ); ?> <br>
                     <?php echo esc_html( $shipping_details['city'] . ', ' . $shipping_details['state'] . ' ' . $shipping_details['postcode'] ); ?> <br>
@@ -34,8 +34,8 @@ $billing_details  = $order->get_address( 'billing' );
                 </p>
             </div>
 
-            <div class="text-sm md:text-base">
-                <div class="md:mb-12 block">Shipping Method:</div>
+            <div class="ma-order-customer__text">
+                <div class="ma-order-customer__subtitle">Shipping Method:</div>
                 <span>
                     <?php
                     $shipping_methods = $order->get_shipping_methods();
@@ -47,11 +47,11 @@ $billing_details  = $order->get_address( 'billing' );
             </div>
         </address>
 
-        <address class="leading-9 capitalize">
-            <div class="md:mb-12 mb-6 ">
-                <span class="text-base md:text-xl md:mb-12 mb-5 block">Billing Info:</span>
-                <div class="text-sm md:text-base">
-                    <div class="md:mb-12">Contact Info:</div>
+        <address class="ma-order-customer__col">
+            <div class="ma-order-customer__section">
+                <span class="ma-order-customer__title">Billing Info:</span>
+                <div class="ma-order-customer__text">
+                    <div class="ma-order-customer__subtitle">Contact Info:</div>
                     <p>
                         <?php echo esc_html( $billing_details['first_name'] . ' ' . $billing_details['last_name'] ); ?> <br />
                         <?php echo esc_html( $billing_details['email'] ); ?> <br />
@@ -60,8 +60,8 @@ $billing_details  = $order->get_address( 'billing' );
                 </div>
             </div>
 
-            <div class="md:mb-12 mb-6 text-sm md:text-base">
-                <div class="md:mb-12 block">Address:</div>
+            <div class="ma-order-customer__section ma-order-customer__text">
+                <div class="ma-order-customer__subtitle">Address:</div>
                 <p>
                     <?php echo esc_html( $billing_details['address_1'] ); ?> <br>
                     <?php echo esc_html( $billing_details['city'] . ', ' . $billing_details['state'] . ' ' . $billing_details['postcode'] ); ?> <br>
@@ -69,8 +69,8 @@ $billing_details  = $order->get_address( 'billing' );
                 </p>
             </div>
 
-            <div class="text-sm md:text-base">
-                <div class="md:mb-12 block">Payment Method:</div>
+            <div class="ma-order-customer__text">
+                <div class="ma-order-customer__subtitle">Payment Method:</div>
                 <span><?php echo esc_html( $order->get_payment_method_title() ); ?></span>
             </div>
         </address>

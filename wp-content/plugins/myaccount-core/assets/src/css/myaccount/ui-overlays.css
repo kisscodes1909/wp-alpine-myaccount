@@ -1,0 +1,92 @@
+/* -------------------------------------------------------------------------- */
+/* My Account shared UI overlays + Alpine transition classes                  */
+/* -------------------------------------------------------------------------- */
+
+.ma-tr-enter,
+.ma-tr-leave {
+    transition-property: opacity, transform;
+    transition-duration: var(--ma-tr-duration, 300ms);
+}
+
+.ma-tr-enter-start,
+.ma-tr-leave-end {
+    opacity: 0;
+}
+
+.ma-tr-enter-end,
+.ma-tr-leave-start {
+    opacity: 1;
+}
+
+.ma-tr-enter {
+    transition-timing-function: ease-out;
+}
+
+.ma-tr-leave {
+    transition-timing-function: ease-in;
+}
+
+.ma-tr-scale-enter-start,
+.ma-tr-scale-leave-end {
+    transform: scale(0.9);
+}
+
+.ma-tr-scale-enter-end,
+.ma-tr-scale-leave-start {
+    transform: scale(1);
+}
+
+.ma-ui-popup__overlay {
+    --ma-tr-duration: 200ms;
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ma-space-md);
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.ma-ui-popup__panel {
+    position: relative;
+    z-index: 20;
+    background: var(--ma-surface);
+    overflow: auto;
+    width: 100%;
+    max-width: 700px;
+    padding: calc(var(--ma-base) * 2);
+}
+
+.ma-ui-toast__item {
+    --ma-tr-duration: 300ms;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    left: 20px;
+    background: #000;
+    color: #fff;
+    padding: 1.25rem 1.75rem;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+}
+
+.ma-address-book__toast {
+    --ma-tr-duration: 300ms;
+}
+
+.ma-address-book__toast.ma-tr-enter-start,
+.ma-address-book__toast.ma-tr-leave-end {
+    transform: scale(0.9);
+}
+
+.ma-address-book__toast.ma-tr-enter-end,
+.ma-address-book__toast.ma-tr-leave-start {
+    transform: scale(1);
+}
+
+@media (min-width: 768px) {
+    .ma-ui-toast__item {
+        top: 56px;
+        right: 56px;
+        left: auto;
+    }
+}

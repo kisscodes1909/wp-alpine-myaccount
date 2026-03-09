@@ -92,7 +92,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-orders__empty-text {
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-view-order__updates,
-body.myaccount-template-fashion.woocommerce-account .ma-form__section--bordered,
+body.myaccount-template-fashion.woocommerce-account .ma-form__section--divided,
 body.myaccount-template-fashion.woocommerce-account .ma-form__actions,
 body.myaccount-template-fashion.woocommerce-account .ma-page-heading__description {
     border-color: var(--ma-border);

@@ -10,12 +10,12 @@ wc_get_template(
 
 <div x-cloak x-data x-init="$store.userAddress.init()" class="ma-address-book">
     <div x-show="$store.userAddress.showNotification"
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0 transform scale-90"
-         x-transition:enter-end="opacity-100 transform scale-100"
-         x-transition:leave="transition ease-in duration-300"
-         x-transition:leave-start="opacity-100 transform scale-100"
-         x-transition:leave-end="opacity-0 transform scale-90"
+         x-transition:enter="ma-tr-enter"
+         x-transition:enter-start="ma-tr-enter-start"
+         x-transition:enter-end="ma-tr-enter-end"
+         x-transition:leave="ma-tr-leave"
+         x-transition:leave-start="ma-tr-leave-start"
+         x-transition:leave-end="ma-tr-leave-end"
          class="ma-address-book__toast">
         <p x-text="$store.userAddress.notificationMessage"></p>
     </div>

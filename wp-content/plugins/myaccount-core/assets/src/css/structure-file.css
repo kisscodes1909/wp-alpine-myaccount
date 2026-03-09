@@ -1,60 +1,8 @@
-@import "./myaccount/base.css";
-@import "./myaccount/navigation.css";
-@import "./myaccount/layout.css";
-@import "./myaccount/order-history.css";
-@import "./myaccount/view-order.css";
-@import "./myaccount/payment-methods.css";
-@import "./myaccount/form-base.css";
-@import "./myaccount/auth-shell.css";
-@import "./myaccount/notices.css";
-@import "./myaccount/login-register.css";
-@import "./myaccount/lost-password.css";
-@import "./myaccount/reset-password.css";
-@import "./myaccount/edit-account.css";
-@import "./myaccount/address-book.css";
-@import "./myaccount/fashion.css";
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer {
-    body {
-        @apply text-charcoal;
-    }
-}
-
-/* Minimal shared utility styles used by My Account Alpine components. */
-[x-cloak] {
-    display: none;
-}
-
-.apl-heading-chip {
-    @apply inline-flex items-center text-form-text text-xl md:text-[34px] font-semibold leading-none;
-}
-
-.apl-heading-chip-sm {
-    @apply inline-flex items-center text-form-text text-xl font-semibold leading-tight;
-}
-
-.loading-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    vertical-align: middle;
-}
-
-.loading-icon svg {
-    display: block;
-    vertical-align: middle;
-}
-
-.loading-icon .spinner-arc {
-    animation: spinner-dash 0.8s linear infinite;
-}
-
-@keyframes spinner-dash {
-    to {
-        stroke-dashoffset: -63;
-    }
-}
+/* Legacy aggregate bundle (fallback) */
+@import "./myaccount-shared.css";
+@import "./myaccount-endpoint-orders.css";
+@import "./myaccount-endpoint-view-order.css";
+@import "./myaccount-endpoint-payment-methods.css";
+@import "./myaccount-endpoint-edit-account.css";
+@import "./myaccount-endpoint-address.css";
+@import "./myaccount-endpoint-auth.css";

@@ -64,7 +64,7 @@ wc_get_template( 'myaccount/page-heading.php', array( 'page_heading' => 'My Info
         </div>
     </div>
 
-    <div class="ma-form__section ma-form__section--bordered">
+    <div class="ma-form__section ma-form__section--divided">
         <div class="ma-form__section-head">
             <h3 class="ma-form__section-title">Contact Information</h3>
             <p class="ma-form__section-description">Manage your contact details</p>
@@ -105,7 +105,7 @@ wc_get_template( 'myaccount/page-heading.php', array( 'page_heading' => 'My Info
         </div>
     </div>
 
-    <div class="ma-form__section ma-form__section--bordered">
+    <div class="ma-form__section ma-form__section--divided">
         <div class="ma-form__section-head">
             <h3 class="ma-form__section-title">Account Settings</h3>
             <p class="ma-form__section-description">Manage your account security</p>

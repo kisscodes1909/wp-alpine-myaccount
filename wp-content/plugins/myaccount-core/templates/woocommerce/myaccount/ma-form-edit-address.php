@@ -48,7 +48,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 }
 </style>
 <template id="edit-address" x-data>
-    <div class="flex justify-between items-center mb-8">
+    <div class="ma-address-form__header">
         <h2 class="apl-heading-chip-sm" x-text="$store.userAddress.form.title">Add Address</h2>
         <button @click="$store.popup.closePopup()" style="color: var(--ma-text-charcoal);">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
@@ -56,8 +56,8 @@ require_once __DIR__ . '/partials/form-field-icons.php';
             </svg>
         </button>
     </div>
-    <form class="ma-form ma-form-address flex flex-col gap-4" x-data="{ showAddress2: false }" x-init="showAddress2 = !!$store.userAddress.editAddress.address2">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <form class="ma-form ma-form-address ma-address-form" x-data="{ showAddress2: false }" x-init="showAddress2 = !!$store.userAddress.editAddress.address2">
+        <div class="ma-address-form__grid ma-address-form__grid--two">
             <div>
                 <label for="first-name">First name</label>
                 <div class="ma-form__input-wrap">
@@ -89,7 +89,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 
         <div>
             <button type="button" class="apl-address-line2-toggle" @click="showAddress2 = !showAddress2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="ma-address-form__icon-sm" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                     <path x-show="!showAddress2" stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     <path x-show="showAddress2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
                 </svg>
@@ -105,7 +105,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
             </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="ma-address-form__grid ma-address-form__grid--three">
             <div>
                 <label for="country">Country / Region</label>
                 <div class="ma-form__input-wrap">
@@ -150,8 +150,8 @@ require_once __DIR__ . '/partials/form-field-icons.php';
         </div>
 
         <template x-if="$store.userAddress.form.action === 'add'">
-            <div class="flex items-center pt-1">
-                <label class="jk-checkbox cursor-pointer">
+            <div class="ma-address-form__default-row">
+                <label class="jk-checkbox ma-address-form__checkbox-label">
                     <input x-model="$store.userAddress.editAddress.default" type="checkbox" />
                     <span>Make this my default shipping address.</span>
                 </label>
@@ -162,24 +162,24 @@ require_once __DIR__ . '/partials/form-field-icons.php';
     <div class="ma-form-actions ma-form-actions--two">
         <template x-if="$store.userAddress.form.action === 'edit'">
             <button type="button"
-                    class="button light inline-flex items-center justify-center gap-2"
+                    class="button light ma-address-form__action-button"
                     :disabled="$store.userAddress.removing"
                     :aria-busy="$store.userAddress.removing"
                     x-loading="$store.userAddress.removing"
                     data-loading-label="Removing..."
                     @click="$store.userAddress.remove($store.userAddress.editAddress.id)"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673A2.25 2.25 0 0115.916 21H8.084a2.25 2.25 0 01-2.244-1.327L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0V4.5A2.25 2.25 0 0013.5 2.25h-3A2.25 2.25 0 008.25 4.5v.893m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="ma-address-form__icon-sm" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673A2.25 2.25 0 0115.916 21H8.084a2.25 2.25 0 01-2.244-1.327L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0V4.5A2.25 2.25 0 0013.5 2.25h-3A2.25 2.25 0 008.25 4.5v.893m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
                 <span>Remove</span>
             </button>
         </template>
 
-        <button type="button" @click="$store.userAddress.save()" class="button inline-flex items-center justify-center gap-2"
+        <button type="button" @click="$store.userAddress.save()" class="button ma-address-form__action-button"
                 :disabled="$store.userAddress.saving"
                 :aria-busy="$store.userAddress.saving"
                 x-loading="$store.userAddress.saving"
                 data-loading-label="Saving...">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="ma-address-form__icon-sm" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
             <span x-text="$store.userAddress.form.buttonSaveLabel">Add</span>
         </button>
     </div>

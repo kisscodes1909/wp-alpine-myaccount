@@ -2,12 +2,12 @@
 <template id="form-change-password" x-data>
         <form
                 x-data="passwordChangeForm()"
-                class="w-full ma-form flex flex-col gap-8"
+                class="ma-form ma-change-password__form"
                 @keyup.enter="handleSubmit()"
                 @submit.prevent="handleSubmit"
                 @keyup="validateForm()"
         >
-            <div class="flex justify-between items-center">
+            <div class="ma-change-password__header">
                 <h2 class="apl-heading-chip-sm">Change Password</h2>
                 <button type="button" @click="$store.popup.closePopup()" style="color: var(--ma-text-charcoal);">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
@@ -22,14 +22,14 @@
                     <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
                     <input
                             x-model="currentPassword"
-                            type="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input pr-5"
+                            type="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input"
                             autocomplete="username"
                             @keyup="handler.validateField('password')"
                             :type="showPassword === true ? 'text' : 'password'"
                             :class="{'field-invalid': errors.currentPassword}"
                     />
                     <div class="password-toggle">
-                        <div class="block w-10 h-10 flex items-center justify-center" x-password-eye="showPassword" @click="showPassword=!showPassword"></div>
+                        <div class="ma-form__eye-toggle" x-password-eye="showPassword" @click="showPassword=!showPassword"></div>
                     </div>
                 </div>
                 <span x-validate-error="{message: errors.currentPassword}"></span>
@@ -41,14 +41,14 @@
                     <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
                     <input
                             x-model="newPassword"
-                            type="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input pr-5"
+                            type="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input"
                             autocomplete="username"
                             @keyup="handler.validateField('password')"
                             :type="showPassword === true ? 'text' : 'password'"
                             :class="{'field-invalid': errors.newPassword}"
                     />
                     <div class="password-toggle">
-                        <div class="block w-10 h-10 flex items-center justify-center" x-password-eye="showPassword" @click="showPassword=!showPassword"></div>
+                        <div class="ma-form__eye-toggle" x-password-eye="showPassword" @click="showPassword=!showPassword"></div>
                     </div>
                 </div>
                 <span x-validate-error="{message: errors.newPassword}"></span>
@@ -60,29 +60,29 @@
                     <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
                     <input
                             x-model="confirmPassword"
-                            type="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input pr-5"
+                            type="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input"
                             autocomplete="username"
                             @keyup="handler.validateField('password')"
                             :type="showPassword === true ? 'text' : 'password'"
                             :class="{'field-invalid': errors.confirmPassword}"
                     />
                     <div class="password-toggle">
-                        <div class="block w-10 h-10 flex items-center justify-center" x-password-eye="showPassword" @click="showPassword=!showPassword"></div>
+                        <div class="ma-form__eye-toggle" x-password-eye="showPassword" @click="showPassword=!showPassword"></div>
                     </div>
                 </div>
                 <span x-validate-error="{message: errors.confirmPassword}"></span>
             </div>
 
-            <div class="flex items-center">
+            <div class="ma-change-password__remember-row">
                 <label class="jk-checkbox">
                     <input x-model="keepSignedIn" type="checkbox" id="keep-signed-in" />
-                    <span><span class="leading-snug">Keep me signed in. <br/><i class="text-sm not-italic">Uncheck if you are using a public device<i></i></span></span>
+                    <span><span class="ma-change-password__remember-text">Keep me signed in. <br/><i class="ma-change-password__remember-note">Uncheck if you are using a public device<i></i></span></span>
                 </label>
             </div>
 
             <div class="text-center">(Password must be 8-25 characters.)</div>
             <div class="ma-form-actions">
-                <button type="submit" class="button inline-flex items-center justify-center gap-2" :disabled="isLoading" :aria-busy="isLoading" x-loading="isLoading" data-loading-label="Saving...">
+                <button type="submit" class="button ma-change-password__submit" :disabled="isLoading" :aria-busy="isLoading" x-loading="isLoading" data-loading-label="Saving...">
                     Save
                 </button>
             </div>

@@ -1,57 +1,48 @@
 /* -------------------------------------------------------------------------- */
 /* My Account endpoint styles: Edit Account                                   */
 /* -------------------------------------------------------------------------- */
-
 /* Standardize section spacing for My Info: flex col + single gap rhythm; border-top balanced with gap */
 .woocommerce-account.woocommerce-edit-account .ma-form {
     --ma-form-space-main-gap: calc(var(--ma-base) * 2);
     --ma-form-space-section-gap: calc(var(--ma-base) * 2);
     --ma-form-space-bordered-top: calc(var(--ma-base) * 2);
 }
-
 .woocommerce-account.woocommerce-edit-account .ma-form__section--divided {
     border-top: 1px solid var(--ma-form-color-border);
 }
-
 /* Fashion variant: increase form rhythm for My Info endpoint */
 body.myaccount-template-fashion.woocommerce-account.woocommerce-edit-account .ma-form {
     --ma-form-space-main-gap: calc(var(--ma-base) * 2.5);
     --ma-form-space-section-gap: calc(var(--ma-base) * 2.5);
     --ma-form-space-bordered-top: calc(var(--ma-base) * 2.5);
 }
-
-.woocommerce-account {
-    .ma-change-password__form {
+.woocommerce-account .ma-change-password__form {
         width: 100%;
         display: flex;
         flex-direction: column;
         gap: var(--ma-space-xl);
     }
-
-    .ma-change-password__header {
+.woocommerce-account .ma-change-password__header {
         display: flex;
         align-items: center;
         justify-content: space-between;
     }
-
-    .ma-change-password__remember-row {
+.woocommerce-account .ma-change-password__remember-row {
         display: flex;
         align-items: center;
     }
-
-    .ma-change-password__remember-text {
+.woocommerce-account .ma-change-password__remember-text {
         line-height: var(--ma-line-snug);
     }
-
-    .ma-change-password__remember-note {
+.woocommerce-account .ma-change-password__remember-note {
         font-size: var(--ma-font-sm);
         font-style: normal;
     }
-
-    .ma-change-password__submit {
+.woocommerce-account .ma-change-password__submit {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: var(--ma-space-xs);
     }
-}
+
+/*# sourceMappingURL=ma-edit-account.css.map */

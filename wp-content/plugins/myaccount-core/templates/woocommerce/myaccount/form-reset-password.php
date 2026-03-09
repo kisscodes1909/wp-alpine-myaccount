@@ -33,8 +33,8 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 
 <!--        <p>--><?php //echo apply_filters( 'woocommerce_reset_password_message', esc_html__( 'Enter a new password below.', 'woocommerce' ) ); ?><!--</p>--><?php //// @codingStandardsIgnoreLine ?>
 
-        <div class="mb-8">
-            <div class="mb-10" :class="{'error': (touched.password && errors.password)}">
+        <div class="ma-reset-password__section">
+            <div class="ma-reset-password__field" :class="{'error': (touched.password && errors.password)}">
                 <label for="reg_password"><?php esc_html_e('New Password', 'woocommerce'); ?></label>
                 <div class="ma-form__input-wrap" x-data="{showPassword:false}">
                     <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
@@ -48,31 +48,31 @@ require_once __DIR__ . '/partials/form-field-icons.php';
                     />
                     <div class="password-toggle">
                         <!-- Password Eye -->
-                        <span class="block w-10 h-10 flex items-center justify-center">
-                    <svg x-show="!showPassword" @click="showPassword=!showPassword" class="cursor-pointer size-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <span class="ma-form__eye-toggle">
+                    <svg x-show="!showPassword" @click="showPassword=!showPassword" class="ma-form__eye-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                     </svg>
 
-                     <svg x-show="showPassword" @click="showPassword=!showPassword" class="cursor-pointer size-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                     <svg x-show="showPassword" @click="showPassword=!showPassword" class="ma-form__eye-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
                     </svg>
                 </span>
                     </div>
                     <span x-validate-error="{message: errors.password, touched: touched.password}"></span>
-                    <p class="mt-4">Password must contain:</p>
-                    <ul class="grid grid-cols-1 md:grid-cols-2 list-none gap-4 md:gap-2">
+                    <p class="ma-reset-password__requirements-hint">Password must contain:</p>
+                    <ul class="ma-reset-password__requirements">
                         <template x-for="(requirement, index) in Object.values(passwordRequirements)" :key="index" >
-                            <li class="flex flex-row items-center gap-3">
-                                <svg x-show="passedRequirements.includes(requirement.code) && touched.password" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-green-600">
+                            <li class="ma-reset-password__requirement">
+                                <svg x-show="passedRequirements.includes(requirement.code) && touched.password" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ma-reset-password__requirement-icon ma-reset-password__requirement-icon--pass">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                                 </svg>
-                                <svg x-show="!passedRequirements.includes(requirement.code) && touched.password" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-red-600 bg-white">
+                                <svg x-show="!passedRequirements.includes(requirement.code) && touched.password" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ma-reset-password__requirement-icon ma-reset-password__requirement-icon--fail">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                                 </svg>
-                                <span :class="{
-                                'text-green-600' : passedRequirements.includes(requirement.code) && touched.password,
-                                'text-red-600' : !passedRequirements.includes(requirement.code) && touched.password,
+                                <span class="ma-reset-password__requirement-text" :class="{
+                                'ma-reset-password__requirement-text--pass' : passedRequirements.includes(requirement.code) && touched.password,
+                                'ma-reset-password__requirement-text--fail' : !passedRequirements.includes(requirement.code) && touched.password,
                             }" x-text="requirement.message"></span>
                             </li>
                         </template>
@@ -82,11 +82,6 @@ require_once __DIR__ . '/partials/form-field-icons.php';
         </div>
 
         <input type="hidden" name="password_2" x-model="formData.password" autocomplete="new-password" />
-
-<!--        <div class="mb-8">-->
-<!--            <label for="password_2">--><?php //esc_html_e( 'Re-enter new password', 'woocommerce' ); ?><!--</label>-->
-<!--            <input minlength="8" type="password" class="woocommerce-Input woocommerce-Input--text input-text" name="password_2" id="password_2" autocomplete="new-password" />-->
-<!--        </div>-->
 
         <input type="hidden" name="reset_key" value="<?php echo esc_attr( $args['key'] ); ?>" />
         <input type="hidden" name="reset_login" value="<?php echo esc_attr( $args['login'] ); ?>" />

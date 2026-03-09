@@ -147,7 +147,7 @@
         line-height: var(--ma-line-snug);
     }
 
-    @media (min-width: 640px) {
+    @media (min-width: 480px) {
         .ma-page-heading__back-label {
             font-size: var(--ma-font-base);
         }

@@ -87,15 +87,15 @@ if ( ! empty( $shipments ) ) {
 
 <?php do_action( 'woocommerce_order_details_before_order_table', $order ); ?>
 
-<div class="md:container mx-auto px-8">
+<div class="ma-order-legacy__container">
 	<?php if ( in_array( $order->get_status(), apply_filters( 'woocommerce_valid_order_statuses_for_cancel', array( 'pending', 'failed', 'processing' ), $order ), true ) ) : ?>
-		<div class="mt-14">
+		<div class="ma-order-legacy__section">
 			<?php $request_order_cancellation = $order->get_meta( 'request_order_cancellation' ); ?>
 			<form action="" method="post">
 				<?php wp_nonce_field( 'cancel_order_action_nonce', 'cancel_order_nonce' ); ?>
 				<input type="hidden" value="<?php echo esc_attr( $order->get_id() ); ?>" name="order_id" />
-				<div class="flex flex-col sm:flex-row gap-5 items-center">
-					<button class="px-6 text-sm button slim w-[300px]" type="submit" <?php echo $request_order_cancellation ? 'disabled' : ''; ?>><?php esc_html_e( 'Cancel Order', 'woocommerce' ); ?></button>
+				<div class="ma-order-legacy__action-row">
+					<button class="button slim ma-order-legacy__action-button" type="submit" <?php echo $request_order_cancellation ? 'disabled' : ''; ?>><?php esc_html_e( 'Cancel Order', 'woocommerce' ); ?></button>
 					<?php if ( $request_order_cancellation ) : ?>
 						<span><?php esc_html_e( 'Your cancelation request has been submitted.', 'woocommerce' ); ?></span>
 					<?php endif; ?>
@@ -105,8 +105,8 @@ if ( ! empty( $shipments ) ) {
 	<?php endif; ?>
 
 	<?php if ( false && $order->get_status() === 'shipped' ) : // Temporarily hide Return Order button. ?>
-		<div class="mt-14 text-center md:text-left">
-			<a href="<?php echo esc_url( wc_get_endpoint_url( 'return-order', $order->get_id() ) ); ?>" class="px-6 text-sm button slim w-[200px] md:w-[300px]"><?php esc_html_e( 'Return Order', 'woocommerce' ); ?></a>
+		<div class="ma-order-legacy__section ma-order-legacy__section--center">
+			<a href="<?php echo esc_url( wc_get_endpoint_url( 'return-order', $order->get_id() ) ); ?>" class="button slim ma-order-legacy__action-button ma-order-legacy__action-button--narrow"><?php esc_html_e( 'Return Order', 'woocommerce' ); ?></a>
 		</div>
 	<?php endif; ?>
 </div>

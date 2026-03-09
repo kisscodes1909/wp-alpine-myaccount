@@ -4,38 +4,45 @@
 
 /* Auth container - wraps login/signup/lost/reset forms */
 .woocommerce-account .ma-auth-container {
-    @apply w-full mx-auto px-4;
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--ma-space-md);
     max-width: 1280px;
 }
 
 @media (min-width: 768px) {
     .woocommerce-account .ma-auth-container {
-        @apply px-8;
+        padding-inline: var(--ma-space-lg);
     }
 }
 
 .woocommerce-account .ma-auth {
-    @apply w-full mx-auto;
+    width: 100%;
+    margin-inline: auto;
     max-width: 700px;
 }
 
 /* Page heading inside auth container - centered */
 .woocommerce-account .ma-auth-container .ma-page-heading {
-    @apply flex flex-col items-center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
     margin-bottom: var(--ma-form-space-section-gap);
 }
 
 .woocommerce-account .ma-auth__content {
-    @apply flex flex-col;
+    display: flex;
+    flex-direction: column;
     gap: var(--ma-form-space-main-gap);
 }
 
 .woocommerce-account .ma-auth-container__notices {
-    @apply flex flex-col;
+    display: flex;
+    flex-direction: column;
     gap: var(--ma-notice-space-gap);
 }
 
 .woocommerce-account .ma-auth-container__notices:empty {
-    @apply hidden;
+    display: none;
 }

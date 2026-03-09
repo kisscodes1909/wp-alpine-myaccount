@@ -3,26 +3,24 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build:css": "cross-env NODE_ENV=development tailwindcss -i ./assets/src/css/structure-file.css -o ./assets/css/myaccount.css --postcss",
-    "build:css:min": "cross-env NODE_ENV=production tailwindcss -i ./assets/src/css/structure-file.css -o ./assets/css/myaccount.css --postcss --minify",
-    "watch:css": "cross-env NODE_ENV=development tailwindcss -i ./assets/src/css/structure-file.css -o ./assets/css/myaccount.css --postcss --watch",
+    "build:css": "cross-env NODE_ENV=development node ./scripts/build-css.js",
+    "build:css:min": "cross-env NODE_ENV=production node ./scripts/build-css.js",
+    "watch:css": "cross-env NODE_ENV=development node ./scripts/build-css.js --watch",
     "build:js": "esbuild ./assets/src/js/alpine/init.js --bundle --outfile=./assets/js/alpine.bundle.js --format=iife --global-name=AlpineBundle",
     "build:js:min": "esbuild ./assets/src/js/alpine/init.js --bundle --outfile=./assets/js/alpine.bundle.min.js --format=iife --global-name=AlpineBundle --minify",
     "watch:js": "esbuild ./assets/src/js/alpine/init.js --bundle --outfile=./assets/js/alpine.bundle.js --format=iife --global-name=AlpineBundle --watch",
     "build": "npm run build:css && npm run build:js"
   },
   "devDependencies": {
-    "@jeffreyvr/tailwindcss-tailpress": "^2.0.0",
     "autoprefixer": "^10.4.17",
     "cross-env": "^7.0.3",
     "esbuild": "^0.25.9",
     "postcss": "^8.4.33",
     "postcss-import": "^14.0.0",
-    "postcss-nested-ancestors": "^2.0.0",
-    "tailwindcss": "^3.4.3"
+    "postcss-nested": "^7.0.2",
+    "postcss-nested-ancestors": "^2.0.0"
   },
   "dependencies": {
-    "@tailwindcss/forms": "^0.5.7",
     "alpinejs": "^3.14.0",
     "lodash": "^4.17.21",
     "yup": "^1.3.3"

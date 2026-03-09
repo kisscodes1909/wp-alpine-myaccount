@@ -4,7 +4,8 @@
 
 .woocommerce-account .woocommerce-notices-wrapper,
 .woocommerce-account .ma-form__notice {
-    @apply flex flex-col;
+    display: flex;
+    flex-direction: column;
     gap: var(--ma-notice-space-gap);
 }
 
@@ -13,15 +14,18 @@
 }
 
 .woocommerce-account .ma-form__notice:empty {
-    @apply hidden;
+    display: none;
 }
 
 .woocommerce-account .woocommerce-message,
 .woocommerce-account .woocommerce-info,
 .woocommerce-account .woocommerce-warning,
 .woocommerce-account .ma-notice--warning {
-    @apply relative list-none m-0;
-    @apply flex items-center;
+    position: relative;
+    list-style: none;
+    margin: 0;
+    display: flex;
+    align-items: center;
     gap: var(--ma-space-sm);
     padding: var(--ma-notice-padding-y) var(--ma-notice-padding-right) var(--ma-notice-padding-y) var(--ma-notice-padding-x);
     border-radius: var(--ma-notice-border-radius);
@@ -40,8 +44,11 @@
 }
 
 .woocommerce-account .woocommerce-error {
-    @apply relative list-none m-0;
-    @apply flex flex-col;
+    position: relative;
+    list-style: none;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
     gap: var(--ma-space-sm);
     padding: var(--ma-notice-padding-y) var(--ma-notice-padding-right) var(--ma-notice-padding-y) calc(var(--ma-notice-padding-x) + var(--ma-notice-icon-size) + var(--ma-space-sm));
     border-radius: var(--ma-notice-border-radius);
@@ -82,14 +89,15 @@
 }
 
 .woocommerce-account .woocommerce-error li {
-    @apply list-none;
+    list-style: none;
 }
 
 .woocommerce-account .woocommerce-message::before,
 .woocommerce-account .woocommerce-info::before,
 .woocommerce-account .woocommerce-warning::before,
 .woocommerce-account .ma-notice--warning::before {
-    @apply inline-block flex-none;
+    display: inline-block;
+    flex: none;
     content: '';
     width: var(--ma-notice-icon-size);
     height: var(--ma-notice-icon-size);
@@ -109,7 +117,7 @@
 }
 
 .woocommerce-account .woocommerce-error::before {
-    @apply absolute;
+    position: absolute;
     content: '';
     width: var(--ma-notice-icon-size);
     height: var(--ma-notice-icon-size);
