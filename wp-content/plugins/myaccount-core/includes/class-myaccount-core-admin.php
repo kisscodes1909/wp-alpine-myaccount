@@ -45,6 +45,16 @@ class MyAccount_Core_Admin {
 				'default'           => 'plugin',
 			)
 		);
+
+		register_setting(
+			'myaccount_core_settings',
+			'myaccount_layout',
+			array(
+				'type'              => 'string',
+				'sanitize_callback' => array( $this, 'sanitize_layout' ),
+				'default'           => '',
+			)
+		);
 	}
 
 	public function sanitize_owner_mode( $value ): string {
@@ -53,12 +63,19 @@ class MyAccount_Core_Admin {
 		return in_array( $mode, array( 'plugin', 'theme' ), true ) ? $mode : 'plugin';
 	}
 
+	public function sanitize_layout( $value ): string {
+		$layout = is_string( $value ) ? $value : '';
+
+		return $layout === 'stacked' ? 'stacked' : '';
+	}
+
 	public function render_settings_page(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
-		$mode = MyAccount_Core_Plugin::get_owner_mode();
+		$mode   = MyAccount_Core_Plugin::get_owner_mode();
+		$layout = get_option( 'myaccount_layout', '' );
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'My Account Core', 'myaccount-core' ); ?></h1>
@@ -93,6 +110,38 @@ class MyAccount_Core_Admin {
 							<p class="description">
 								<?php esc_html_e( 'Switch to Theme mode to disable plugin ownership without deactivating the plugin.', 'myaccount-core' ); ?>
 							</p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'My Account layout', 'myaccount-core' ); ?></th>
+						<td>
+							<fieldset>
+								<label>
+									<input
+										type="radio"
+										name="myaccount_layout"
+										value=""
+										<?php checked( $layout, '' ); ?>
+									/>
+									<?php esc_html_e( 'Theme default (column)', 'myaccount-core' ); ?>
+								</label>
+								<p class="description" style="margin-left: 1.5em; margin-top: 0.25em;">
+									<?php esc_html_e( 'Navigation left, content right; theme controls column layout.', 'myaccount-core' ); ?>
+								</p>
+								<br />
+								<label>
+									<input
+										type="radio"
+										name="myaccount_layout"
+										value="stacked"
+										<?php checked( $layout, 'stacked' ); ?>
+									/>
+									<?php esc_html_e( 'Stacked', 'myaccount-core' ); ?>
+								</label>
+								<p class="description" style="margin-left: 1.5em; margin-top: 0.25em;">
+									<?php esc_html_e( 'Navigation on top (horizontal), content below.', 'myaccount-core' ); ?>
+								</p>
+							</fieldset>
 						</td>
 					</tr>
 				</table>

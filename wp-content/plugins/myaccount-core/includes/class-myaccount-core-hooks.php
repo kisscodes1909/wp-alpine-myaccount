@@ -140,6 +140,10 @@ class MyAccount_Core_Hooks {
 
 		$classes[] = 'myaccount-template-' . sanitize_html_class( $template );
 
+		if ( get_option( 'myaccount_layout' ) === 'stacked' ) {
+			$classes[] = 'ma-layout-stacked';
+		}
+
 		return $classes;
 	}
 

@@ -6,6 +6,7 @@ class MyAccount_Core_Template_Loader {
 	private static ?MyAccount_Core_Template_Loader $instance = null;
 	private string $plugin_dir;
 	private array $managed_templates = array(
+		'myaccount/my-account.php',
 		'myaccount/navigation.php',
 		'myaccount/page-heading.php',
 		'myaccount/form-login.php',

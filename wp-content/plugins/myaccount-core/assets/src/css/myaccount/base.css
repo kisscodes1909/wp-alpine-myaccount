@@ -108,10 +108,6 @@
         border-bottom: var(--ma-fullbleed-border-bottom, 0);
     }
 
-    .woocommerce-MyAccount-content {
-        @apply w-full max-w-[1280px] mx-auto;
-    }
-
     /* Horizontal padding on main content blocks (ensures spacing even when theme does not use .woocommerce-MyAccount-content) */
     .ma-page-heading,
     .ma-orders,
@@ -128,33 +124,49 @@
     }
 
     .ma-page-heading {
-        @apply my-8;
+        margin-block: var(--ma-space-xl);
     }
 
     .ma-page-heading__back-link {
-        @apply inline-flex items-center gap-1 mb-3 no-underline;
+        display: inline-flex;
+        align-items: center;
+        gap: var(--ma-space-xs);
+        margin-bottom: var(--ma-space-md);
+        text-decoration: none;
         color: var(--ma-text-charcoal);
     }
 
     .ma-page-heading__back-icon {
-        width: 25px;
-        height: 26px;
-        transform: scale(0.75);
+        width: var(--ma-font-lg);
+        height: var(--ma-font-lg);
+        flex-shrink: 0;
     }
 
     .ma-page-heading__back-label {
-        @apply text-sm sm:text-base;
+        font-size: var(--ma-font-sm);
         line-height: var(--ma-line-snug);
     }
 
+    @media (min-width: 640px) {
+        .ma-page-heading__back-label {
+            font-size: var(--ma-font-base);
+        }
+    }
+
     .ma-page-heading__title {
-        @apply uppercase;
+        font-size: var(--ma-font-lg);
+        line-height: var(--ma-line-snug);
+        margin-bottom: var(--ma-space-xs);
+        text-transform: uppercase;
         color: var(--ma-text-primary);
     }
 
     .ma-page-heading__description {
-        @apply text-sm pb-4 border-b;
-        line-height: var(--ma-line-snug);
+        font-size: var(--ma-font-sm);
+        line-height: var(--ma-line-md);
+        padding-bottom: var(--ma-space-md);
+        border-bottom: 1px solid var(--ma-border-divider);
+        color: var(--ma-text-charcoal);
     }
 
     /* ma-orders: moved to base-order-history.css */
