@@ -6908,6 +6908,112 @@ attempted value: ${formattedValue}
     }
   });
 
+  // assets/src/js/alpine/components/forms/lostPassword.js
+  var LostPasswordHandler = class extends BaseFormHandler {
+    getValidationSchema() {
+      return window.yup.object().shape({
+        email: window.yup.string().email("Your email address isn't valid.").required("This field is required.")
+      });
+    }
+  };
+  var lostPassword_default = () => ({
+    formData: {
+      email: ""
+    },
+    isFormSubmitting: false,
+    allowSubmit: false,
+    errors: {},
+    touched: {},
+    notice: "",
+    handler: null,
+    init() {
+      this.handler = new LostPasswordHandler(this.formData, {});
+      this.$watch("handler.isFormSubmitting", (value) => {
+        this.isFormSubmitting = value;
+      });
+      this.$watch("handler.errors", (value) => {
+        this.errors = value;
+      });
+      this.$watch("handler.touched", (value) => {
+        this.touched = value;
+      });
+      this.$watch("handler.notice", (value) => {
+        this.notice = value;
+      });
+    }
+  });
+
+  // assets/src/js/alpine/components/forms/resetPassword.js
+  var ResetPasswordHandler = class extends BaseFormHandler {
+    constructor(formData, additionalData = {}) {
+      super(formData, additionalData);
+      this.passedRequirements = [];
+      this.passwordRequirements = {
+        minLength: { regex: /.{8,}/, message: "At least 8 characters", code: "ERR_PASSWORD_MINLENGTH" },
+        uppercase: { regex: /(?=.*[A-Z])/, message: "1 uppercase letter", code: "ERR_PASSWORD_UPPERCASE" },
+        number: { regex: /(?=.*[0-9])/, message: "1 number", code: "ERR_PASSWORD_NUMBER" },
+        lowercase: { regex: /(?=.*[a-z])/, message: "1 lowercase letter", code: "ERR_PASSWORD_LOWERCASE" }
+      };
+    }
+    getValidationSchema() {
+      return window.yup.object().shape({
+        password: window.yup.string().required("This field is required.").test("password-complexity", "Your password does not meet the requirements.", (value) => {
+          const passedRequirements = [];
+          Object.values(this.passwordRequirements).forEach((requirement) => {
+            if (requirement.regex.test(value || "")) {
+              passedRequirements.push(requirement.code);
+            }
+          });
+          this.passedRequirements = passedRequirements;
+          return passedRequirements.length === Object.keys(this.passwordRequirements).length;
+        })
+      });
+    }
+  };
+  var resetPassword_default = () => ({
+    formData: {
+      password: ""
+    },
+    isFormSubmitting: false,
+    allowSubmit: false,
+    errors: {},
+    touched: {},
+    notice: "",
+    handler: null,
+    passedRequirements: [],
+    passwordRequirements: {},
+    init() {
+      this.handler = new ResetPasswordHandler(this.formData);
+      this.$watch("handler.isFormSubmitting", (value) => {
+        this.isFormSubmitting = value;
+      });
+      this.$watch("handler.errors", (value) => {
+        this.errors = value;
+      });
+      this.$watch("handler.touched", (value) => {
+        this.touched = value;
+      });
+      this.$watch("handler.notice", (value) => {
+        this.notice = value;
+      });
+      this.$watch("handler.passedRequirements", (value) => {
+        this.passedRequirements = value;
+      });
+      this.$watch("handler.passwordRequirements", (value) => {
+        this.passwordRequirements = value;
+      });
+      this.passwordRequirements = this.handler.passwordRequirements;
+    }
+  });
+
+  // assets/src/js/alpine/components/forms/auth.js
+  function registerAuthFormComponents() {
+    Alpine.data("login", login_default);
+    Alpine.data("signup", signup_default);
+    Alpine.data("lostPassword", lostPassword_default);
+    Alpine.data("resetPassword", resetPassword_default);
+  }
+
   // assets/src/js/alpine/components/forms/updateAccount.js
   var updateAccount_default = () => {
     const userData = window.accountData || {};
@@ -7054,12 +7160,16 @@ attempted value: ${formattedValue}
     };
   };
 
-  // assets/src/js/alpine/components/forms/index.js
-  function registerFormComponents() {
-    Alpine.data("login", login_default);
-    Alpine.data("signup", signup_default);
+  // assets/src/js/alpine/components/forms/edit-account.js
+  function registerEditAccountFormComponents() {
     Alpine.data("updateAccount", updateAccount_default);
     Alpine.data("passwordChangeForm", passwordChangeForm_default);
+  }
+
+  // assets/src/js/alpine/components/forms/index.js
+  function registerFormComponents() {
+    registerAuthFormComponents();
+    registerEditAccountFormComponents();
   }
 
   // assets/src/js/alpine/components/account/index.js
@@ -7099,3 +7209,4 @@ attempted value: ${formattedValue}
     }
   }
 })();
+//# sourceMappingURL=alpine.bundle.js.map

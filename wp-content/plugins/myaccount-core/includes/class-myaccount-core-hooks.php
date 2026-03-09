@@ -87,21 +87,26 @@ class MyAccount_Core_Hooks {
 		wc_get_template( 'myaccount/apl-address.php' );
 		wc_get_template( 'myaccount/ma-form-edit-address.php' );
 
-		wp_localize_script(
-			'alpine-bundle',
-			'scriptData',
-			array(
-				'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
-				'addresses' => $addresses,
-				'countries' => $countries,
-				'nonce'     => wp_create_nonce( 'save_address_nonce' ),
-			)
+		$address_localize_data = array(
+			'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
+			'addresses' => $addresses,
+			'countries' => $countries,
+			'nonce'     => wp_create_nonce( 'save_address_nonce' ),
 		);
+		$address_handle        = wp_script_is( 'myaccount-core-js-endpoint', 'enqueued' ) ? 'myaccount-core-js-endpoint' : 'alpine-bundle';
+
+		if ( wp_script_is( $address_handle, 'enqueued' ) ) {
+			wp_localize_script(
+				$address_handle,
+				'scriptData',
+				$address_localize_data
+			);
+		}
 
 		wp_enqueue_script(
 			'myaccount-core-address-googleapis',
 			'https://maps.googleapis.com/maps/api/js?key=AIzaSyD-42Ska0L9w12EoymnnOFAPaF5uCdiPgU&language=en&loading=async',
-			array( 'alpine-bundle' ),
+			array( $address_handle ),
 			'1.0',
 			true
 		);

@@ -6,9 +6,9 @@
     "build:css": "cross-env NODE_ENV=development node ./scripts/build-css.js",
     "build:css:min": "cross-env NODE_ENV=production node ./scripts/build-css.js",
     "watch:css": "cross-env NODE_ENV=development node ./scripts/build-css.js --watch",
-    "build:js": "esbuild ./assets/src/js/alpine/init.js --bundle --outfile=./assets/js/alpine.bundle.js --format=iife --global-name=AlpineBundle",
-    "build:js:min": "esbuild ./assets/src/js/alpine/init.js --bundle --outfile=./assets/js/alpine.bundle.min.js --format=iife --global-name=AlpineBundle --minify",
-    "watch:js": "esbuild ./assets/src/js/alpine/init.js --bundle --outfile=./assets/js/alpine.bundle.js --format=iife --global-name=AlpineBundle --watch",
+    "build:js": "cross-env NODE_ENV=development node ./scripts/build-js.js",
+    "build:js:min": "cross-env NODE_ENV=production node ./scripts/build-js.js",
+    "watch:js": "cross-env NODE_ENV=development node ./scripts/build-js.js --watch",
     "build": "npm run build:css && npm run build:js"
   },
   "devDependencies": {

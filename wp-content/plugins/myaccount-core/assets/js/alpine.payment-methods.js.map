@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/js/alpine/entries/endpoint-payment-methods.js"],
+  "sourcesContent": ["window.MyAccountAlpineRuntime?.start?.();\n"],
+  "mappings": ";;AAAA,SAAO,wBAAwB,QAAQ;",
+  "names": []
+}
