@@ -6,7 +6,7 @@
     .ma-orders {
         display: flex;
         flex-direction: column;
-        gap: var(--ma-space-2xl);
+        gap: var(--ma-space-xl);
     }
 
     /* Order list item card (Figma: image left, content right). No background, no padding on box/image; padding only on body. */
@@ -15,7 +15,7 @@
         flex-direction: column;
         border: 1px solid var(--ma-border);
         padding: 0;
-        transition: border-color 0.3s ease-in-out;
+        transition: border-color var(--ma-duration-normal) var(--ma-easing-smooth);
     }
 
     .ma-orders__item:hover {
@@ -50,7 +50,7 @@
     .ma-orders__item-image-overlay-count {
         font-size: var(--ma-font-2xl);
         font-weight: 500;
-        line-height: var(--ma-line-lg);
+        line-height: var(--ma-line-tight);
         color: var(--ma-text-inverse);
         letter-spacing: -0.44px;
     }
@@ -58,7 +58,7 @@
     .ma-orders__item-image-overlay-label {
         font-size: var(--ma-font-md);
         font-weight: 400;
-        line-height: var(--ma-line-md);
+        line-height: var(--ma-line-snug);
         color: var(--ma-text-inverse-soft);
     }
 
@@ -68,7 +68,7 @@
         height: 100%;
         min-height: 155px;
         object-fit: cover;
-        transition: transform 0.3s ease-in-out;
+        transition: transform var(--ma-duration-normal) var(--ma-easing-smooth);
     }
 
     .ma-orders__item:hover .ma-orders__item-image img {
@@ -105,9 +105,9 @@
 
     .ma-orders__item-order-number {
         margin: 0;
-        font-size: var(--ma-font-lg);
+        font-size: var(--ma-font-sm);
         font-weight: 500;
-        line-height: var(--ma-line-xl);
+        line-height: var(--ma-line-snug);
         color: var(--ma-text-primary);
         letter-spacing: -0.15px;
     }
@@ -118,8 +118,8 @@
         gap: 10px;
         padding: 5px 10px;
         border: 1px solid transparent;
-        font-size: var(--ma-font-md);
-        line-height: var(--ma-line-md);
+        font-size: var(--ma-font-xs);
+        line-height: var(--ma-line-tight);
         font-weight: 400;
         text-transform: uppercase;
         letter-spacing: 0.6px;
@@ -185,8 +185,8 @@
 
     .ma-orders__item-meta-label {
         margin-bottom: 2px;
-        font-size: var(--ma-font-md);
-        line-height: var(--ma-line-md);
+        font-size: var(--ma-font-xs);
+        line-height: var(--ma-line-tight);
         color: var(--ma-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.6px;
@@ -194,8 +194,8 @@
 
     .ma-orders__item-meta-value {
         margin: 0;
-        font-size: var(--ma-font-md);
-        line-height: var(--ma-line-md);
+        font-size: var(--ma-font-xs);
+        line-height: var(--ma-line-tight);
         color: var(--ma-text-muted-dark);
     }
 
@@ -210,9 +210,9 @@
 
     .ma-orders__item-total {
         margin: 0;
-        font-size: var(--ma-font-lg);
+        font-size: var(--ma-font-sm);
         font-weight: 500;
-        line-height: var(--ma-line-xl);
+        line-height: var(--ma-line-snug);
         color: var(--ma-text-primary);
         letter-spacing: -0.15px;
     }
@@ -221,13 +221,13 @@
         display: inline-flex;
         align-items: center;
         gap: 4px;
-        font-size: var(--ma-font-md);
-        line-height: var(--ma-line-md);
+        font-size: var(--ma-font-xs);
+        line-height: var(--ma-line-tight);
         color: var(--ma-text-muted);
         text-transform: uppercase;
         letter-spacing: 1.2px;
         text-decoration: none;
-        transition: color 0.3s ease-in-out;
+        transition: color var(--ma-duration-normal) var(--ma-easing-smooth);
     }
 
     .ma-orders__item:hover .ma-orders__item-view-link,
@@ -267,7 +267,7 @@
     .ma-orders__empty-text {
         margin-bottom: var(--ma-space-sm);
         font-size: var(--ma-font-lg);
-        line-height: var(--ma-line-xl);
+        line-height: var(--ma-line-normal);
         font-weight: 600;
     }
 

@@ -91,8 +91,6 @@ If the endpoint receives `alpine.shared-validation.js`, you can use:
 
 - `x-validate-field` – toggles `.error` class from `{ message, touched }`
 - `x-validate-error` – shows error message
-- `x-password-eye` – toggles password visibility icon (bind `@click="showPassword = !showPassword"` on the wrapper)
-
 Expression shape is documented in `assets/src/js/alpine/directives/validate.js`. For schema validation in the component, use `window.yup` (do not import `yup` in component or endpoint files).
 
 ### Loading directive

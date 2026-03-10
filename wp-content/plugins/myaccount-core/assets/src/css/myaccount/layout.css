@@ -24,8 +24,8 @@ body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAcc
 body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation.ma-fullbleed-band {
     --ma-fullbleed-border-top: calc(var(--ma-base) * 0.0625) solid var(--ma-border-divider);
     --ma-fullbleed-border-bottom: calc(var(--ma-base) * 0.0625) solid var(--ma-border-divider);
-    --ma-nav-transition-duration: 0.2s;
-    --ma-nav-transition-timing: ease;
+    --ma-nav-transition-duration: var(--ma-duration-fast);
+    --ma-nav-transition-timing: var(--ma-easing-smooth);
     display: flex;
     justify-content: center;
     width: 100%;
@@ -37,7 +37,7 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lis
     padding: 0;
     display: flex;
     flex-flow: row;
-    gap: 1.5rem;
+    gap: var(--ma-space-lg);
 }
 
 body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li {

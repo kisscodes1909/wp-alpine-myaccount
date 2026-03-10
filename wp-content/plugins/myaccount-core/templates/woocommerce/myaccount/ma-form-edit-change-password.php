@@ -15,59 +15,47 @@
                 </button>
             </div>
 
-            <div x-data="{showPassword:false}">
+            <div>
                 <label for="password"><?php esc_html_e( 'Password', 'woocommerce' ); ?></label>
-                <div class="ma-form__input-wrap" x-data="{showPassword:false}">
+                <div class="ma-form__input-wrap">
                     <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
                     <input
                             x-model="formData.currentPassword"
                             type="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input"
                             autocomplete="username"
                             @blur="handler.validateField('currentPassword')"
-                            :type="showPassword === true ? 'text' : 'password'"
                             :class="{'field-invalid': errors.currentPassword}"
                     />
-                    <div class="password-toggle">
-                        <div class="ma-form__eye-toggle" x-password-eye="showPassword" @click="showPassword=!showPassword"></div>
-                    </div>
                 </div>
                 <span x-validate-error="{message: errors.currentPassword, touched: touched.currentPassword}"></span>
             </div>
 
-            <div x-data="{showPassword:false}">
+            <div>
                 <label for="password"><?php esc_html_e( 'New Password', 'woocommerce' ); ?></label>
-                <div class="ma-form__input-wrap" x-data="{showPassword:false}">
+                <div class="ma-form__input-wrap">
                     <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
                     <input
                             x-model="formData.newPassword"
                             type="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input"
                             autocomplete="username"
                             @blur="handler.validateField('newPassword')"
-                            :type="showPassword === true ? 'text' : 'password'"
                             :class="{'field-invalid': errors.newPassword}"
                     />
-                    <div class="password-toggle">
-                        <div class="ma-form__eye-toggle" x-password-eye="showPassword" @click="showPassword=!showPassword"></div>
-                    </div>
                 </div>
                 <span x-validate-error="{message: errors.newPassword, touched: touched.newPassword}"></span>
             </div>
 
-            <div x-data="{showPassword:false}">
+            <div>
                 <label for="password"><?php esc_html_e( 'Confirm Password', 'woocommerce' ); ?></label>
-                <div class="ma-form__input-wrap" x-data="{showPassword:false}">
+                <div class="ma-form__input-wrap">
                     <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
                     <input
                             x-model="formData.confirmPassword"
                             type="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input"
                             autocomplete="username"
                             @blur="handler.validateField('confirmPassword')"
-                            :type="showPassword === true ? 'text' : 'password'"
                             :class="{'field-invalid': errors.confirmPassword}"
                     />
-                    <div class="password-toggle">
-                        <div class="ma-form__eye-toggle" x-password-eye="showPassword" @click="showPassword=!showPassword"></div>
-                    </div>
                 </div>
                 <span x-validate-error="{message: errors.confirmPassword, touched: touched.confirmPassword}"></span>
             </div>

@@ -7,34 +7,72 @@
 
 .woocommerce-account {
     /* Scale foundation: theme can override --ma-base to adapt to html font-size. */
-    --ma-base: 1em;
-    --ma-space-2xs: calc(var(--ma-base) * 0.0625);
-    --ma-space-xs: calc(var(--ma-base) * 0.25);
-    --ma-space-sm: calc(var(--ma-base) * 0.5);
-    --ma-space-md: var(--ma-base);
-    --ma-space-lg: calc(var(--ma-base) * 1.5);
-    --ma-space-xl: calc(var(--ma-base) * 2);
-    --ma-space-2xl: calc(var(--ma-base) * 3);
-    --ma-space-3xl: calc(var(--ma-base) * 4);
-    --ma-font-xs: calc(var(--ma-base) * 0.75);
-    --ma-font-sm: calc(var(--ma-base) * 0.875);
-    --ma-font-base: var(--ma-base);
-    --ma-font-md: calc(var(--ma-base) * 1.2);
-    --ma-font-lg: calc(var(--ma-base) * 1.4);
-    --ma-font-xl: calc(var(--ma-base) * 1.6);
-    --ma-font-2xl: calc(var(--ma-base) * 2);
-    --ma-font-3xl: calc(var(--ma-base) * 3);
-    --ma-line-tight: calc(var(--ma-base) * 1.35);
-    --ma-line-snug: calc(var(--ma-base) * 1.4);
-    --ma-line-normal: calc(var(--ma-base) * 1.5);
-    --ma-line-md: calc(var(--ma-base) * 1.6);
-    --ma-line-lg: calc(var(--ma-base) * 1.8);
-    --ma-line-xl: calc(var(--ma-base) * 2);
-    --ma-line-2xl: calc(var(--ma-base) * 2.4);
-    --ma-line-3xl: calc(var(--ma-base) * 3);
-    --ma-line-3_2xl: calc(var(--ma-base) * 3.2);
+      /* ─────────────────────────────────────────────────────────────
+     BASE & SCALE
+     ───────────────────────────────────────────────────────────── */
+    --ma-base: 1rem;  /* Changed from 1em to 1rem for consistency */
+    
+    /* Spacing Scale */
+    --ma-space-0: 0;
+    --ma-space-2xs: calc(var(--ma-base) * 0.0625);  /* 1px */
+    --ma-space-xs: calc(var(--ma-base) * 0.25);     /* 4px */
+    --ma-space-sm: calc(var(--ma-base) * 0.5);      /* 8px */
+    --ma-space-md: var(--ma-base);                   /* 16px */
+    --ma-space-lg: calc(var(--ma-base) * 1.5);      /* 24px */
+    --ma-space-xl: calc(var(--ma-base) * 2);        /* 32px */
+    --ma-space-2xl: calc(var(--ma-base) * 3);       /* 48px */
+    --ma-space-3xl: calc(var(--ma-base) * 4);       /* 64px */
+    --ma-space-4xl: calc(var(--ma-base) * 6);       /* 96px */
+    --ma-space-5xl: calc(var(--ma-base) * 8);       /* 128px */
 
-    /* Shared color tokens for My Account endpoints */
+    /* ─────────────────────────────────────────────────────────────
+        TYPOGRAPHY
+        ───────────────────────────────────────────────────────────── */
+    
+    /* Font Families */
+    --ma-font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --ma-font-serif: 'Playfair Display', Georgia, serif;
+    --ma-font-mono: 'JetBrains Mono', 'Courier New', monospace;
+    
+    /* Font Sizes */
+    --ma-font-xs: calc(var(--ma-base) * 0.75);      /* 12px */
+    --ma-font-sm: calc(var(--ma-base) * 0.875);     /* 14px */
+    --ma-font-base: var(--ma-base);                  /* 16px */
+    --ma-font-md: calc(var(--ma-base) * 1.125);     /* 18px */
+    --ma-font-lg: calc(var(--ma-base) * 1.25);      /* 20px */
+    --ma-font-xl: calc(var(--ma-base) * 1.5);       /* 24px */
+    --ma-font-2xl: calc(var(--ma-base) * 1.875);    /* 30px */
+    --ma-font-3xl: calc(var(--ma-base) * 2.25);     /* 36px */
+    --ma-font-4xl: calc(var(--ma-base) * 3);        /* 48px */
+    --ma-font-5xl: calc(var(--ma-base) * 3.75);     /* 60px */
+
+    /* Font Weights */
+    --ma-weight-light: 300;
+    --ma-weight-regular: 400;
+    --ma-weight-medium: 500;
+    --ma-weight-semibold: 600;
+    --ma-weight-bold: 700;
+
+    /* Line Heights (unitless) */
+    --ma-line-tight: 1.25;
+    --ma-line-snug: 1.35;
+    --ma-line-normal: 1.5;
+    --ma-line-relaxed: 1.75;
+    --ma-line-loose: 2;
+
+    /* Letter Spacing */
+    --ma-tracking-tighter: -0.05em;
+    --ma-tracking-tight: -0.025em;
+    --ma-tracking-normal: 0;
+    --ma-tracking-wide: 0.025em;
+    --ma-tracking-wider: 0.05em;
+    --ma-tracking-widest: 0.1em;  /* For uppercase luxury */
+
+    /* ─────────────────────────────────────────────────────────────
+        COLORS
+        ───────────────────────────────────────────────────────────── */
+    
+    /* Text Colors */
     --ma-text-primary: #0a0a0a;
     --ma-text-charcoal: #4d4d4d;
     --ma-text-strong: #111827;
@@ -43,50 +81,157 @@
     --ma-text-inverse: #ffffff;
     --ma-text-inverse-soft: rgba(255, 255, 255, 0.8);
 
+    /* Borders */
     --ma-border: #e5e7eb;
     --ma-border-focus: #9ca3af;
     --ma-border-divider: rgba(0, 0, 0, 0.1);
+    --ma-border-strong: #d1d5db;
 
+    /* Surfaces */
     --ma-surface: #ffffff;
     --ma-surface-alt: #f9fafb;
     --ma-surface-soft: #f8fafc;
     --ma-surface-overlay: rgba(0, 0, 0, 0.5);
+    --ma-surface-overlay-light: rgba(0, 0, 0, 0.3);
 
+    /* Accent */
     --ma-accent-bg: #eff6ff;
     --ma-accent-border: #bedbff;
     --ma-accent-text: #155dfc;
     --ma-accent-icon: #2b7fff;
 
+    /* Success */
     --ma-success-bg: #ecfdf5;
     --ma-success-border: #a7f3d0;
     --ma-success-text: #064e3b;
+    --ma-success-icon: #10b981;
 
+    /* Danger */
     --ma-danger-bg: #fff1f2;
     --ma-danger-border: #ffa1ad;
     --ma-danger-border-hover: #ff8090;
     --ma-danger-text: #ec003f;
+    --ma-danger-icon: #ef4444;
 
+    /* Warning */
     --ma-warning-bg: #fffbeb;
     --ma-warning-border: #fde68a;
     --ma-warning-text: #78350f;
+    --ma-warning-icon: #f59e0b;
 
+    /* Info */
     --ma-info-bg: #eff6ff;
     --ma-info-border: #bfdbfe;
     --ma-info-text: #1e3a8a;
+    --ma-info-icon: #3b82f6;
 
+    /* ─────────────────────────────────────────────────────────────
+        BUTTONS
+        ───────────────────────────────────────────────────────────── */
     --ma-btn-primary-bg: #111827;
+    --ma-btn-primary-bg-hover: #1f2937;
     --ma-btn-primary-border: #111827;
     --ma-btn-primary-text: #ffffff;
+
     --ma-btn-secondary-bg: transparent;
+    --ma-btn-secondary-bg-hover: var(--ma-surface-alt);
     --ma-btn-secondary-border: var(--ma-border);
+    --ma-btn-secondary-border-hover: var(--ma-border-strong);
     --ma-btn-secondary-text: var(--ma-text-primary);
-    --ma-btn-secondary-border-hover: var(--ma-border);
+
     --ma-btn-danger-bg: transparent;
+    --ma-btn-danger-bg-hover: var(--ma-danger-bg);
     --ma-btn-danger-border: var(--ma-danger-border);
-    --ma-btn-danger-text: var(--ma-danger-text);
     --ma-btn-danger-border-hover: var(--ma-danger-border-hover);
+    --ma-btn-danger-text: var(--ma-danger-text);
+
     --ma-btn-pill-bg: #000000;
+    --ma-btn-pill-bg-hover: #1a1a1a;
     --ma-btn-pill-text: #ffffff;
+
+    /* ─────────────────────────────────────────────────────────────
+        BORDER RADIUS
+        ───────────────────────────────────────────────────────────── */
+    --ma-radius-none: 0;
+    --ma-radius-sm: 2px;
+    --ma-radius-md: 4px;
+    --ma-radius-lg: 8px;
+    --ma-radius-xl: 12px;
+    --ma-radius-2xl: 16px;
+    --ma-radius-full: 9999px;
+
+    /* ─────────────────────────────────────────────────────────────
+        SHADOWS
+        ───────────────────────────────────────────────────────────── */
+    --ma-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --ma-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    --ma-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.05);
+    --ma-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+    --ma-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15), 0 10px 10px rgba(0, 0, 0, 0.04);
+    --ma-shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.25);
+    --ma-shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+
+    /* ─────────────────────────────────────────────────────────────
+        TRANSITIONS & ANIMATIONS
+        ───────────────────────────────────────────────────────────── */
+    --ma-duration-instant: 100ms;
+    --ma-duration-fast: 150ms;
+    --ma-duration-normal: 250ms;
+    --ma-duration-slow: 350ms;
+    --ma-duration-slower: 500ms;
+
+    --ma-easing-linear: linear;
+    --ma-easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --ma-easing-in: cubic-bezier(0.4, 0, 1, 1);
+    --ma-easing-out: cubic-bezier(0, 0, 0.2, 1);
+    --ma-easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* ─────────────────────────────────────────────────────────────
+        Z-INDEX SCALE
+        ───────────────────────────────────────────────────────────── */
+    --ma-z-base: 0;
+    --ma-z-dropdown: 1000;
+    --ma-z-sticky: 1020;
+    --ma-z-fixed: 1030;
+    --ma-z-modal-backdrop: 1040;
+    --ma-z-modal: 1050;
+    --ma-z-popover: 1060;
+    --ma-z-toast: 1070;
+    --ma-z-tooltip: 1080;
+
+    /* ─────────────────────────────────────────────────────────────
+        BREAKPOINTS (for reference in media queries)
+        ───────────────────────────────────────────────────────────── */
+    --ma-breakpoint-xs: 480px;
+    --ma-breakpoint-sm: 640px;
+    --ma-breakpoint-md: 768px;
+    --ma-breakpoint-lg: 1024px;
+    --ma-breakpoint-xl: 1280px;
+    --ma-breakpoint-2xl: 1536px;
+
+    /* ─────────────────────────────────────────────────────────────
+        CONTAINER WIDTHS
+        ───────────────────────────────────────────────────────────── */
+    --ma-container-sm: 640px;
+    --ma-container-md: 768px;
+    --ma-container-lg: 1024px;
+    --ma-container-xl: 1280px;
+    --ma-container-2xl: 1536px;
+
+    /* ─────────────────────────────────────────────────────────────
+        OPACITY SCALE
+        ───────────────────────────────────────────────────────────── */
+    --ma-opacity-0: 0;
+    --ma-opacity-10: 0.1;
+    --ma-opacity-20: 0.2;
+    --ma-opacity-30: 0.3;
+    --ma-opacity-40: 0.4;
+    --ma-opacity-50: 0.5;
+    --ma-opacity-60: 0.6;
+    --ma-opacity-70: 0.7;
+    --ma-opacity-80: 0.8;
+    --ma-opacity-90: 0.9;
+    --ma-opacity-100: 1;
 
     /* Shared full-bleed utility for My Account bands inside constrained containers. */
     .ma-fullbleed-band {
@@ -154,7 +299,7 @@
     }
 
     .ma-page-heading__title {
-        font-size: var(--ma-font-lg);
+        font-size: var(--ma-font-xl);
         line-height: var(--ma-line-snug);
         margin-bottom: var(--ma-space-xs);
         text-transform: uppercase;
@@ -163,7 +308,7 @@
 
     .ma-page-heading__description {
         font-size: var(--ma-font-sm);
-        line-height: var(--ma-line-md);
+        line-height: var(--ma-line-normal);
         padding-bottom: var(--ma-space-md);
         border-bottom: 1px solid var(--ma-border-divider);
         color: var(--ma-text-charcoal);

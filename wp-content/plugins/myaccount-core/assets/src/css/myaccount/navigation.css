@@ -13,7 +13,7 @@
     .ma-nav-header__title {
         text-align: center;
         font-size: var(--ma-font-xl);
-        line-height: var(--ma-line-2xl);
+        line-height: var(--ma-line-normal);
         font-weight: 600;
         color: var(--ma-text-primary);
     }
@@ -22,7 +22,7 @@
         text-align: center;
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
-        color: #4b5563;
+        color: var(--ma-text-muted-dark);
     }
 
     .ma-nav-header__signout {
@@ -30,7 +30,7 @@
         align-items: center;
         gap: var(--ma-space-xs);
         text-decoration: underline;
-        color: #111827;
+        color: var(--ma-text-primary);
         font-size: var(--ma-font-base);
     }
 

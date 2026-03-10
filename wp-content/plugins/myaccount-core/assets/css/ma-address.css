@@ -9,8 +9,8 @@
 .woocommerce-account .ma-address-book__toast {
         position: fixed;
         z-index: 1000;
-        top: 56px;
-        right: 20px;
+        top: calc(var(--ma-base) * 3.5);
+        right: calc(var(--ma-base) * 1.25);
         padding: 0.75rem 1rem;
     }
 .woocommerce-account .ma-address-book__list {
@@ -62,7 +62,7 @@
         text-transform: uppercase;
         letter-spacing: 0.05em;
         white-space: nowrap;
-        line-height: var(--ma-line-md);
+        line-height: var(--ma-line-snug);
     }
 .woocommerce-account .ma-address-book__default-icon {
         width: 12px;
@@ -112,8 +112,8 @@
 .woocommerce-account .ma-address-book__limit-message {
         font-size: var(--ma-font-sm);
         text-align: center;
-        color: #dc2626;
-        margin-bottom: 0.5rem;
+        color: var(--ma-danger-text);
+        margin-bottom: var(--ma-space-sm);
     }
 .woocommerce-account .ma-address-book__add-button {
         width: 100%;

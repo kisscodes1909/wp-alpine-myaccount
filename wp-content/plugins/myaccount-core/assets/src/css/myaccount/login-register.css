@@ -21,7 +21,7 @@
     border-bottom: 2px solid transparent;
     font-size: var(--ma-form-font-size-base);
     color: var(--ma-form-color-muted);
-    transition: color 180ms ease, border-color 180ms ease;
+    transition: color var(--ma-duration-fast) var(--ma-easing-smooth), border-color var(--ma-duration-fast) var(--ma-easing-smooth);
 }
 
 .woocommerce-account .ma-auth-tabs__item:hover {

@@ -106,7 +106,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-form__status-pill {
 body.myaccount-template-fashion.woocommerce-account .ma-address-book__toast {
     background: var(--ma-btn-pill-bg);
     color: var(--ma-btn-pill-text);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+    box-shadow: var(--ma-shadow-lg);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-address-book__default-pill {
@@ -129,7 +129,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-address-book__empty-titl
 
 /* Order details (view-order) fashion overrides – Figma 36:1502 */
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-header {
-    border-color: var(--ma-border);
+    border-color: var(--ma-border-divider);
 }
 
 /* Label (.ma-order-details-header__label) uses base layer; no override needed. */
@@ -154,7 +154,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
 /* Section 3: Items list – Figma card and typography (min font-size calc(var(--ma-base) * 1.2)) */
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__items-title {
     font-size: var(--ma-font-md);
-    line-height: var(--ma-line-md);
+    line-height: var(--ma-line-snug);
     color: var(--ma-text-primary);
     text-transform: uppercase;
     letter-spacing: 1.2px;
@@ -177,14 +177,14 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-meta,
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-qty {
     font-size: var(--ma-font-md);
-    line-height: var(--ma-line-md);
+    line-height: var(--ma-line-snug);
     text-transform: uppercase;
     letter-spacing: 1.2px;
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-price {
     font-size: var(--ma-font-md);
-    line-height: var(--ma-line-md);
+    line-height: var(--ma-line-snug);
     color: var(--ma-text-primary);
     text-transform: uppercase;
     letter-spacing: 1.2px;

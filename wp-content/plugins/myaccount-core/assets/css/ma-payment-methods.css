@@ -18,7 +18,7 @@
             text-transform: uppercase;
             gap: 12px;
             font-size: var(--ma-font-md);
-            line-height: var(--ma-line-3xl);
+            line-height: var(--ma-line-normal);
             font-weight: 500;
         }
 /* Same section layout and title-to-body spacing for add and saved */
@@ -32,7 +32,7 @@
         .woocommerce-account .payment-methods-page .payment-methods-section--saved .payment-methods-section__title {
             font-size: var(--ma-font-xl);
             letter-spacing: 0.07754em;
-            line-height: var(--ma-line-3xl);
+            line-height: var(--ma-line-normal);
             font-weight: 400;
         }
 .woocommerce-account .payment-methods-page .payment-methods-section--saved > .payment-methods-section__body {
@@ -73,7 +73,7 @@
             color: var(--ma-text-muted-dark);
             width: 48px;
             height: 32px;
-            line-height: var(--ma-line-md);
+            line-height: var(--ma-line-snug);
         }
 .woocommerce-account .payment-methods-page .payment-methods-item__meta {
             display: flex;
@@ -84,7 +84,7 @@
 .woocommerce-account .payment-methods-page .payment-methods-item__title {
             font-size: var(--ma-font-base);
             font-weight: 500;
-            line-height: var(--ma-line-2xl);
+            line-height: var(--ma-line-normal);
             letter-spacing: -0.0195em;
             color: var(--ma-text-primary);
         }
@@ -92,7 +92,7 @@
             font-size: var(--ma-font-sm);
             font-weight: 400;
             color: var(--ma-text-muted-dark);
-            line-height: var(--ma-line-xl);
+            line-height: var(--ma-line-snug);
             letter-spacing: -0.01074em;
         }
 .woocommerce-account .payment-methods-page .payment-methods-item__default-link {
@@ -101,7 +101,7 @@
             font-size: var(--ma-font-xs);
             color: var(--ma-text-muted-dark);
             text-decoration: underline;
-            line-height: var(--ma-line-md);
+            line-height: var(--ma-line-snug);
         }
 .woocommerce-account .payment-methods-page .payment-methods-item__actions {
             display: flex;
@@ -119,7 +119,7 @@
                 color: var(--ma-text-muted-dark);
                 width: 36px;
                 height: 36px;
-                transition: border-color 180ms ease, background-color 180ms ease;
+                transition: border-color var(--ma-duration-fast) var(--ma-easing-smooth), background-color var(--ma-duration-fast) var(--ma-easing-smooth);
             }
 .woocommerce-account .payment-methods-page .payment-methods-item__actions a:hover {
                     border-color: var(--ma-text-muted);
@@ -133,11 +133,11 @@
             display: inline-flex;
             align-items: center;
             border-radius: 9999px;
-            background: #000;
-            color: #fff;
+            background: var(--ma-btn-pill-bg);
+            color: var(--ma-btn-pill-text);
             gap: 6px;
             padding: 4px 12px;
-            line-height: var(--ma-line-md);
+            line-height: var(--ma-line-snug);
             font-size: var(--ma-font-xs);
             letter-spacing: 0.05em;
             text-transform: uppercase;

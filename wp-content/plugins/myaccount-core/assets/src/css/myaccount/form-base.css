@@ -37,23 +37,22 @@
         --ma-form-space-button-gap: calc(var(--ma-base) * 0.5);
         --ma-form-space-button-padding-x: calc(var(--ma-base) * 1);
         --ma-form-space-field-padding-x: calc(var(--ma-base) * 1);
+        --ma-form-space-error-gap: calc(var(--ma-base) * 0.5);
         --ma-form-space-input-icon-left: calc(var(--ma-base) * 2.5);
         --ma-form-space-input-icon-padding-right: calc(var(--ma-base) * 2.5);
-        --ma-form-space-password-padding-right: calc(var(--ma-base) * 6);
-        --ma-form-space-password-toggle-right: calc(var(--ma-base) * 0.75);
-        --ma-form-space-password-toggle-gap: calc(var(--ma-base) * 0.25);
         --ma-form-space-validate-icon-top: calc(var(--ma-base) * 0.75);
         --ma-form-space-validate-icon-right: calc(var(--ma-base) * 0.25);
+        --ma-form-error-icon-size: calc(var(--ma-base) * 1.25);
 
         --apl-radio-size: 20px;
         --apl-checkbox-size: 26px;
         --apl-checkbox-icon-size: 18px;
 
-        --ma-form-font-size-xs: var(--ma-font-lg);
-        --ma-form-font-size-sm: var(--ma-font-lg);
-        --ma-form-font-size-base: var(--ma-font-xl);
+        --ma-form-font-size-xs: var(--ma-font-xs);
+        --ma-form-font-size-sm: var(--ma-font-sm);
+        --ma-form-font-size-base: var(--ma-font-base);
         --ma-form-font-size-xl: var(--ma-font-xl);
-        --ma-form-line-height-title: var(--ma-line-3xl);
+        --ma-form-line-height-title: var(--ma-line-normal);
         --ma-form-font-size-checkbox-label: var(--ma-font-xl);
 
         --ma-form-color-text: var(--ma-text-primary);
@@ -86,7 +85,7 @@
         .ma-form__input,
         select,
         textarea {
-            transition: all 180ms ease;
+            transition: all var(--ma-duration-fast) var(--ma-easing-smooth);
         }
 
         .ma-form__input:-webkit-autofill,
@@ -107,24 +106,11 @@
             padding-right: var(--ma-form-space-input-icon-padding-right);
         }
 
-        input[type='password'] {
-            padding-right: var(--ma-form-space-password-padding-right);
-        }
-
         div[x-validate-icon] {
             top: var(--ma-form-space-validate-icon-top);
             right: var(--ma-form-space-validate-icon-right);
         }
 
-        .password-toggle {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            align-items: center;
-            right: var(--ma-form-space-password-toggle-right);
-            gap: var(--ma-form-space-password-toggle-gap);
-        }
 
         .ma-form__input-wrap {
             position: relative;
@@ -165,7 +151,7 @@
             background-color: var(--ma-form-color-surface);
             font-size: var(--ma-font-base);
             line-height: var(--ma-line-normal);
-            transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+            transition: border-color var(--ma-duration-fast) var(--ma-easing-smooth), box-shadow var(--ma-duration-fast) var(--ma-easing-smooth), background-color var(--ma-duration-fast) var(--ma-easing-smooth);
         }
 
         .ma-form__input:focus,
@@ -195,7 +181,7 @@
             display: inline-grid;
             place-content: center;
             flex: none;
-            background: #fff;
+            background: var(--ma-form-color-surface);
             border: 1px solid var(--ma-form-color-border);
         }
 
@@ -271,7 +257,7 @@
                 display: inline-block;
                 border-radius: 0;
                 border: 1px solid var(--ma-form-color-border);
-                background: #fff;
+                background: var(--ma-form-color-surface);
                 flex: none;
                 position: relative;
                 margin-top: 0;
@@ -327,7 +313,7 @@
             gap: var(--ma-form-space-button-gap);
             padding-inline: var(--ma-form-space-button-padding-x);
             font-size: var(--ma-form-font-size-base);
-            transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
+            transition: border-color var(--ma-duration-fast) var(--ma-easing-smooth), box-shadow var(--ma-duration-fast) var(--ma-easing-smooth), background-color var(--ma-duration-fast) var(--ma-easing-smooth), color var(--ma-duration-fast) var(--ma-easing-smooth);
 
             &:hover {
                 filter: brightness(1.08);
@@ -385,7 +371,7 @@
         gap: var(--ma-form-space-button-gap, calc(var(--ma-base) * 0.5));
         padding-inline: var(--ma-form-space-button-padding-x, calc(var(--ma-base) * 1));
         font-size: var(--ma-form-font-size-base);
-        transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
+        transition: border-color var(--ma-duration-fast) var(--ma-easing-smooth), box-shadow var(--ma-duration-fast) var(--ma-easing-smooth), background-color var(--ma-duration-fast) var(--ma-easing-smooth), color var(--ma-duration-fast) var(--ma-easing-smooth);
 
         &:hover {
             filter: brightness(1.08);
@@ -501,9 +487,22 @@
     }
 
     .ma-form__error {
-        display: block;
+        display: inline-flex;
+        align-items: center;
+        gap: var(--ma-form-space-error-gap);
         font-size: var(--ma-form-font-size-base);
+        line-height: var(--ma-line-normal);
         color: var(--ma-form-color-error);
+    }
+
+    .ma-form__error-icon {
+        width: var(--ma-form-error-icon-size);
+        height: var(--ma-form-error-icon-size);
+        flex: none;
+    }
+
+    .ma-form__error-text {
+        display: inline-block;
     }
 
     .ma-form__settings {
@@ -575,20 +574,6 @@
 }
 
 .woocommerce-account {
-    .ma-form__eye-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-    }
-
-    .ma-form__eye-icon {
-        cursor: pointer;
-        width: calc(var(--ma-base) * 2);
-        height: calc(var(--ma-base) * 2);
-    }
-
     .ma-form__checkbox-stack {
         display: flex;
         flex-direction: column;

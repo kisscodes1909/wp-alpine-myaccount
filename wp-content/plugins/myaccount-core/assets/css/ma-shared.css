@@ -6,34 +6,72 @@
 /* -------------------------------------------------------------------------- */
 .woocommerce-account {
     /* Scale foundation: theme can override --ma-base to adapt to html font-size. */
-    --ma-base: 1em;
-    --ma-space-2xs: calc(var(--ma-base) * 0.0625);
-    --ma-space-xs: calc(var(--ma-base) * 0.25);
-    --ma-space-sm: calc(var(--ma-base) * 0.5);
-    --ma-space-md: var(--ma-base);
-    --ma-space-lg: calc(var(--ma-base) * 1.5);
-    --ma-space-xl: calc(var(--ma-base) * 2);
-    --ma-space-2xl: calc(var(--ma-base) * 3);
-    --ma-space-3xl: calc(var(--ma-base) * 4);
-    --ma-font-xs: calc(var(--ma-base) * 0.75);
-    --ma-font-sm: calc(var(--ma-base) * 0.875);
-    --ma-font-base: var(--ma-base);
-    --ma-font-md: calc(var(--ma-base) * 1.2);
-    --ma-font-lg: calc(var(--ma-base) * 1.4);
-    --ma-font-xl: calc(var(--ma-base) * 1.6);
-    --ma-font-2xl: calc(var(--ma-base) * 2);
-    --ma-font-3xl: calc(var(--ma-base) * 3);
-    --ma-line-tight: calc(var(--ma-base) * 1.35);
-    --ma-line-snug: calc(var(--ma-base) * 1.4);
-    --ma-line-normal: calc(var(--ma-base) * 1.5);
-    --ma-line-md: calc(var(--ma-base) * 1.6);
-    --ma-line-lg: calc(var(--ma-base) * 1.8);
-    --ma-line-xl: calc(var(--ma-base) * 2);
-    --ma-line-2xl: calc(var(--ma-base) * 2.4);
-    --ma-line-3xl: calc(var(--ma-base) * 3);
-    --ma-line-3_2xl: calc(var(--ma-base) * 3.2);
+      /* ─────────────────────────────────────────────────────────────
+     BASE & SCALE
+     ───────────────────────────────────────────────────────────── */
+    --ma-base: 1rem;  /* Changed from 1em to 1rem for consistency */
+    
+    /* Spacing Scale */
+    --ma-space-0: 0;
+    --ma-space-2xs: calc(var(--ma-base) * 0.0625);  /* 1px */
+    --ma-space-xs: calc(var(--ma-base) * 0.25);     /* 4px */
+    --ma-space-sm: calc(var(--ma-base) * 0.5);      /* 8px */
+    --ma-space-md: var(--ma-base);                   /* 16px */
+    --ma-space-lg: calc(var(--ma-base) * 1.5);      /* 24px */
+    --ma-space-xl: calc(var(--ma-base) * 2);        /* 32px */
+    --ma-space-2xl: calc(var(--ma-base) * 3);       /* 48px */
+    --ma-space-3xl: calc(var(--ma-base) * 4);       /* 64px */
+    --ma-space-4xl: calc(var(--ma-base) * 6);       /* 96px */
+    --ma-space-5xl: calc(var(--ma-base) * 8);       /* 128px */
 
-    /* Shared color tokens for My Account endpoints */
+    /* ─────────────────────────────────────────────────────────────
+        TYPOGRAPHY
+        ───────────────────────────────────────────────────────────── */
+    
+    /* Font Families */
+    --ma-font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --ma-font-serif: 'Playfair Display', Georgia, serif;
+    --ma-font-mono: 'JetBrains Mono', 'Courier New', monospace;
+    
+    /* Font Sizes */
+    --ma-font-xs: calc(var(--ma-base) * 0.75);      /* 12px */
+    --ma-font-sm: calc(var(--ma-base) * 0.875);     /* 14px */
+    --ma-font-base: var(--ma-base);                  /* 16px */
+    --ma-font-md: calc(var(--ma-base) * 1.125);     /* 18px */
+    --ma-font-lg: calc(var(--ma-base) * 1.25);      /* 20px */
+    --ma-font-xl: calc(var(--ma-base) * 1.5);       /* 24px */
+    --ma-font-2xl: calc(var(--ma-base) * 1.875);    /* 30px */
+    --ma-font-3xl: calc(var(--ma-base) * 2.25);     /* 36px */
+    --ma-font-4xl: calc(var(--ma-base) * 3);        /* 48px */
+    --ma-font-5xl: calc(var(--ma-base) * 3.75);     /* 60px */
+
+    /* Font Weights */
+    --ma-weight-light: 300;
+    --ma-weight-regular: 400;
+    --ma-weight-medium: 500;
+    --ma-weight-semibold: 600;
+    --ma-weight-bold: 700;
+
+    /* Line Heights (unitless) */
+    --ma-line-tight: 1.25;
+    --ma-line-snug: 1.35;
+    --ma-line-normal: 1.5;
+    --ma-line-relaxed: 1.75;
+    --ma-line-loose: 2;
+
+    /* Letter Spacing */
+    --ma-tracking-tighter: -0.05em;
+    --ma-tracking-tight: -0.025em;
+    --ma-tracking-normal: 0;
+    --ma-tracking-wide: 0.025em;
+    --ma-tracking-wider: 0.05em;
+    --ma-tracking-widest: 0.1em;  /* For uppercase luxury */
+
+    /* ─────────────────────────────────────────────────────────────
+        COLORS
+        ───────────────────────────────────────────────────────────── */
+    
+    /* Text Colors */
     --ma-text-primary: #0a0a0a;
     --ma-text-charcoal: #4d4d4d;
     --ma-text-strong: #111827;
@@ -42,50 +80,157 @@
     --ma-text-inverse: #ffffff;
     --ma-text-inverse-soft: rgba(255, 255, 255, 0.8);
 
+    /* Borders */
     --ma-border: #e5e7eb;
     --ma-border-focus: #9ca3af;
     --ma-border-divider: rgba(0, 0, 0, 0.1);
+    --ma-border-strong: #d1d5db;
 
+    /* Surfaces */
     --ma-surface: #ffffff;
     --ma-surface-alt: #f9fafb;
     --ma-surface-soft: #f8fafc;
     --ma-surface-overlay: rgba(0, 0, 0, 0.5);
+    --ma-surface-overlay-light: rgba(0, 0, 0, 0.3);
 
+    /* Accent */
     --ma-accent-bg: #eff6ff;
     --ma-accent-border: #bedbff;
     --ma-accent-text: #155dfc;
     --ma-accent-icon: #2b7fff;
 
+    /* Success */
     --ma-success-bg: #ecfdf5;
     --ma-success-border: #a7f3d0;
     --ma-success-text: #064e3b;
+    --ma-success-icon: #10b981;
 
+    /* Danger */
     --ma-danger-bg: #fff1f2;
     --ma-danger-border: #ffa1ad;
     --ma-danger-border-hover: #ff8090;
     --ma-danger-text: #ec003f;
+    --ma-danger-icon: #ef4444;
 
+    /* Warning */
     --ma-warning-bg: #fffbeb;
     --ma-warning-border: #fde68a;
     --ma-warning-text: #78350f;
+    --ma-warning-icon: #f59e0b;
 
+    /* Info */
     --ma-info-bg: #eff6ff;
     --ma-info-border: #bfdbfe;
     --ma-info-text: #1e3a8a;
+    --ma-info-icon: #3b82f6;
 
+    /* ─────────────────────────────────────────────────────────────
+        BUTTONS
+        ───────────────────────────────────────────────────────────── */
     --ma-btn-primary-bg: #111827;
+    --ma-btn-primary-bg-hover: #1f2937;
     --ma-btn-primary-border: #111827;
     --ma-btn-primary-text: #ffffff;
+
     --ma-btn-secondary-bg: transparent;
+    --ma-btn-secondary-bg-hover: var(--ma-surface-alt);
     --ma-btn-secondary-border: var(--ma-border);
+    --ma-btn-secondary-border-hover: var(--ma-border-strong);
     --ma-btn-secondary-text: var(--ma-text-primary);
-    --ma-btn-secondary-border-hover: var(--ma-border);
+
     --ma-btn-danger-bg: transparent;
+    --ma-btn-danger-bg-hover: var(--ma-danger-bg);
     --ma-btn-danger-border: var(--ma-danger-border);
-    --ma-btn-danger-text: var(--ma-danger-text);
     --ma-btn-danger-border-hover: var(--ma-danger-border-hover);
+    --ma-btn-danger-text: var(--ma-danger-text);
+
     --ma-btn-pill-bg: #000000;
+    --ma-btn-pill-bg-hover: #1a1a1a;
     --ma-btn-pill-text: #ffffff;
+
+    /* ─────────────────────────────────────────────────────────────
+        BORDER RADIUS
+        ───────────────────────────────────────────────────────────── */
+    --ma-radius-none: 0;
+    --ma-radius-sm: 2px;
+    --ma-radius-md: 4px;
+    --ma-radius-lg: 8px;
+    --ma-radius-xl: 12px;
+    --ma-radius-2xl: 16px;
+    --ma-radius-full: 9999px;
+
+    /* ─────────────────────────────────────────────────────────────
+        SHADOWS
+        ───────────────────────────────────────────────────────────── */
+    --ma-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --ma-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    --ma-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.05);
+    --ma-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+    --ma-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15), 0 10px 10px rgba(0, 0, 0, 0.04);
+    --ma-shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.25);
+    --ma-shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+
+    /* ─────────────────────────────────────────────────────────────
+        TRANSITIONS & ANIMATIONS
+        ───────────────────────────────────────────────────────────── */
+    --ma-duration-instant: 100ms;
+    --ma-duration-fast: 150ms;
+    --ma-duration-normal: 250ms;
+    --ma-duration-slow: 350ms;
+    --ma-duration-slower: 500ms;
+
+    --ma-easing-linear: linear;
+    --ma-easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --ma-easing-in: cubic-bezier(0.4, 0, 1, 1);
+    --ma-easing-out: cubic-bezier(0, 0, 0.2, 1);
+    --ma-easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* ─────────────────────────────────────────────────────────────
+        Z-INDEX SCALE
+        ───────────────────────────────────────────────────────────── */
+    --ma-z-base: 0;
+    --ma-z-dropdown: 1000;
+    --ma-z-sticky: 1020;
+    --ma-z-fixed: 1030;
+    --ma-z-modal-backdrop: 1040;
+    --ma-z-modal: 1050;
+    --ma-z-popover: 1060;
+    --ma-z-toast: 1070;
+    --ma-z-tooltip: 1080;
+
+    /* ─────────────────────────────────────────────────────────────
+        BREAKPOINTS (for reference in media queries)
+        ───────────────────────────────────────────────────────────── */
+    --ma-breakpoint-xs: 480px;
+    --ma-breakpoint-sm: 640px;
+    --ma-breakpoint-md: 768px;
+    --ma-breakpoint-lg: 1024px;
+    --ma-breakpoint-xl: 1280px;
+    --ma-breakpoint-2xl: 1536px;
+
+    /* ─────────────────────────────────────────────────────────────
+        CONTAINER WIDTHS
+        ───────────────────────────────────────────────────────────── */
+    --ma-container-sm: 640px;
+    --ma-container-md: 768px;
+    --ma-container-lg: 1024px;
+    --ma-container-xl: 1280px;
+    --ma-container-2xl: 1536px;
+
+    /* ─────────────────────────────────────────────────────────────
+        OPACITY SCALE
+        ───────────────────────────────────────────────────────────── */
+    --ma-opacity-0: 0;
+    --ma-opacity-10: 0.1;
+    --ma-opacity-20: 0.2;
+    --ma-opacity-30: 0.3;
+    --ma-opacity-40: 0.4;
+    --ma-opacity-50: 0.5;
+    --ma-opacity-60: 0.6;
+    --ma-opacity-70: 0.7;
+    --ma-opacity-80: 0.8;
+    --ma-opacity-90: 0.9;
+    --ma-opacity-100: 1;
 
     /* ma-orders: moved to base-order-history.css */
 
@@ -152,7 +297,7 @@
         }
     }
 .woocommerce-account .ma-page-heading__title {
-        font-size: var(--ma-font-lg);
+        font-size: var(--ma-font-xl);
         line-height: var(--ma-line-snug);
         margin-bottom: var(--ma-space-xs);
         text-transform: uppercase;
@@ -160,7 +305,7 @@
     }
 .woocommerce-account .ma-page-heading__description {
         font-size: var(--ma-font-sm);
-        line-height: var(--ma-line-md);
+        line-height: var(--ma-line-normal);
         padding-bottom: var(--ma-space-md);
         border-bottom: 1px solid var(--ma-border-divider);
         color: var(--ma-text-charcoal);
@@ -171,7 +316,7 @@
 .ma-tr-enter,
 .ma-tr-leave {
     transition-property: opacity, transform;
-    transition-duration: var(--ma-tr-duration, 300ms);
+    transition-duration: var(--ma-tr-duration, var(--ma-duration-normal));
 }
 .ma-tr-enter-start,
 .ma-tr-leave-end {
@@ -182,10 +327,10 @@
     opacity: 1;
 }
 .ma-tr-enter {
-    transition-timing-function: ease-out;
+    transition-timing-function: var(--ma-easing-out);
 }
 .ma-tr-leave {
-    transition-timing-function: ease-in;
+    transition-timing-function: var(--ma-easing-in);
 }
 .ma-tr-scale-enter-start,
 .ma-tr-scale-leave-end {
@@ -196,14 +341,14 @@
     transform: scale(1);
 }
 .ma-ui-popup__overlay {
-    --ma-tr-duration: 200ms;
+    --ma-tr-duration: var(--ma-duration-fast);
     position: fixed;
     inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: var(--ma-space-md);
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--ma-surface-overlay);
 }
 .ma-ui-popup__panel {
     position: relative;
@@ -215,18 +360,18 @@
     padding: calc(var(--ma-base) * 2);
 }
 .ma-ui-toast__item {
-    --ma-tr-duration: 300ms;
+    --ma-tr-duration: var(--ma-duration-normal);
     position: fixed;
-    top: 20px;
-    right: 20px;
-    left: 20px;
-    background: #000;
-    color: #fff;
+    top: calc(var(--ma-base) * 1.25);
+    right: calc(var(--ma-base) * 1.25);
+    left: calc(var(--ma-base) * 1.25);
+    background: var(--ma-btn-pill-bg);
+    color: var(--ma-btn-pill-text);
     padding: 1.25rem 1.75rem;
-    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+    box-shadow: var(--ma-shadow-lg);
 }
 .ma-address-book__toast {
-    --ma-tr-duration: 300ms;
+    --ma-tr-duration: var(--ma-duration-normal);
 }
 .ma-address-book__toast.ma-tr-enter-start,
 .ma-address-book__toast.ma-tr-leave-end {
@@ -238,8 +383,8 @@
 }
 @media (min-width: 768px) {
     .ma-ui-toast__item {
-        top: 56px;
-        right: 56px;
+        top: calc(var(--ma-base) * 3.5);
+        right: calc(var(--ma-base) * 3.5);
         left: auto;
     }
 }
@@ -255,7 +400,7 @@
 .woocommerce-account .ma-nav-header__title {
         text-align: center;
         font-size: var(--ma-font-xl);
-        line-height: var(--ma-line-2xl);
+        line-height: var(--ma-line-normal);
         font-weight: 600;
         color: var(--ma-text-primary);
     }
@@ -263,14 +408,14 @@
         text-align: center;
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
-        color: #4b5563;
+        color: var(--ma-text-muted-dark);
     }
 .woocommerce-account .ma-nav-header__signout {
         display: inline-flex;
         align-items: center;
         gap: var(--ma-space-xs);
         text-decoration: underline;
-        color: #111827;
+        color: var(--ma-text-primary);
         font-size: var(--ma-font-base);
     }
 .woocommerce-account .ma-nav-header__signout:hover {
@@ -324,8 +469,8 @@ body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAcc
 body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation.ma-fullbleed-band {
     --ma-fullbleed-border-top: calc(var(--ma-base) * 0.0625) solid var(--ma-border-divider);
     --ma-fullbleed-border-bottom: calc(var(--ma-base) * 0.0625) solid var(--ma-border-divider);
-    --ma-nav-transition-duration: 0.2s;
-    --ma-nav-transition-timing: ease;
+    --ma-nav-transition-duration: var(--ma-duration-fast);
+    --ma-nav-transition-timing: var(--ma-easing-smooth);
     display: flex;
     justify-content: center;
     width: 100%;
@@ -336,7 +481,7 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lis
     padding: 0;
     display: flex;
     flex-flow: row;
-    gap: 1.5rem;
+    gap: var(--ma-space-lg);
 }
 body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li {
     --ma-nav-icon: none;
@@ -458,23 +603,22 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lis
         --ma-form-space-button-gap: calc(var(--ma-base) * 0.5);
         --ma-form-space-button-padding-x: calc(var(--ma-base) * 1);
         --ma-form-space-field-padding-x: calc(var(--ma-base) * 1);
+        --ma-form-space-error-gap: calc(var(--ma-base) * 0.5);
         --ma-form-space-input-icon-left: calc(var(--ma-base) * 2.5);
         --ma-form-space-input-icon-padding-right: calc(var(--ma-base) * 2.5);
-        --ma-form-space-password-padding-right: calc(var(--ma-base) * 6);
-        --ma-form-space-password-toggle-right: calc(var(--ma-base) * 0.75);
-        --ma-form-space-password-toggle-gap: calc(var(--ma-base) * 0.25);
         --ma-form-space-validate-icon-top: calc(var(--ma-base) * 0.75);
         --ma-form-space-validate-icon-right: calc(var(--ma-base) * 0.25);
+        --ma-form-error-icon-size: calc(var(--ma-base) * 1.25);
 
         --apl-radio-size: 20px;
         --apl-checkbox-size: 26px;
         --apl-checkbox-icon-size: 18px;
 
-        --ma-form-font-size-xs: var(--ma-font-lg);
-        --ma-form-font-size-sm: var(--ma-font-lg);
-        --ma-form-font-size-base: var(--ma-font-xl);
+        --ma-form-font-size-xs: var(--ma-font-xs);
+        --ma-form-font-size-sm: var(--ma-font-sm);
+        --ma-form-font-size-base: var(--ma-font-base);
         --ma-form-font-size-xl: var(--ma-font-xl);
-        --ma-form-line-height-title: var(--ma-line-3xl);
+        --ma-form-line-height-title: var(--ma-line-normal);
         --ma-form-font-size-checkbox-label: var(--ma-font-xl);
 
         --ma-form-color-text: var(--ma-text-primary);
@@ -506,7 +650,7 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lis
 .woocommerce-account .ma-form .ma-form__input,
         .woocommerce-account .ma-form select,
         .woocommerce-account .ma-form textarea {
-            transition: all 180ms ease;
+            transition: all var(--ma-duration-fast) var(--ma-easing-smooth);
         }
 .woocommerce-account .ma-form .ma-form__input:-webkit-autofill,
         .woocommerce-account .ma-form .ma-form__input:-webkit-autofill:hover,
@@ -524,21 +668,9 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lis
         .woocommerce-account .ma-form select {
             padding-right: var(--ma-form-space-input-icon-padding-right);
         }
-.woocommerce-account .ma-form input[type='password'] {
-            padding-right: var(--ma-form-space-password-padding-right);
-        }
 .woocommerce-account .ma-form div[x-validate-icon] {
             top: var(--ma-form-space-validate-icon-top);
             right: var(--ma-form-space-validate-icon-right);
-        }
-.woocommerce-account .ma-form .password-toggle {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            align-items: center;
-            right: var(--ma-form-space-password-toggle-right);
-            gap: var(--ma-form-space-password-toggle-gap);
         }
 .woocommerce-account .ma-form .ma-form__input-wrap {
             position: relative;
@@ -575,7 +707,7 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lis
             background-color: var(--ma-form-color-surface);
             font-size: var(--ma-font-base);
             line-height: var(--ma-line-normal);
-            transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+            transition: border-color var(--ma-duration-fast) var(--ma-easing-smooth), box-shadow var(--ma-duration-fast) var(--ma-easing-smooth), background-color var(--ma-duration-fast) var(--ma-easing-smooth);
         }
 .woocommerce-account .ma-form .ma-form__input:focus,
         .woocommerce-account .ma-form select:focus,
@@ -600,7 +732,7 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lis
             display: inline-grid;
             place-content: center;
             flex: none;
-            background: #fff;
+            background: var(--ma-form-color-surface);
             border: 1px solid var(--ma-form-color-border);
         }
 .woocommerce-account .ma-form input[type='radio'] {
@@ -668,7 +800,7 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lis
                 display: inline-block;
                 border-radius: 0;
                 border: 1px solid var(--ma-form-color-border);
-                background: #fff;
+                background: var(--ma-form-color-surface);
                 flex: none;
                 position: relative;
                 margin-top: 0;
@@ -717,7 +849,7 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lis
             gap: var(--ma-form-space-button-gap);
             padding-inline: var(--ma-form-space-button-padding-x);
             font-size: var(--ma-form-font-size-base);
-            transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
+            transition: border-color var(--ma-duration-fast) var(--ma-easing-smooth), box-shadow var(--ma-duration-fast) var(--ma-easing-smooth), background-color var(--ma-duration-fast) var(--ma-easing-smooth), color var(--ma-duration-fast) var(--ma-easing-smooth);
         }
 .woocommerce-account .ma-form .button:hover, .woocommerce-account .ma-form .woocommerce-button:hover, .woocommerce-account .ma-form button[type='submit']:hover, .woocommerce-account .ma-form input[type='submit']:hover {
                 filter: brightness(1.08);
@@ -762,7 +894,7 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lis
         gap: var(--ma-form-space-button-gap, calc(var(--ma-base) * 0.5));
         padding-inline: var(--ma-form-space-button-padding-x, calc(var(--ma-base) * 1));
         font-size: var(--ma-form-font-size-base);
-        transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
+        transition: border-color var(--ma-duration-fast) var(--ma-easing-smooth), box-shadow var(--ma-duration-fast) var(--ma-easing-smooth), background-color var(--ma-duration-fast) var(--ma-easing-smooth), color var(--ma-duration-fast) var(--ma-easing-smooth);
     }
 .ma-form-actions > .button:hover, .ma-form-actions > button[type='button']:hover, .ma-form-actions > button[type='submit']:hover, .ma-form-actions > input[type='submit']:hover, .ma-form-actions > a.button:hover {
             filter: brightness(1.08);
@@ -856,9 +988,20 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lis
         color: var(--ma-form-color-muted);
     }
 .woocommerce-account .ma-form__error {
-        display: block;
+        display: inline-flex;
+        align-items: center;
+        gap: var(--ma-form-space-error-gap);
         font-size: var(--ma-form-font-size-base);
+        line-height: var(--ma-line-normal);
         color: var(--ma-form-color-error);
+    }
+.woocommerce-account .ma-form__error-icon {
+        width: var(--ma-form-error-icon-size);
+        height: var(--ma-form-error-icon-size);
+        flex: none;
+    }
+.woocommerce-account .ma-form__error-text {
+        display: inline-block;
     }
 .woocommerce-account .ma-form__settings {
         display: flex;
@@ -918,18 +1061,6 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lis
 .woocommerce-account .ma-form__actions {
         border-top: 1px solid var(--ma-border);
         padding-top: var(--ma-form-space-actions-top);
-    }
-.woocommerce-account .ma-form__eye-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-    }
-.woocommerce-account .ma-form__eye-icon {
-        cursor: pointer;
-        width: calc(var(--ma-base) * 2);
-        height: calc(var(--ma-base) * 2);
     }
 .woocommerce-account .ma-form__checkbox-stack {
         display: flex;
@@ -1121,245 +1252,7 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lis
     color: inherit;
     text-decoration: underline;
 }
-/* Fashion template tokens + visual overrides.
- * Form colors inherit from form-base.css (base variables).
- * Override only surface tokens for fashion template. */
-body.myaccount-template-fashion.woocommerce-account {
-    --ma-fashion-surface: var(--ma-surface-alt);
-    --ma-form-color-surface: var(--ma-surface-alt);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-form label {
-    font-weight: 500;
-    letter-spacing: 0.01em;
-}
-body.myaccount-template-fashion.woocommerce-account .ma-form .ma-form__input,
-body.myaccount-template-fashion.woocommerce-account .ma-form select,
-body.myaccount-template-fashion.woocommerce-account .ma-form textarea {
-    border: 1px solid var(--ma-form-color-border);
-    border-radius: 0;
-    background-color: var(--ma-form-color-surface);
-    color: var(--ma-form-color-input);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-form .ma-form__input::-moz-placeholder, body.myaccount-template-fashion.woocommerce-account .ma-form textarea::-moz-placeholder {
-    color: var(--ma-form-color-placeholder);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-form .ma-form__input::placeholder,
-body.myaccount-template-fashion.woocommerce-account .ma-form textarea::placeholder {
-    color: var(--ma-form-color-placeholder);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-form .ma-form__input:focus,
-body.myaccount-template-fashion.woocommerce-account .ma-form select:focus,
-body.myaccount-template-fashion.woocommerce-account .ma-form textarea:focus {
-    border: 1px solid var(--ma-form-color-focus-border);
-    --tw-ring-color: var(--ma-form-color-focus-ring);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-form .error .ma-form__input,
-body.myaccount-template-fashion.woocommerce-account .ma-form .error select,
-body.myaccount-template-fashion.woocommerce-account .ma-form .error textarea,
-body.myaccount-template-fashion.woocommerce-account .ma-form .field-invalid {
-    border: 1px solid var(--ma-form-color-error);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-form .error label {
-    color: var(--ma-form-color-error);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-form .button,
-body.myaccount-template-fashion.woocommerce-account .ma-form .woocommerce-button,
-body.myaccount-template-fashion.woocommerce-account .ma-form button[type='submit'],
-body.myaccount-template-fashion.woocommerce-account .ma-form input[type='submit'],
-body.myaccount-template-fashion.woocommerce-account .ma-form-actions > .button,
-body.myaccount-template-fashion.woocommerce-account .ma-form-actions > button[type='button'],
-body.myaccount-template-fashion.woocommerce-account .ma-form-actions > button[type='submit'],
-body.myaccount-template-fashion.woocommerce-account .ma-form-actions > input[type='submit'],
-body.myaccount-template-fashion.woocommerce-account .ma-form-actions > a.button {
-    border-radius: 0;
-    border: 1px solid var(--ma-form-color-button-border);
-    background-color: var(--ma-form-color-button-bg);
-    color: var(--ma-form-color-button-text);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-form .button:focus-visible,
-body.myaccount-template-fashion.woocommerce-account .ma-form .woocommerce-button:focus-visible,
-body.myaccount-template-fashion.woocommerce-account .ma-form button[type='submit']:focus-visible,
-body.myaccount-template-fashion.woocommerce-account .ma-form input[type='submit']:focus-visible {
-    outline-color: var(--ma-form-color-outline);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-form .button.light,
-body.myaccount-template-fashion.woocommerce-account .ma-form .woocommerce-button.light,
-body.myaccount-template-fashion.woocommerce-account .ma-form button[type='submit'].light,
-body.myaccount-template-fashion.woocommerce-account .ma-form input[type='submit'].light,
-body.myaccount-template-fashion.woocommerce-account .ma-form-actions > .button.light,
-body.myaccount-template-fashion.woocommerce-account .ma-form-actions > button[type='button'].light,
-body.myaccount-template-fashion.woocommerce-account .ma-form-actions > button[type='submit'].light,
-body.myaccount-template-fashion.woocommerce-account .ma-form-actions > input[type='submit'].light,
-body.myaccount-template-fashion.woocommerce-account .ma-form-actions > a.button.light {
-    border: 1px solid var(--ma-form-color-button-light-border);
-    background-color: var(--ma-form-color-button-light-bg);
-    color: var(--ma-form-color-button-light-text);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-orders__item {
-    background: transparent;
-}
-body.myaccount-template-fashion.woocommerce-account .ma-page-heading__description {
-    color: var(--ma-text-muted);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-orders__empty-text {
-    color: var(--ma-text-muted-dark);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-view-order__updates,
-body.myaccount-template-fashion.woocommerce-account .ma-form__section--divided,
-body.myaccount-template-fashion.woocommerce-account .ma-form__actions,
-body.myaccount-template-fashion.woocommerce-account .ma-page-heading__description {
-    border-color: var(--ma-border);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-form__status-pill {
-    background-color: var(--ma-success-bg);
-    color: var(--ma-success-text);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-address-book__toast {
-    background: var(--ma-btn-pill-bg);
-    color: var(--ma-btn-pill-text);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-address-book__default-pill {
-    background: var(--ma-btn-pill-bg);
-    color: var(--ma-btn-pill-text);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-address-book .ma-address-book__action-button {
-    border-color: var(--ma-border);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-address-book .ma-address-book__action-button--danger {
-    border-color: var(--ma-btn-danger-border);
-    color: var(--ma-btn-danger-text);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-address-book__empty-title {
-    color: var(--ma-text-primary);
-}
-/* Order details (view-order) fashion overrides – Figma 36:1502 */
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-header {
-    border-color: var(--ma-border);
-}
-/* Label (.ma-order-details-header__label) uses base layer; no override needed. */
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-header__btn--danger {
-    border-color: var(--ma-btn-danger-border);
-    color: var(--ma-btn-danger-text);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-status-card {
-    border-color: var(--ma-border);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-status-card__header {
-    background: var(--ma-fashion-surface);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__shipping-icon {
-    border-color: var(--ma-border);
-}
-/* Section 3: Items list – Figma card and typography (min font-size calc(var(--ma-base) * 1.2)) */
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__items-title {
-    font-size: var(--ma-font-md);
-    line-height: var(--ma-line-md);
-    color: var(--ma-text-primary);
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item {
-    background: var(--ma-surface-alt);
-    border-color: var(--ma-border);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-body {
-    color: var(--ma-text-primary);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-name {
-    font-size: var(--ma-font-md);
-    line-height: var(--ma-line-tight);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-meta,
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-qty {
-    font-size: var(--ma-font-md);
-    line-height: var(--ma-line-md);
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-price {
-    font-size: var(--ma-font-md);
-    line-height: var(--ma-line-md);
-    color: var(--ma-text-primary);
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-}
-/* Section 3: Shipping – Figma two-column colors */
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__shipping-inner {
-    border-color: var(--ma-border);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__shipping-label {
-    font-size: var(--ma-font-md);
-    color: var(--ma-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__shipping-icon,
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__contact-icon-wrap {
-    background: var(--ma-surface-alt);
-    border-color: var(--ma-border);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__shipping-name {
-    color: var(--ma-text-primary);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__shipping-address {
-    color: var(--ma-text-muted-dark);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__contact-line {
-    color: var(--ma-text-muted-dark);
-}
-/* Section 3: Summary card – Figma (header, totals, total row, payment, actions) */
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-card {
-    border-color: var(--ma-border);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-header {
-    background: var(--ma-surface-alt);
-    border-bottom-color: var(--ma-border);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-title {
-    color: var(--ma-text-primary);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-label {
-    color: var(--ma-text-muted-dark);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-value {
-    color: var(--ma-text-primary);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-row--total {
-    color: var(--ma-text-primary);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-row--total .ma-order-details-items-summary__summary-label,
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-row--total .ma-order-details-items-summary__summary-value {
-    color: inherit;
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__payment-label {
-    color: var(--ma-text-muted);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__payment-masked {
-    color: var(--ma-text-muted);
-}
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__btn--danger {
-    border-color: var(--ma-btn-danger-border);
-    color: var(--ma-btn-danger-text);
-}
-@media (min-width: 768px) {
-    .woocommerce-account .ma-page-heading__back-icon {
-        transform: scale(1);
-    }
-
-    .woocommerce-account .ma-view-order__layout {
-        grid-template-columns: repeat(10, minmax(0, 1fr));
-        gap: 90px;
-    }
-
-    .woocommerce-account .ma-view-order__summary {
-        grid-column: span 3 / span 3;
-    }
-
-    .woocommerce-account .ma-view-order__details {
-        grid-column: span 7 / span 7;
-    }
-}
+/* @import "./myaccount/fashion.css"; */
 body {
     color: #4d4d4d;
 }
@@ -1428,7 +1321,7 @@ body {
     vertical-align: middle;
 }
 .loading-icon .spinner-arc {
-    animation: spinner-dash 0.8s linear infinite;
+    animation: spinner-dash var(--ma-duration-slower) var(--ma-easing-linear) infinite;
 }
 .ma-btn-content,
 .ma-btn-loading {

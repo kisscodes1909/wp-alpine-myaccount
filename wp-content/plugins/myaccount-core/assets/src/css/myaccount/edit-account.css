@@ -40,12 +40,15 @@ body.myaccount-template-fashion.woocommerce-account.woocommerce-edit-account .ma
     }
 
     .ma-change-password__remember-text {
+        font-size: var(--ma-font-sm);
         line-height: var(--ma-line-snug);
+        color: var(--ma-text-primary);
     }
 
     .ma-change-password__remember-note {
-        font-size: var(--ma-font-sm);
+        font-size: var(--ma-font-xs);
         font-style: normal;
+        color: var(--ma-text-muted-dark);
     }
 
     .ma-change-password__submit {

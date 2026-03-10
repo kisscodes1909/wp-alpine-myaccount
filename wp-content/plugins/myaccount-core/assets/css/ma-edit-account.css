@@ -32,11 +32,14 @@ body.myaccount-template-fashion.woocommerce-account.woocommerce-edit-account .ma
         align-items: center;
     }
 .woocommerce-account .ma-change-password__remember-text {
+        font-size: var(--ma-font-sm);
         line-height: var(--ma-line-snug);
+        color: var(--ma-text-primary);
     }
 .woocommerce-account .ma-change-password__remember-note {
-        font-size: var(--ma-font-sm);
+        font-size: var(--ma-font-xs);
         font-style: normal;
+        color: var(--ma-text-muted-dark);
     }
 .woocommerce-account .ma-change-password__submit {
         display: inline-flex;
