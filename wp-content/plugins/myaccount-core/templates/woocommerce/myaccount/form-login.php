@@ -195,7 +195,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 							?>
 							<span class="jk-checkbox-label"><?php esc_html_e( 'I agree to the', 'woocommerce' ); ?> <a class="ma-link-underline" target="_blank" rel="noopener noreferrer" href="<?php echo esc_url( get_permalink( $terms_page_id ) ); ?>"><?php esc_html_e( 'Terms of Service', 'woocommerce' ); ?></a> <?php esc_html_e( 'and', 'woocommerce' ); ?> <a class="ma-link-underline" target="_blank" rel="noopener noreferrer" href="<?php echo esc_url( get_permalink( $privacy_page_id ) ); ?>"><?php esc_html_e( 'Privacy Policy.', 'woocommerce' ); ?></a></span>
 						</label>
-						<span x-validate-error="{message: errors.agreeTOS}"></span>
+						<span x-validate-error="{message: errors.agreeTOS, touched: touched.agreeTOS}"></span>
 					</div>
 				</div>
 

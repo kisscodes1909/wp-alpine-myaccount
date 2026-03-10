@@ -3464,16 +3464,16 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
   }
 
   // assets/src/js/alpine/directives/loading.js
-  var SPINNER_SVG = `<span class="loading-icon inline-flex items-center justify-center w-5 h-5 flex-shrink-0" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle class="spinner-arc" cx="12" cy="12" r="10" stroke-dasharray="16 46" stroke-dashoffset="0" /></svg></span>`;
+  var SPINNER_SVG = `<span class="loading-icon ma-btn-loading-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="ma-btn-loading-svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle class="spinner-arc" cx="12" cy="12" r="10" stroke-dasharray="16 46" stroke-dashoffset="0" /></svg></span>`;
   function registerLoadingDirective() {
     Alpine.directive("loading", (el, { expression }, { evaluateLater: evaluateLater2, effect: effect3 }) => {
       const getLoading = evaluateLater2(expression);
       const loadingLabel = el.getAttribute("data-loading-label") || "Saving...";
       const contentWrap = document.createElement("span");
-      contentWrap.className = "inline-flex items-center justify-center gap-2";
+      contentWrap.className = "ma-btn-content";
       while (el.firstChild) contentWrap.appendChild(el.firstChild);
       const loadingWrap = document.createElement("span");
-      loadingWrap.className = "inline-flex items-center justify-center gap-2";
+      loadingWrap.className = "ma-btn-loading";
       loadingWrap.setAttribute("aria-hidden", "true");
       loadingWrap.innerHTML = SPINNER_SVG + `<span class="button-loading-label">${loadingLabel}</span>`;
       loadingWrap.style.display = "none";

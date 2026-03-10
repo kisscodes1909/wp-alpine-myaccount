@@ -124,6 +124,10 @@ class MyAccount_Core_Hooks {
 	public function redirect_dashboard_to_orders(): void {
 		$is_builder = function_exists( 'bricks_is_builder' ) && bricks_is_builder();
 
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
+
 		if ( is_account_page() && ! is_wc_endpoint_url() && ! $is_builder ) {
 			wp_safe_redirect( wc_get_endpoint_url( 'orders' ) );
 			exit;

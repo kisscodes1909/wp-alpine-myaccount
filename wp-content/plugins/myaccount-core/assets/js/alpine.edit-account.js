@@ -1,149 +1,247 @@
 (() => {
+  // assets/src/js/BaseFormHandler.js
+  var BaseFormHandler = class {
+    constructor(formData, additionalData = {}) {
+      this.formData = formData;
+      this.additionalData = additionalData;
+      this.errors = {};
+      this.touched = {};
+      this.notice = "";
+      this.isFormSubmitting = false;
+    }
+    async validateForm(skipFields = []) {
+      const fields = Object.keys(this.formData).filter((field) => !skipFields.includes(field));
+      for (const field of fields) {
+        await this.validateField(field);
+      }
+    }
+    async validateField(field) {
+      const yup = window.yup;
+      const schema = this.getValidationSchema();
+      try {
+        await schema.validateAt(field, this.formData);
+        delete this.errors[field];
+      } catch (error) {
+        this.errors[field] = error.message;
+      }
+      this.touched[field] = true;
+    }
+    getValidationSchema() {
+      throw new Error("getValidationSchema method should be implemented in the subclass");
+    }
+    getErrorMessage(error) {
+      const responseData = error?.responseJSON?.data;
+      if (typeof responseData?.message === "string" && responseData.message) {
+        return responseData.message;
+      }
+      if (typeof responseData === "string" && responseData) {
+        return responseData;
+      }
+      if (typeof error?.message === "string" && error.message) {
+        return error.message;
+      }
+      return "Something went wrong. Please try again.";
+    }
+    async handleSubmit(skipFields) {
+      await this.validateForm(skipFields);
+      if (Object.keys(this.errors).length > 0) {
+        this.isFormSubmitting = false;
+        return;
+      }
+      this.isFormSubmitting = true;
+      window.wp.ajax.post(this.getApiEndpoint(), {
+        ...this.formData,
+        ...this.additionalData
+      }).done((response) => {
+        this.isFormSubmitting = false;
+        this.notice = response.message;
+        this.done(response);
+        const event = new CustomEvent(`${this.getApiEndpoint()}_success`);
+        window.dispatchEvent(event);
+      }).fail((error) => {
+        this.notice = this.getErrorMessage(error);
+        this.isFormSubmitting = false;
+      });
+    }
+  };
+
+  // assets/src/js/handlers/UpdateAccountHandler.js
+  var UpdateAccountHandler = class extends BaseFormHandler {
+    getValidationSchema() {
+      return window.yup.object().shape({
+        firstName: window.yup.string().required("First name is required."),
+        lastName: window.yup.string().required("Last name is required."),
+        email: window.yup.string().email("Invalid email address.").required("Email is required.")
+      });
+    }
+    getApiEndpoint() {
+      return "save_account_details";
+    }
+    async handleSubmit() {
+      await this.validateForm();
+      if (Object.keys(this.errors).length > 0) {
+        this.isFormSubmitting = false;
+        return;
+      }
+      this.isFormSubmitting = true;
+      const payload = {
+        ...this.formData,
+        nonce: this.additionalData.nonce
+      };
+      window.wp.ajax.post(this.getApiEndpoint(), payload).done((response) => {
+        this.isFormSubmitting = false;
+        this.notice = response?.data || response?.message || "";
+        this.done(response);
+        const event = new CustomEvent(`${this.getApiEndpoint()}_success`);
+        window.dispatchEvent(event);
+      }).fail((error) => {
+        this.notice = this.getErrorMessage(error);
+        this.isFormSubmitting = false;
+        this.fail(error);
+      });
+    }
+    done(response) {
+      const message = response?.data || response?.message || "Account details updated successfully.";
+      window.Alpine?.store("toast")?.addToast(message, "success");
+    }
+    fail(error) {
+      const message = this.getErrorMessage(error);
+      window.Alpine?.store("toast")?.addToast(message, "error");
+    }
+  };
+
   // assets/src/js/alpine/components/forms/updateAccount.js
   var updateAccount_default = () => {
     const userData = window.accountData || {};
     const nonce = window.saveAccountDetailsNonce || "";
-    const ajaxUrl = window.ajaxurl || "/wp-admin/admin-ajax.php";
     return {
-      firstName: userData.firstName || "",
-      lastName: userData.lastName || "",
-      email: userData.email || "",
-      password: "*********",
-      saveAccountDetailsNonce: nonce,
+      formData: {
+        firstName: userData.firstName || "",
+        lastName: userData.lastName || "",
+        email: userData.email || ""
+      },
       allowSubmit: false,
-      isLoading: false,
+      isFormSubmitting: false,
       errors: {},
-      async handleSubmit() {
-        await this.validateForm();
-        if (Object.keys(this.errors).length > 0) return;
-        await this.ajaxSaveAccountDetails();
+      touched: {},
+      notice: "",
+      handler: null,
+      init() {
+        this.handler = new UpdateAccountHandler(this.formData, {
+          nonce
+        });
+        this.$watch("handler.isFormSubmitting", (value) => {
+          this.isFormSubmitting = value;
+        });
+        this.$watch("handler.errors", (value) => {
+          this.errors = value;
+        });
+        this.$watch("handler.touched", (value) => {
+          this.touched = value;
+        });
+        this.$watch("handler.notice", (value) => {
+          this.notice = value;
+        });
       },
       setAllowSubmit() {
         this.allowSubmit = true;
       },
-      async ajaxSaveAccountDetails() {
-        this.isLoading = true;
-        const data = {
-          action: "save_account_details",
-          nonce: this.saveAccountDetailsNonce,
-          firstName: this.firstName,
-          lastName: this.lastName,
-          email: this.email
-        };
-        try {
-          const response = await fetch(ajaxUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams(data)
-          });
-          const result = await response.json();
-          if (result.success) {
-            this.$store.toast.addToast(result.data, "success");
-          } else {
-            this.$store.toast.addToast("Error updating account details", "error");
-          }
-        } catch (error) {
-          console.error("Error:", error);
-          this.$store.toast.addToast("AJAX request failed", "error");
-        } finally {
-          this.isLoading = false;
-        }
+      async handleSubmit() {
+        await this.handler.handleSubmit();
       },
       async validateForm() {
-        const yup = window.yup;
-        const schema = yup.object().shape({
-          firstName: yup.string().required("First name is required."),
-          lastName: yup.string().required("Last name is required."),
-          email: yup.string().email("Invalid email address.").required("Email is required.")
-        });
-        this.errors = {};
-        try {
-          await schema.validate({
-            firstName: this.firstName,
-            lastName: this.lastName,
-            email: this.email
-          }, { abortEarly: false });
-          this.allowSubmit = true;
-          return true;
-        } catch (err) {
-          err.inner.forEach((error) => {
-            this.errors[error.path] = error.message;
-          });
-          this.allowSubmit = false;
-          return false;
-        }
+        await this.handler.validateForm();
+        this.allowSubmit = Object.keys(this.handler.errors || {}).length === 0;
+      },
+      validateField(field) {
+        return this.handler.validateField(field);
       }
     };
   };
 
+  // assets/src/js/handlers/ChangePasswordHandler.js
+  var ChangePasswordHandler = class extends BaseFormHandler {
+    getValidationSchema() {
+      return window.yup.object().shape({
+        currentPassword: window.yup.string().required("The current password is required."),
+        newPassword: window.yup.string().min(8, "The new password must be at least 8 characters long.").required("The new password is required."),
+        confirmPassword: window.yup.string().oneOf([window.yup.ref("newPassword"), null], "Passwords must match.").required("Confirming your new password is required.")
+      });
+    }
+    getApiEndpoint() {
+      return "change_password";
+    }
+    async handleSubmit() {
+      await this.validateForm();
+      if (Object.keys(this.errors).length > 0) {
+        this.isFormSubmitting = false;
+        return;
+      }
+      this.isFormSubmitting = true;
+      const payload = {
+        ...this.additionalData,
+        currentPassword: this.formData.currentPassword,
+        pass1: this.formData.newPassword,
+        pass2: this.formData.confirmPassword,
+        keepSignedIn: this.formData.keepSignedIn
+      };
+      window.wp.ajax.post(this.getApiEndpoint(), payload).done((response) => {
+        this.isFormSubmitting = false;
+        this.notice = response.message;
+        this.done(response);
+        const event = new CustomEvent(`${this.getApiEndpoint()}_success`);
+        window.dispatchEvent(event);
+      }).fail((error) => {
+        this.notice = this.getErrorMessage(error);
+        this.isFormSubmitting = false;
+      });
+    }
+    done(response) {
+      if (response?.message) {
+        window.Alpine?.store("toast")?.addToast(response.message, "success");
+      }
+      window.Alpine?.store("popup")?.closePopup();
+    }
+  };
+
   // assets/src/js/alpine/components/forms/passwordChangeForm.js
-  var passwordChangeForm_default = () => {
-    const nonce = window.changePasswordNonce || "";
-    const ajaxUrl = window.ajaxurl || "/wp-admin/admin-ajax.php";
-    return {
+  var passwordChangeForm_default = () => ({
+    formData: {
       currentPassword: "",
       newPassword: "",
       confirmPassword: "",
-      keepSignedIn: true,
-      changePasswordNonce: nonce,
-      isLoading: false,
-      errors: {},
-      async handleSubmit() {
-        await this.validateForm();
-        if (Object.keys(this.errors).length > 0) return;
-        this.isLoading = true;
-        const data = {
-          action: "change_password",
-          nonce: this.changePasswordNonce,
-          currentPassword: this.currentPassword,
-          pass1: this.newPassword,
-          pass2: this.confirmPassword,
-          keepSignedIn: this.keepSignedIn
-        };
-        try {
-          const response = await fetch(ajaxUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams(data)
-          });
-          const result = await response.json();
-          if (result.success) {
-            this.$store.toast.addToast(result.data, "success");
-            this.$store.popup.closePopup();
-          } else {
-            this.$store.toast.addToast(result.data, "error");
-          }
-        } catch (error) {
-          console.error("Error:", error);
-          this.$store.toast.addToast("AJAX request failed", "error");
-        } finally {
-          this.isLoading = false;
-        }
-      },
-      async validateForm() {
-        const yup = window.yup;
-        const schema = yup.object().shape({
-          currentPassword: yup.string().required("The current password is required."),
-          newPassword: yup.string().min(8, "The new password must be at least 8 characters long.").required("The new password is required."),
-          confirmPassword: yup.string().oneOf([yup.ref("newPassword"), null], "Passwords must match.").required("Confirming your new password is required.")
-        });
-        this.errors = {};
-        try {
-          await schema.validate({
-            currentPassword: this.currentPassword,
-            newPassword: this.newPassword,
-            confirmPassword: this.confirmPassword
-          }, { abortEarly: false });
-          return true;
-        } catch (err) {
-          err.inner.forEach((error) => {
-            this.errors[error.path] = error.message;
-          });
-          return false;
-        }
-      }
-    };
-  };
+      keepSignedIn: true
+    },
+    isFormSubmitting: false,
+    errors: {},
+    touched: {},
+    notice: "",
+    changePasswordNonce: window.changePasswordNonce || "",
+    handler: null,
+    init() {
+      this.handler = new ChangePasswordHandler(this.formData, {
+        nonce: this.changePasswordNonce
+      });
+      this.$watch("handler.isFormSubmitting", (value) => {
+        this.isFormSubmitting = value;
+      });
+      this.$watch("handler.errors", (value) => {
+        this.errors = value;
+      });
+      this.$watch("handler.touched", (value) => {
+        this.touched = value;
+      });
+      this.$watch("handler.notice", (value) => {
+        this.notice = value;
+      });
+    },
+    async handleSubmit() {
+      await this.handler.handleSubmit();
+    },
+    validateField(field) {
+      return this.handler.validateField(field);
+    }
+  });
 
   // assets/src/js/alpine/components/forms/edit-account.js
   function registerEditAccountFormComponents() {

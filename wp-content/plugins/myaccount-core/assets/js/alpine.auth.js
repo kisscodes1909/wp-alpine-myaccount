@@ -109,6 +109,69 @@
     }
   });
 
+  // assets/src/js/handlers/SignupHandler.js
+  var SignupHandler = class extends BaseFormHandler {
+    constructor(formData, additionalData = {}) {
+      super(formData, additionalData);
+      this.passedRequirements = [];
+      this.passwordRequirements = {
+        minLength: { regex: /.{8,}/, message: "At least 8 characters", code: "ERR_PASSWORD_MINLENGTH" },
+        uppercase: { regex: /(?=.*[A-Z])/, message: "1 uppercase letter", code: "ERR_PASSWORD_UPPERCASE" },
+        number: { regex: /(?=.*[0-9])/, message: "1 number", code: "ERR_PASSWORD_NUMBER" },
+        lowercase: { regex: /(?=.*[a-z])/, message: "1 lowercase letter", code: "ERR_PASSWORD_LOWERCASE" }
+      };
+    }
+    getValidationSchema() {
+      return window.yup.object().shape({
+        firstName: window.yup.string().required("This field is required.").matches(/^[A-Za-z]+$/, "Your name isn't valid."),
+        lastName: window.yup.string().required("This field is required.").matches(/^[A-Za-z]+$/, "Your name isn't valid."),
+        email: window.yup.string().email("Your email address isn't valid.").required("This field is required."),
+        agreeTOS: window.yup.boolean().required("You must accept the Terms of Service.").oneOf([true], "You must accept the Terms of Service."),
+        password: window.yup.string().required("This field is required.").test("password-complexity", "Your password does not meet the requirements.", (value) => {
+          const passedRequirements = [];
+          Object.entries(this.passwordRequirements).forEach(([, requirement]) => {
+            if (requirement.regex.test(value || "")) {
+              passedRequirements.push(requirement.code);
+            }
+          });
+          this.passedRequirements = [...passedRequirements];
+          return passedRequirements.length === Object.keys(this.passwordRequirements).length;
+        })
+      });
+    }
+    getApiEndpoint() {
+      return "handle_signup";
+    }
+    async handleSubmit() {
+      const captchaSiteKey = this.additionalData.captchaSiteKey || "";
+      const token = captchaSiteKey && window.grecaptcha ? await window.grecaptcha.execute(captchaSiteKey, { action: "signup" }) : "";
+      await this.validateForm(["receiveOfferNews"]);
+      if (Object.keys(this.errors).length > 0) {
+        this.isFormSubmitting = false;
+        return;
+      }
+      this.isFormSubmitting = true;
+      const payload = {
+        ...this.formData,
+        signupNonce: this.additionalData.signupNonce,
+        captchaToken: token
+      };
+      window.wp.ajax.post(this.getApiEndpoint(), payload).done((response) => {
+        this.isFormSubmitting = false;
+        this.notice = response.message;
+        this.done(response);
+        const event = new CustomEvent(`${this.getApiEndpoint()}_success`);
+        window.dispatchEvent(event);
+      }).fail((error) => {
+        this.notice = this.getErrorMessage(error);
+        this.isFormSubmitting = false;
+      });
+    }
+    done() {
+      window.location.reload();
+    }
+  };
+
   // assets/src/js/alpine/components/forms/signup.js
   var signup_default = () => ({
     formData: {
@@ -119,81 +182,45 @@
       agreeTOS: false,
       receiveOfferNews: false
     },
-    messages: { message: 0 },
     isFormSubmitting: false,
     notice: "",
     errors: {},
     touched: {},
-    signupNonce: window.authenicationData?.signupNonce || "",
     passedRequirements: [],
-    passwordRequirements: {
-      minLength: { regex: /.{8,}/, message: "At least 8 characters", code: "ERR_PASSWORD_MINLENGTH" },
-      uppercase: { regex: /(?=.*[A-Z])/, message: "1 uppercase letter", code: "ERR_PASSWORD_UPPERCASE" },
-      number: { regex: /(?=.*[0-9])/, message: "1 number", code: "ERR_PASSWORD_NUMBER" },
-      lowercase: { regex: /(?=.*[a-z])/, message: "1 lowercase letter", code: "ERR_PASSWORD_LOWERCASE" }
+    passwordRequirements: {},
+    handler: null,
+    init() {
+      const authData = window.authenicationData || {};
+      this.handler = new SignupHandler(this.formData, {
+        signupNonce: authData.signupNonce || "",
+        captchaSiteKey: authData.captchaSiteKey || ""
+      });
+      this.passwordRequirements = this.handler.passwordRequirements;
+      this.$watch("handler.isFormSubmitting", (value) => {
+        this.isFormSubmitting = value;
+      });
+      this.$watch("handler.errors", (value) => {
+        this.errors = value;
+      });
+      this.$watch("handler.touched", (value) => {
+        this.touched = value;
+      });
+      this.$watch("handler.notice", (value) => {
+        this.notice = value;
+      });
+      this.$watch("handler.passedRequirements", (value) => {
+        this.passedRequirements = value;
+      });
     },
     async handleSubmit() {
-      const token = await grecaptcha.execute(window.authenicationData.captchaSiteKey, { action: "signup" });
-      await this.validateForm();
-      if (Object.keys(this.errors).length > 0) {
-        return;
-      }
-      this.isFormSubmitting = true;
-      window.wp.ajax.post("handle_signup", {
-        firstName: this.formData.firstName,
-        lastName: this.formData.lastName,
-        email: this.formData.email,
-        password: this.formData.password,
-        agreeTOS: this.formData.agreeTOS,
-        receiveOfferNews: this.formData.receiveOfferNews,
-        signupNonce: this.signupNonce,
-        captchaToken: token
-      }).done((response) => {
-        this.notice = response.message;
-        this.isFormSubmitting = false;
-        window.location.reload();
-      }).fail((error) => {
-        this.notice = error.message;
-        this.isFormSubmitting = false;
-        console.error("Error:", error);
-      });
+      await this.handler.handleSubmit();
     },
-    async validateForm() {
-      const fields = Object.keys(this.formData);
-      for (const field of fields) {
-        if (field === "receiveOfferNews") continue;
-        await this.validateField(field);
-      }
-    },
-    async validateField(field) {
-      const yup = window.yup;
-      const schema = yup.object().shape({
-        firstName: yup.string().required("This field is required.").matches(/^[A-Za-z]+$/, "Your name isn't valid."),
-        lastName: yup.string().required("This field is required.").matches(/^[A-Za-z]+$/, "Your name isn't valid."),
-        email: yup.string().email("Your email address isn't valid.").required("This field is required."),
-        agreeTOS: yup.boolean().required("You must accept the Terms of Service.").oneOf([true], "You must accept the Terms of Service."),
-        password: yup.string().required("This field is required.").test("password-complexity", "Your password does not meet the requirements.", (value) => {
-          let passedRequirements = [];
-          Object.entries(this.passwordRequirements).forEach(([, requirement]) => {
-            if (requirement.regex.test(value)) {
-              passedRequirements.push(requirement.code);
-            }
-          });
-          this.passedRequirements = passedRequirements;
-          return passedRequirements.length === Object.keys(this.passwordRequirements).length;
-        })
-      });
-      try {
-        await schema.validateAt(field, this.formData);
-        delete this.errors[field];
-      } catch (error) {
-        this.errors[field] = error.message;
-      }
-      this.touched[field] = true;
+    validateField(field) {
+      return this.handler.validateField(field);
     }
   });
 
-  // assets/src/js/alpine/components/forms/lostPassword.js
+  // assets/src/js/handlers/LostPasswordHandler.js
   var LostPasswordHandler = class extends BaseFormHandler {
     getValidationSchema() {
       return window.yup.object().shape({
@@ -201,6 +228,8 @@
       });
     }
   };
+
+  // assets/src/js/alpine/components/forms/lostPassword.js
   var lostPassword_default = () => ({
     formData: {
       email: ""
@@ -228,7 +257,7 @@
     }
   });
 
-  // assets/src/js/alpine/components/forms/resetPassword.js
+  // assets/src/js/handlers/ResetPasswordHandler.js
   var ResetPasswordHandler = class extends BaseFormHandler {
     constructor(formData, additionalData = {}) {
       super(formData, additionalData);
@@ -249,12 +278,14 @@
               passedRequirements.push(requirement.code);
             }
           });
-          this.passedRequirements = passedRequirements;
+          this.passedRequirements = [...passedRequirements];
           return passedRequirements.length === Object.keys(this.passwordRequirements).length;
         })
       });
     }
   };
+
+  // assets/src/js/alpine/components/forms/resetPassword.js
   var resetPassword_default = () => ({
     formData: {
       password: ""

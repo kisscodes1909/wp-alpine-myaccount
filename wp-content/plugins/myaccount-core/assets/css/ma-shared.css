@@ -113,18 +113,19 @@
         border-bottom: var(--ma-fullbleed-border-bottom, 0);
     }
 /* Horizontal padding on main content blocks (ensures spacing even when theme does not use .woocommerce-MyAccount-content) */
-.woocommerce-account .ma-page-heading,
-    .woocommerce-account .ma-orders,
-    .woocommerce-account .ma-view-order {
+/* .ma-page-heading,
+    .ma-orders,
+    .ma-view-order {
         padding-inline: var(--ma-space-md);
     }
-@media (min-width: 768px) {
-        .woocommerce-account .ma-page-heading,
-        .woocommerce-account .ma-orders,
-        .woocommerce-account .ma-view-order {
+
+    @media (min-width: 768px) {
+        .ma-page-heading,
+        .ma-orders,
+        .ma-view-order {
             padding-inline: var(--ma-space-lg);
         }
-    }
+    } */
 .woocommerce-account .ma-page-heading {
         margin-block: var(--ma-space-xl);
     }
@@ -1428,6 +1429,26 @@ body {
 }
 .loading-icon .spinner-arc {
     animation: spinner-dash 0.8s linear infinite;
+}
+.ma-btn-content,
+.ma-btn-loading {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+.ma-btn-loading-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+}
+.ma-btn-loading-svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    display: block;
 }
 @keyframes spinner-dash {
     to {

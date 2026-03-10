@@ -6,5 +6,5 @@
  */
 ?>
 <template x-data x-teleport="#loader-container">
-    <!-- No full-page overlay; button-level loading only -->
+    <div class="ma-ui-loader-placeholder" aria-hidden="true"></div>
 </template>

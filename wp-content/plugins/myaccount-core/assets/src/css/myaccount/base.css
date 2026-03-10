@@ -109,7 +109,7 @@
     }
 
     /* Horizontal padding on main content blocks (ensures spacing even when theme does not use .woocommerce-MyAccount-content) */
-    .ma-page-heading,
+    /* .ma-page-heading,
     .ma-orders,
     .ma-view-order {
         padding-inline: var(--ma-space-md);
@@ -121,7 +121,7 @@
         .ma-view-order {
             padding-inline: var(--ma-space-lg);
         }
-    }
+    } */
 
     .ma-page-heading {
         margin-block: var(--ma-space-xl);

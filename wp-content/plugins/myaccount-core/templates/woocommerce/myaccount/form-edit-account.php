@@ -23,7 +23,7 @@ wc_get_template( 'myaccount/page-heading.php', array( 'page_heading' => 'My Info
 <form x-data="updateAccount" id="form-update-account" class="ma-form woocommerce-EditAccountForm edit-account"
       @submit.prevent="handleSubmit"
       @keyup.enter="handleSubmit"
-      @keyup="setAllowSubmit(), validateForm()"
+      @input="setAllowSubmit()"
 >
     <div class="ma-form__section">
         <div class="ma-form__section-head">
@@ -39,12 +39,13 @@ wc_get_template( 'myaccount/page-heading.php', array( 'page_heading' => 'My Info
                     <input
                             type="text"
                             id="firstName"
-                            x-model="firstName"
+                            x-model="formData.firstName"
+                            @blur="validateField('firstName')"
                             class="ma-form__input ma-form__input--capitalize"
                             :class="{'field-invalid': errors.firstName}"
                     />
                 </div>
-                <span x-validate-error="{message: errors.firstName}"></span>
+                <span x-validate-error="{message: errors.firstName, touched: touched.firstName}"></span>
             </div>
 
             <div class="ma-form__field">
@@ -54,12 +55,13 @@ wc_get_template( 'myaccount/page-heading.php', array( 'page_heading' => 'My Info
                     <input
                             type="text"
                             id="lastName"
-                            x-model="lastName"
+                            x-model="formData.lastName"
+                            @blur="validateField('lastName')"
                             class="ma-form__input ma-form__input--capitalize"
                             :class="{'field-invalid': errors.lastName}"
                     />
                 </div>
-                <span x-validate-error="{message: errors.lastName}"></span>
+                <span x-validate-error="{message: errors.lastName, touched: touched.lastName}"></span>
             </div>
         </div>
     </div>
@@ -78,14 +80,15 @@ wc_get_template( 'myaccount/page-heading.php', array( 'page_heading' => 'My Info
                     <input
                             type="text"
                             id="email"
-                            x-model="email"
+                            x-model="formData.email"
+                            @blur="validateField('email')"
                             autocomplete="email"
                             class="ma-form__input"
                             :class="{'field-invalid': errors.email}"
                     />
                 </div>
                 <p class="ma-form__hint">This email is used for order confirmations and account notifications</p>
-                <span x-validate-error="{message: errors.email}"></span>
+                <span x-validate-error="{message: errors.email, touched: touched.email}"></span>
             </div>
 
             <div class="ma-form__field">
@@ -140,9 +143,9 @@ wc_get_template( 'myaccount/page-heading.php', array( 'page_heading' => 'My Info
         <button
                 type="submit"
                 class="button"
-                :disabled="!allowSubmit || isLoading"
-                :aria-busy="isLoading"
-                x-loading="isLoading"
+                :disabled="!allowSubmit || isFormSubmitting"
+                :aria-busy="isFormSubmitting"
+                x-loading="isFormSubmitting"
                 data-loading-label="Saving..."
         >
             <span>Save Changes</span>

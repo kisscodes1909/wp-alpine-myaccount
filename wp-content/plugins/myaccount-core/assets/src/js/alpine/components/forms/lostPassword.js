@@ -1,15 +1,4 @@
-import BaseFormHandler from '../../../BaseFormHandler.js';
-
-class LostPasswordHandler extends BaseFormHandler {
-    getValidationSchema() {
-        return window.yup.object().shape({
-            email: window.yup
-                .string()
-                .email('Your email address isn\'t valid.')
-                .required('This field is required.'),
-        });
-    }
-}
+import LostPasswordHandler from '../../../handlers/LostPasswordHandler.js';
 
 export default () => ({
     formData: {

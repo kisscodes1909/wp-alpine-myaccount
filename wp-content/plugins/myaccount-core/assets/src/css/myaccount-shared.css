@@ -94,6 +94,29 @@ body {
     animation: spinner-dash 0.8s linear infinite;
 }
 
+.ma-btn-content,
+.ma-btn-loading {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.ma-btn-loading-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+}
+
+.ma-btn-loading-svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    display: block;
+}
+
 @keyframes spinner-dash {
     to {
         stroke-dashoffset: -63;
