@@ -5,6 +5,8 @@
         display: flex;
         flex-direction: column;
         gap: 64px;
+
+        /* Same section layout and title-to-body spacing for add and saved */
     }
 .woocommerce-account .payment-methods-page .payment-methods-section__title-icon {
             width: 20px;
@@ -21,7 +23,6 @@
             line-height: var(--ma-line-normal);
             font-weight: 500;
         }
-/* Same section layout and title-to-body spacing for add and saved */
 .woocommerce-account .payment-methods-page .payment-methods-section--add,
         .woocommerce-account .payment-methods-page .payment-methods-section--saved {
             display: flex;

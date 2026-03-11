@@ -232,6 +232,21 @@
     --ma-opacity-90: 0.9;
     --ma-opacity-100: 1;
 
+    /* Horizontal padding on main content blocks (ensures spacing even when theme does not use .woocommerce-MyAccount-content) */
+    /* .ma-page-heading,
+    .ma-orders,
+    .ma-view-order {
+        padding-inline: var(--ma-space-md);
+    }
+
+    @media (min-width: 768px) {
+        .ma-page-heading,
+        .ma-orders,
+        .ma-view-order {
+            padding-inline: var(--ma-space-lg);
+        }
+    } */
+
     /* ma-orders: moved to base-order-history.css */
 
     /* Payment methods page – shared base layout (Add + Saved sections) */
@@ -257,20 +272,6 @@
         border-top: var(--ma-fullbleed-border-top, 0);
         border-bottom: var(--ma-fullbleed-border-bottom, 0);
     }
-/* Horizontal padding on main content blocks (ensures spacing even when theme does not use .woocommerce-MyAccount-content) */
-/* .ma-page-heading,
-    .ma-orders,
-    .ma-view-order {
-        padding-inline: var(--ma-space-md);
-    }
-
-    @media (min-width: 768px) {
-        .ma-page-heading,
-        .ma-orders,
-        .ma-view-order {
-            padding-inline: var(--ma-space-lg);
-        }
-    } */
 .woocommerce-account .ma-page-heading {
         margin-block: var(--ma-space-xl);
     }

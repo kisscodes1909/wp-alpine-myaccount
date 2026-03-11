@@ -48,9 +48,13 @@ const buildTargets = [
 ];
 
 function getBuildOptions(target) {
+  let output = target.output;
+  if (isProd) {
+    output = output.replace(/\.js$/, '.min.js');
+  }
   const options = {
     entryPoints: [path.join(root, target.input)],
-    outfile: path.join(root, target.output),
+    outfile: path.join(root, output),
     bundle: true,
     format: 'iife',
     platform: 'browser',
@@ -68,8 +72,10 @@ function getBuildOptions(target) {
 
 async function buildAll() {
   for (const target of buildTargets) {
-    await esbuild.build(getBuildOptions(target));
-    console.log(`[build-js] Wrote ${target.output}`);
+    const options = getBuildOptions(target);
+    await esbuild.build(options);
+    const outBasename = path.basename(options.outfile);
+    console.log(`[build-js] Wrote assets/js/${outBasename}`);
   }
 }
 

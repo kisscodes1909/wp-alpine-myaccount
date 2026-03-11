@@ -6,6 +6,7 @@ class MyAccount_Core_Assets {
 	private static ?MyAccount_Core_Assets $instance = null;
 	private string $plugin_dir;
 	private string $plugin_url;
+	private bool $use_min_assets = false;
 
 	public static function instance( string $plugin_dir, string $plugin_url ): MyAccount_Core_Assets {
 		if ( null === self::$instance ) {
@@ -16,8 +17,9 @@ class MyAccount_Core_Assets {
 	}
 
 	private function __construct( string $plugin_dir, string $plugin_url ) {
-		$this->plugin_dir = trailingslashit( $plugin_dir );
-		$this->plugin_url = trailingslashit( $plugin_url );
+		$this->plugin_dir  = trailingslashit( $plugin_dir );
+		$this->plugin_url  = trailingslashit( $plugin_url );
+		$this->use_min_assets = $this->should_use_min_assets();
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ), 20 );
 		add_filter( 'body_class', array( $this, 'add_endpoint_body_class' ) );
@@ -32,7 +34,7 @@ class MyAccount_Core_Assets {
 		$endpoint      = $this->get_account_endpoint();
 		$shared_loaded = $this->enqueue_style_if_exists(
 			'myaccount-core-css-shared',
-			'assets/css/ma-shared.css'
+			$this->asset_path( 'assets/css/ma-shared.css' )
 		);
 
 		$endpoint_file   = $this->resolve_endpoint_css_file( $endpoint );
@@ -42,7 +44,7 @@ class MyAccount_Core_Assets {
 		if ( '' !== $endpoint_file ) {
 			$endpoint_loaded = $this->enqueue_style_if_exists(
 				'myaccount-core-css-endpoint',
-				'assets/css/' . $endpoint_file,
+				$this->asset_path( 'assets/css/' . $endpoint_file ),
 				$endpoint_deps
 			);
 		}
@@ -50,7 +52,7 @@ class MyAccount_Core_Assets {
 		if ( ! $endpoint_loaded && 'ma-auth.css' !== $endpoint_file ) {
 			$endpoint_loaded = $this->enqueue_style_if_exists(
 				'myaccount-core-css-endpoint-auth-fallback',
-				'assets/css/ma-auth.css',
+				$this->asset_path( 'assets/css/ma-auth.css' ),
 				$endpoint_deps
 			);
 		}
@@ -58,30 +60,33 @@ class MyAccount_Core_Assets {
 		if ( ! $shared_loaded || ! $endpoint_loaded ) {
 			$this->enqueue_style_if_exists(
 				'myaccount-core-css',
-				'assets/css/myaccount.css'
+				$this->asset_path( 'assets/css/myaccount.css' )
 			);
 		}
 
 		$validation_required   = $this->endpoint_requires_validation_js( $endpoint );
 		$endpoint_js_file      = $this->resolve_endpoint_js_file( $endpoint );
-		$shared_js_exists      = file_exists( $this->plugin_dir . 'assets/js/alpine.shared-core.js' );
-		$endpoint_js_exists    = file_exists( $this->plugin_dir . 'assets/js/' . $endpoint_js_file );
-		$validation_js_exists  = ! $validation_required || file_exists( $this->plugin_dir . 'assets/js/alpine.shared-validation.js' );
+		$shared_js_path        = $this->asset_path( 'assets/js/alpine.shared-core.js' );
+		$endpoint_js_path      = $this->asset_path( 'assets/js/' . $endpoint_js_file );
+		$validation_js_path    = $this->asset_path( 'assets/js/alpine.shared-validation.js' );
+		$shared_js_exists     = file_exists( $this->plugin_dir . $shared_js_path );
+		$endpoint_js_exists   = file_exists( $this->plugin_dir . $endpoint_js_path );
+		$validation_js_exists = ! $validation_required || file_exists( $this->plugin_dir . $validation_js_path );
 		$can_use_split_loading = $shared_js_exists && $endpoint_js_exists && $validation_js_exists;
 		$legacy_js_loaded      = false;
-		$js_shared_loaded      = false;
+		$js_shared_loaded     = false;
 
 		if ( $can_use_split_loading ) {
 			$js_shared_loaded = $this->enqueue_script_if_exists(
 				'myaccount-core-js-shared-core',
-				'assets/js/alpine.shared-core.js'
+				$shared_js_path
 			);
 
 			if ( $validation_required ) {
 				$validation_deps = $js_shared_loaded ? array( 'myaccount-core-js-shared-core' ) : array();
 				$this->enqueue_script_if_exists(
 					'myaccount-core-js-shared-validation',
-					'assets/js/alpine.shared-validation.js',
+					$validation_js_path,
 					$validation_deps
 				);
 			}
@@ -96,13 +101,13 @@ class MyAccount_Core_Assets {
 
 			$this->enqueue_script_if_exists(
 				'myaccount-core-js-endpoint',
-				'assets/js/' . $endpoint_js_file,
+				$endpoint_js_path,
 				$endpoint_js_deps
 			);
 		} else {
 			$legacy_js_loaded = $this->enqueue_script_if_exists(
 				'alpine-bundle',
-				'assets/js/alpine.bundle.js'
+				$this->asset_path( 'assets/js/alpine.bundle.js' )
 			);
 		}
 
@@ -158,6 +163,40 @@ class MyAccount_Core_Assets {
 		$classes[] = 'ma-shared-scope';
 
 		return $classes;
+	}
+
+	/**
+	 * Whether to enqueue minified assets (.min.css / .min.js).
+	 * Uses constant MYACCOUNT_CORE_USE_MIN_ASSETS if set, else wp_get_environment_type() === 'production'.
+	 */
+	private function should_use_min_assets(): bool {
+		if ( defined( 'MYACCOUNT_CORE_USE_MIN_ASSETS' ) ) {
+			return (bool) MYACCOUNT_CORE_USE_MIN_ASSETS;
+		}
+		if ( function_exists( 'wp_get_environment_type' ) ) {
+			return wp_get_environment_type() === 'production';
+		}
+		$env = getenv( 'WP_ENVIRONMENT_TYPE' );
+		return $env !== false && $env === 'production';
+	}
+
+	/**
+	 * Return asset path with .min suffix when using production assets.
+	 * Falls back to non-min path if min file does not exist.
+	 */
+	private function asset_path( string $relative_path ): string {
+		if ( ! $this->use_min_assets ) {
+			return $relative_path;
+		}
+		$min_path = preg_replace( '/\.(css|js)$/', '.min.$1', $relative_path );
+		if ( $min_path === $relative_path ) {
+			return $relative_path;
+		}
+		$min_file = $this->plugin_dir . $min_path;
+		if ( file_exists( $min_file ) ) {
+			return $min_path;
+		}
+		return $relative_path;
 	}
 
 	private function get_account_endpoint(): string {
@@ -243,11 +282,13 @@ class MyAccount_Core_Assets {
 			return false;
 		}
 
+		$version = $this->use_min_assets ? null : filemtime( $file );
+
 		wp_enqueue_style(
 			$handle,
 			$this->plugin_url . $relative_path,
 			$deps,
-			filemtime( $file )
+			$version
 		);
 
 		return true;
@@ -259,11 +300,13 @@ class MyAccount_Core_Assets {
 			return false;
 		}
 
+		$version = $this->use_min_assets ? null : filemtime( $file );
+
 		wp_enqueue_script(
 			$handle,
 			$this->plugin_url . $relative_path,
 			$deps,
-			filemtime( $file ),
+			$version,
 			true
 		);
 

@@ -7,6 +7,7 @@ const atImport = require('postcss-import');
 const nestedAncestors = require('postcss-nested-ancestors');
 const nested = require('postcss-nested');
 const autoprefixer = require('autoprefixer');
+const cssnano = require('cssnano');
 
 const root = path.resolve(__dirname, '..');
 const isProd = process.env.NODE_ENV === 'production';
@@ -49,16 +50,24 @@ const buildTargets = [
 
 async function buildOne(target) {
   const inputPath = path.join(root, target.input);
-  const outputPath = path.join(root, target.output);
+  let outputPath = path.join(root, target.output);
+  if (isProd) {
+    outputPath = outputPath.replace(/\.css$/, '.min.css');
+  }
   const mapPath = `${outputPath}.map`;
   const css = fs.readFileSync(inputPath, 'utf8');
 
-  const result = await postcss([
+  const plugins = [
     atImport(),
     nestedAncestors(),
     nested(),
     autoprefixer(),
-  ]).process(css, {
+  ];
+  if (isProd) {
+    plugins.push(cssnano());
+  }
+
+  const result = await postcss(plugins).process(css, {
     from: inputPath,
     to: outputPath,
     map: isProd ? false : { inline: false },
