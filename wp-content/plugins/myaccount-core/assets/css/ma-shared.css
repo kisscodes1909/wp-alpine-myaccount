@@ -5,6 +5,7 @@
 /*         ma-address-book, ma-payment-methods                                 */
 /* -------------------------------------------------------------------------- */
 .woocommerce-account {
+
     /* Scale foundation: theme can override --ma-base to adapt to html font-size. */
       /* ─────────────────────────────────────────────────────────────
      BASE & SCALE
@@ -232,27 +233,7 @@
     --ma-opacity-90: 0.9;
     --ma-opacity-100: 1;
 
-    /* Horizontal padding on main content blocks (ensures spacing even when theme does not use .woocommerce-MyAccount-content) */
-    /* .ma-page-heading,
-    .ma-orders,
-    .ma-view-order {
-        padding-inline: var(--ma-space-md);
-    }
 
-    @media (min-width: 768px) {
-        .ma-page-heading,
-        .ma-orders,
-        .ma-view-order {
-            padding-inline: var(--ma-space-lg);
-        }
-    } */
-
-    /* ma-orders: moved to base-order-history.css */
-
-    /* Payment methods page – shared base layout (Add + Saved sections) */
-    /* payment-methods endpoint styles: moved to payment-methods.css */
-    /* view-order endpoint styles: moved to view-order.css */
-    /* address-book endpoint styles: moved to address-book.css */
 }
 /* Shared full-bleed utility for My Account bands inside constrained containers. */
 .woocommerce-account .ma-fullbleed-band {
