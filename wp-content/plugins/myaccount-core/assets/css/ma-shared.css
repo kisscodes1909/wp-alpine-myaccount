@@ -426,6 +426,9 @@
         left: auto;
     }
 }
+/* -------------------------------------------------------------------------- */
+/* My Account navigation: header (optional), stacked nav list, mobile dropdown */
+/* -------------------------------------------------------------------------- */
 .woocommerce-account .ma-nav-header {
         display: none;
         flex-direction: column;
@@ -463,47 +466,7 @@
         width: 1rem;
         height: 1rem;
     }
-@media (min-width: 992px) {
-    .woocommerce-account .ma-nav-header {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        max-width: var(--ma-container-xl);
-        margin-inline: auto;
-        padding-inline: var(--ma-space-lg);
-        margin-bottom: var(--ma-space-lg);
-    }
-
-    .woocommerce-account .ma-nav-header__title {
-        text-align: left;
-        font-size: var(--ma-font-2xl);
-    }
-
-    .woocommerce-account .ma-nav-header__user {
-        text-align: right;
-        font-size: var(--ma-font-base);
-    }
-}
-/* -------------------------------------------------------------------------- */
-/* My Account layout: controlled by body.ma-layout-stacked                    */
-/* Only stacked layout is defined here; theme controls column layout by default */
-/* Navigation styles apply only when stacked (nav has .ma-fullbleed-band).     */
-/* -------------------------------------------------------------------------- */
-/* Stacked layout: nav on top (horizontal), content below. */
-body.woocommerce-account.ma-layout-stacked .ma-account-layout {
-    display: flex;
-    flex-direction: column;
-}
-body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAccount-navigation {
-    flex-shrink: 0;
-}
-body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAccount-content {
-    width: 100%;
-    max-width: 1280px;
-    margin-inline: auto;
-}
-/* Navigation styles when stacked: full-bleed band, flex row, list, links, icons, hover/active. */
+/* Stacked layout: nav band, list, links, icons, hover/active */
 body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation.ma-fullbleed-band {
     --ma-fullbleed-border-top: var(--ma-space-2xs) solid var(--ma-border-divider);
     --ma-fullbleed-border-bottom: var(--ma-space-2xs) solid var(--ma-border-divider);
@@ -518,7 +481,7 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation.ma-
 body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list {
     padding: 0;
     display: flex;
-    flex-flow: row;
+    flex-flow: column;
     gap: var(--ma-space-lg);
 }
 body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li {
@@ -600,10 +563,164 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lis
 body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.is-active {
     border-bottom-color: var(--ma-text-primary);
 }
+/* Mobile: overlay dropdown — shared by stacked and vertical layout */
+body.woocommerce-account .ma-nav-dropdown {
+    position: relative;
+    z-index: 100;
+    --ma-nav-dropdown-item-height: calc(var(--ma-base) * 2.75);
+}
+body.woocommerce-account .ma-nav-dropdown .woocommerce-MyAccount-navigation {
+    flex-direction: column;
+    align-items: stretch;
+}
+body.woocommerce-account .ma-nav-dropdown__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-width: 0;
+    height: var(--ma-nav-dropdown-item-height);
+    box-sizing: border-box;
+    padding-block: 0;
+    padding-inline: var(--ma-space-md);
+    font: inherit;
+    font-size: var(--ma-font-base);
+    line-height: var(--ma-line-normal);
+    font-weight: 400;
+    color: var(--ma-text-primary);
+    text-transform: uppercase;
+    letter-spacing: var(--ma-tracking-widest);
+    cursor: pointer;
+}
+body.woocommerce-account .ma-nav-dropdown__trigger-label {
+    flex: 1;
+    text-align: left;
+}
+body.woocommerce-account .ma-nav-dropdown__trigger-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+    transition: transform var(--ma-duration-fast) var(--ma-easing-smooth);
+}
+body.woocommerce-account .ma-nav-dropdown__trigger-icon--open {
+    transform: rotate(180deg);
+}
+body.woocommerce-account .ma-nav-dropdown__list,
+body.woocommerce-account .ma-nav-dropdown__list.woocommerce-MyAccount-navigation-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 110;
+    flex-direction: column;
+    gap: 0;
+    margin-top: var(--ma-space-2xs);
+    padding: var(--ma-space-xs) 0;
+    background: var(--ma-surface);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-height: min(70vh, 400px);
+    overflow-y: auto;
+}
+body.woocommerce-account .ma-nav-dropdown__list li {
+    margin-bottom: 0;
+    border-bottom: 0;
+}
+body.woocommerce-account .ma-nav-dropdown__list.woocommerce-MyAccount-navigation-list li,
+body.woocommerce-account .ma-nav-dropdown__list.woocommerce-MyAccount-navigation-list li:hover,
+body.woocommerce-account .ma-nav-dropdown__list.woocommerce-MyAccount-navigation-list li.is-active {
+    border: none;
+    border-bottom: 0;
+}
+body.woocommerce-account .ma-nav-dropdown__list .woocommerce-MyAccount-navigation-link {
+    justify-content: flex-start;
+    padding-inline: var(--ma-space-md);
+    height: var(--ma-nav-dropdown-item-height);
+}
 @media (min-width: 992px) {
+    .woocommerce-account .ma-nav-header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        max-width: var(--ma-container-xl);
+        margin-inline: auto;
+        padding-inline: var(--ma-space-lg);
+        margin-bottom: var(--ma-space-lg);
+    }
+
+    .woocommerce-account .ma-nav-header__title {
+        text-align: left;
+        font-size: var(--ma-font-2xl);
+    }
+
+    .woocommerce-account .ma-nav-header__user {
+        text-align: right;
+        font-size: var(--ma-font-base);
+    }
+
     body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation.ma-fullbleed-band {
         padding-inline: var(--ma-space-5xl);
     }
+
+    body.woocommerce-account .ma-nav-dropdown .woocommerce-MyAccount-navigation {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    body.woocommerce-account .ma-nav-dropdown__trigger {
+        display: none;
+    }
+
+    body.woocommerce-account .ma-nav-dropdown__list,
+    body.woocommerce-account .ma-nav-dropdown__list.woocommerce-MyAccount-navigation-list {
+        position: static;
+        display: flex;
+        flex-flow: column;
+        gap: var(--ma-space-lg);
+        margin-top: 0;
+        padding: 0;
+        background: transparent;
+        box-shadow: none;
+        max-height: none;
+        overflow: visible;
+    }
+
+    body.woocommerce-account .ma-nav-dropdown__list .woocommerce-MyAccount-navigation-link {
+        justify-content: center;
+        padding-inline: 0;
+        min-height: 0;
+    }
+
+    body.woocommerce-account.ma-layout-stacked .ma-nav-dropdown__list {
+        flex-flow: row;
+    }
+
+    body.woocommerce-account.ma-layout-stacked .ma-nav-dropdown__list li {
+        margin-bottom: -var(--ma-space-2xs);
+        border-bottom: var(--ma-space-2xs) solid transparent;
+    }
+
+    body.woocommerce-account.ma-layout-stacked .ma-nav-dropdown__list.woocommerce-MyAccount-navigation-list li.is-active {
+        border-bottom: var(--ma-space-2xs) solid var(--ma-text-primary);
+    }
+}
+/* -------------------------------------------------------------------------- */
+/* My Account layout: controlled by body.ma-layout-stacked                    */
+/* Only stacked layout is defined here; theme controls column layout by default */
+/* Navigation styles apply only when stacked (nav has .ma-fullbleed-band).     */
+/* -------------------------------------------------------------------------- */
+/* Stacked layout: nav on top (horizontal), content below. */
+body.woocommerce-account.ma-layout-stacked .ma-account-layout {
+    display: flex;
+    flex-direction: column;
+}
+body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAccount-navigation {
+    flex-shrink: 0;
+}
+body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAccount-content {
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
 }
 .woocommerce-account {
     --ma-notice-space-gap: var(--ma-space-md);
