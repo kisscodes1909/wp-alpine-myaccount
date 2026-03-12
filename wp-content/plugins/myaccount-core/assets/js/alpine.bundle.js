@@ -6253,25 +6253,8 @@ attempted value: ${formattedValue}
   var MAX_ADDRESSES = 9;
   var DEFAULT_COUNTRY = "United States";
   var AJAX_ACTION = "save-address";
-  var AUTOCOMPLETE_ENABLED = false;
-  var AUTOCOMPLETE_INIT_DELAY = 150;
-  var GOOGLE_API_RETRY_DELAY = 500;
-  var GOOGLE_API_MAX_RETRIES = 10;
-  var DOM_RETRY_DELAY = 150;
-  var DOM_MAX_RETRIES = 10;
-  var POPUP_SELECTOR = "#popup-container";
-  var AUTOCOMPLETE_WRAPPER_SELECTOR = ".address-autocomplete-wrapper";
-  var ADDRESS_COMPONENT_MAP = {
-    street_number: { field: "address", prefix: true },
-    route: { field: "address", append: true },
-    locality: { field: "city" },
-    administrative_area_level_1: { field: "region", shortName: true },
-    postal_code: { field: "postalCode" }
-  };
   var userAddress_default = {
     // State
-    autocompleteEnabled: AUTOCOMPLETE_ENABLED,
-    // Exposed for template (fallback address input when false)
     addresses: [],
     countries: {},
     ajaxUrl: "",
@@ -6289,9 +6272,6 @@ attempted value: ${formattedValue}
     activeAction: "",
     activeActionId: "",
     _inited: false,
-    _autocompleteInstance: null,
-    _googleApiRetries: 0,
-    _domRetries: 0,
     // ==================== Initialization ====================
     init() {
       if (this._inited) return;
@@ -6372,10 +6352,6 @@ attempted value: ${formattedValue}
       this._setFormMode("add", "Add Address", "Add Address");
       this.editAddress = this._getEmptyAddress();
       this.isEditing = true;
-      this._cleanupAutocomplete();
-      this._googleApiRetries = 0;
-      this._domRetries = 0;
-      setTimeout(() => this.initAutocomplete(), AUTOCOMPLETE_INIT_DELAY);
     },
     startEdit(id) {
       this._setFormMode("edit", "Edit Address", "Update Address");
@@ -6383,10 +6359,6 @@ attempted value: ${formattedValue}
       if (address) {
         this.editAddress = { ...address };
         this.isEditing = true;
-        this._cleanupAutocomplete();
-        this._googleApiRetries = 0;
-        this._domRetries = 0;
-        setTimeout(() => this.initAutocomplete(), AUTOCOMPLETE_INIT_DELAY);
       }
     },
     async save() {
@@ -6493,110 +6465,6 @@ attempted value: ${formattedValue}
       } else {
         this.editAddress.phone = phone;
       }
-    },
-    // ==================== Places API (New) - PlaceAutocompleteElement ====================
-    async initAutocomplete() {
-      if (!AUTOCOMPLETE_ENABLED) return;
-      this._cleanupAutocomplete();
-      if (typeof google === "undefined" || !google.maps) {
-        if (this._googleApiRetries < GOOGLE_API_MAX_RETRIES) {
-          this._googleApiRetries++;
-          setTimeout(() => this.initAutocomplete(), GOOGLE_API_RETRY_DELAY);
-        } else {
-          console.error("Google Maps API failed to load after max retries");
-        }
-        return;
-      }
-      const popup = document.querySelector(POPUP_SELECTOR);
-      const wrapper = popup?.querySelector(AUTOCOMPLETE_WRAPPER_SELECTOR);
-      if (!wrapper) {
-        if (this._domRetries < DOM_MAX_RETRIES) {
-          this._domRetries++;
-          setTimeout(() => this.initAutocomplete(), DOM_RETRY_DELAY);
-          return;
-        }
-        console.warn("Autocomplete wrapper not found in popup");
-        return;
-      }
-      try {
-        const { PlaceAutocompleteElement } = await google.maps.importLibrary("places");
-        const placeAutocomplete = new PlaceAutocompleteElement({
-          placeholder: "Start typing your address..."
-        });
-        placeAutocomplete.includedRegionCodes = ["us"];
-        placeAutocomplete.addEventListener("gmp-select", async ({ placePrediction }) => {
-          const place = placePrediction.toPlace();
-          await this._handlePlaceSelectNew(place);
-        });
-        wrapper.innerHTML = "";
-        wrapper.appendChild(placeAutocomplete);
-        this._autocompleteInstance = placeAutocomplete;
-        this._googleApiRetries = 0;
-        this._domRetries = 0;
-      } catch (err) {
-        console.error("Places API autocomplete init error:", err);
-      }
-    },
-    async _handlePlaceSelectNew(place) {
-      if (!place || !this.editAddress) {
-        console.warn("Invalid place or editAddress is null");
-        return;
-      }
-      this._resetAddressFields();
-      try {
-        await place.fetchFields({ fields: ["addressComponents", "formattedAddress"] });
-      } catch (e) {
-        console.error("Failed to fetch place fields:", e);
-        Alpine.store("toast")?.addToast("Failed to load address details", "error");
-        return;
-      }
-      if (place.addressComponents?.length) {
-        this._parseAddressComponentsNew(place.addressComponents);
-      } else if (place.formattedAddress) {
-        this.editAddress.address = place.formattedAddress;
-      }
-    },
-    _parseAddressComponentsNew(components) {
-      if (!this.editAddress) return;
-      components.forEach((component) => {
-        if (!component.types?.length) return;
-        component.types.forEach((type) => {
-          const mapping = ADDRESS_COMPONENT_MAP[type];
-          if (!mapping) return;
-          const value = mapping.shortName ? component.shortText || "" : component.longText || "";
-          if (!value) return;
-          if (mapping.append) {
-            this.editAddress[mapping.field] += value;
-          } else if (mapping.prefix) {
-            this.editAddress[mapping.field] = value + " ";
-          } else {
-            this.editAddress[mapping.field] = value;
-          }
-        });
-      });
-      if (this.editAddress.address) {
-        this.editAddress.address = this.editAddress.address.trim();
-      }
-    },
-    _cleanupAutocomplete() {
-      if (!this._autocompleteInstance) return;
-      try {
-        const popup = document.querySelector(POPUP_SELECTOR);
-        const wrapper = popup?.querySelector(AUTOCOMPLETE_WRAPPER_SELECTOR);
-        if (wrapper && this._autocompleteInstance.parentNode === wrapper) {
-          wrapper.removeChild(this._autocompleteInstance);
-        }
-      } catch (e) {
-        console.warn("Autocomplete cleanup error:", e);
-      }
-      this._autocompleteInstance = null;
-    },
-    _resetAddressFields() {
-      if (!this.editAddress) return;
-      this.editAddress.address = "";
-      this.editAddress.city = "";
-      this.editAddress.region = "";
-      this.editAddress.postalCode = "";
     }
   };
 

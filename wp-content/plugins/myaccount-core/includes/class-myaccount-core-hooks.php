@@ -102,14 +102,6 @@ class MyAccount_Core_Hooks {
 				$address_localize_data
 			);
 		}
-
-		wp_enqueue_script(
-			'myaccount-core-address-googleapis',
-			'https://maps.googleapis.com/maps/api/js?key=AIzaSyD-42Ska0L9w12EoymnnOFAPaF5uCdiPgU&language=en&loading=async',
-			array( $address_handle ),
-			'1.0',
-			true
-		);
 	}
 
 	public function redirect_after_login( string $redirect, WP_User $user ): string {

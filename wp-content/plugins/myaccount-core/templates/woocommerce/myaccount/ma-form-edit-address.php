@@ -34,15 +34,10 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 
         <div>
             <label for="address">Address</label>
-            <template x-if="$store.userAddress.autocompleteEnabled">
-                <div class="address-autocomplete-wrapper"></div>
-            </template>
-            <template x-if="!$store.userAddress.autocompleteEnabled">
-                <div class="ma-form__input-wrap">
-                    <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_map_pin(); ?></span>
-                    <input class="ma-form__input" x-model="$store.userAddress.editAddress.address" type="text" name="address" id="address" autocomplete="street-address" />
-                </div>
-            </template>
+            <div class="ma-form__input-wrap">
+                <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_map_pin(); ?></span>
+                <input class="ma-form__input" x-model="$store.userAddress.editAddress.address" type="text" name="address" id="address" autocomplete="street-address" />
+            </div>
         </div>
 
         <div>

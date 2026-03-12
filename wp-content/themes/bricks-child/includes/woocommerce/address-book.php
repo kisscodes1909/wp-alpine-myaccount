@@ -40,8 +40,12 @@ class Adress_Book {
 
     function enqueue_scripts($addresses, $countries): void
     {
-        $aafw_google_api_key = 'AIzaSyD-42Ska0L9w12EoymnnOFAPaF5uCdiPgU';
         $language = 'en';
+        // Use same source as myaccount-core: constant MYACCOUNT_GOOGLE_MAPS_API_KEY or option myaccount_google_maps_api_key
+        $api_key = defined('MYACCOUNT_GOOGLE_MAPS_API_KEY') && MYACCOUNT_GOOGLE_MAPS_API_KEY !== ''
+            ? (string) MYACCOUNT_GOOGLE_MAPS_API_KEY
+            : (string) get_option('myaccount_google_maps_api_key', '');
+        $api_key = apply_filters('myaccount_google_maps_api_key', $api_key);
 
         wp_enqueue_script('address-book', CHILD_URL . '/assets/js/address-book.js', array('alpine-bundle'), filemtime(CHILD_DIR . '/assets/js/address-book.js'), true);
         wp_localize_script('alpine-bundle', 'scriptData', [
@@ -50,14 +54,15 @@ class Adress_Book {
                 'countries' => $countries,
                 'nonce' => wp_create_nonce('save_address_nonce')
         ]);
-        // Places API (New): load without legacy libraries; places loaded via importLibrary() in JS
-        wp_enqueue_script(
-            'address-googleapis',
-            'https://maps.googleapis.com/maps/api/js?key=' . $aafw_google_api_key . '&language=' . $language . '&loading=async',
-            array( 'address-book' ),
-            '1.0',
-            true
-        );
+        if ($api_key !== '') {
+            wp_enqueue_script(
+                'address-googleapis',
+                'https://maps.googleapis.com/maps/api/js?key=' . esc_attr($api_key) . '&language=' . esc_attr($language) . '&loading=async',
+                array( 'address-book' ),
+                '1.0',
+                true
+            );
+        }
     }
 }
 
