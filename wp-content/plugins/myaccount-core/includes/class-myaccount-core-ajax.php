@@ -135,7 +135,7 @@ class MyAccount_Core_Ajax {
 	public function handle_signup(): void {
 		$nonce_value = isset( $_REQUEST['signupNonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['signupNonce'] ) ) : '';
 
-		if ( ! isset( $_POST['firstName'], $_POST['lastName'], $_POST['email'], $_POST['password'], $_POST['captchaToken'] ) || ! wp_verify_nonce( $nonce_value, 'woocommerce-register' ) ) {
+		if ( ! isset( $_POST['firstName'], $_POST['lastName'], $_POST['email'], $_POST['password'] ) || ! wp_verify_nonce( $nonce_value, 'woocommerce-register' ) ) {
 			wp_send_json_error(
 				array(
 					'message' => wc_print_notice( 'Required fields are missing.', 'error', array(), true ),
@@ -153,30 +153,6 @@ class MyAccount_Core_Ajax {
 			$validation_error  = new WP_Error();
 			$validation_error  = apply_filters( 'woocommerce_process_registration_errors', $validation_error, $username, $password, $email );
 			$validation_errors = $validation_error->get_error_messages();
-
-			$captcha_token      = sanitize_text_field( wp_unslash( $_POST['captchaToken'] ) );
-			$captcha_secret_key = '6Lemz_YpAAAAABcCKloM1gjuRKWi-Zgj18VM-kOT';
-
-			$response = wp_remote_post(
-				'https://www.google.com/recaptcha/api/siteverify',
-				array(
-					'body' => array(
-						'secret'   => $captcha_secret_key,
-						'response' => $captcha_token,
-					),
-				)
-			);
-
-			if ( is_wp_error( $response ) ) {
-				throw new Exception( 'The request is unacceptable, please contact admin!' );
-			}
-
-			$response_body = wp_remote_retrieve_body( $response );
-			$result        = json_decode( $response_body, true );
-
-			if ( ! is_array( $result ) || empty( $result['success'] ) ) {
-				throw new Exception( 'The request is unacceptable, please contact admin!' );
-			}
 
 			if ( 1 === count( $validation_errors ) ) {
 				throw new Exception( $validation_error->get_error_message() );

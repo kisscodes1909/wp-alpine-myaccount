@@ -1,7 +1,7 @@
 /**
  * Signup Component
  * Usage: <form x-data="signup" @submit.prevent="handleSubmit">
- * Requires: authenicationData.signupNonce, authenicationData.captchaSiteKey
+ * Requires: authenicationData.signupNonce
  */
 import SignupHandler from '../../../handlers/SignupHandler.js';
 
@@ -27,7 +27,6 @@ export default () => ({
 
         this.handler = new SignupHandler(this.formData, {
             signupNonce: authData.signupNonce || '',
-            captchaSiteKey: authData.captchaSiteKey || '',
         });
 
         this.passwordRequirements = this.handler.passwordRequirements;

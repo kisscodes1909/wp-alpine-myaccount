@@ -46,11 +46,6 @@ export default class SignupHandler extends BaseFormHandler {
     }
 
     async handleSubmit() {
-        const captchaSiteKey = this.additionalData.captchaSiteKey || '';
-        const token = captchaSiteKey && window.grecaptcha
-            ? await window.grecaptcha.execute(captchaSiteKey, { action: 'signup' })
-            : '';
-
         await this.validateForm(['receiveOfferNews']);
 
         if (Object.keys(this.errors).length > 0) {
@@ -63,7 +58,6 @@ export default class SignupHandler extends BaseFormHandler {
         const payload = {
             ...this.formData,
             signupNonce: this.additionalData.signupNonce,
-            captchaToken: token,
         };
 
         window.wp.ajax.post(this.getApiEndpoint(), payload).done((response) => {

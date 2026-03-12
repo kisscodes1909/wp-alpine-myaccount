@@ -6713,8 +6713,6 @@ attempted value: ${formattedValue}
       return "handle_signup";
     }
     async handleSubmit() {
-      const captchaSiteKey = this.additionalData.captchaSiteKey || "";
-      const token = captchaSiteKey && window.grecaptcha ? await window.grecaptcha.execute(captchaSiteKey, { action: "signup" }) : "";
       await this.validateForm(["receiveOfferNews"]);
       if (Object.keys(this.errors).length > 0) {
         this.isFormSubmitting = false;
@@ -6723,8 +6721,7 @@ attempted value: ${formattedValue}
       this.isFormSubmitting = true;
       const payload = {
         ...this.formData,
-        signupNonce: this.additionalData.signupNonce,
-        captchaToken: token
+        signupNonce: this.additionalData.signupNonce
       };
       window.wp.ajax.post(this.getApiEndpoint(), payload).done((response) => {
         this.isFormSubmitting = false;
@@ -6762,8 +6759,7 @@ attempted value: ${formattedValue}
     init() {
       const authData = window.authenicationData || {};
       this.handler = new SignupHandler(this.formData, {
-        signupNonce: authData.signupNonce || "",
-        captchaSiteKey: authData.captchaSiteKey || ""
+        signupNonce: authData.signupNonce || ""
       });
       this.passwordRequirements = this.handler.passwordRequirements;
       this.$watch("handler.isFormSubmitting", (value) => {

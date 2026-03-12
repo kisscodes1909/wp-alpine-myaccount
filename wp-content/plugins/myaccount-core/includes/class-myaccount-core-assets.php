@@ -111,26 +111,14 @@ class MyAccount_Core_Assets {
 			);
 		}
 
-		$captcha_site_key    = defined( 'CAPTCHA_SITE_KEY' ) ? CAPTCHA_SITE_KEY : '';
 		$auth_localize_data  = array(
-			'wooLoginNonce'  => wp_create_nonce( 'woocommerce-login' ),
-			'signupNonce'    => wp_create_nonce( 'woocommerce-register' ),
-			'captchaSiteKey' => $captcha_site_key,
+			'wooLoginNonce' => wp_create_nonce( 'woocommerce-login' ),
+			'signupNonce'   => wp_create_nonce( 'woocommerce-register' ),
 		);
 		$auth_target_handle  = ( $can_use_split_loading && $js_shared_loaded ) ? 'myaccount-core-js-shared-core' : 'alpine-bundle';
 
 		if ( ( 'myaccount-core-js-shared-core' === $auth_target_handle && $js_shared_loaded ) || ( 'alpine-bundle' === $auth_target_handle && $legacy_js_loaded ) ) {
 			wp_localize_script( $auth_target_handle, 'authenicationData', $auth_localize_data );
-		}
-
-		if ( ! empty( $captcha_site_key ) ) {
-			wp_enqueue_script(
-				'myaccount-core-recaptcha',
-				'https://www.google.com/recaptcha/api.js?render=' . rawurlencode( $captcha_site_key ),
-				array(),
-				null,
-				true
-			);
 		}
 	}
 
@@ -144,10 +132,6 @@ class MyAccount_Core_Assets {
 
 		if ( in_array( $handle, $defer_handles, true ) ) {
 			return str_replace( ' src', ' defer="defer" src', $tag );
-		}
-
-		if ( 'myaccount-core-recaptcha' === $handle ) {
-			return str_replace( ' src', ' async defer src', $tag );
 		}
 
 		return $tag;
