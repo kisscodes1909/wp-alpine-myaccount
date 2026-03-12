@@ -45,6 +45,34 @@ Examples:
 - Keep nesting shallow (required depth: <= 3).
 - Avoid deeply chained selectors that lock styles to fragile markup.
 
+## Nested CSS writing style
+Write CSS using **nested selectors** so that:
+- A single root selector (e.g. `body.woocommerce-account`, `.woocommerce-account`) wraps a section.
+- Child elements and modifiers are nested inside that root instead of repeating the full selector.
+- Use `&` for the parent when needed (e.g. `&:focus-within`, `&.ma-layout-stacked`).
+- Place `@media` inside the relevant block when the breakpoint only affects that block.
+
+Example (flat vs nested):
+
+```css
+/* Flat — avoid */
+body.woocommerce-account .ma-nav-dropdown__trigger { ... }
+body.woocommerce-account .ma-nav-dropdown__trigger-label { ... }
+body.woocommerce-account .ma-nav-dropdown__list { ... }
+
+/* Nested — prefer */
+body.woocommerce-account {
+    .ma-nav-dropdown {
+        .ma-nav-dropdown__trigger { ... }
+        .ma-nav-dropdown__trigger-label { ... }
+        .ma-nav-dropdown__list { ... }
+        &:focus-within .ma-nav-dropdown__list { display: flex; }
+    }
+}
+```
+
+Reference: `assets/src/css/myaccount/navigation.css` (full nested structure).
+
 ## Utility Contract (`.ma-u-*`)
 Utilities are for repeated generic patterns only.
 

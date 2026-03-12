@@ -28,7 +28,6 @@
     align-items: center;
     gap: var(--ma-space-sm);
     padding: var(--ma-notice-padding-y) var(--ma-notice-padding-right) var(--ma-notice-padding-y) var(--ma-notice-padding-x);
-    border-radius: var(--ma-notice-border-radius);
     font-size: var(--ma-notice-font-size);
     line-height: var(--ma-notice-line-height);
     font-weight: 500;
@@ -51,7 +50,6 @@
     flex-direction: column;
     gap: var(--ma-space-sm);
     padding: var(--ma-notice-padding-y) var(--ma-notice-padding-right) var(--ma-notice-padding-y) calc(var(--ma-notice-padding-x) + var(--ma-notice-icon-size) + var(--ma-space-sm));
-    border-radius: var(--ma-notice-border-radius);
     font-size: var(--ma-notice-font-size);
     line-height: var(--ma-notice-line-height);
     font-weight: 500;

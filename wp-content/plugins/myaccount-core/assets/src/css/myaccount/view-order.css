@@ -120,7 +120,6 @@
         color: var(--ma-text-primary);
         cursor: pointer;
         text-decoration: none;
-        border-radius: 0;
     }
 
     .ma-order-details-header__btn--danger {
@@ -324,7 +323,6 @@
         top: 0;
         width: calc(var(--ma-space-md) * 0.75);
         height: calc(var(--ma-space-md) * 0.75);
-        border-radius: 50%;
         background: var(--ma-border);
         flex-shrink: 0;
         margin: 0;
@@ -882,7 +880,6 @@
         line-height: var(--ma-line-tight);
         font-weight: 400;
         font-family: inherit;
-        border-radius: 0;
     }
 
     .ma-order-details-items-summary__btn:hover {

@@ -15,7 +15,6 @@ body.myaccount-template-fashion.woocommerce-account .ma-form .ma-form__input,
 body.myaccount-template-fashion.woocommerce-account .ma-form select,
 body.myaccount-template-fashion.woocommerce-account .ma-form textarea {
     border: 1px solid var(--ma-form-color-border);
-    border-radius: 0;
     background-color: var(--ma-form-color-surface);
     color: var(--ma-form-color-input);
 }
@@ -52,7 +51,6 @@ body.myaccount-template-fashion.woocommerce-account .ma-form-actions > button[ty
 body.myaccount-template-fashion.woocommerce-account .ma-form-actions > button[type='submit'],
 body.myaccount-template-fashion.woocommerce-account .ma-form-actions > input[type='submit'],
 body.myaccount-template-fashion.woocommerce-account .ma-form-actions > a.button {
-    border-radius: 0;
     border: 1px solid var(--ma-form-color-button-border);
     background-color: var(--ma-form-color-button-bg);
     color: var(--ma-form-color-button-text);

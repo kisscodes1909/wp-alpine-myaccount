@@ -3490,37 +3490,10 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     });
   }
 
-  // assets/src/js/alpine/components/account/maNavDropdown.js
-  var maNavDropdown_default = () => ({
-    open: false,
-    activeLabel: "",
-    init() {
-      const isDesktop = () => typeof window !== "undefined" && window.innerWidth >= 992;
-      if (isDesktop()) {
-        this.open = true;
-      }
-      this.$nextTick(() => {
-        const activeEl = this.$el.querySelector(
-          ".woocommerce-MyAccount-navigation-list li.is-active .ma-nav-link__label"
-        );
-        this.activeLabel = activeEl ? activeEl.textContent.trim() : this.$el.dataset.activeLabel || "Menu";
-      });
-    },
-    isMobile() {
-      return typeof window !== "undefined" && window.innerWidth < 992;
-    },
-    close() {
-      if (this.isMobile()) {
-        this.open = false;
-      }
-    }
-  });
-
   // assets/src/js/alpine/entries/shared-core.js
   window.Alpine = module_default;
   registerSharedStores();
   registerLoadingDirective();
-  module_default.data("maNavDropdown", maNavDropdown_default);
   window.MyAccountAlpineRuntime = window.MyAccountAlpineRuntime || {};
   window.MyAccountAlpineRuntime.start = () => {
     if (window.MyAccountAlpineRuntime.started) {

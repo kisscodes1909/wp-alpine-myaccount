@@ -240,78 +240,61 @@
         --ma-fullbleed-bg: transparent;
         --ma-fullbleed-border-top: 0;
         --ma-fullbleed-border-bottom: 0;
-    }
 
-    .ma-fullbleed-band::before {
-        content: "";
-        position: absolute;
-        z-index: -1;
-        inset-block: 0;
-        inset-inline: -100vmax;
-        background: var(--ma-fullbleed-bg, transparent);
-        border-top: var(--ma-fullbleed-border-top, 0);
-        border-bottom: var(--ma-fullbleed-border-bottom, 0);
-    }
-
-    /* Horizontal padding on main content blocks (ensures spacing even when theme does not use .woocommerce-MyAccount-content) */
-    /* .ma-page-heading,
-    .ma-orders,
-    .ma-view-order {
-        padding-inline: var(--ma-space-md);
-    }
-
-    @media (min-width: 768px) {
-        .ma-page-heading,
-        .ma-orders,
-        .ma-view-order {
-            padding-inline: var(--ma-space-lg);
+        &::before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            inset-block: 0;
+            inset-inline: -100vmax;
+            background: var(--ma-fullbleed-bg, transparent);
+            border-top: var(--ma-fullbleed-border-top, 0);
+            border-bottom: var(--ma-fullbleed-border-bottom, 0);
         }
-    } */
+    }
 
     .ma-page-heading {
         margin-block: var(--ma-space-xl);
-    }
 
-    .ma-page-heading__back-link {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--ma-space-xs);
-        margin-bottom: var(--ma-space-md);
-        text-decoration: none;
-        color: var(--ma-text-charcoal);
-    }
-
-    .ma-page-heading__back-icon {
-        width: var(--ma-font-lg);
-        height: var(--ma-font-lg);
-        flex-shrink: 0;
-    }
-
-    .ma-page-heading__back-label {
-        font-size: var(--ma-font-sm);
-        line-height: var(--ma-line-snug);
-    }
-
-    @media (min-width: 480px) {
-        .ma-page-heading__back-label {
-            font-size: var(--ma-font-base);
+        .ma-page-heading__back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--ma-space-xs);
+            margin-bottom: var(--ma-space-md);
+            text-decoration: none;
+            color: var(--ma-text-charcoal);
         }
-    }
 
-    .ma-page-heading__title {
-        font-size: var(--ma-font-xl);
-        line-height: var(--ma-line-snug);
-        margin-bottom: var(--ma-space-xs);
-        text-transform: uppercase;
-        color: var(--ma-text-primary);
-    }
+        .ma-page-heading__back-icon {
+            width: var(--ma-font-lg);
+            height: var(--ma-font-lg);
+            flex-shrink: 0;
+        }
 
-    .ma-page-heading__description {
-        font-size: var(--ma-font-sm);
-        line-height: var(--ma-line-normal);
-        padding-bottom: var(--ma-space-md);
-        border-bottom: 1px solid var(--ma-border-divider);
-        color: var(--ma-text-charcoal);
+        .ma-page-heading__back-label {
+            font-size: var(--ma-font-sm);
+            line-height: var(--ma-line-snug);
+
+            @media (min-width: 480px) {
+                font-size: var(--ma-font-base);
+            }
+        }
+
+        .ma-page-heading__title {
+            font-size: var(--ma-font-xl);
+            line-height: var(--ma-line-snug);
+            margin-bottom: var(--ma-space-xs);
+            text-transform: uppercase;
+            color: var(--ma-text-primary);
+        }
+
+        .ma-page-heading__description {
+            font-size: var(--ma-font-sm);
+            line-height: var(--ma-line-normal);
+            padding-bottom: var(--ma-space-md);
+            border-bottom: 1px solid var(--ma-border-divider);
+            color: var(--ma-text-charcoal);
+        }
     }
 
     /* ma-orders: moved to base-order-history.css */

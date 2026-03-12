@@ -169,7 +169,6 @@
     .ma-orders__item-status-dot {
         width: var(--ma-space-2xs);
         height: var(--ma-space-2xs);
-        border-radius: 50%;
     }
 
     .ma-orders__item-meta {

@@ -1,21 +1,21 @@
 /* -------------------------------------------------------------------------- */
 /* My Account layout: controlled by body.ma-layout-stacked                    */
 /* Only stacked layout is defined here; theme controls column layout by default */
-/* Navigation styles apply only when stacked (nav has .ma-fullbleed-band).     */
 /* -------------------------------------------------------------------------- */
 
-/* Stacked layout: nav on top (horizontal), content below. */
-body.woocommerce-account.ma-layout-stacked .ma-account-layout {
-    display: flex;
-    flex-direction: column;
-}
+body.woocommerce-account.ma-layout-stacked {
+    .ma-account-layout {
+        display: flex;
+        flex-direction: column;
 
-body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAccount-navigation {
-    flex-shrink: 0;
-}
+        .woocommerce-MyAccount-navigation {
+            flex-shrink: 0;
+        }
 
-body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAccount-content {
-    width: 100%;
-    max-width: 1280px;
-    margin-inline: auto;
+        .woocommerce-MyAccount-content {
+            width: 100%;
+            max-width: 1280px;
+            margin-inline: auto;
+        }
+    }
 }

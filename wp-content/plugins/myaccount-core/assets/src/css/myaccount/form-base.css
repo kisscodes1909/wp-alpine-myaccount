@@ -7,7 +7,6 @@
     --ma-notice-padding-x: var(--ma-space-md);
     --ma-notice-padding-right: var(--ma-space-2xl);
     --ma-notice-border-width: var(--ma-space-2xs);
-    --ma-notice-border-radius: var(--ma-radius-none);
     --ma-notice-font-size: var(--ma-font-xl);
     --ma-notice-font-size-desktop: var(--ma-font-xl);
     --ma-notice-line-height: var(--ma-line-normal);
@@ -80,12 +79,6 @@
         label {
             margin-bottom: 0;
             text-transform: uppercase;
-        }
-
-        .ma-form__input,
-        select,
-        textarea {
-            transition: all var(--ma-duration-fast) var(--ma-easing-smooth);
         }
 
         .ma-form__input:-webkit-autofill,
@@ -190,7 +183,6 @@
             height: var(--apl-radio-size);
             min-width: var(--apl-radio-size);
             min-height: var(--apl-radio-size);
-            border-radius: 0;
             cursor: pointer;
 
             &:checked {
@@ -204,7 +196,6 @@
             height: var(--apl-checkbox-size);
             min-width: var(--apl-checkbox-size);
             min-height: var(--apl-checkbox-size);
-            border-radius: 0;
             cursor: pointer;
 
             &:checked {
@@ -255,7 +246,6 @@
                 min-width: var(--apl-checkbox-size);
                 min-height: var(--apl-checkbox-size);
                 display: inline-block;
-                border-radius: 0;
                 border: 1px solid var(--ma-form-color-border);
                 background: var(--ma-form-color-surface);
                 flex: none;
@@ -558,7 +548,6 @@
 
     .ma-form__status-pill {
         display: inline-flex;
-        border-radius: 9999px;
         text-transform: uppercase;
         letter-spacing: var(--ma-tracking-wider);
         font-size: var(--ma-font-base);

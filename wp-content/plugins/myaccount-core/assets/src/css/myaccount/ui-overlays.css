@@ -67,26 +67,24 @@
     color: var(--ma-btn-pill-text);
     padding: 1.25rem 1.75rem;
     box-shadow: var(--ma-shadow-lg);
+
+    @media (min-width: 768px) {
+        top: var(--ma-space-2xl);
+        right: var(--ma-space-2xl);
+        left: auto;
+    }
 }
 
 .ma-address-book__toast {
     --ma-tr-duration: var(--ma-duration-normal);
-}
 
-.ma-address-book__toast.ma-tr-enter-start,
-.ma-address-book__toast.ma-tr-leave-end {
-    transform: scale(0.9);
-}
+    &.ma-tr-enter-start,
+    &.ma-tr-leave-end {
+        transform: scale(0.9);
+    }
 
-.ma-address-book__toast.ma-tr-enter-end,
-.ma-address-book__toast.ma-tr-leave-start {
-    transform: scale(1);
-}
-
-@media (min-width: 768px) {
-    .ma-ui-toast__item {
-        top: var(--ma-space-2xl);
-        right: var(--ma-space-2xl);
-        left: auto;
+    &.ma-tr-enter-end,
+    &.ma-tr-leave-start {
+        transform: scale(1);
     }
 }

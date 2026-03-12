@@ -55,7 +55,6 @@
 
         .payment-methods-item {
             background: var(--ma-surface);
-            border-radius: 0;
             min-height: 0;
             border: 1px solid var(--ma-border);
             padding: var(--ma-space-xl);
@@ -131,7 +130,6 @@
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                border-radius: 9999px;
                 border: 1px solid transparent;
                 background: transparent;
                 color: var(--ma-text-muted-dark);
@@ -154,7 +152,6 @@
         .payment-methods-item__default-pill {
             display: inline-flex;
             align-items: center;
-            border-radius: 9999px;
             background: var(--ma-btn-pill-bg);
             color: var(--ma-btn-pill-text);
             gap: var(--ma-space-sm);

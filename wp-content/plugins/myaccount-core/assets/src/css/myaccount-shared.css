@@ -62,10 +62,8 @@ body {
     font-size: var(--ma-font-xl);
     line-height: 1;
     font-weight: 600;
-}
 
-@media (min-width: 992px) {
-    .apl-heading-chip {
+    @media (min-width: 992px) {
         font-size: 34px;
     }
 }
@@ -84,15 +82,15 @@ body {
     align-items: center;
     justify-content: center;
     vertical-align: middle;
-}
 
-.loading-icon svg {
-    display: block;
-    vertical-align: middle;
-}
+    svg {
+        display: block;
+        vertical-align: middle;
+    }
 
-.loading-icon .spinner-arc {
-    animation: spinner-dash var(--ma-duration-slower) var(--ma-easing-linear) infinite;
+    .spinner-arc {
+        animation: spinner-dash var(--ma-duration-slower) var(--ma-easing-linear) infinite;
+    }
 }
 
 .ma-btn-content,

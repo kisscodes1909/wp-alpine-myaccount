@@ -63,7 +63,6 @@
         display: inline-flex;
         align-items: center;
         gap: var(--ma-space-xs);
-        border-radius: 9999px;
         padding: var(--ma-space-xs) var(--ma-space-sm);
         font-size: var(--ma-font-xs);
         text-transform: uppercase;
