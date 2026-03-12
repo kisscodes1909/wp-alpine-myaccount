@@ -60,6 +60,17 @@
     --ma-line-relaxed: 1.75;
     --ma-line-loose: 2;
 
+    /* Notice (font-size, space, line-height from base scale) */
+    --ma-notice-space-gap: var(--ma-space-md);
+    --ma-notice-padding-y: var(--ma-space-md);
+    --ma-notice-padding-x: var(--ma-space-md);
+    --ma-notice-padding-right: var(--ma-space-2xl);
+    --ma-notice-border-width: var(--ma-space-2xs);
+    --ma-notice-font-size: var(--ma-font-base);
+    --ma-notice-font-size-lg: var(--ma-font-md);
+    --ma-notice-line-height: var(--ma-line-normal);
+    --ma-notice-icon-size: var(--ma-font-lg);
+
     /* Letter Spacing */
     --ma-tracking-tighter: -0.05em;
     --ma-tracking-tight: -0.025em;

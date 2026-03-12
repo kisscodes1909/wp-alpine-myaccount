@@ -6582,6 +6582,7 @@ attempted value: ${formattedValue}
       this.errors = {};
       this.touched = {};
       this.notice = "";
+      this.noticeType = "";
       this.isFormSubmitting = false;
     }
     async validateForm(skipFields = []) {
@@ -6642,11 +6643,13 @@ attempted value: ${formattedValue}
       }).done((response) => {
         this.isFormSubmitting = false;
         this.notice = this.getResponseMessage(response);
+        this.noticeType = "success";
         this.done(response);
         const event = new CustomEvent(`${this.getApiEndpoint()}_success`);
         window.dispatchEvent(event);
       }).fail((error2) => {
         this.notice = this.getErrorMessage(error2);
+        this.noticeType = "error";
         this.isFormSubmitting = false;
       });
     }
@@ -6681,6 +6684,7 @@ attempted value: ${formattedValue}
     touched: {},
     woocommerceLoginNonce: window.authenicationData?.wooLoginNonce || "",
     notice: "",
+    noticeType: "",
     handler: null,
     init() {
       this.handler = new LoginHandler(this.formData, {
@@ -6690,6 +6694,7 @@ attempted value: ${formattedValue}
       this.$watch("handler.errors", (value) => this.errors = value);
       this.$watch("handler.touched", (value) => this.touched = value);
       this.$watch("handler.notice", (value) => this.notice = value);
+      this.$watch("handler.noticeType", (value) => this.noticeType = value);
     },
     async handleSubmit() {
       await this.handler.handleSubmit(["rememberme"]);
@@ -6743,12 +6748,13 @@ attempted value: ${formattedValue}
       window.wp.ajax.post(this.getApiEndpoint(), payload).done((response) => {
         this.isFormSubmitting = false;
         this.notice = this.getResponseMessage(response);
+        this.noticeType = "success";
         this.done(response);
-        const event = new CustomEvent(`${this.getApiEndpoint()}_success`);
-        window.dispatchEvent(event);
+        window.dispatchEvent(new CustomEvent(`${this.getApiEndpoint()}_success`));
       }).fail((error2) => {
-        this.notice = this.getErrorMessage(error2);
         this.isFormSubmitting = false;
+        this.notice = this.getErrorMessage(error2);
+        this.noticeType = "error";
       });
     }
     done() {
@@ -6768,6 +6774,7 @@ attempted value: ${formattedValue}
     },
     isFormSubmitting: false,
     notice: "",
+    noticeType: "",
     errors: {},
     touched: {},
     passedRequirements: [],
@@ -6790,6 +6797,9 @@ attempted value: ${formattedValue}
       });
       this.$watch("handler.notice", (value) => {
         this.notice = value;
+      });
+      this.$watch("handler.noticeType", (value) => {
+        this.noticeType = value;
       });
       this.$watch("handler.passedRequirements", (value) => {
         this.passedRequirements = value;
@@ -6938,18 +6948,17 @@ attempted value: ${formattedValue}
       };
       window.wp.ajax.post(this.getApiEndpoint(), payload).done((response) => {
         this.isFormSubmitting = false;
-        this.notice = this.getResponseMessage(response);
+        this.notice = "";
         this.done(response);
-        const event = new CustomEvent(`${this.getApiEndpoint()}_success`);
-        window.dispatchEvent(event);
+        window.dispatchEvent(new CustomEvent(`${this.getApiEndpoint()}_success`));
       }).fail((error2) => {
-        this.notice = this.getErrorMessage(error2);
         this.isFormSubmitting = false;
+        this.notice = "";
         this.fail(error2);
       });
     }
     done(response) {
-      const message = this.getResponseMessage(response) || "Account details updated successfully.";
+      const message = this.getResponseMessage(response) || "Your account details have been updated.";
       window.Alpine?.store("toast")?.addToast(message, "success");
     }
     fail(error2) {
@@ -7035,13 +7044,13 @@ attempted value: ${formattedValue}
       };
       window.wp.ajax.post(this.getApiEndpoint(), payload).done((response) => {
         this.isFormSubmitting = false;
-        this.notice = this.getResponseMessage(response);
+        this.notice = "";
         this.done(response);
-        const event = new CustomEvent(`${this.getApiEndpoint()}_success`);
-        window.dispatchEvent(event);
+        window.dispatchEvent(new CustomEvent(`${this.getApiEndpoint()}_success`));
       }).fail((error2) => {
-        this.notice = this.getErrorMessage(error2);
         this.isFormSubmitting = false;
+        this.notice = "";
+        this.fail(error2);
       });
     }
     done(response) {
@@ -7050,6 +7059,12 @@ attempted value: ${formattedValue}
         window.Alpine?.store("toast")?.addToast(message, "success");
       }
       window.Alpine?.store("popup")?.closePopup();
+    }
+    fail(error2) {
+      const message = this.getErrorMessage(error2);
+      if (message) {
+        window.Alpine?.store("toast")?.addToast(message, "error");
+      }
     }
   };
 

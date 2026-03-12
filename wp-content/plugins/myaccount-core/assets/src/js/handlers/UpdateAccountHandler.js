@@ -32,23 +32,22 @@ export default class UpdateAccountHandler extends BaseFormHandler {
             nonce: this.additionalData.nonce,
         };
 
-        window.wp.ajax.post(this.getApiEndpoint(), payload).done((response) => {
-            this.isFormSubmitting = false;
-            this.notice = this.getResponseMessage(response);
-            this.done(response);
-
-            const event = new CustomEvent(`${this.getApiEndpoint()}_success`);
-            window.dispatchEvent(event);
-
-        }).fail((error) => {
-            this.notice = this.getErrorMessage(error);
-            this.isFormSubmitting = false;
-            this.fail(error);
-        });
+        window.wp.ajax.post(this.getApiEndpoint(), payload)
+            .done((response) => {
+                this.isFormSubmitting = false;
+                this.notice = '';
+                this.done(response);
+                window.dispatchEvent(new CustomEvent(`${this.getApiEndpoint()}_success`));
+            })
+            .fail((error) => {
+                this.isFormSubmitting = false;
+                this.notice = '';
+                this.fail(error);
+            });
     }
 
     done(response) {
-        const message = this.getResponseMessage(response) || 'Account details updated successfully.';
+        const message = this.getResponseMessage(response) || 'Your account details have been updated.';
         window.Alpine?.store('toast')?.addToast(message, 'success');
     }
 

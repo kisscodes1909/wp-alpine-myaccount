@@ -5,6 +5,7 @@ export default class BaseFormHandler {
         this.errors = {};
         this.touched = {};
         this.notice = '';
+        this.noticeType = '';
         this.isFormSubmitting = false;
     }
 
@@ -80,6 +81,7 @@ export default class BaseFormHandler {
         }).done((response) => {
             this.isFormSubmitting = false;
             this.notice = this.getResponseMessage(response);
+            this.noticeType = 'success';
             this.done(response);
 
             const event = new CustomEvent(`${this.getApiEndpoint()}_success`);
@@ -87,6 +89,7 @@ export default class BaseFormHandler {
 
         }).fail((error) => {
             this.notice = this.getErrorMessage(error);
+            this.noticeType = 'error';
             this.isFormSubmitting = false;
         });
     }

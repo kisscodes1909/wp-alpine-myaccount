@@ -1,6 +1,7 @@
 /**
  * Login Handler
- * Extends BaseFormHandler to handle login form submission
+ * Extends BaseFormHandler to handle login form submission.
+ * Success and error messages are shown via notice (ma-form__notice) only.
  */
 import BaseFormHandler from '../BaseFormHandler.js';
 

@@ -97,6 +97,17 @@
     --ma-line-relaxed: 1.75;
     --ma-line-loose: 2;
 
+    /* Notice (font-size, space, line-height from base scale) */
+    --ma-notice-space-gap: var(--ma-space-md);
+    --ma-notice-padding-y: var(--ma-space-md);
+    --ma-notice-padding-x: var(--ma-space-md);
+    --ma-notice-padding-right: var(--ma-space-2xl);
+    --ma-notice-border-width: var(--ma-space-2xs);
+    --ma-notice-font-size: var(--ma-font-base);
+    --ma-notice-font-size-lg: var(--ma-font-md);
+    --ma-notice-line-height: var(--ma-line-normal);
+    --ma-notice-icon-size: var(--ma-font-lg);
+
     /* Letter Spacing */
     --ma-tracking-tighter: -0.05em;
     --ma-tracking-tight: -0.025em;
@@ -772,16 +783,7 @@ body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAcc
             margin-inline: auto;
         }
 .woocommerce-account {
-    --ma-notice-space-gap: var(--ma-space-md);
-    --ma-notice-padding-y: var(--ma-space-md);
-    --ma-notice-padding-x: var(--ma-space-md);
-    --ma-notice-padding-right: var(--ma-space-2xl);
-    --ma-notice-border-width: var(--ma-space-2xs);
-    --ma-notice-font-size: var(--ma-font-xl);
-    --ma-notice-font-size-desktop: var(--ma-font-xl);
-    --ma-notice-line-height: var(--ma-line-normal);
-
-    --ma-notice-icon-size: var(--ma-font-xl);
+    /* Notice icon masks (visual only; size from base.css) */
     --ma-notice-success-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'/%3E%3C/svg%3E");
     --ma-notice-error-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'/%3E%3C/svg%3E");
     --ma-notice-warning-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 9v3.75m0 3.75h.008v.008H12v-.008Zm8.24 3.72H3.76c-1.38 0-2.24-1.5-1.55-2.7L10.45 3.3c.69-1.2 2.41-1.2 3.1 0l8.24 14.28c.69 1.2-.17 2.7-1.55 2.7Z'/%3E%3C/svg%3E");
@@ -1311,6 +1313,7 @@ body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAcc
 }
 /* -------------------------------------------------------------------------- */
 /* My Account shared notices styles                                           */
+/* font-size, space, line-height: from base token scale (base.css)            */
 /* -------------------------------------------------------------------------- */
 .woocommerce-account .woocommerce-notices-wrapper,
 .woocommerce-account .ma-form__notice {
@@ -1319,7 +1322,7 @@ body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAcc
     gap: var(--ma-notice-space-gap);
 }
 .woocommerce-account .ma-form__notice {
-    margin-bottom: var(--ma-form-space-section-gap);
+    margin-bottom: var(--ma-space-xl);
 }
 .woocommerce-account .ma-form__notice:empty {
     display: none;
@@ -1327,7 +1330,8 @@ body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAcc
 .woocommerce-account .woocommerce-message,
 .woocommerce-account .woocommerce-info,
 .woocommerce-account .woocommerce-warning,
-.woocommerce-account .ma-notice--warning {
+.woocommerce-account .ma-notice--warning,
+.woocommerce-account .ma-notice--success {
     position: relative;
     list-style: none;
     margin: 0;
@@ -1343,11 +1347,13 @@ body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAcc
     .woocommerce-account .woocommerce-message,
     .woocommerce-account .woocommerce-info,
     .woocommerce-account .woocommerce-warning,
-    .woocommerce-account .ma-notice--warning {
-        font-size: var(--ma-notice-font-size-desktop);
+    .woocommerce-account .ma-notice--warning,
+    .woocommerce-account .ma-notice--success {
+        font-size: var(--ma-notice-font-size-lg);
     }
 }
-.woocommerce-account .woocommerce-error {
+.woocommerce-account .woocommerce-error,
+.woocommerce-account .ma-notice--error {
     position: relative;
     list-style: none;
     margin: 0;
@@ -1360,16 +1366,19 @@ body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAcc
     font-weight: 500;
 }
 @media (min-width: 768px) {
-    .woocommerce-account .woocommerce-error {
-        font-size: var(--ma-notice-font-size-desktop);
+    .woocommerce-account .woocommerce-error,
+    .woocommerce-account .ma-notice--error {
+        font-size: var(--ma-notice-font-size-lg);
     }
 }
-.woocommerce-account .woocommerce-message {
+.woocommerce-account .woocommerce-message,
+.woocommerce-account .ma-notice--success {
     background-color: var(--ma-success-bg);
     border: var(--ma-notice-border-width) solid var(--ma-success-border);
     color: var(--ma-success-text);
 }
-.woocommerce-account .woocommerce-error {
+.woocommerce-account .woocommerce-error,
+.woocommerce-account .ma-notice--error {
     background-color: var(--ma-danger-bg);
     border: var(--ma-notice-border-width) solid var(--ma-danger-border);
     color: var(--ma-danger-text);
@@ -1385,13 +1394,15 @@ body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAcc
     border: var(--ma-notice-border-width) solid var(--ma-warning-border);
     color: var(--ma-warning-text);
 }
-.woocommerce-account .woocommerce-error li {
+.woocommerce-account .woocommerce-error li,
+.woocommerce-account .ma-notice--error li {
     list-style: none;
 }
 .woocommerce-account .woocommerce-message::before,
 .woocommerce-account .woocommerce-info::before,
 .woocommerce-account .woocommerce-warning::before,
-.woocommerce-account .ma-notice--warning::before {
+.woocommerce-account .ma-notice--warning::before,
+.woocommerce-account .ma-notice--success::before {
     display: inline-block;
     flex: none;
     content: '';
@@ -1406,11 +1417,13 @@ body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAcc
     mask-position: center;
     mask-size: contain;
 }
-.woocommerce-account .woocommerce-message::before {
+.woocommerce-account .woocommerce-message::before,
+.woocommerce-account .ma-notice--success::before {
     -webkit-mask-image: var(--ma-notice-success-icon-mask);
     mask-image: var(--ma-notice-success-icon-mask);
 }
-.woocommerce-account .woocommerce-error::before {
+.woocommerce-account .woocommerce-error::before,
+.woocommerce-account .ma-notice--error::before {
     position: absolute;
     content: '';
     width: var(--ma-notice-icon-size);
@@ -1440,7 +1453,9 @@ body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAcc
 .woocommerce-account .woocommerce-error a,
 .woocommerce-account .woocommerce-info a,
 .woocommerce-account .woocommerce-warning a,
-.woocommerce-account .ma-notice--warning a {
+.woocommerce-account .ma-notice--warning a,
+.woocommerce-account .ma-notice--success a,
+.woocommerce-account .ma-notice--error a {
     color: inherit;
     text-decoration: underline;
 }

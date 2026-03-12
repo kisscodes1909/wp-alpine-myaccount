@@ -2,16 +2,7 @@
 
 
 .woocommerce-account {
-    --ma-notice-space-gap: var(--ma-space-md);
-    --ma-notice-padding-y: var(--ma-space-md);
-    --ma-notice-padding-x: var(--ma-space-md);
-    --ma-notice-padding-right: var(--ma-space-2xl);
-    --ma-notice-border-width: var(--ma-space-2xs);
-    --ma-notice-font-size: var(--ma-font-xl);
-    --ma-notice-font-size-desktop: var(--ma-font-xl);
-    --ma-notice-line-height: var(--ma-line-normal);
-
-    --ma-notice-icon-size: var(--ma-font-xl);
+    /* Notice icon masks (visual only; size from base.css) */
     --ma-notice-success-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'/%3E%3C/svg%3E");
     --ma-notice-error-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'/%3E%3C/svg%3E");
     --ma-notice-warning-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 9v3.75m0 3.75h.008v.008H12v-.008Zm8.24 3.72H3.76c-1.38 0-2.24-1.5-1.55-2.7L10.45 3.3c.69-1.2 2.41-1.2 3.1 0l8.24 14.28c.69 1.2-.17 2.7-1.55 2.7Z'/%3E%3C/svg%3E");

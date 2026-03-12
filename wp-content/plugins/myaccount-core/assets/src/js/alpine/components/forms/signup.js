@@ -16,6 +16,7 @@ export default () => ({
     },
     isFormSubmitting: false,
     notice: '',
+    noticeType: '',
     errors: {},
     touched: {},
     passedRequirements: [],
@@ -42,6 +43,9 @@ export default () => ({
         });
         this.$watch('handler.notice', (value) => {
             this.notice = value;
+        });
+        this.$watch('handler.noticeType', (value) => {
+            this.noticeType = value;
         });
         this.$watch('handler.passedRequirements', (value) => {
             this.passedRequirements = value;

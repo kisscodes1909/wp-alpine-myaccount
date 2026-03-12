@@ -17,6 +17,7 @@ export default () => ({
     touched: {},
     woocommerceLoginNonce: window.authenicationData?.wooLoginNonce || '',
     notice: '',
+    noticeType: '',
     handler: null,
 
     init() {
@@ -29,6 +30,7 @@ export default () => ({
         this.$watch('handler.errors', value => this.errors = value);
         this.$watch('handler.touched', value => this.touched = value);
         this.$watch('handler.notice', value => this.notice = value);
+        this.$watch('handler.noticeType', value => this.noticeType = value);
     },
 
     async handleSubmit() {

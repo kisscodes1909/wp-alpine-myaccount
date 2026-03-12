@@ -38,18 +38,18 @@ export default class ChangePasswordHandler extends BaseFormHandler {
             keepSignedIn: this.formData.keepSignedIn,
         };
 
-        window.wp.ajax.post(this.getApiEndpoint(), payload).done((response) => {
-            this.isFormSubmitting = false;
-            this.notice = this.getResponseMessage(response);
-            this.done(response);
-
-            const event = new CustomEvent(`${this.getApiEndpoint()}_success`);
-            window.dispatchEvent(event);
-
-        }).fail((error) => {
-            this.notice = this.getErrorMessage(error);
-            this.isFormSubmitting = false;
-        });
+        window.wp.ajax.post(this.getApiEndpoint(), payload)
+            .done((response) => {
+                this.isFormSubmitting = false;
+                this.notice = '';
+                this.done(response);
+                window.dispatchEvent(new CustomEvent(`${this.getApiEndpoint()}_success`));
+            })
+            .fail((error) => {
+                this.isFormSubmitting = false;
+                this.notice = '';
+                this.fail(error);
+            });
     }
 
     done(response) {
@@ -58,5 +58,12 @@ export default class ChangePasswordHandler extends BaseFormHandler {
             window.Alpine?.store('toast')?.addToast(message, 'success');
         }
         window.Alpine?.store('popup')?.closePopup();
+    }
+
+    fail(error) {
+        const message = this.getErrorMessage(error);
+        if (message) {
+            window.Alpine?.store('toast')?.addToast(message, 'error');
+        }
     }
 }

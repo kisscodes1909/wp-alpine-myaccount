@@ -7,6 +7,7 @@
       this.errors = {};
       this.touched = {};
       this.notice = "";
+      this.noticeType = "";
       this.isFormSubmitting = false;
     }
     async validateForm(skipFields = []) {
@@ -67,11 +68,13 @@
       }).done((response) => {
         this.isFormSubmitting = false;
         this.notice = this.getResponseMessage(response);
+        this.noticeType = "success";
         this.done(response);
         const event = new CustomEvent(`${this.getApiEndpoint()}_success`);
         window.dispatchEvent(event);
       }).fail((error) => {
         this.notice = this.getErrorMessage(error);
+        this.noticeType = "error";
         this.isFormSubmitting = false;
       });
     }
@@ -106,6 +109,7 @@
     touched: {},
     woocommerceLoginNonce: window.authenicationData?.wooLoginNonce || "",
     notice: "",
+    noticeType: "",
     handler: null,
     init() {
       this.handler = new LoginHandler(this.formData, {
@@ -115,6 +119,7 @@
       this.$watch("handler.errors", (value) => this.errors = value);
       this.$watch("handler.touched", (value) => this.touched = value);
       this.$watch("handler.notice", (value) => this.notice = value);
+      this.$watch("handler.noticeType", (value) => this.noticeType = value);
     },
     async handleSubmit() {
       await this.handler.handleSubmit(["rememberme"]);
@@ -168,12 +173,13 @@
       window.wp.ajax.post(this.getApiEndpoint(), payload).done((response) => {
         this.isFormSubmitting = false;
         this.notice = this.getResponseMessage(response);
+        this.noticeType = "success";
         this.done(response);
-        const event = new CustomEvent(`${this.getApiEndpoint()}_success`);
-        window.dispatchEvent(event);
+        window.dispatchEvent(new CustomEvent(`${this.getApiEndpoint()}_success`));
       }).fail((error) => {
-        this.notice = this.getErrorMessage(error);
         this.isFormSubmitting = false;
+        this.notice = this.getErrorMessage(error);
+        this.noticeType = "error";
       });
     }
     done() {
@@ -193,6 +199,7 @@
     },
     isFormSubmitting: false,
     notice: "",
+    noticeType: "",
     errors: {},
     touched: {},
     passedRequirements: [],
@@ -215,6 +222,9 @@
       });
       this.$watch("handler.notice", (value) => {
         this.notice = value;
+      });
+      this.$watch("handler.noticeType", (value) => {
+        this.noticeType = value;
       });
       this.$watch("handler.passedRequirements", (value) => {
         this.passedRequirements = value;

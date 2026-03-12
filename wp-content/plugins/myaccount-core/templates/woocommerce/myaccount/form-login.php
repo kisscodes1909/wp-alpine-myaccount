@@ -47,7 +47,9 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 			>
 				<?php do_action( 'woocommerce_login_form_start' ); ?>
 
-				<div class="ma-form__notice" x-html="notice"></div>
+				<div class="ma-form__notice" x-show="notice">
+					<div :class="noticeType === 'success' ? 'ma-notice ma-notice--success' : (noticeType === 'error' ? 'ma-notice ma-notice--error' : '')" x-html="notice"></div>
+				</div>
 
 				<div class="ma-form__section">
 					<div class="ma-form__fields">
@@ -108,7 +110,9 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 			>
 				<?php do_action( 'woocommerce_register_form_start' ); ?>
 
-				<div class="ma-form__notice" x-html="notice"></div>
+				<div class="ma-form__notice" x-show="notice">
+					<div :class="noticeType === 'success' ? 'ma-notice ma-notice--success' : (noticeType === 'error' ? 'ma-notice ma-notice--error' : '')" x-html="notice"></div>
+				</div>
 
 				<div class="ma-form__section">
 					<div class="ma-form__fields">

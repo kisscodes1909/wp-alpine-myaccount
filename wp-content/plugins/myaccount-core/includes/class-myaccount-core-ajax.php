@@ -104,7 +104,7 @@ class MyAccount_Core_Ajax {
 			$user->ID        = $user_id;
 			$user->user_pass = $pass1;
 			wp_update_user( $user );
-			$this->send_json_success( __( 'Password changed successfully.', 'woocommerce' ) );
+			$this->send_json_success( __( 'Your password has been changed. You can now sign in with your new password.', 'myaccount-core' ) );
 		}
 
 		$this->send_json_error( __( 'Please provide a new password.', 'woocommerce' ) );
@@ -141,7 +141,7 @@ class MyAccount_Core_Ajax {
 		}
 
 		wp_update_user( $user );
-		$this->send_json_success( __( 'Account details updated successfully.', 'woocommerce' ) );
+		$this->send_json_success( __( 'Your account details have been updated.', 'myaccount-core' ) );
 	}
 
 	public function save_address_book(): void {
@@ -194,7 +194,7 @@ class MyAccount_Core_Ajax {
 		}
 		update_user_meta( $user_id, 'address_book', maybe_serialize( $sanitized_addresses ) );
 
-		$this->send_json_success( __( 'Address data saved successfully.', 'myaccount-core' ) );
+		$this->send_json_success( __( 'Your address has been saved.', 'myaccount-core' ) );
 	}
 
 	public function handle_signup(): void {
@@ -239,8 +239,7 @@ class MyAccount_Core_Ajax {
 
 			wc_set_customer_auth_cookie( $new_customer );
 
-			$message = wc_print_notice( __( 'Signup successful.', 'woocommerce' ), 'success', array(), true );
-			$this->send_json_success( is_string( $message ) ? $message : __( 'Signup successful.', 'woocommerce' ), array( 'email' => $email ) );
+			$this->send_json_success( __( 'Account created. Welcome!', 'myaccount-core' ), array( 'email' => $email ) );
 		} catch ( Exception $e ) {
 			$message = $e->getMessage();
 			$this->send_json_error( wp_strip_all_tags( $message ) ? $message : __( 'Registration failed.', 'woocommerce' ) );
@@ -283,8 +282,7 @@ class MyAccount_Core_Ajax {
 				throw new Exception( $user->get_error_message() );
 			}
 
-			$message = wc_print_notice( __( 'Login successful.', 'woocommerce' ), 'success', array(), true );
-			$this->send_json_success( is_string( $message ) ? $message : __( 'Login successful.', 'woocommerce' ), array( 'email' => $creds['user_login'] ) );
+			$this->send_json_success( __( "You're signed in. Welcome back!", 'myaccount-core' ), array( 'email' => $creds['user_login'] ) );
 		} catch ( Exception $e ) {
 			$msg = $e->getMessage();
 			$this->send_json_error( wp_strip_all_tags( $msg ) ? $msg : __( 'Login failed.', 'woocommerce' ) );

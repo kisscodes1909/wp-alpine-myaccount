@@ -60,18 +60,19 @@ export default class SignupHandler extends BaseFormHandler {
             signupNonce: this.additionalData.signupNonce,
         };
 
-        window.wp.ajax.post(this.getApiEndpoint(), payload).done((response) => {
-            this.isFormSubmitting = false;
-            this.notice = this.getResponseMessage(response);
-            this.done(response);
-
-            const event = new CustomEvent(`${this.getApiEndpoint()}_success`);
-            window.dispatchEvent(event);
-
-        }).fail((error) => {
-            this.notice = this.getErrorMessage(error);
-            this.isFormSubmitting = false;
-        });
+        window.wp.ajax.post(this.getApiEndpoint(), payload)
+            .done((response) => {
+                this.isFormSubmitting = false;
+                this.notice = this.getResponseMessage(response);
+                this.noticeType = 'success';
+                this.done(response);
+                window.dispatchEvent(new CustomEvent(`${this.getApiEndpoint()}_success`));
+            })
+            .fail((error) => {
+                this.isFormSubmitting = false;
+                this.notice = this.getErrorMessage(error);
+                this.noticeType = 'error';
+            });
     }
 
     done() {
