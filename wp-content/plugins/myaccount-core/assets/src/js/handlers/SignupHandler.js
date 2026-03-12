@@ -62,7 +62,7 @@ export default class SignupHandler extends BaseFormHandler {
 
         window.wp.ajax.post(this.getApiEndpoint(), payload).done((response) => {
             this.isFormSubmitting = false;
-            this.notice = response.message;
+            this.notice = this.getResponseMessage(response);
             this.done(response);
 
             const event = new CustomEvent(`${this.getApiEndpoint()}_success`);

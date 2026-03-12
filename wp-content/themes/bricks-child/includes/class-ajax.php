@@ -41,7 +41,11 @@ class Theme_Ajax {
     }
 
 	function test_ajax() {
-		die('ok');
+		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'test_ajax' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'bricks-child' ) ) );
+		}
+		wp_send_json_success( array( 'message' => 'ok' ) );
 	}
 
     function modify_authenticate_error(WP_Error | WP_User $result, $user, $password): WP_Error|WP_User
@@ -63,9 +67,15 @@ class Theme_Ajax {
     }
 
     function handle_approve_return_ajax() {
-        $order_id = isset($_POST['order_id']) ? intval($_POST['order_id']) : 0;
-        $row_index = isset($_POST['row_index']) ? intval($_POST['row_index']) : -1;
-        $fields = isset($_POST['fields']) ? json_decode(stripslashes($_POST['fields']), true) : [];
+        $nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+        if ( ! wp_verify_nonce( $nonce, 'approve_return' ) ) {
+            wp_send_json_error( array( 'message' => __( 'Security check failed.', 'bricks-child' ) ) );
+        }
+        $order_id   = isset( $_POST['order_id'] ) ? absint( $_POST['order_id'] ) : 0;
+        $row_index  = isset( $_POST['row_index'] ) ? absint( $_POST['row_index'] ) : -1;
+        $fields_raw = isset( $_POST['fields'] ) ? wp_unslash( $_POST['fields'] ) : '';
+        $fields     = is_string( $fields_raw ) ? json_decode( stripslashes( $fields_raw ), true ) : array();
+        $fields     = is_array( $fields ) ? $fields : array();
 
         $packageLabelACFKey = $fields['package_label']['key'];
         $statusACFKey = $fields['status']['key'];
@@ -89,11 +99,10 @@ class Theme_Ajax {
                 // Trigger email notification
                 do_action('send_admin_approve_return_notification', $order_id, false, $requestId);
 
-                wp_send_json_success('Update successful');
+                wp_send_json_success( array( 'message' => __( 'Update successful.', 'bricks-child' ) ) );
             }
         }
-
-        wp_send_json_error('Update failed');
+        wp_send_json_error( array( 'message' => __( 'Update failed.', 'bricks-child' ) ) );
     }
 
 
@@ -102,54 +111,50 @@ class Theme_Ajax {
     // This function will handle the return request from the user
     // It will add a new row to the order_return_request field
     public function handle_return_request(): void {
-        if (!is_user_logged_in()) {
-            wp_send_json_error(array('message' => 'User is not logged in'), 403);
+        if ( ! is_user_logged_in() ) {
+            wp_send_json_error( array( 'message' => __( 'User is not logged in.', 'bricks-child' ) ) );
             return;
         }
-        $nonce = $_POST['nonce'];
-
-        if (!wp_verify_nonce($nonce, 'return_order')) {
-            wp_send_json_error(array('message' => 'Nonce verification failed'), 403);
+        $nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+        if ( ! wp_verify_nonce( $nonce, 'return_order' ) ) {
+            wp_send_json_error( array( 'message' => __( 'Security check failed.', 'bricks-child' ) ) );
             return;
         }
-
-        if (isset($_POST['data'])) {
-            $data = json_decode(stripslashes($_POST['data']), true);
+        if ( isset( $_POST['data'] ) ) {
+            $data = json_decode( stripslashes( (string) $_POST['data'] ), true );
+            $data = is_array( $data ) ? $data : array();
             $order_items = [];
 
             $requestId = uniqid();
 
-            foreach ($data['items'] as $item) {
+            $items = isset( $data['items'] ) && is_array( $data['items'] ) ? $data['items'] : array();
+            foreach ( $items as $item ) {
                 $order_items[] = array(
-                    'id' => $item['id'],
-                    'qty' => $item['selectedReturnQuantity'],
-                    'reason' => $item['reason'],
-                    'feed_back' => $item['feedback']
+                    'id'       => isset( $item['id'] ) ? absint( $item['id'] ) : 0,
+                    'qty'      => isset( $item['selectedReturnQuantity'] ) ? absint( $item['selectedReturnQuantity'] ) : 0,
+                    'reason'   => isset( $item['reason'] ) ? sanitize_text_field( $item['reason'] ) : '',
+                    'feed_back' => isset( $item['feedback'] ) ? sanitize_textarea_field( $item['feedback'] ) : '',
                 );
             }
 
-            $new_return_request = array(
-                'id' => $requestId,
-                'createAt' => current_time('m/d/Y g:i a'), // Đặt ngày giờ hiện tại
-                'status' => 'processing', // Đặt trạng thái processing
-                'package_label' => '',
-                'order_items'   => $order_items,
-                'email_sent' => 0 // Đánh dấu email đã được gửi
+            $order_id_for_request = isset( $data['orderId'] ) ? absint( $data['orderId'] ) : 0;
+            $new_return_request   = array(
+                'id'             => $requestId,
+                'createAt'       => current_time( 'm/d/Y g:i a' ),
+                'status'         => 'processing',
+                'package_label'  => '',
+                'order_items'    => $order_items,
+                'email_sent'     => 0,
             );
-
-
-            $rowNumber = add_row('order_return_request', $new_return_request, $data['orderId']); // Return the row number if successful
-
-            if($rowNumber) {
-                do_action('send_return_confirmation_notification', $data['orderId'], false, $requestId);
-                do_action('send_admin_new_return_notification', $data['orderId'], false, $requestId);
-                wp_send_json_success('Return request processed');
-                // Send email here if needed
-            } else {
-                wp_send_json_error('Return request failed');
+            $rowNumber = add_row( 'order_return_request', $new_return_request, $order_id_for_request );
+            if ( $rowNumber && $order_id_for_request ) {
+                do_action( 'send_return_confirmation_notification', $order_id_for_request, false, $requestId );
+                do_action( 'send_admin_new_return_notification', $order_id_for_request, false, $requestId );
+                wp_send_json_success( array( 'message' => __( 'Return request processed.', 'bricks-child' ) ) );
             }
+            wp_send_json_error( array( 'message' => __( 'Return request failed.', 'bricks-child' ) ) );
         }
-
+        wp_send_json_error( array( 'message' => __( 'Invalid request data.', 'bricks-child' ) ) );
     }
 
 
@@ -192,22 +197,18 @@ class Theme_Ajax {
         }
 
         if ( ! empty( $errors ) ) {
-            wp_send_json_error( implode( ' ', $errors ) );
+            wp_send_json_error( array( 'message' => implode( ' ', $errors ) ) );
         }
 
-        // New user data.
-        $user = new stdClass();
-        $user->ID = $user_id;
+        $user             = new stdClass();
+        $user->ID         = $user_id;
+        $user->user_pass  = $pass1;
 
         if ( $pass1 && $save_pass ) {
-
-            $user->user_pass = $pass1;
-            // You might want to use wp_update_user here to save the new password
-            $result =  wp_update_user( $user );
-            wp_send_json_success('Password changed successfully');
+            wp_update_user( $user );
+            wp_send_json_success( array( 'message' => __( 'Password changed successfully.', 'bricks-child' ) ) );
         }
-
-        wp_die();
+        wp_send_json_error( array( 'message' => __( 'Please provide a new password.', 'woocommerce' ) ) );
     }
 
     function save_account_details(): void
@@ -222,13 +223,12 @@ class Theme_Ajax {
         $user_id = get_current_user_id();
 
         if ( $user_id <= 0 ) {
-            wp_send_json_error('User was not found!');
+            wp_send_json_error( array( 'message' => __( 'User was not found!', 'bricks-child' ) ) );
         }
 
-        // Assuming you have proper validation and sanitization here
-        $first_name = wc_clean(wp_unslash($_POST['firstName']));
-        $last_name = wc_clean(wp_unslash($_POST['lastName']));
-        $email = sanitize_email(wp_unslash($_POST['email']));
+        $first_name = wc_clean( wp_unslash( $_POST['firstName'] ?? '' ) );
+        $last_name = wc_clean( wp_unslash( $_POST['lastName'] ?? '' ) );
+        $email     = sanitize_email( wp_unslash( $_POST['email'] ?? '' ) );
 
         // Current user data.
         $current_user       = get_user_by( 'id', $user_id );
@@ -241,26 +241,25 @@ class Theme_Ajax {
 
         if ( $email ) {
             if ( ! is_email( $email ) ) {
-                wp_send_json_error(__( 'Please provide a valid email address.', 'woocommerce' ));
+                wp_send_json_error( array( 'message' => __( 'Please provide a valid email address.', 'woocommerce' ) ) );
             } elseif ( email_exists( $email ) && $email !== $current_user->user_email ) {
-                wp_send_json_error(__( 'This email address is already registered.', 'woocommerce' ));
+                wp_send_json_error( array( 'message' => __( 'This email address is already registered.', 'woocommerce' ) ) );
             }
             $user->user_email = $email;
         }
 
         wp_update_user( $user );
-
-        wp_send_json_success('Account details updated successfully.');
+        wp_send_json_success( array( 'message' => __( 'Account details updated successfully.', 'bricks-child' ) ) );
     }
 
     function save_address_book() {
-        // Verify nonce
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'save_address_nonce')) {
-            wp_send_json_error('Invalid security token');
-            exit;
+        $nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+        if ( ! wp_verify_nonce( $nonce, 'save_address_nonce' ) ) {
+            wp_send_json_error( array( 'message' => __( 'Invalid security token.', 'bricks-child' ) ) );
         }
-
-        $new_address = json_decode(stripslashes($_POST['data']), true);
+        $data_raw     = isset( $_POST['data'] ) ? wp_unslash( $_POST['data'] ) : '';
+        $new_address  = is_string( $data_raw ) ? json_decode( stripslashes( $data_raw ), true ) : array();
+        $new_address  = is_array( $new_address ) ? $new_address : array();
 
         $user_id = get_current_user_id();
 
@@ -288,19 +287,17 @@ class Theme_Ajax {
             }
         }
 
-        update_user_meta($user_id, 'address_book', $serialized_data);
-
-        wp_send_json_success('Address data saved successfully');
-        exit;
-
+        update_user_meta( $user_id, 'address_book', $serialized_data );
+        wp_send_json_success( array( 'message' => __( 'Address data saved successfully.', 'bricks-child' ) ) );
     }
 
 
     function handle_signup() {
-
-        $nonce_value = $_REQUEST['signupNonce'];  // Assuming you send this in your AJAX request
-
-        if (isset($_POST['firstName'], $_POST['lastName'], $_POST['email'], $_POST['password'], $_POST['captchaToken']) && wp_verify_nonce( $nonce_value, 'woocommerce-register' ) ) {
+        $nonce_value = isset( $_REQUEST['signupNonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['signupNonce'] ) ) : '';
+        if ( ! wp_verify_nonce( $nonce_value, 'woocommerce-register' ) ) {
+            wp_send_json_error( array( 'message' => wc_print_notice( __( 'Security check failed.', 'bricks-child' ), 'error', array(), true ) ) );
+        }
+        if ( isset( $_POST['firstName'], $_POST['lastName'], $_POST['email'], $_POST['password'], $_POST['captchaToken'] ) ) {
             $email = sanitize_email($_POST['email']);
             $first_name = sanitize_text_field($_POST['firstName']);
             $last_name = sanitize_text_field($_POST['lastName']);
@@ -359,17 +356,16 @@ class Theme_Ajax {
             } catch (Exception $e) {
                 wp_send_json_error(array('message' => wc_print_notice($e->getMessage(), 'error', [], true)));
             }
-        } else {
-            wp_send_json_error(['message' => wc_print_notice('Required fields are missing.', 'error', [], true)]);
         }
-        exit;
+        wp_send_json_error( array( 'message' => wc_print_notice( __( 'Required fields are missing.', 'bricks-child' ), 'error', array(), true ) ) );
     }
 
     function handle_login_ajax() {
-        $nonce_value = $_REQUEST['woocommerceLoginNonce']; // @codingStandardsIgnoreLine.
-        $valid_nonce = wp_verify_nonce( $nonce_value, 'woocommerce-login' );
-
-        if ( isset($_POST['email'], $_POST['password'] )) {
+        $nonce_value = isset( $_REQUEST['woocommerceLoginNonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['woocommerceLoginNonce'] ) ) : '';
+        if ( ! wp_verify_nonce( $nonce_value, 'woocommerce-login' ) ) {
+            wp_send_json_error( array( 'message' => wc_print_notice( __( 'Security check failed. Please refresh and try again.', 'woocommerce' ), 'error', array(), true ) ) );
+        }
+        if ( isset( $_POST['email'], $_POST['password'] ) ) {
 
             try {
                 $creds = array(
@@ -394,26 +390,22 @@ class Theme_Ajax {
 
                 if ( is_wp_error( $user ) ) {
                     throw new Exception( $user->get_error_message() );
-                } else {
-                      wp_send_json_success(
-                          [
-                              'email' => $email,
-                              'message' => wc_print_notice('Login Successfully', 'success', [], true)
-                          ]);
-
                 }
+                wp_send_json_success( array(
+                    'email'   => $creds['user_login'],
+                    'message' => wc_print_notice( __( 'Login Successfully', 'bricks-child' ), 'success', array(), true ),
+                ) );
             } catch ( Exception $e ) {
-                    wp_send_json_error(array('message' => wc_print_notice($e->getMessage(), 'error', [], true)));
+                wp_send_json_error( array( 'message' => wc_print_notice( $e->getMessage(), 'error', array(), true ) ) );
             }
         }
+        wp_send_json_error( array( 'message' => wc_print_notice( __( 'Required fields are missing.', 'woocommerce' ), 'error', array(), true ) ) );
     }
 
 	function wishlist_add_item() {
-		$nonce = $_POST['nonce'];
-
-		if (!wp_verify_nonce($nonce, 'wishlist-add-item')) {
-			wp_send_json_error(array('message' => 'Nonce verification failed'), 403);
-			return;
+		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'wishlist-add-item' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'bricks-child' ) ) );
 		}
 
 		try {
@@ -425,48 +417,31 @@ class Theme_Ajax {
 				return $item->get_product_id();
 			}, $wishlists->get_items());
 
-			wp_send_json_success($return);
-
-
+			wp_send_json_success( array( 'items' => $return ) );
 		} catch ( YITH_WCWL_Exception $e ) {
-			$return = $e->getTextualCode();
-
-//			/**
-//			 * APPLY_FILTERS: yith_wcwl_error_adding_to_wishlist_message
-//			 *
-//			 * Filter the error message shown when adding an item to the wishlist.
-//			 *
-//			 * @param string $message Message
-//			 *
-//			 * @return string
-//			 */
-//			$message = apply_filters( 'yith_wcwl_error_adding_to_wishlist_message', $e->getMessage() );
-
-			if($return === 'exists') {
-				$message = 'The product was exist';
-			}
-
-			wp_send_json_error(['message' => $message, 'code' => $return]);
+			$return  = $e->getTextualCode();
+			$message = $return === 'exists' ? __( 'The product already exists in the wishlist.', 'bricks-child' ) : $e->getMessage();
+			wp_send_json_error( array( 'message' => $message, 'code' => $return ) );
 		}
-
 	}
 
 	function get_wishlist() {
+		$nonce = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'get_wishlist' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'bricks-child' ) ) );
+		}
 		$wishlists = YITH_WCWL_Wishlist_Factory::get_default_wishlist();
 
-		$return = array_map(function ($item) {
+		$return = array_map( function ( $item ) {
 			return $item->get_product_id();
-		}, $wishlists->get_items());
-
-		wp_send_json_success($return);
+		}, $wishlists->get_items() );
+		wp_send_json_success( array( 'items' => $return ) );
 	}
 
 	function wishlist_remove_item() {
-		$nonce = $_POST['nonce'];
-
-		if (!wp_verify_nonce($nonce, 'wishlist-remove-item')) {
-			wp_send_json_error(array('message' => 'Nonce verification failed'), 403);
-			return;
+		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'wishlist-remove-item' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'bricks-child' ) ) );
 		}
 		try {
 			YITH_WCWL()->remove();
@@ -488,16 +463,11 @@ class Theme_Ajax {
 			}, $wishlists->get_items());
 
 			$message = apply_filters( 'yith_wcwl_product_removed_text', __( 'Product successfully removed.', 'yith-woocommerce-wishlist' ) );
-
-			wp_send_json_success($return);
-
+			wp_send_json_success( array( 'items' => $return, 'message' => $message ) );
 		} catch ( Exception $e ) {
-			$message = $e->getMessage();
-
-			wp_send_json_error($message);
+			wp_send_json_error( array( 'message' => $e->getMessage() ) );
 		}
 	}
-
 }
 
 new Theme_Ajax();

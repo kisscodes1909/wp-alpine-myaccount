@@ -29,6 +29,18 @@
     getValidationSchema() {
       throw new Error("getValidationSchema method should be implemented in the subclass");
     }
+    /**
+     * Get user-facing message from success response. Supports consistent shape
+     * { data: { message: string } } and legacy { data: string } or { message: string }.
+     */
+    getResponseMessage(response) {
+      if (!response) return "";
+      const data = response.data;
+      if (data && typeof data === "object" && typeof data.message === "string") return data.message;
+      if (typeof data === "string") return data;
+      if (typeof response.message === "string") return response.message;
+      return "";
+    }
     getErrorMessage(error) {
       const responseData = error?.responseJSON?.data;
       if (typeof responseData?.message === "string" && responseData.message) {
@@ -54,7 +66,7 @@
         ...this.additionalData
       }).done((response) => {
         this.isFormSubmitting = false;
-        this.notice = response.message;
+        this.notice = this.getResponseMessage(response);
         this.done(response);
         const event = new CustomEvent(`${this.getApiEndpoint()}_success`);
         window.dispatchEvent(event);
@@ -90,7 +102,7 @@
       };
       window.wp.ajax.post(this.getApiEndpoint(), payload).done((response) => {
         this.isFormSubmitting = false;
-        this.notice = response?.data || response?.message || "";
+        this.notice = this.getResponseMessage(response);
         this.done(response);
         const event = new CustomEvent(`${this.getApiEndpoint()}_success`);
         window.dispatchEvent(event);
@@ -101,7 +113,7 @@
       });
     }
     done(response) {
-      const message = response?.data || response?.message || "Account details updated successfully.";
+      const message = this.getResponseMessage(response) || "Account details updated successfully.";
       window.Alpine?.store("toast")?.addToast(message, "success");
     }
     fail(error) {
@@ -187,7 +199,7 @@
       };
       window.wp.ajax.post(this.getApiEndpoint(), payload).done((response) => {
         this.isFormSubmitting = false;
-        this.notice = response.message;
+        this.notice = this.getResponseMessage(response);
         this.done(response);
         const event = new CustomEvent(`${this.getApiEndpoint()}_success`);
         window.dispatchEvent(event);
@@ -197,8 +209,9 @@
       });
     }
     done(response) {
-      if (response?.message) {
-        window.Alpine?.store("toast")?.addToast(response.message, "success");
+      const message = this.getResponseMessage(response);
+      if (message) {
+        window.Alpine?.store("toast")?.addToast(message, "success");
       }
       window.Alpine?.store("popup")?.closePopup();
     }

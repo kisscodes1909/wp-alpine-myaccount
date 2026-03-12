@@ -34,7 +34,7 @@ export default class UpdateAccountHandler extends BaseFormHandler {
 
         window.wp.ajax.post(this.getApiEndpoint(), payload).done((response) => {
             this.isFormSubmitting = false;
-            this.notice = response?.data || response?.message || '';
+            this.notice = this.getResponseMessage(response);
             this.done(response);
 
             const event = new CustomEvent(`${this.getApiEndpoint()}_success`);
@@ -48,7 +48,7 @@ export default class UpdateAccountHandler extends BaseFormHandler {
     }
 
     done(response) {
-        const message = response?.data || response?.message || 'Account details updated successfully.';
+        const message = this.getResponseMessage(response) || 'Account details updated successfully.';
         window.Alpine?.store('toast')?.addToast(message, 'success');
     }
 

@@ -12,36 +12,31 @@ class Theme_Ajax {
 
     function handle_return_request(): void
     {
-        $nonce = $_POST['nonce'];
-        if (!wp_verify_nonce($nonce, 'return_order')) {
-            // Nonce did not verify
-            wp_send_json_error(array('message' => 'Nonce verification failed'), 403);
-            return;
+        $nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+        if ( ! wp_verify_nonce( $nonce, 'return_order' ) ) {
+            wp_send_json_error( array( 'message' => __( 'Security check failed.', 'bricks-child' ) ) );
         }
-
-        if (isset($_POST['data'])) {
-            $data = json_decode(stripslashes($_POST['data']), true);
-            $order_items = [];
-
-            foreach ($data['items'] as $item) {
+        if ( isset( $_POST['data'] ) ) {
+            $data = json_decode( stripslashes( (string) $_POST['data'] ), true );
+            $data = is_array( $data ) ? $data : array();
+            $order_items = array();
+            $items = isset( $data['items'] ) && is_array( $data['items'] ) ? $data['items'] : array();
+            foreach ( $items as $item ) {
                 $order_items[] = array(
-                    'id' => $item['id'],
-                    'qty' => $item['selectedReturnQuantity'],
-                    'reason' => $item['reason'],
-                    'feed_back' => $item['feedback']
+                    'id'        => isset( $item['id'] ) ? absint( $item['id'] ) : 0,
+                    'qty'       => isset( $item['selectedReturnQuantity'] ) ? absint( $item['selectedReturnQuantity'] ) : 0,
+                    'reason'    => isset( $item['reason'] ) ? sanitize_text_field( $item['reason'] ) : '',
+                    'feed_back' => isset( $item['feedback'] ) ? sanitize_textarea_field( $item['feedback'] ) : '',
                 );
             }
-
+            $order_id = isset( $data['orderId'] ) ? absint( $data['orderId'] ) : 0;
             $new_return_request = array(
                 'package_label' => '',
-                'order_items'   => $order_items
+                'order_items'   => $order_items,
             );
-
-            $post_id = 5561; // Replace with the actual post ID
-            add_row('order_return_request', $new_return_request, $data['orderId']);
+            add_row( 'order_return_request', $new_return_request, $order_id );
         }
-
-        wp_send_json_success('Return request processed');
+        wp_send_json_success( array( 'message' => __( 'Return request processed.', 'bricks-child' ) ) );
     }
 
 
@@ -83,22 +78,18 @@ class Theme_Ajax {
         }
 
         if ( ! empty( $errors ) ) {
-            wp_send_json_error( implode( ' ', $errors ) );
+            wp_send_json_error( array( 'message' => implode( ' ', $errors ) ) );
         }
 
-        // New user data.
         $user = new stdClass();
         $user->ID = $user_id;
+        $user->user_pass = $pass1;
 
         if ( $pass1 && $save_pass ) {
-
-            $user->user_pass = $pass1;
-            // You might want to use wp_update_user here to save the new password
-            $result =  wp_update_user( $user );
-            wp_send_json_success('Password changed successfully');
+            wp_update_user( $user );
+            wp_send_json_success( array( 'message' => __( 'Password changed successfully.', 'bricks-child' ) ) );
         }
-
-        wp_die();
+        wp_send_json_error( array( 'message' => __( 'Please provide a new password.', 'woocommerce' ) ) );
     }
 
     function save_account_details(): void
@@ -113,13 +104,12 @@ class Theme_Ajax {
         $user_id = get_current_user_id();
 
         if ( $user_id <= 0 ) {
-            wp_send_json_error('User was not found!');
+            wp_send_json_error( array( 'message' => __( 'User was not found!', 'bricks-child' ) ) );
         }
 
-        // Assuming you have proper validation and sanitization here
-        $first_name = wc_clean(wp_unslash($_POST['firstName']));
-        $last_name = wc_clean(wp_unslash($_POST['lastName']));
-        $email = sanitize_email(wp_unslash($_POST['email']));
+        $first_name = wc_clean( wp_unslash( $_POST['firstName'] ?? '' ) );
+        $last_name  = wc_clean( wp_unslash( $_POST['lastName'] ?? '' ) );
+        $email      = sanitize_email( wp_unslash( $_POST['email'] ?? '' ) );
 
         // Current user data.
         $current_user       = get_user_by( 'id', $user_id );
@@ -132,9 +122,9 @@ class Theme_Ajax {
 
         if ( $email ) {
             if ( ! is_email( $email ) ) {
-                wp_send_json_error(__( 'Please provide a valid email address.', 'woocommerce' ));
+                wp_send_json_error( array( 'message' => __( 'Please provide a valid email address.', 'woocommerce' ) ) );
             } elseif ( email_exists( $email ) && $email !== $current_user->user_email ) {
-                wp_send_json_error(__( 'This email address is already registered.', 'woocommerce' ));
+                wp_send_json_error( array( 'message' => __( 'This email address is already registered.', 'woocommerce' ) ) );
             }
             $user->user_email = $email;
         }

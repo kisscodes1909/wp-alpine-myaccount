@@ -185,15 +185,17 @@
       try {
         const result = await this._sendRequest(action, data);
         if (result.success) {
-          if (showToast) Alpine.store("toast").addToast(result.data, "success");
+          const message = result.data && result.data.message || result.data;
+          if (showToast) Alpine.store("toast").addToast(message, "success");
           if (closePopup) {
             this.editAddress = this._getEmptyAddress();
             Alpine.store("popup").closePopup();
           }
           return result;
         } else {
-          if (showToast) Alpine.store("toast").addToast(result.data, "error");
-          throw new Error(result.data);
+          const message = result.data && result.data.message || result.data;
+          if (showToast) Alpine.store("toast").addToast(message, "error");
+          throw new Error(typeof message === "string" ? message : "An error occurred");
         }
       } catch (error) {
         if (showToast) Alpine.store("toast").addToast("An error occurred", "error");

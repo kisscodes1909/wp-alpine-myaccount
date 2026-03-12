@@ -40,7 +40,7 @@ export default class ChangePasswordHandler extends BaseFormHandler {
 
         window.wp.ajax.post(this.getApiEndpoint(), payload).done((response) => {
             this.isFormSubmitting = false;
-            this.notice = response.message;
+            this.notice = this.getResponseMessage(response);
             this.done(response);
 
             const event = new CustomEvent(`${this.getApiEndpoint()}_success`);
@@ -53,8 +53,9 @@ export default class ChangePasswordHandler extends BaseFormHandler {
     }
 
     done(response) {
-        if (response?.message) {
-            window.Alpine?.store('toast')?.addToast(response.message, 'success');
+        const message = this.getResponseMessage(response);
+        if (message) {
+            window.Alpine?.store('toast')?.addToast(message, 'success');
         }
         window.Alpine?.store('popup')?.closePopup();
     }
