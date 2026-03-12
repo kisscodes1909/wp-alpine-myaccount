@@ -150,9 +150,9 @@ class MyAccount_Core_Hooks {
 
 	public function render_overlay_containers(): void {
 		?>
-		<div x-data id="popup-container" class="z-[999] fixed inset-0 overflow-y-auto flex items-center justify-center p-4" x-show="$store.popup.open" x-cloak aria-hidden="true"></div>
-		<div x-data id="toast-container" class="z-[1000]"></div>
-		<div x-data id="loader-container" class="z-[1001]"></div>
+		<div x-data id="popup-container" class="ma-ui-overlay-container ma-ui-popup-container" x-show="$store.popup.open" x-cloak :aria-hidden="!$store.popup.open"></div>
+		<div x-data id="toast-container" class="ma-ui-overlay-container ma-ui-toast-container"></div>
+		<div x-data id="loader-container" class="ma-ui-overlay-container ma-ui-loader-container"></div>
 		<?php
 	}
 

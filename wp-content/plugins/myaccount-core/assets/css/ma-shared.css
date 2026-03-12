@@ -363,43 +363,107 @@
 .ma-tr-scale-leave-start {
     transform: scale(1);
 }
-.ma-ui-popup__overlay {
-    --ma-tr-duration: var(--ma-duration-fast);
+/* Shared: fixed overlay container — base for popup, toast, loader */
+.ma-ui-overlay-container {
+    position: fixed;
+    display: flex;
+}
+/* Popup container: full viewport, flex center */
+.ma-ui-popup-container {
+    inset: 0;
+    z-index: var(--ma-z-modal-backdrop);
+    overflow-y: auto;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ma-space-md);
+}
+/* Loader container: full viewport, teleport target */
+.ma-ui-loader-container {
+    inset: 0;
+    z-index: var(--ma-z-modal);
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+/* Toast container: mobile = bottom (tầm nhìn tốt, safe-area); desktop = top-right */
+.ma-ui-toast-container {
+    bottom: var(--ma-space-lg);
+    left: var(--ma-space-lg);
+    right: var(--ma-space-lg);
+    padding-bottom: max(var(--ma-space-lg), env(safe-area-inset-bottom));
+    z-index: var(--ma-z-toast);
+    flex-direction: column;
+    gap: var(--ma-space-sm);
+    pointer-events: none;
+}
+/* Body scroll lock when popup is open (class added by popup store) */
+body.ma-popup-scroll-lock {
+    overflow: hidden;
+}
+/* Shared backdrop: full-screen dim layer — reuse for popup, loader, confirm, etc. */
+.ma-u-backdrop {
     position: fixed;
     inset: 0;
+    z-index: var(--ma-z-modal-backdrop);
+    background: var(--ma-surface-overlay);
+}
+.ma-ui-popup__overlay {
+    --ma-tr-duration: var(--ma-duration-fast);
     display: flex;
     align-items: center;
     justify-content: center;
     padding: var(--ma-space-md);
-    background: var(--ma-surface-overlay);
 }
 .ma-ui-popup__panel {
     position: relative;
-    z-index: 20;
+    z-index: var(--ma-z-modal);
     background: var(--ma-surface);
     overflow: auto;
     width: 100%;
     max-width: 700px;
+    max-height: calc(100vh - var(--ma-space-md) * 2);
     padding: var(--ma-space-xl);
-}
-.ma-ui-toast__item {
-    --ma-tr-duration: var(--ma-duration-normal);
-    position: fixed;
-    top: var(--ma-space-lg);
-    right: var(--ma-space-lg);
-    left: var(--ma-space-lg);
-    background: var(--ma-btn-pill-bg);
-    color: var(--ma-btn-pill-text);
-    padding: 1.25rem 1.75rem;
-    box-shadow: var(--ma-shadow-lg);
+    box-shadow: var(--ma-shadow-2xl);
 }
 @media (min-width: 768px) {
-.ma-ui-toast__item {
+    .ma-ui-toast-container {
         top: var(--ma-space-2xl);
         right: var(--ma-space-2xl);
-        left: auto
-}
+        bottom: auto;
+        left: auto;
+        padding-bottom: 0;
+        max-width: 24rem;
     }
+}
+/* Toast item: shared layout; colors from modifiers */
+.ma-ui-toast__item {
+    --ma-tr-duration: var(--ma-duration-normal);
+    position: relative;
+    padding: 1.25rem 1.75rem;
+    box-shadow: var(--ma-shadow-lg);
+    border-left: 4px solid transparent;
+    pointer-events: auto;
+}
+.ma-ui-toast__item.success {
+    background: var(--ma-success-bg);
+    color: var(--ma-success-text);
+    border-left-color: var(--ma-success-icon);
+}
+.ma-ui-toast__item.error {
+    background: var(--ma-danger-bg);
+    color: var(--ma-danger-text);
+    border-left-color: var(--ma-danger-icon);
+}
+.ma-ui-toast__item.notice {
+    background: var(--ma-info-bg);
+    color: var(--ma-info-text);
+    border-left-color: var(--ma-info-icon);
+}
+.ma-ui-toast__item.default {
+    background: var(--ma-surface-alt);
+    color: var(--ma-text-primary);
+    border-left-color: var(--ma-border-strong);
+}
 .ma-address-book__toast {
     --ma-tr-duration: var(--ma-duration-normal);
 }
