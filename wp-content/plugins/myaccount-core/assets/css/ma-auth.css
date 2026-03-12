@@ -8,12 +8,12 @@
     padding: 0;
     justify-content: center;
     margin: 0;
-    gap: calc(var(--ma-base) * 1.25);
+    gap: var(--ma-space-lg);
     margin-bottom: var(--ma-form-space-section-gap);
 }
 .woocommerce-account .ma-auth-tabs__item {
     display: inline-block;
-    padding: calc(var(--ma-base) * 0.5) var(--ma-space-md);
+    padding: var(--ma-space-sm) var(--ma-space-md);
     cursor: pointer;
     background: transparent;
     border-bottom: 2px solid transparent;
@@ -63,12 +63,12 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: calc(var(--ma-base) * 0.75);
+    gap: var(--ma-space-sm);
 }
 .woocommerce-account .ma-form__password-requirement-icon {
     flex: none;
-    width: calc(var(--ma-base) * 2);
-    height: calc(var(--ma-base) * 2);
+    width: var(--ma-space-xl);
+    height: var(--ma-space-xl);
 }
 .woocommerce-account .ma-form__password-requirement-icon--pass {
     color: var(--ma-success-text);
@@ -86,16 +86,16 @@
 /* My Account endpoint styles: Lost Password                                  */
 /* -------------------------------------------------------------------------- */
 .woocommerce-account .ma-lost-password__field {
-    margin-bottom: calc(var(--ma-base) * 2);
+    margin-bottom: var(--ma-space-xl);
 }
 /* -------------------------------------------------------------------------- */
 /* My Account endpoint styles: Reset Password                                 */
 /* -------------------------------------------------------------------------- */
 .woocommerce-account .ma-reset-password__section {
-        margin-bottom: calc(var(--ma-base) * 2);
+        margin-bottom: var(--ma-space-xl);
     }
 .woocommerce-account .ma-reset-password__field {
-        margin-bottom: calc(var(--ma-base) * 2.5);
+        margin-bottom: var(--ma-space-2xl);
     }
 .woocommerce-account .ma-reset-password__requirements-hint {
         margin-top: var(--ma-space-sm);
@@ -117,11 +117,11 @@
 .woocommerce-account .ma-reset-password__requirement {
         display: flex;
         align-items: center;
-        gap: calc(var(--ma-base) * 0.75);
+        gap: var(--ma-space-sm);
     }
 .woocommerce-account .ma-reset-password__requirement-icon {
-        width: calc(var(--ma-base) * 2);
-        height: calc(var(--ma-base) * 2);
+        width: var(--ma-space-xl);
+        height: var(--ma-space-xl);
     }
 .woocommerce-account .ma-reset-password__requirement-icon--pass,
     .woocommerce-account .ma-reset-password__requirement-text--pass {

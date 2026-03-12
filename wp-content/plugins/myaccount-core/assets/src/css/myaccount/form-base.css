@@ -2,51 +2,51 @@
 
 
 .woocommerce-account {
-    --ma-notice-space-gap: calc(var(--ma-base) * 1);
-    --ma-notice-padding-y: calc(var(--ma-base) * 1);
-    --ma-notice-padding-x: calc(var(--ma-base) * 1);
-    --ma-notice-padding-right: calc(var(--ma-base) * 2.5);
-    --ma-notice-border-width: 1px;
-    --ma-notice-border-radius: 0;
+    --ma-notice-space-gap: var(--ma-space-md);
+    --ma-notice-padding-y: var(--ma-space-md);
+    --ma-notice-padding-x: var(--ma-space-md);
+    --ma-notice-padding-right: var(--ma-space-2xl);
+    --ma-notice-border-width: var(--ma-space-2xs);
+    --ma-notice-border-radius: var(--ma-radius-none);
     --ma-notice-font-size: var(--ma-font-xl);
     --ma-notice-font-size-desktop: var(--ma-font-xl);
     --ma-notice-line-height: var(--ma-line-normal);
 
-    --ma-notice-icon-size: calc(var(--ma-base) * 2);
+    --ma-notice-icon-size: var(--ma-font-xl);
     --ma-notice-success-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'/%3E%3C/svg%3E");
     --ma-notice-error-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'/%3E%3C/svg%3E");
     --ma-notice-warning-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 9v3.75m0 3.75h.008v.008H12v-.008Zm8.24 3.72H3.76c-1.38 0-2.24-1.5-1.55-2.7L10.45 3.3c.69-1.2 2.41-1.2 3.1 0l8.24 14.28c.69 1.2-.17 2.7-1.55 2.7Z'/%3E%3C/svg%3E");
     --ma-notice-info-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z'/%3E%3C/svg%3E");
 
     .ma-form {
-        --ma-form-space-label-bottom: 6px;
-        --ma-form-space-main-gap: calc(var(--ma-base) * 1.5);
-        --ma-form-space-section-gap: calc(var(--ma-base) * 2);
-        --ma-form-space-section-head-gap: calc(var(--ma-base) * 0.5);
-        --ma-form-space-fields-gap: calc(var(--ma-base) * 1.5);
-        --ma-form-space-field-gap: calc(var(--ma-base) * 0.5);
-        --ma-form-space-grid-gap: calc(var(--ma-base) * 1.5);
-        --ma-form-space-bordered-top: 30px;
-        --ma-form-space-actions-top: calc(var(--ma-base) * 2);
-        --ma-form-space-setting-card-gap: calc(var(--ma-base) * 1);
-        --ma-form-space-setting-card-padding-x: 25px;
-        --ma-form-space-setting-card-padding-y: calc(var(--ma-base) * 1);
-        --ma-form-space-setting-meta-gap: calc(var(--ma-base) * 0.25);
-        --ma-form-space-status-pill-padding-x: calc(var(--ma-base) * 0.75);
-        --ma-form-space-status-pill-padding-y: calc(var(--ma-base) * 0.25);
-        --ma-form-space-button-gap: calc(var(--ma-base) * 0.5);
-        --ma-form-space-button-padding-x: calc(var(--ma-base) * 1);
-        --ma-form-space-field-padding-x: calc(var(--ma-base) * 1);
-        --ma-form-space-error-gap: calc(var(--ma-base) * 0.5);
-        --ma-form-space-input-icon-left: calc(var(--ma-base) * 2.5);
-        --ma-form-space-input-icon-padding-right: calc(var(--ma-base) * 2.5);
-        --ma-form-space-validate-icon-top: calc(var(--ma-base) * 0.75);
-        --ma-form-space-validate-icon-right: calc(var(--ma-base) * 0.25);
-        --ma-form-error-icon-size: calc(var(--ma-base) * 1.25);
+        --ma-form-space-label-bottom: var(--ma-space-sm);
+        --ma-form-space-main-gap: var(--ma-space-lg);
+        --ma-form-space-section-gap: var(--ma-space-xl);
+        --ma-form-space-section-head-gap: var(--ma-space-sm);
+        --ma-form-space-fields-gap: var(--ma-space-lg);
+        --ma-form-space-field-gap: var(--ma-space-sm);
+        --ma-form-space-grid-gap: var(--ma-space-lg);
+        --ma-form-space-bordered-top: var(--ma-space-xl);
+        --ma-form-space-actions-top: var(--ma-space-xl);
+        --ma-form-space-setting-card-gap: var(--ma-space-md);
+        --ma-form-space-setting-card-padding-x: var(--ma-space-lg);
+        --ma-form-space-setting-card-padding-y: var(--ma-space-md);
+        --ma-form-space-setting-meta-gap: var(--ma-space-xs);
+        --ma-form-space-status-pill-padding-x: var(--ma-space-sm);
+        --ma-form-space-status-pill-padding-y: var(--ma-space-xs);
+        --ma-form-space-button-gap: var(--ma-space-sm);
+        --ma-form-space-button-padding-x: var(--ma-space-md);
+        --ma-form-space-field-padding-x: var(--ma-space-md);
+        --ma-form-space-error-gap: var(--ma-space-sm);
+        --ma-form-space-input-icon-left: var(--ma-space-2xl);
+        --ma-form-space-input-icon-padding-right: var(--ma-space-2xl);
+        --ma-form-space-validate-icon-top: var(--ma-space-sm);
+        --ma-form-space-validate-icon-right: var(--ma-space-xs);
+        --ma-form-error-icon-size: var(--ma-font-lg);
 
-        --apl-radio-size: 20px;
-        --apl-checkbox-size: 26px;
-        --apl-checkbox-icon-size: 18px;
+        --apl-radio-size: var(--ma-font-lg);
+        --apl-checkbox-size: var(--ma-font-xl);
+        --apl-checkbox-icon-size: var(--ma-font-md);
 
         --ma-form-font-size-xs: var(--ma-font-xs);
         --ma-form-font-size-sm: var(--ma-font-sm);
@@ -122,12 +122,12 @@
             align-items: center;
             justify-content: center;
             pointer-events: none;
-            left: calc(var(--ma-base) * 0.75);
+            left: var(--ma-space-sm);
             top: 50%;
             transform: translateY(-50%);
             color: var(--ma-form-color-muted);
-            width: calc(var(--ma-base) * 1.5);
-            height: calc(var(--ma-base) * 1.5);
+            width: var(--ma-space-lg);
+            height: var(--ma-space-lg);
         }
 
         .ma-form__input-icon--left .ma-form__input-icon-svg {
@@ -226,14 +226,14 @@
         label.jk-checkbox {
             display: inline-flex;
             align-items: center;
-            gap: calc(var(--ma-base) * 0.75);
+            gap: var(--ma-space-sm);
             cursor: pointer;
         }
 
         .jk-checkbox-wrapper {
             display: inline-flex;
             align-items: center;
-            gap: calc(var(--ma-base) * 0.75);
+            gap: var(--ma-space-sm);
             cursor: pointer;
 
             > input[type='checkbox'] {
@@ -353,8 +353,8 @@
 .ma-form-actions {
     display: flex;
     flex-direction: column;
-    gap: var(--ma-form-space-fields-gap, calc(var(--ma-base) * 1.5));
-    padding-top: var(--ma-form-space-actions-top, calc(var(--ma-base) * 2));
+    gap: var(--ma-form-space-fields-gap, var(--ma-space-lg));
+    padding-top: var(--ma-form-space-actions-top, var(--ma-space-xl));
 
     > .button,
     > button[type='button'],
@@ -368,8 +368,8 @@
         justify-content: center;
         border: 1px solid currentColor;
         font-weight: 500;
-        gap: var(--ma-form-space-button-gap, calc(var(--ma-base) * 0.5));
-        padding-inline: var(--ma-form-space-button-padding-x, calc(var(--ma-base) * 1));
+        gap: var(--ma-form-space-button-gap, var(--ma-space-sm));
+        padding-inline: var(--ma-form-space-button-padding-x, var(--ma-space-md));
         font-size: var(--ma-form-font-size-base);
         transition: border-color var(--ma-duration-fast) var(--ma-easing-smooth), box-shadow var(--ma-duration-fast) var(--ma-easing-smooth), background-color var(--ma-duration-fast) var(--ma-easing-smooth), color var(--ma-duration-fast) var(--ma-easing-smooth);
 
@@ -420,7 +420,7 @@
     .ma-form__section-title {
         margin: 0;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: var(--ma-tracking-wider);
         font-size: var(--ma-form-font-size-base);
         line-height: var(--ma-form-line-height-title);
         color: var(--ma-text-primary);
@@ -459,7 +459,7 @@
     .ma-form__label {
         display: block;
         margin: 0;
-        letter-spacing: 0.05em;
+        letter-spacing: var(--ma-tracking-wider);
         font-size: var(--ma-font-base);
         line-height: var(--ma-line-normal);
         color: var(--ma-form-color-muted);
@@ -531,7 +531,7 @@
     .ma-form__setting-label {
         margin: 0;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: var(--ma-tracking-wider);
         font-size: var(--ma-font-base);
         line-height: var(--ma-line-normal);
         color: var(--ma-form-color-text);
@@ -548,7 +548,7 @@
         background: transparent;
         border: 0;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: var(--ma-tracking-wider);
         text-decoration: underline;
         white-space: nowrap;
         font-size: var(--ma-font-base);
@@ -560,7 +560,7 @@
         display: inline-flex;
         border-radius: 9999px;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: var(--ma-tracking-wider);
         font-size: var(--ma-font-base);
         line-height: var(--ma-line-normal);
         padding-inline: var(--ma-form-space-status-pill-padding-x);

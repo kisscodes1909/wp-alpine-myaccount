@@ -9,7 +9,7 @@
 /* Section 1: Order details header (mobile-first: column + align left, then row at 768px) */
 .woocommerce-account .ma-order-details-header {
         border-bottom: 1px solid var(--ma-border-divider);
-        padding-bottom: 1px;
+        padding-bottom: var(--ma-space-2xs);
     }
 .woocommerce-account .ma-order-details-header__inner {
         display: flex;
@@ -30,7 +30,7 @@
         font-weight: 400;
         color: var(--ma-text-muted);
         text-transform: uppercase;
-        letter-spacing: calc(var(--ma-space-md) * 0.075);
+        letter-spacing: var(--ma-tracking-widest);
     }
 .woocommerce-account .ma-order-details-header__number {
         margin: 0;
@@ -38,14 +38,14 @@
         line-height: var(--ma-line-tight);
         font-weight: 400;
         color: var(--ma-text-primary);
-        letter-spacing: calc(var(--ma-space-md) * -0.053);
+        letter-spacing: var(--ma-tracking-tighter);
     }
 .woocommerce-account .ma-order-details-header__date {
         margin-top: calc(var(--ma-space-md) * 0.375);
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-tight);
         color: var(--ma-text-muted);
-        letter-spacing: calc(var(--ma-space-md) * -0.0094);
+        letter-spacing: var(--ma-tracking-tight);
     }
 /* Mobile: align left */
 .woocommerce-account .ma-order-details-header__total-label {
@@ -54,7 +54,7 @@
         line-height: var(--ma-line-tight);
         color: var(--ma-text-muted);
         text-transform: uppercase;
-        letter-spacing: calc(var(--ma-space-md) * 0.075);
+        letter-spacing: var(--ma-tracking-widest);
         text-align: left;
     }
 .woocommerce-account .ma-order-details-header__total-value {
@@ -64,7 +64,7 @@
         font-weight: 400;
         color: var(--ma-text-primary);
         text-align: left;
-        letter-spacing: calc(var(--ma-space-md) * 0.022);
+        letter-spacing: var(--ma-tracking-wide);
     }
 .woocommerce-account .ma-order-details-header__actions {
         display: flex;
@@ -101,7 +101,7 @@
         font-size: var(--ma-font-xs);
         line-height: var(--ma-line-tight);
         text-transform: uppercase;
-        letter-spacing: calc(var(--ma-space-md) * 0.0375);
+        letter-spacing: var(--ma-tracking-wide);
         border: 1px solid var(--ma-border);
         background: transparent;
         color: var(--ma-text-primary);
@@ -112,7 +112,7 @@
 .woocommerce-account .ma-order-details-header__btn--danger {
         border-color: var(--ma-danger-border);
         color: var(--ma-danger-text);
-        letter-spacing: calc(var(--ma-space-md) * 0.075);
+        letter-spacing: var(--ma-tracking-widest);
     }
 .woocommerce-account .ma-order-details-header__btn:disabled {
         opacity: 0.6;
@@ -184,7 +184,7 @@
         font-weight: 400;
         color: var(--ma-text-primary);
         text-transform: uppercase;
-        letter-spacing: 0.0805em;
+        letter-spacing: var(--ma-tracking-widest);
     }
 .woocommerce-account .ma-order-status-card__pill {
         display: inline-flex;
@@ -195,7 +195,7 @@
         font-size: var(--ma-font-xs);
         line-height: var(--ma-line-tight);
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: var(--ma-tracking-wider);
         background: var(--ma-accent-bg);
         border: 1px solid var(--ma-accent-border);
         color: var(--ma-accent-text);
@@ -216,7 +216,7 @@
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-snug);
         color: var(--ma-text-muted-dark);
-        letter-spacing: -0.0094em;
+        letter-spacing: var(--ma-tracking-tight);
     }
 .woocommerce-account .ma-order-status-card__est-delivery {
         text-align: right;
@@ -227,14 +227,14 @@
         line-height: var(--ma-line-tight);
         color: var(--ma-text-muted);
         text-transform: uppercase;
-        letter-spacing: 0.1em;
+        letter-spacing: var(--ma-tracking-widest);
     }
 .woocommerce-account .ma-order-status-card__est-date {
         margin-top: calc(var(--ma-space-md) * 0.125);
         font-size: var(--ma-font-base);
         line-height: var(--ma-line-normal);
         color: var(--ma-text-primary);
-        letter-spacing: -0.0195em;
+        letter-spacing: var(--ma-tracking-tight);
     }
 .woocommerce-account .ma-order-status-card__timeline {
         padding: var(--ma-space-xl) calc(var(--ma-space-md) * 1.75) calc(var(--ma-space-md) * 1.75);
@@ -418,7 +418,7 @@
         line-height: var(--ma-line-normal);
         color: var(--ma-text-primary);
         text-transform: uppercase;
-        letter-spacing: 0.12em;
+        letter-spacing: var(--ma-tracking-widest);
     }
 /* Order details items: list layout on all viewports (mobile-first) */
 .woocommerce-account .ma-order-details-items-summary__items-list {

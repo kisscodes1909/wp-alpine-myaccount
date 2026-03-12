@@ -5,52 +5,10 @@
  */
 require_once __DIR__ . '/partials/form-field-icons.php';
 ?>
-<style>
-.ma-form.ma-form-address .address-autocomplete-wrapper {
-    width: 100%;
-}
-
-.ma-form.ma-form-address .address-autocomplete-wrapper gmp-place-autocomplete {
-    width: 100%;
-    min-height: 50px;
-    display: block;
-    border-radius: 0;
-    border: 1px solid var(--ma-border);
-    background-color: var(--ma-surface-soft);
-    transition: border-color 150ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1);
-    color-scheme: light;
-    --gmp-mat-color-surface: var(--ma-surface-soft);
-    --gmp-mat-color-on-surface: var(--ma-text-strong);
-    --gmp-mat-color-on-surface-variant: var(--ma-text-muted-dark);
-    --gmp-mat-color-primary: var(--ma-text-charcoal);
-    --gmp-mat-color-outline-decorative: transparent;
-    --gmp-mat-font-family: inherit;
-}
-
-.ma-form.ma-form-address .address-autocomplete-wrapper gmp-place-autocomplete:focus-within {
-    border-color: var(--ma-border-focus);
-    box-shadow: 0 0 0 1px var(--ma-border-divider);
-}
-
-.apl-address-line2-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--ma-info-text);
-    font-size: 15px;
-    line-height: 1.25;
-    font-weight: 500;
-    text-decoration: none;
-}
-
-.apl-address-line2-toggle:hover {
-    opacity: 0.9;
-}
-</style>
 <template id="edit-address" x-data>
     <div class="ma-address-form__header">
         <h2 class="apl-heading-chip-sm" x-text="$store.userAddress.form.title">Add Address</h2>
-        <button @click="$store.popup.closePopup()" style="color: var(--ma-text-charcoal);">
+        <button @click="$store.popup.closePopup()">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
                 <path d="M9.46584 8.12341L15.6959 1.89301C16.1014 1.48775 16.1014 0.832499 15.6959 0.427237C15.2907 0.0219756 14.6354 0.0219756 14.2302 0.427237L7.99991 6.65763L1.76983 0.427237C1.36438 0.0219756 0.709335 0.0219756 0.304082 0.427237C-0.101361 0.832499 -0.101361 1.48775 0.304082 1.89301L6.53416 8.12341L0.304082 14.3538C-0.101361 14.7591 -0.101361 15.4143 0.304082 15.8196C0.506044 16.0217 0.771594 16.1233 1.03695 16.1233C1.30231 16.1233 1.56767 16.0217 1.76983 15.8196L7.99991 9.58918L14.2302 15.8196C14.4323 16.0217 14.6977 16.1233 14.963 16.1233C15.2284 16.1233 15.4938 16.0217 15.6959 15.8196C16.1014 15.4143 16.1014 14.7591 15.6959 14.3538L9.46584 8.12341Z" fill="currentColor"/>
             </svg>

@@ -8,7 +8,7 @@ body.myaccount-template-fashion.woocommerce-account {
 
 body.myaccount-template-fashion.woocommerce-account .ma-form label {
     font-weight: 500;
-    letter-spacing: 0.01em;
+    letter-spacing: var(--ma-tracking-normal);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-form .ma-form__input,
@@ -157,7 +157,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
     line-height: var(--ma-line-snug);
     color: var(--ma-text-primary);
     text-transform: uppercase;
-    letter-spacing: 1.2px;
+    letter-spacing: var(--ma-tracking-widest);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item {
@@ -179,7 +179,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
     font-size: var(--ma-font-md);
     line-height: var(--ma-line-snug);
     text-transform: uppercase;
-    letter-spacing: 1.2px;
+    letter-spacing: var(--ma-tracking-widest);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-price {
@@ -187,7 +187,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
     line-height: var(--ma-line-snug);
     color: var(--ma-text-primary);
     text-transform: uppercase;
-    letter-spacing: 1.2px;
+    letter-spacing: var(--ma-tracking-widest);
 }
 
 /* Section 3: Shipping – Figma two-column colors */
@@ -199,7 +199,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
     font-size: var(--ma-font-md);
     color: var(--ma-text-muted);
     text-transform: uppercase;
-    letter-spacing: 1.2px;
+    letter-spacing: var(--ma-tracking-widest);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__shipping-icon,

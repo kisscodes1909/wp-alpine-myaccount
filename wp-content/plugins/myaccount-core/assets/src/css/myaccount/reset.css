@@ -1,0 +1,38 @@
+/* -------------------------------------------------------------------------- */
+/* My Account reset: margin/padding, list, form (scope: .woocommerce-account) */
+/* -------------------------------------------------------------------------- */
+
+.woocommerce-account {
+    /* 1. Margin / padding */
+    p,
+    ul,
+    ol,
+    fieldset,
+    figure,
+    h1, h2, h3, h4, h5, h6 {
+        margin: 0;
+        padding: 0;
+    }
+
+    /* 2. List */
+    ul,
+    ol {
+        list-style: none;
+        padding-left: 0;
+        margin: 0;
+    }
+
+    /* 3. Form */
+    fieldset {
+        margin: 0;
+        padding: 0;
+        border: 0;
+    }
+
+    input,
+    button,
+    select,
+    textarea {
+        margin: 0;
+    }
+}

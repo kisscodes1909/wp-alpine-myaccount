@@ -54,15 +54,15 @@
     overflow: auto;
     width: 100%;
     max-width: 700px;
-    padding: calc(var(--ma-base) * 2);
+    padding: var(--ma-space-xl);
 }
 
 .ma-ui-toast__item {
     --ma-tr-duration: var(--ma-duration-normal);
     position: fixed;
-    top: calc(var(--ma-base) * 1.25);
-    right: calc(var(--ma-base) * 1.25);
-    left: calc(var(--ma-base) * 1.25);
+    top: var(--ma-space-lg);
+    right: var(--ma-space-lg);
+    left: var(--ma-space-lg);
     background: var(--ma-btn-pill-bg);
     color: var(--ma-btn-pill-text);
     padding: 1.25rem 1.75rem;
@@ -85,8 +85,8 @@
 
 @media (min-width: 768px) {
     .ma-ui-toast__item {
-        top: calc(var(--ma-base) * 3.5);
-        right: calc(var(--ma-base) * 3.5);
+        top: var(--ma-space-2xl);
+        right: var(--ma-space-2xl);
         left: auto;
     }
 }

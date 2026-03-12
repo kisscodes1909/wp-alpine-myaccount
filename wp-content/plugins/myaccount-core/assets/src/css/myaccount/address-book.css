@@ -12,8 +12,8 @@
     .ma-address-book__toast {
         position: fixed;
         z-index: 1000;
-        top: calc(var(--ma-base) * 3.5);
-        right: calc(var(--ma-base) * 1.25);
+        top: var(--ma-space-2xl);
+        right: var(--ma-space-lg);
         padding: 0.75rem 1rem;
     }
 
@@ -41,7 +41,7 @@
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
-        gap: calc(var(--ma-base) * 0.75);
+        gap: var(--ma-space-sm);
     }
 
     .ma-address-book__identity {
@@ -51,14 +51,14 @@
     .ma-address-book__name {
         margin: 0;
         font-size: var(--ma-font-lg);
-        line-height: calc(var(--ma-base) * 1.75);
+        line-height: var(--ma-line-relaxed);
         font-weight: 500;
         color: var(--ma-text-primary);
     }
 
     .ma-address-book__phone {
         font-size: var(--ma-font-base);
-        line-height: calc(var(--ma-base) * 1.5);
+        line-height: var(--ma-line-normal);
         color: var(--ma-text-muted-dark);
         margin-block: 0.5rem 0;
     }
@@ -68,28 +68,28 @@
         align-items: center;
         gap: var(--ma-space-xs);
         border-radius: 9999px;
-        padding: var(--ma-space-xs) calc(var(--ma-base) * 0.75);
+        padding: var(--ma-space-xs) var(--ma-space-sm);
         font-size: var(--ma-font-xs);
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: var(--ma-tracking-wider);
         white-space: nowrap;
         line-height: var(--ma-line-snug);
     }
 
     .ma-address-book__default-icon {
-        width: 12px;
-        height: 12px;
+        width: var(--ma-font-xs);
+        height: var(--ma-font-xs);
     }
 
     .ma-address-book__content {
         flex: 1;
         font-size: var(--ma-font-base);
-        line-height: calc(var(--ma-base) * 1.5);
+        line-height: var(--ma-line-normal);
         color: var(--ma-text-muted-dark);
         display: flex;
         flex-direction: column;
         margin-top: var(--ma-space-lg);
-        gap: calc(var(--ma-base) * 0.125);
+        gap: var(--ma-space-2xs);
         p {
             margin: 0;
         }
@@ -99,15 +99,15 @@
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        gap: calc(var(--ma-base) * 0.75);
+        gap: var(--ma-space-sm);
         flex-wrap: wrap;
         padding-top: var(--ma-space-md);
     }
 
-    .ma-address-book__action-button {
+    /* .ma-address-book__action-button {
         width: 140px;
         justify-content: center;
-    }
+    } */
 
     .ma-address-book__empty {
         background: var(--ma-surface);

@@ -22,15 +22,15 @@ body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAcc
 
 /* Navigation styles when stacked: full-bleed band, flex row, list, links, icons, hover/active. */
 body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation.ma-fullbleed-band {
-    --ma-fullbleed-border-top: calc(var(--ma-base) * 0.0625) solid var(--ma-border-divider);
-    --ma-fullbleed-border-bottom: calc(var(--ma-base) * 0.0625) solid var(--ma-border-divider);
+    --ma-fullbleed-border-top: var(--ma-space-2xs) solid var(--ma-border-divider);
+    --ma-fullbleed-border-bottom: var(--ma-space-2xs) solid var(--ma-border-divider);
     --ma-nav-transition-duration: var(--ma-duration-fast);
     --ma-nav-transition-timing: var(--ma-easing-smooth);
     display: flex;
     justify-content: center;
     width: 100%;
     margin-inline: auto;
-    padding-inline: calc(var(--ma-base) * 1);
+    padding-inline: var(--ma-space-md);
 }
 
 body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list {
@@ -43,8 +43,8 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lis
 body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li {
     --ma-nav-icon: none;
     flex-shrink: 0;
-    margin-bottom: -calc(var(--ma-base) * 0.0625);
-    border-bottom: calc(var(--ma-base) * 0.125) solid transparent;
+    margin-bottom: -var(--ma-space-2xs);
+    border-bottom: var(--ma-space-2xs) solid transparent;
     transition: border-bottom-color var(--ma-nav-transition-duration) var(--ma-nav-transition-timing);
 }
 
@@ -62,7 +62,7 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lin
     font-size: var(--ma-font-base);
     line-height: var(--ma-line-normal);
     font-weight: 400;
-    letter-spacing: calc(var(--ma-base) * 0.078125);
+    letter-spacing: var(--ma-tracking-widest);
     color: var(--ma-text-muted);
     transition: color var(--ma-nav-transition-duration) var(--ma-nav-transition-timing);
 }
@@ -136,6 +136,6 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lis
 
 @media (min-width: 992px) {
     body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation.ma-fullbleed-band {
-        padding-inline: calc(var(--ma-base) * 7.5625);
+        padding-inline: var(--ma-space-5xl);
     }
 }

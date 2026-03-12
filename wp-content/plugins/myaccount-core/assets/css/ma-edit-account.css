@@ -3,18 +3,18 @@
 /* -------------------------------------------------------------------------- */
 /* Standardize section spacing for My Info: flex col + single gap rhythm; border-top balanced with gap */
 .woocommerce-account.woocommerce-edit-account .ma-form {
-    --ma-form-space-main-gap: calc(var(--ma-base) * 2);
-    --ma-form-space-section-gap: calc(var(--ma-base) * 2);
-    --ma-form-space-bordered-top: calc(var(--ma-base) * 2);
+    --ma-form-space-main-gap: var(--ma-space-xl);
+    --ma-form-space-section-gap: var(--ma-space-xl);
+    --ma-form-space-bordered-top: var(--ma-space-xl);
 }
 .woocommerce-account.woocommerce-edit-account .ma-form__section--divided {
     border-top: 1px solid var(--ma-form-color-border);
 }
 /* Fashion variant: increase form rhythm for My Info endpoint */
 body.myaccount-template-fashion.woocommerce-account.woocommerce-edit-account .ma-form {
-    --ma-form-space-main-gap: calc(var(--ma-base) * 2.5);
-    --ma-form-space-section-gap: calc(var(--ma-base) * 2.5);
-    --ma-form-space-bordered-top: calc(var(--ma-base) * 2.5);
+    --ma-form-space-main-gap: var(--ma-space-2xl);
+    --ma-form-space-section-gap: var(--ma-space-2xl);
+    --ma-form-space-bordered-top: var(--ma-space-2xl);
 }
 .woocommerce-account .ma-change-password__form {
         width: 100%;

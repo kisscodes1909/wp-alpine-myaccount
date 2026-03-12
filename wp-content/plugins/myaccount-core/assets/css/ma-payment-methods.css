@@ -4,13 +4,13 @@
 .woocommerce-account .payment-methods-page {
         display: flex;
         flex-direction: column;
-        gap: 64px;
+        gap: var(--ma-space-3xl);
 
         /* Same section layout and title-to-body spacing for add and saved */
     }
 .woocommerce-account .payment-methods-page .payment-methods-section__title-icon {
-            width: 20px;
-            height: 20px;
+            width: var(--ma-font-lg);
+            height: var(--ma-font-lg);
         }
 .woocommerce-account .payment-methods-page .payment-methods-section__title {
             display: inline-flex;
@@ -18,7 +18,7 @@
             color: var(--ma-text-primary);
             margin: 0;
             text-transform: uppercase;
-            gap: 12px;
+            gap: var(--ma-space-sm);
             font-size: var(--ma-font-md);
             line-height: var(--ma-line-normal);
             font-weight: 500;
@@ -27,12 +27,12 @@
         .woocommerce-account .payment-methods-page .payment-methods-section--saved {
             display: flex;
             flex-direction: column;
-            gap: 32px;
+            gap: var(--ma-space-xl);
         }
 .woocommerce-account .payment-methods-page .payment-methods-section--saved > .payment-methods-section__title,
         .woocommerce-account .payment-methods-page .payment-methods-section--saved .payment-methods-section__title {
             font-size: var(--ma-font-xl);
-            letter-spacing: 0.07754em;
+            letter-spacing: var(--ma-tracking-widest);
             line-height: var(--ma-line-normal);
             font-weight: 400;
         }
@@ -49,17 +49,17 @@
             border-radius: 0;
             min-height: 0;
             border: 1px solid var(--ma-border);
-            padding: 1.25rem;
+            padding: var(--ma-space-xl);
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
-            gap: 16px;
+            gap: var(--ma-space-md);
         }
 .woocommerce-account .payment-methods-page .payment-methods-item__main {
             display: flex;
             align-items: flex-start;
             min-width: 0;
-            gap: 16px;
+            gap: var(--ma-space-md);
         }
 .woocommerce-account .payment-methods-page .payment-methods-item__brand {
             flex: none;
@@ -72,21 +72,21 @@
             font-weight: 700;
             border: 1px solid var(--ma-border);
             color: var(--ma-text-muted-dark);
-            width: 48px;
-            height: 32px;
+            width: var(--ma-space-4xl);
+            height: var(--ma-space-2xl);
             line-height: var(--ma-line-snug);
         }
 .woocommerce-account .payment-methods-page .payment-methods-item__meta {
             display: flex;
             flex-direction: column;
             min-width: 0;
-            gap: 4px;
+            gap: var(--ma-space-xs);
         }
 .woocommerce-account .payment-methods-page .payment-methods-item__title {
             font-size: var(--ma-font-base);
             font-weight: 500;
             line-height: var(--ma-line-normal);
-            letter-spacing: -0.0195em;
+            letter-spacing: var(--ma-tracking-tight);
             color: var(--ma-text-primary);
         }
 .woocommerce-account .payment-methods-page .payment-methods-item__expiry {
@@ -94,7 +94,7 @@
             font-weight: 400;
             color: var(--ma-text-muted-dark);
             line-height: var(--ma-line-snug);
-            letter-spacing: -0.01074em;
+            letter-spacing: var(--ma-tracking-tight);
         }
 .woocommerce-account .payment-methods-page .payment-methods-item__default-link {
             display: inline-flex;
@@ -108,7 +108,7 @@
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 12px;
+            gap: var(--ma-space-sm);
         }
 .woocommerce-account .payment-methods-page .payment-methods-item__actions a {
                 display: inline-flex;
@@ -118,8 +118,8 @@
                 border: 1px solid transparent;
                 background: transparent;
                 color: var(--ma-text-muted-dark);
-                width: 36px;
-                height: 36px;
+                width: var(--ma-space-2xl);
+                height: var(--ma-space-2xl);
                 transition: border-color var(--ma-duration-fast) var(--ma-easing-smooth), background-color var(--ma-duration-fast) var(--ma-easing-smooth);
             }
 .woocommerce-account .payment-methods-page .payment-methods-item__actions a:hover {
@@ -127,8 +127,8 @@
                     background-color: var(--ma-surface-alt);
                 }
 .woocommerce-account .payment-methods-page .payment-methods-item__delete-icon {
-            width: 18px;
-            height: 18px;
+            width: var(--ma-font-md);
+            height: var(--ma-font-md);
         }
 .woocommerce-account .payment-methods-page .payment-methods-item__default-pill {
             display: inline-flex;
@@ -136,26 +136,26 @@
             border-radius: 9999px;
             background: var(--ma-btn-pill-bg);
             color: var(--ma-btn-pill-text);
-            gap: 6px;
-            padding: 4px 12px;
+            gap: var(--ma-space-sm);
+            padding: var(--ma-space-xs) var(--ma-space-sm);
             line-height: var(--ma-line-snug);
             font-size: var(--ma-font-xs);
-            letter-spacing: 0.05em;
+            letter-spacing: var(--ma-tracking-wider);
             text-transform: uppercase;
         }
 .woocommerce-account .payment-methods-page .payment-methods-item__default-icon {
-            width: 12px;
-            height: 12px;
+            width: var(--ma-font-xs);
+            height: var(--ma-font-xs);
         }
 .woocommerce-account .payment-methods-page .payment-methods-section--add .woocommerce-add-payment-method,
         .woocommerce-account .payment-methods-page .payment-methods-section--add #add_payment_method {
             padding: 0;
         }
 .woocommerce-account .payment-methods-page .payment-methods-section--add .payment-methods-section__body {
-            padding: 24px 20px 1px;
+            padding: var(--ma-space-2xl) var(--ma-space-lg) var(--ma-space-2xs);
         }
 .woocommerce-account .payment-methods-page .payment-methods-section--add .woocommerce-PaymentMethods > li.woocommerce-PaymentMethod {
-            grid-template-columns: 20px 1fr;
+            grid-template-columns: var(--ma-space-lg) 1fr;
             row-gap: 0;
         }
 @media (min-width: 992px) {
@@ -175,7 +175,7 @@
 
             .woocommerce-account .payment-methods-page .payment-methods-item {
                 min-height: 98px;
-                padding: 25px 25px 23px;
+                padding: var(--ma-space-xl) var(--ma-space-xl) var(--ma-space-xl);
             }
         }
 
