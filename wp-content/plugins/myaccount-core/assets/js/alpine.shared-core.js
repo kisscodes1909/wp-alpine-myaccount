@@ -3493,10 +3493,18 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     });
   }
 
+  // assets/src/js/alpine/components/account/navDropdown.js
+  function navDropdown() {
+    return {
+      open: false
+    };
+  }
+
   // assets/src/js/alpine/entries/shared-core.js
   window.Alpine = module_default;
   registerSharedStores();
   registerLoadingDirective();
+  module_default.data("navDropdown", navDropdown);
   window.MyAccountAlpineRuntime = window.MyAccountAlpineRuntime || {};
   window.MyAccountAlpineRuntime.start = () => {
     if (window.MyAccountAlpineRuntime.started) {

@@ -240,7 +240,7 @@ body.woocommerce-account {
             transition: transform var(--ma-duration-fast) var(--ma-easing-smooth);
         }
 
-        &:focus-within {
+        &.is-open {
             .ma-nav-dropdown__trigger-icon {
                 transform: rotate(180deg);
             }
@@ -271,7 +271,7 @@ body.woocommerce-account {
 
             .woocommerce-MyAccount-navigation-link {
                 justify-content: flex-start;
-                padding-inline: var(--ma-space-md);
+                padding-inline: var(--ma-space-sm);
                 height: var(--ma-nav-dropdown-item-height);
             }
         }

@@ -44,13 +44,18 @@ foreach ( wc_get_account_menu_items() as $endpoint => $label ) {
 }
 ?>
 
-<div class="ma-nav-dropdown" data-active-label="<?php echo esc_attr( $active_nav_label ?: __( 'Menu', 'woocommerce' ) ); ?>">
+<div class="ma-nav-dropdown"
+	 x-data="navDropdown"
+	 :class="{ 'is-open': open }"
+	 @click.outside="open = false"
+	 data-active-label="<?php echo esc_attr( $active_nav_label ?: __( 'Menu', 'woocommerce' ) ); ?>">
 	<nav class="woocommerce-MyAccount-navigation <?php echo ( get_option( 'myaccount_layout' ) === 'stacked' ) ? 'ma-fullbleed-band' : ''; ?>" aria-label="<?php esc_attr_e( 'Account pages', 'woocommerce' ); ?>">
 		<div class="ma-nav-dropdown__trigger"
 			 role="button"
 			 tabindex="0"
-			 aria-expanded="false"
+			 :aria-expanded="open"
 			 aria-haspopup="listbox"
+			 @click="open = !open"
 			 aria-label="<?php esc_attr_e( 'Account menu', 'woocommerce' ); ?>">
 			<span class="ma-nav-dropdown__trigger-label"><?php echo esc_html( $active_nav_label ?: __( 'Menu', 'woocommerce' ) ); ?></span>
 			<svg class="ma-nav-dropdown__trigger-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
