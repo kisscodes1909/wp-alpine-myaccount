@@ -85,7 +85,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-page-heading__descriptio
     color: var(--ma-text-muted);
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-orders__empty-text {
+body.myaccount-template-fashion.woocommerce-account .ma-empty-state__title {
     color: var(--ma-text-muted-dark);
 }
 
@@ -121,7 +121,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-address-book .ma-address
     color: var(--ma-btn-danger-text);
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-address-book__empty-title {
+body.myaccount-template-fashion.woocommerce-account .ma-address-book__empty .ma-empty-state__title {
     color: var(--ma-text-primary);
 }
 
@@ -257,7 +257,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
     color: var(--ma-text-muted);
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__btn--danger {
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__actions .ma-btn--danger {
     border-color: var(--ma-btn-danger-border);
     color: var(--ma-btn-danger-text);
 }

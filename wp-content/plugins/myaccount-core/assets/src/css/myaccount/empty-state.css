@@ -1,0 +1,51 @@
+/* -------------------------------------------------------------------------- */
+/* Shared: empty state (ma-empty-state) — Heading + Description + Button      */
+/* -------------------------------------------------------------------------- */
+
+.woocommerce-account {
+    .ma-empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: var(--ma-space-md);
+        padding: var(--ma-space-lg);
+        text-align: center;
+    }
+
+    .ma-empty-state__title {
+        margin: 0;
+        font-size: var(--ma-font-lg);
+        font-weight: 600;
+        line-height: var(--ma-line-normal);
+        color: var(--ma-text-primary);
+    }
+
+    .ma-empty-state__description {
+        margin: 0;
+        max-width: 28rem;
+        font-size: var(--ma-font-base);
+        line-height: var(--ma-line-normal);
+        color: var(--ma-text-muted-dark);
+    }
+
+    .ma-empty-state__actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: var(--ma-space-sm);
+    }
+
+    /* CTA = .ma-btn.ma-btn--primary only; no extra rules — shared .ma-btn style */
+
+    /* Panel: Orders, Payment Methods, Address empty — same surface as address-book */
+    .ma-empty-state--panel {
+        width: 100%;
+        box-sizing: border-box;
+        background: var(--ma-surface);
+        padding: var(--ma-space-lg);
+        border: 1px solid var(--ma-border);
+    }
+
+}

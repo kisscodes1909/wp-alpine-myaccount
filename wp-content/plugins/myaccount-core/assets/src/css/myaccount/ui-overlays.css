@@ -117,13 +117,13 @@ body.ma-popup-scroll-lock {
     }
 }
 
-/* Toast item: shared layout; colors from modifiers */
+/* Toast item: shared layout; colors from modifiers (padding ~20px/28px → token-close) */
 .ma-ui-toast__item {
     --ma-tr-duration: var(--ma-duration-normal);
     position: relative;
-    padding: 1.25rem 1.75rem;
+    padding: var(--ma-space-md) var(--ma-space-lg);
     box-shadow: var(--ma-shadow-lg);
-    border-left: 4px solid transparent;
+    border-left: var(--ma-space-xs) solid transparent;
     pointer-events: auto;
 }
 

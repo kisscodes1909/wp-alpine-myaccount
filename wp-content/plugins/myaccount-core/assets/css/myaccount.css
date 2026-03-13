@@ -353,7 +353,7 @@
         }
 /* -------------------------------------------------------------------------- */
 /* My Account shared buttons (.ma-btn) — token-based, no WooCommerce dependency */
-/* Variants: --primary, --secondary, --secondary-light, --danger, --ghost (icon/close) */
+/* Variants: --primary, --secondary (= secondary-light), --secondary-light, --danger, --ghost, --block */
 /* -------------------------------------------------------------------------- */
 .woocommerce-account .ma-btn {
         -webkit-appearance: none;
@@ -394,6 +394,13 @@
         opacity: 0.5;
         cursor: not-allowed;
     }
+/* Icons inside any .ma-btn (empty state, address, auth, etc.) — one size */
+.woocommerce-account .ma-btn svg {
+        display: block;
+        width: var(--ma-font-base);
+        height: var(--ma-font-base);
+        flex-shrink: 0;
+    }
 .woocommerce-account .ma-btn--primary {
         border-color: var(--ma-btn-primary-border);
         background: var(--ma-btn-primary-bg);
@@ -413,6 +420,26 @@
         border-color: var(--ma-btn-secondary-border-hover);
         background: var(--ma-btn-secondary-bg-hover);
         color: var(--ma-text-primary);
+    }
+/* Alias: same as secondary-light (templates / view-order summary links) */
+.woocommerce-account .ma-btn--secondary {
+        border-color: var(--ma-border);
+        background: var(--ma-surface);
+        color: var(--ma-text-primary);
+    }
+.woocommerce-account .ma-btn--secondary:hover:not(:disabled) {
+        border-color: var(--ma-btn-secondary-border-hover);
+        background: var(--ma-btn-secondary-bg-hover);
+        color: var(--ma-text-primary);
+    }
+/* Full-width stack (e.g. order summary actions) */
+.woocommerce-account .ma-btn--block {
+        width: 100%;
+        box-sizing: border-box;
+        min-height: calc(var(--ma-space-md) * 2.625);
+    }
+.woocommerce-account .ma-btn--block.ma-btn--danger {
+        min-height: calc(var(--ma-space-md) * 2.875);
     }
 .woocommerce-account .ma-btn--danger {
         border-color: var(--ma-btn-danger-border);
@@ -444,6 +471,52 @@
         width: var(--ma-font-base);
         height: var(--ma-font-base);
         flex-shrink: 0;
+    }
+/* -------------------------------------------------------------------------- */
+/* Shared: empty state (ma-empty-state) — Heading + Description + Button      */
+/* -------------------------------------------------------------------------- */
+.woocommerce-account {
+
+    /* CTA = .ma-btn.ma-btn--primary only; no extra rules — shared .ma-btn style */
+
+}
+.woocommerce-account .ma-empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: var(--ma-space-md);
+        padding: var(--ma-space-lg);
+        text-align: center;
+    }
+.woocommerce-account .ma-empty-state__title {
+        margin: 0;
+        font-size: var(--ma-font-lg);
+        font-weight: 600;
+        line-height: var(--ma-line-normal);
+        color: var(--ma-text-primary);
+    }
+.woocommerce-account .ma-empty-state__description {
+        margin: 0;
+        max-width: 28rem;
+        font-size: var(--ma-font-base);
+        line-height: var(--ma-line-normal);
+        color: var(--ma-text-muted-dark);
+    }
+.woocommerce-account .ma-empty-state__actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: var(--ma-space-sm);
+    }
+/* Panel: Orders, Payment Methods, Address empty — same surface as address-book */
+.woocommerce-account .ma-empty-state--panel {
+        width: 100%;
+        box-sizing: border-box;
+        background: var(--ma-surface);
+        padding: var(--ma-space-lg);
+        border: 1px solid var(--ma-border);
     }
 /* -------------------------------------------------------------------------- */
 /* My Account shared UI overlays + Alpine transition classes                  */
@@ -547,13 +620,13 @@ body.ma-popup-scroll-lock {
         max-width: 24rem;
     }
 }
-/* Toast item: shared layout; colors from modifiers */
+/* Toast item: shared layout; colors from modifiers (padding ~20px/28px → token-close) */
 .ma-ui-toast__item {
     --ma-tr-duration: var(--ma-duration-normal);
     position: relative;
-    padding: 1.25rem 1.75rem;
+    padding: var(--ma-space-md) var(--ma-space-lg);
     box-shadow: var(--ma-shadow-lg);
-    border-left: 4px solid transparent;
+    border-left: var(--ma-space-xs) solid transparent;
     pointer-events: auto;
 }
 .ma-ui-toast__item.success {
@@ -1638,10 +1711,11 @@ body {
 /* -------------------------------------------------------------------------- */
 /* My Account endpoint base layer: Order History (ma-orders)                  */
 /* -------------------------------------------------------------------------- */
+/* Root stack gap: --ma-space-md (shared with other endpoints). */
 .woocommerce-account .ma-orders {
         display: flex;
         flex-direction: column;
-        gap: var(--ma-space-xl);
+        gap: var(--ma-space-md);
     }
 /* Order list item: list layout on all viewports (image left, content right). */
 .woocommerce-account .ma-orders__item {
@@ -1850,7 +1924,7 @@ body {
 .woocommerce-account .ma-orders__item-view-link {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: var(--ma-space-xs);
         font-size: var(--ma-font-xs);
         font-weight: 500;
         line-height: var(--ma-line-tight);
@@ -1869,39 +1943,31 @@ body {
         height: var(--ma-font-sm);
     }
 .woocommerce-account .ma-orders__pagination {
-        margin-top: var(--ma-space-2xl);
-        justify-content: center;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--ma-space-md);
+        padding-top: var(--ma-space-lg);
+        border-top: 1px solid var(--ma-border);
+    }
+.woocommerce-account .ma-orders__pagination-caption {
+        margin: 0;
+        font-size: var(--ma-font-xs);
+        font-weight: 400;
+        line-height: var(--ma-line-tight);
+        text-transform: uppercase;
+        letter-spacing: var(--ma-tracking-wider);
+        color: var(--ma-text-muted);
+    }
+.woocommerce-account .ma-orders__pagination-actions {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--ma-space-sm);
     }
 .woocommerce-account .ma-orders__pagination-button {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--ma-space-xs);
-    }
-.woocommerce-account .ma-orders__pagination-icon {
-        width: 1rem;
-        height: 1rem;
-    }
-.woocommerce-account .ma-orders__empty {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: var(--ma-space-lg);
-    }
-.woocommerce-account .ma-orders__empty-text {
-        margin-bottom: var(--ma-space-sm);
-        font-size: var(--ma-font-lg);
-        line-height: var(--ma-line-normal);
-        font-weight: 600;
-    }
-.woocommerce-account .ma-orders__empty-link {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--ma-space-xs);
-    }
-.woocommerce-account .ma-orders__empty-icon {
-        width: 1rem;
-        height: 1rem;
+        text-decoration: none;
     }
 /* -------------------------------------------------------------------------- */
 /* My Account endpoint base layer: View Order                                 */
@@ -2635,60 +2701,18 @@ body {
         color: var(--ma-text-muted);
         letter-spacing: var(--ma-tracking-normal);
     }
-/* Action buttons (Figma: stacked, full-width, gap var(--ma-space-md)) */
+/* Stacked CTAs: layout only — surfaces from .ma-btn / .ma-btn--block (buttons.css) */
 .woocommerce-account .ma-order-details-items-summary__actions {
         display: flex;
         flex-direction: column;
         gap: calc(var(--ma-space-md) * 0.625);
         padding: var(--ma-vo-md-125) var(--ma-space-lg);
     }
-/* Same font-size, line-height, padding for all buttons so height stays in sync */
-.woocommerce-account .ma-order-details-items-summary__btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: var(--ma-vo-md-875);
+.woocommerce-account .ma-order-details-items-summary__action-form {
         width: 100%;
-        min-height: calc(var(--ma-space-md) * 2.625);
-        padding: var(--ma-space-sm) var(--ma-space-lg);
-        font-size: var(--ma-font-xs);
-        line-height: var(--ma-line-tight);
-        font-weight: 400;
-        text-transform: uppercase;
-        letter-spacing: var(--ma-tracking-widest);
-        text-decoration: none;
-        border: calc(var(--ma-space-md) * 0.1) solid var(--ma-btn-secondary-border);
-        background: var(--ma-btn-secondary-bg);
-        color: var(--ma-btn-secondary-text);
-        cursor: pointer;
-        transition: border-color var(--ma-duration-fast) var(--ma-easing-smooth), color var(--ma-duration-fast) var(--ma-easing-smooth);
     }
-/* Override browser/theme defaults on button so text matches anchor buttons (specificity over theme global button) */
-.woocommerce-account .woocommerce-account .ma-order-details-items-summary__actions button.ma-order-details-items-summary__btn {
-        font-size: var(--ma-font-xs);
-        line-height: var(--ma-line-tight);
-        font-weight: 400;
-        font-family: inherit;
-    }
-.woocommerce-account .ma-order-details-items-summary__btn:hover {
-        border-color: var(--ma-btn-secondary-border-hover);
-    }
-.woocommerce-account .ma-order-details-items-summary__btn:disabled {
+.woocommerce-account .ma-order-details-items-summary__actions .ma-btn--danger:disabled {
         opacity: 0.6;
-        cursor: not-allowed;
-    }
-.woocommerce-account .ma-order-details-items-summary__btn--danger {
-        border-color: var(--ma-btn-danger-border);
-        color: var(--ma-btn-danger-text);
-        min-height: calc(var(--ma-space-md) * 2.875);
-    }
-.woocommerce-account .ma-order-details-items-summary__btn--danger:hover:not(:disabled) {
-        border-color: var(--ma-btn-danger-border-hover);
-    }
-.woocommerce-account .ma-order-details-items-summary__btn-icon {
-        width: var(--ma-vo-md-875);
-        height: var(--ma-vo-md-875);
-        flex-shrink: 0;
     }
 /* Shipment status title (in order-details.php) */
 .woocommerce-account .ma-order-details__shipments-title {
@@ -2793,10 +2817,11 @@ body {
 /* -------------------------------------------------------------------------- */
 /* My Account endpoint styles: Payment Methods                                */
 /* -------------------------------------------------------------------------- */
+/* Root stack gap: --ma-space-md (shared with .ma-orders / .ma-address-book). */
 .woocommerce-account .payment-methods-page {
         display: flex;
         flex-direction: column;
-        gap: var(--ma-space-3xl);
+        gap: var(--ma-space-md);
 
         /* Same section layout and title-to-body spacing for add and saved */
     }
@@ -3008,24 +3033,18 @@ body {
 /* -------------------------------------------------------------------------- */
 /* My Account endpoint styles: Address Book                                   */
 /* -------------------------------------------------------------------------- */
-.woocommerce-account {
-
-    /* .ma-address-book__action-button {
-        width: 140px;
-        justify-content: center;
-    } */
-}
+/* Root stack gap: --ma-space-md (shared with .ma-orders, payment-methods-page). */
 .woocommerce-account .ma-address-book {
         display: flex;
         flex-direction: column;
-        gap: var(--ma-space-2xl);
+        gap: var(--ma-space-md);
     }
 .woocommerce-account .ma-address-book__toast {
         position: fixed;
         z-index: 1000;
         top: var(--ma-space-2xl);
         right: var(--ma-space-lg);
-        padding: 0.75rem 1rem;
+        padding: var(--ma-space-sm) var(--ma-space-md);
     }
 .woocommerce-account .ma-address-book__list {
         display: grid;
@@ -3053,14 +3072,13 @@ body {
 .woocommerce-account .ma-address-book__identity {
         min-width: 0;
     }
-.woocommerce-account .ma-address-book__name,
-    .woocommerce-account .ma-address-book__empty-title {
+.woocommerce-account .ma-address-book__name {
         margin: 0;
         font-size: var(--ma-font-lg);
         color: var(--ma-text-primary);
+        line-height: var(--ma-line-relaxed);
+        font-weight: 500;
     }
-.woocommerce-account .ma-address-book__name { line-height: var(--ma-line-relaxed); font-weight: 500; }
-.woocommerce-account .ma-address-book__empty-title { text-align: center; }
 .woocommerce-account .ma-address-book__phone {
         margin-block: 0.5rem 0;
         font-size: var(--ma-font-base);
@@ -3103,10 +3121,14 @@ body {
         flex-wrap: wrap;
         padding-top: var(--ma-space-md);
     }
+/* Empty state: surface via .ma-empty-state--panel inside partial */
 .woocommerce-account .ma-address-book__empty {
-        background: var(--ma-surface);
-        padding: var(--ma-space-md);
+        margin: 0;
     }
+/* .ma-address-book__action-button {
+        width: 140px;
+        justify-content: center;
+    } */
 .woocommerce-account .ma-address-book__footer {
         display: flex;
         flex-direction: column;
@@ -3119,18 +3141,10 @@ body {
         color: var(--ma-danger-text);
         margin-bottom: var(--ma-space-sm);
     }
+/* Layout only; typography/gap match global .ma-btn (buttons.css) */
 .woocommerce-account .ma-address-book__add-button {
         width: 100%;
         max-width: 450px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: var(--ma-space-xs);
-        font-weight: 400;
-    }
-.woocommerce-account .ma-address-book__add-icon {
-        width: 1rem;
-        height: 1rem;
     }
 .woocommerce-account .ma-address-form {
         display: flex;
@@ -3164,12 +3178,6 @@ body {
     }
 .woocommerce-account .ma-address-form__checkbox-label {
         cursor: pointer;
-    }
-.woocommerce-account .ma-address-form__action-button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: var(--ma-space-xs);
     }
 .woocommerce-account .ma-address-form__icon-sm {
         width: 1rem;

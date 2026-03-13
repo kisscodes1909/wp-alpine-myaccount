@@ -1,10 +1,11 @@
 /* -------------------------------------------------------------------------- */
 /* My Account endpoint base layer: Order History (ma-orders)                  */
 /* -------------------------------------------------------------------------- */
+/* Root stack gap: --ma-space-md (shared with other endpoints). */
 .woocommerce-account .ma-orders {
         display: flex;
         flex-direction: column;
-        gap: var(--ma-space-xl);
+        gap: var(--ma-space-md);
     }
 /* Order list item: list layout on all viewports (image left, content right). */
 .woocommerce-account .ma-orders__item {
@@ -213,7 +214,7 @@
 .woocommerce-account .ma-orders__item-view-link {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: var(--ma-space-xs);
         font-size: var(--ma-font-xs);
         font-weight: 500;
         line-height: var(--ma-line-tight);
@@ -232,39 +233,31 @@
         height: var(--ma-font-sm);
     }
 .woocommerce-account .ma-orders__pagination {
-        margin-top: var(--ma-space-2xl);
-        justify-content: center;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--ma-space-md);
+        padding-top: var(--ma-space-lg);
+        border-top: 1px solid var(--ma-border);
+    }
+.woocommerce-account .ma-orders__pagination-caption {
+        margin: 0;
+        font-size: var(--ma-font-xs);
+        font-weight: 400;
+        line-height: var(--ma-line-tight);
+        text-transform: uppercase;
+        letter-spacing: var(--ma-tracking-wider);
+        color: var(--ma-text-muted);
+    }
+.woocommerce-account .ma-orders__pagination-actions {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--ma-space-sm);
     }
 .woocommerce-account .ma-orders__pagination-button {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--ma-space-xs);
-    }
-.woocommerce-account .ma-orders__pagination-icon {
-        width: 1rem;
-        height: 1rem;
-    }
-.woocommerce-account .ma-orders__empty {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: var(--ma-space-lg);
-    }
-.woocommerce-account .ma-orders__empty-text {
-        margin-bottom: var(--ma-space-sm);
-        font-size: var(--ma-font-lg);
-        line-height: var(--ma-line-normal);
-        font-weight: 600;
-    }
-.woocommerce-account .ma-orders__empty-link {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--ma-space-xs);
-    }
-.woocommerce-account .ma-orders__empty-icon {
-        width: 1rem;
-        height: 1rem;
+        text-decoration: none;
     }
 
 /*# sourceMappingURL=ma-orders.css.map */

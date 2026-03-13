@@ -3,10 +3,11 @@
 /* -------------------------------------------------------------------------- */
 
 .woocommerce-account {
+    /* Root stack gap: --ma-space-md (shared with .ma-orders / .ma-address-book). */
     .payment-methods-page {
         display: flex;
         flex-direction: column;
-        gap: var(--ma-space-3xl);
+        gap: var(--ma-space-md);
 
         .payment-methods-section__title-icon {
             width: var(--ma-font-lg);

@@ -1,24 +1,18 @@
 /* -------------------------------------------------------------------------- */
 /* My Account endpoint styles: Address Book                                   */
 /* -------------------------------------------------------------------------- */
-.woocommerce-account {
-
-    /* .ma-address-book__action-button {
-        width: 140px;
-        justify-content: center;
-    } */
-}
+/* Root stack gap: --ma-space-md (shared with .ma-orders, payment-methods-page). */
 .woocommerce-account .ma-address-book {
         display: flex;
         flex-direction: column;
-        gap: var(--ma-space-2xl);
+        gap: var(--ma-space-md);
     }
 .woocommerce-account .ma-address-book__toast {
         position: fixed;
         z-index: 1000;
         top: var(--ma-space-2xl);
         right: var(--ma-space-lg);
-        padding: 0.75rem 1rem;
+        padding: var(--ma-space-sm) var(--ma-space-md);
     }
 .woocommerce-account .ma-address-book__list {
         display: grid;
@@ -46,14 +40,13 @@
 .woocommerce-account .ma-address-book__identity {
         min-width: 0;
     }
-.woocommerce-account .ma-address-book__name,
-    .woocommerce-account .ma-address-book__empty-title {
+.woocommerce-account .ma-address-book__name {
         margin: 0;
         font-size: var(--ma-font-lg);
         color: var(--ma-text-primary);
+        line-height: var(--ma-line-relaxed);
+        font-weight: 500;
     }
-.woocommerce-account .ma-address-book__name { line-height: var(--ma-line-relaxed); font-weight: 500; }
-.woocommerce-account .ma-address-book__empty-title { text-align: center; }
 .woocommerce-account .ma-address-book__phone {
         margin-block: 0.5rem 0;
         font-size: var(--ma-font-base);
@@ -96,10 +89,14 @@
         flex-wrap: wrap;
         padding-top: var(--ma-space-md);
     }
+/* Empty state: surface via .ma-empty-state--panel inside partial */
 .woocommerce-account .ma-address-book__empty {
-        background: var(--ma-surface);
-        padding: var(--ma-space-md);
+        margin: 0;
     }
+/* .ma-address-book__action-button {
+        width: 140px;
+        justify-content: center;
+    } */
 .woocommerce-account .ma-address-book__footer {
         display: flex;
         flex-direction: column;
@@ -112,18 +109,10 @@
         color: var(--ma-danger-text);
         margin-bottom: var(--ma-space-sm);
     }
+/* Layout only; typography/gap match global .ma-btn (buttons.css) */
 .woocommerce-account .ma-address-book__add-button {
         width: 100%;
         max-width: 450px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: var(--ma-space-xs);
-        font-weight: 400;
-    }
-.woocommerce-account .ma-address-book__add-icon {
-        width: 1rem;
-        height: 1rem;
     }
 .woocommerce-account .ma-address-form {
         display: flex;
@@ -157,12 +146,6 @@
     }
 .woocommerce-account .ma-address-form__checkbox-label {
         cursor: pointer;
-    }
-.woocommerce-account .ma-address-form__action-button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: var(--ma-space-xs);
     }
 .woocommerce-account .ma-address-form__icon-sm {
         width: 1rem;

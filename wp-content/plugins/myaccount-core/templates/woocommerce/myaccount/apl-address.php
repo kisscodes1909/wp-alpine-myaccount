@@ -78,10 +78,24 @@ wc_get_template(
     </div>
 
     <div x-show="$store.userAddress.addresses.length === 0" class="ma-address-book__empty">
-        <h3 class="ma-address-book__empty-title">You have not added any addresses yet.</h3>
+		<?php
+		wc_get_template(
+			'myaccount/partials/ma-empty-state.php',
+			array(
+				'title'                => esc_html__( 'You have not added any addresses yet.', 'myaccount-core' ),
+				'description'          => esc_html__( 'Add a shipping or billing address to speed up checkout.', 'myaccount-core' ),
+				'primary_as_button'    => true,
+				'primary_label'        => esc_html__( 'Add Address', 'myaccount-core' ),
+				'primary_icon'         => true,
+				'primary_button_attrs' => '@click="$store.userAddress.startAdd(); $store.popup.openPopup(document.getElementById(\'edit-address\').innerHTML)" :disabled="$store.userAddress.stopAdd"',
+				'modifier_class'       => 'ma-empty-state--panel',
+				'heading_level'        => 'h3',
+			)
+		);
+		?>
     </div>
 
-    <div class="ma-address-book__footer" x-effect="$store.userAddress.checkMaxAddress()">
+    <div class="ma-address-book__footer" x-show="$store.userAddress.addresses.length > 0" x-effect="$store.userAddress.checkMaxAddress()">
         <template x-if="$store.userAddress.stopAdd">
             <div class="ma-address-book__limit-message">*You can only save up to 9 addresses.</div>
         </template>

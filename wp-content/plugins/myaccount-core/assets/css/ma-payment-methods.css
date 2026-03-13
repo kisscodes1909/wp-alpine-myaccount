@@ -1,10 +1,11 @@
 /* -------------------------------------------------------------------------- */
 /* My Account endpoint styles: Payment Methods                                */
 /* -------------------------------------------------------------------------- */
+/* Root stack gap: --ma-space-md (shared with .ma-orders / .ma-address-book). */
 .woocommerce-account .payment-methods-page {
         display: flex;
         flex-direction: column;
-        gap: var(--ma-space-3xl);
+        gap: var(--ma-space-md);
 
         /* Same section layout and title-to-body spacing for add and saved */
     }

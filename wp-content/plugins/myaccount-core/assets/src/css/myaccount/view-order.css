@@ -822,7 +822,7 @@
         letter-spacing: var(--ma-tracking-normal);
     }
 
-    /* Action buttons (Figma: stacked, full-width, gap var(--ma-space-md)) */
+    /* Stacked CTAs: layout only — surfaces from .ma-btn / .ma-btn--block (buttons.css) */
     .ma-order-details-items-summary__actions {
         display: flex;
         flex-direction: column;
@@ -830,59 +830,12 @@
         padding: var(--ma-vo-md-125) var(--ma-space-lg);
     }
 
-    /* Same font-size, line-height, padding for all buttons so height stays in sync */
-    .ma-order-details-items-summary__btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: var(--ma-vo-md-875);
+    .ma-order-details-items-summary__action-form {
         width: 100%;
-        min-height: calc(var(--ma-space-md) * 2.625);
-        padding: var(--ma-space-sm) var(--ma-space-lg);
-        font-size: var(--ma-font-xs);
-        line-height: var(--ma-line-tight);
-        font-weight: 400;
-        text-transform: uppercase;
-        letter-spacing: var(--ma-tracking-widest);
-        text-decoration: none;
-        border: calc(var(--ma-space-md) * 0.1) solid var(--ma-btn-secondary-border);
-        background: var(--ma-btn-secondary-bg);
-        color: var(--ma-btn-secondary-text);
-        cursor: pointer;
-        transition: border-color var(--ma-duration-fast) var(--ma-easing-smooth), color var(--ma-duration-fast) var(--ma-easing-smooth);
     }
 
-    /* Override browser/theme defaults on button so text matches anchor buttons (specificity over theme global button) */
-    .woocommerce-account .ma-order-details-items-summary__actions button.ma-order-details-items-summary__btn {
-        font-size: var(--ma-font-xs);
-        line-height: var(--ma-line-tight);
-        font-weight: 400;
-        font-family: inherit;
-    }
-
-    .ma-order-details-items-summary__btn:hover {
-        border-color: var(--ma-btn-secondary-border-hover);
-    }
-
-    .ma-order-details-items-summary__btn:disabled {
+    .ma-order-details-items-summary__actions .ma-btn--danger:disabled {
         opacity: 0.6;
-        cursor: not-allowed;
-    }
-
-    .ma-order-details-items-summary__btn--danger {
-        border-color: var(--ma-btn-danger-border);
-        color: var(--ma-btn-danger-text);
-        min-height: calc(var(--ma-space-md) * 2.875);
-    }
-
-    .ma-order-details-items-summary__btn--danger:hover:not(:disabled) {
-        border-color: var(--ma-btn-danger-border-hover);
-    }
-
-    .ma-order-details-items-summary__btn-icon {
-        width: var(--ma-vo-md-875);
-        height: var(--ma-vo-md-875);
-        flex-shrink: 0;
     }
 
     /* Shipment status title (in order-details.php) */

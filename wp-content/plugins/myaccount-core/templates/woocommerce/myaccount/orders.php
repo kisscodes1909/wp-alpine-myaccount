@@ -13,9 +13,8 @@ do_action( 'woocommerce_before_account_orders', $has_orders );
 ?>
 <?php wc_get_template( 'myaccount/page-heading.php', array( 'page_heading' => 'Order History', 'page_description' => 'View and track your past orders' ) ); ?>
 
+<div class="ma-orders">
 <?php if ( $has_orders ) : ?>
-
-	<div class="ma-orders">
 		<?php
 		foreach ( $customer_orders->orders as $customer_order ) {
 			$order  = wc_get_order( $customer_order ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
@@ -46,41 +45,57 @@ do_action( 'woocommerce_before_account_orders', $has_orders );
 
 		<?php do_action( 'woocommerce_before_account_orders_pagination' ); ?>
 
-		<?php if ( 1 < $customer_orders->max_num_pages ) : ?>
-			<div class="woocommerce-pagination woocommerce-pagination--without-numbers woocommerce-Pagination ma-orders__pagination">
-				<?php if ( 1 !== $current_page ) : ?>
-					<a class="ma-btn ma-btn--secondary ma-orders__pagination-button" href="<?php echo esc_url( wc_get_endpoint_url( 'orders', $current_page - 1 ) ); ?>">
-						<svg xmlns="http://www.w3.org/2000/svg" class="ma-orders__pagination-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-						</svg>
-						<span><?php esc_html_e( 'Previous', 'woocommerce' ); ?></span>
-					</a>
-				<?php endif; ?>
-
-				<?php if ( intval( $customer_orders->max_num_pages ) !== $current_page ) : ?>
-					<a class="ma-btn ma-btn--secondary ma-orders__pagination-button" href="<?php echo esc_url( wc_get_endpoint_url( 'orders', $current_page + 1 ) ); ?>">
-						<span><?php esc_html_e( 'Next', 'woocommerce' ); ?></span>
-						<svg xmlns="http://www.w3.org/2000/svg" class="ma-orders__pagination-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5L15.75 12l-7.5 7.5" />
-						</svg>
-					</a>
-				<?php endif; ?>
-			</div>
-		<?php endif; ?>
-
-	<?php else : ?>
-
-		<div class="ma-orders__empty">
-			<p class="ma-orders__empty-text">No orders were found</p>
-			<a href="/shop" class="ma-btn ma-btn--primary ma-orders__empty-link">
-				<svg xmlns="http://www.w3.org/2000/svg" class="ma-orders__empty-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-					<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386a1.5 1.5 0 011.415 1.026L5.91 6.75m0 0h12.84m-12.84 0l1.531 8.677A1.5 1.5 0 008.917 16.5h8.666a1.5 1.5 0 001.476-1.073L20.25 9H6.75m2.25 10.5a1.125 1.125 0 11-2.25 0 1.125 1.125 0 012.25 0zm9 0a1.125 1.125 0 11-2.25 0 1.125 1.125 0 012.25 0z" />
-				</svg>
-				<span>Continue Shopping</span>
-			</a>
+		<?php
+		$ma_orders_total     = (int) $customer_orders->total;
+		$ma_orders_max_pages = (int) $customer_orders->max_num_pages;
+		$ma_orders_paginated = $ma_orders_max_pages > 1;
+		if ( $ma_orders_paginated ) {
+			$ma_orders_caption = sprintf(
+				/* translators: 1: current page, 2: total pages, 3: total order count */
+				esc_html__( 'Page %1$d of %2$d · %3$d orders', 'woocommerce' ),
+				$current_page,
+				$ma_orders_max_pages,
+				$ma_orders_total
+			);
+		} else {
+			$ma_orders_caption = sprintf(
+				/* translators: %d: total order count */
+				esc_html__( '%d orders', 'woocommerce' ),
+				$ma_orders_total
+			);
+		}
+		?>
+		<div class="woocommerce-pagination woocommerce-pagination--without-numbers woocommerce-Pagination ma-orders__pagination">
+			<p class="ma-orders__pagination-caption"><?php echo $ma_orders_caption; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped via sprintf/esc_html__ ?></p>
+			<?php if ( $ma_orders_paginated ) : ?>
+				<div class="ma-orders__pagination-actions">
+					<?php if ( 1 !== $current_page ) : ?>
+						<a class="ma-btn ma-btn--secondary-light ma-orders__pagination-button" href="<?php echo esc_url( wc_get_endpoint_url( 'orders', $current_page - 1 ) ); ?>"><?php esc_html_e( 'Previous', 'woocommerce' ); ?></a>
+					<?php endif; ?>
+					<?php if ( $ma_orders_max_pages !== $current_page ) : ?>
+						<a class="ma-btn ma-btn--secondary-light ma-orders__pagination-button" href="<?php echo esc_url( wc_get_endpoint_url( 'orders', $current_page + 1 ) ); ?>"><?php esc_html_e( 'Next', 'woocommerce' ); ?></a>
+					<?php endif; ?>
+				</div>
+			<?php endif; ?>
 		</div>
-	<?php endif; ?>
 
-	</div>
+<?php else : ?>
+
+	<?php
+	wc_get_template(
+		'myaccount/partials/ma-empty-state.php',
+		array(
+			'title'          => esc_html__( 'No order has been made yet.', 'woocommerce' ),
+			'description'    => esc_html__( 'When you place an order, it will appear here so you can track delivery and view details.', 'woocommerce' ),
+			'primary_url'    => esc_url( apply_filters( 'woocommerce_return_to_shop_redirect', wc_get_page_permalink( 'shop' ) ) ),
+			'primary_label'  => esc_html__( 'Browse products', 'woocommerce' ),
+			'primary_icon'   => true,
+			'modifier_class' => 'ma-empty-state--panel',
+		)
+	);
+	?>
+
+<?php endif; ?>
+</div>
 
 <?php do_action( 'woocommerce_after_account_orders', $has_orders ); ?>

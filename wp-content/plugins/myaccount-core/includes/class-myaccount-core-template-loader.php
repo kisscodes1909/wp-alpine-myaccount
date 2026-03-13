@@ -17,6 +17,7 @@ class MyAccount_Core_Template_Loader {
 		'myaccount/form-edit-account.php',
 		'myaccount/payment-methods.php',
 		'myaccount/apl-address.php',
+		'myaccount/partials/ma-empty-state.php',
 		'myaccount/ma-form-edit-address.php',
 		'myaccount/ma-form-edit-change-password.php',
 		'order/order-meta-data.php',

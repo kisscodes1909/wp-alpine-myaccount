@@ -91,6 +91,8 @@ Rules:
 - Prefer tokenized values from `.woocommerce-account` custom properties.
 - Keep endpoint styling aligned to shared tokens for colors, spacing, and type.
 - Avoid arbitrary one-off values unless required by design fidelity.
+- **Endpoint root stack** (main flex column after page heading: notices + sections + list): use `gap: var(--ma-space-md)` so Order History, Address Book, Payment Methods, etc. share the same vertical rhythm. Deviations need a short comment.
+- **Buttons**: All CTAs use [buttons.css](assets/src/css/myaccount/buttons.css) `.ma-btn` + variant (`--primary`, `--secondary` / `--secondary-light`, `--danger`, `--ghost`). Full-width stacks: `.ma-btn--block`. Do not duplicate border/background/hover for the same look in endpoint CSS unless a short Figma-exception comment applies.
 
 ## Build Pipeline
 - CSS is built with PostCSS (import + nesting + autoprefixer).
