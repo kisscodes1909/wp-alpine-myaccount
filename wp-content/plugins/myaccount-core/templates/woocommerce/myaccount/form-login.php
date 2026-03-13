@@ -25,19 +25,17 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 
 <div class="ma-auth-container">
 	<div x-data="{ openTab: 'login' }" class="ma-auth">
-		<?php wc_get_template( 'myaccount/page-heading.php', array( 'page_heading' => __( 'Log In', 'woocommerce' ), 'page_description' => __( 'Sign in or create a new account', 'woocommerce' ) ) ); ?>
-
-		<ul class="ma-auth-tabs" role="tablist">
-		<li>
-			<a role="tab" :class="{ 'ma-auth-tabs__item--active': openTab === 'login' }" @click="openTab = 'login'" class="ma-auth-tabs__item"><?php esc_html_e( 'Log In', 'woocommerce' ); ?></a>
-		</li>
-		<li>
-			<a role="tab" :class="{ 'ma-auth-tabs__item--active': openTab === 'signUp' }" @click="openTab = 'signUp'" class="ma-auth-tabs__item"><?php esc_html_e( 'Sign Up', 'woocommerce' ); ?></a>
-		</li>
-	</ul>
-
 	<div class="ma-auth__content">
 		<div x-show="openTab === 'login'">
+			<div class="ma-auth__login-head">
+				<p class="ma-auth__login-welcome"><?php esc_html_e( 'Welcome back', 'woocommerce' ); ?></p>
+				<h2 class="ma-auth__login-title"><?php esc_html_e( 'Sign In', 'woocommerce' ); ?></h2>
+				<p class="ma-auth__login-signup-line">
+					<?php esc_html_e( "Don't have an account?", 'woocommerce' ); ?>
+					<a href="#" class="ma-auth__login-signup-link" @click.prevent="openTab = 'signUp'"><?php esc_html_e( 'Create one', 'woocommerce' ); ?></a>
+				</p>
+			</div>
+			<?php require __DIR__ . '/partials/auth-social-divider.php'; ?>
 			<form
 				x-data="login"
 				class="woocommerce-form login ma-form"
@@ -63,7 +61,10 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 						</div>
 
 						<div class="ma-form__field" :class="{ 'error': (touched.password && errors.password) }">
-							<label for="login_password" class="ma-form__label"><?php esc_html_e( 'Password', 'woocommerce' ); ?></label>
+							<div class="ma-form__field-header">
+								<label for="login_password" class="ma-form__label"><?php esc_html_e( 'Password', 'woocommerce' ); ?></label>
+								<a class="ma-form__lost-password ma-link-underline" href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php esc_html_e( 'Forgot password?', 'woocommerce' ); ?></a>
+							</div>
 							<div class="ma-form__input-wrap">
 								<span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
 								<input id="login_password" x-model="formData.password" type="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input" autocomplete="username" @keyup="handler.validateField('password')" />
@@ -74,25 +75,23 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 				</div>
 
 				<div class="ma-form__section ma-form__options">
-					<label class="jk-checkbox-wrapper">
+					<label class="ma-form__checkbox">
 						<input x-model="formData.rememberme" type="checkbox" id="keep-signed-in-login">
-						<span class="jk-checkbox"></span>
-						<span class="jk-checkbox-label ma-form__checkbox-stack">
+						<span class="ma-form__checkbox-box"></span>
+						<span class="ma-form__checkbox-label ma-form__checkbox-stack">
 							<span><?php esc_html_e( 'Keep me signed in.', 'woocommerce' ); ?></span>
 							<span class="ma-form__hint"><?php esc_html_e( 'If you are using a public device.', 'woocommerce' ); ?></span>
 						</span>
 					</label>
-					<p class="woocommerce-LostPassword lost_password ma-form__lost-password">
-						<a class="ma-link-underline" href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php esc_html_e( 'Forgot password?', 'woocommerce' ); ?></a>
-					</p>
 				</div>
 
 				<?php do_action( 'woocommerce_login_form' ); ?>
 
 				<div class="ma-form__section">
 					<div class="ma-form-actions">
-						<button type="submit" class="woocommerce-button button" :disabled="isFormSubmitting" :aria-busy="isFormSubmitting" x-loading="isFormSubmitting" data-loading-label="<?php esc_attr_e( 'Signing in...', 'woocommerce' ); ?>">
-							<?php esc_html_e( 'Log in', 'woocommerce' ); ?>
+						<button type="submit" class="ma-btn ma-btn--primary" :disabled="isFormSubmitting" :aria-busy="isFormSubmitting" x-loading="isFormSubmitting" data-loading-label="<?php esc_attr_e( 'Signing in...', 'woocommerce' ); ?>">
+							<span class="ma-btn-content"><?php esc_html_e( 'Sign In', 'woocommerce' ); ?></span>
+							<?php ma_form_icon_arrow_right(); ?>
 						</button>
 					</div>
 				</div>
@@ -102,6 +101,18 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 		</div>
 
 		<div x-show="openTab === 'signUp'">
+			<div class="ma-auth__signup-head">
+				<p class="ma-auth__signup-welcome"><?php esc_html_e( 'Join Maison', 'woocommerce' ); ?></p>
+				<h2 class="ma-auth__signup-title"><?php esc_html_e( 'Create Account', 'woocommerce' ); ?></h2>
+				<p class="ma-auth__signup-login-line">
+					<?php esc_html_e( 'Already a member?', 'woocommerce' ); ?>
+					<a href="#" class="ma-auth__signup-login-link" @click.prevent="openTab = 'login'"><?php esc_html_e( 'Sign in', 'woocommerce' ); ?></a>
+				</p>
+			</div>
+			<?php
+			$auth_social_context = 'signup';
+			require __DIR__ . '/partials/auth-social-divider.php';
+			?>
 			<form
 				@submit.prevent="handleSubmit"
 				x-data="signup"
@@ -115,7 +126,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 				</div>
 
 				<div class="ma-form__section">
-					<div class="ma-form__fields">
+					<div class="ma-form__grid">
 						<div class="ma-form__field" x-validate-field="{message: errors.firstName, touched:touched.firstName}" :class="{ 'error': (touched.firstName && errors.firstName) }">
 							<label for="reg_firstName" class="ma-form__label"><?php esc_html_e( 'First name', 'woocommerce' ); ?></label>
 							<div class="ma-form__input-wrap">
@@ -124,7 +135,6 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 							</div>
 							<span x-validate-error="{message: errors.firstName, touched: touched.firstName}"></span>
 						</div>
-
 						<div class="ma-form__field" x-validate-field="{message: errors.lastName, touched:touched.lastName}" :class="{ 'error': (touched.lastName && errors.lastName) }">
 							<label for="reg_lastName" class="ma-form__label"><?php esc_html_e( 'Last name', 'woocommerce' ); ?></label>
 							<div class="ma-form__input-wrap">
@@ -133,7 +143,8 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 							</div>
 							<span x-validate-error="{message: errors.lastName, touched: touched.lastName}"></span>
 						</div>
-
+					</div>
+					<div class="ma-form__fields">
 						<div class="ma-form__field" x-validate-field="{message: errors.email, touched:touched.email}" :class="{ 'error': (touched.email && errors.email) }">
 							<label for="reg_email" class="ma-form__label"><?php esc_html_e( 'Email address', 'woocommerce' ); ?></label>
 							<div class="ma-form__input-wrap">
@@ -169,21 +180,21 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 				</div>
 
 				<div class="ma-form__section">
-					<label class="jk-checkbox-wrapper">
+					<label class="ma-form__checkbox">
 						<input x-model="formData.receiveOfferNews" type="checkbox" id="receive-offers">
-						<span class="jk-checkbox"></span>
-						<span class="jk-checkbox-label"><?php esc_html_e( 'Receive emails with specialized offers and news.', 'woocommerce' ); ?></span>
+						<span class="ma-form__checkbox-box"></span>
+						<span class="ma-form__checkbox-label"><?php esc_html_e( 'Receive emails with specialized offers and news.', 'woocommerce' ); ?></span>
 					</label>
 
 					<div class="ma-form__field" :class="{ 'error': errors.agreeTOS }">
-						<label class="jk-checkbox-wrapper">
+						<label class="ma-form__checkbox">
 							<input @change="validateField('agreeTOS')" x-model="formData.agreeTOS" type="checkbox" id="agree-tos">
-							<span class="jk-checkbox"></span>
+							<span class="ma-form__checkbox-box"></span>
 							<?php
 							$privacy_page_id = wc_privacy_policy_page_id();
 							$terms_page_id   = wc_terms_and_conditions_page_id();
 							?>
-							<span class="jk-checkbox-label"><?php esc_html_e( 'I agree to the', 'woocommerce' ); ?> <a class="ma-link-underline" target="_blank" rel="noopener noreferrer" href="<?php echo esc_url( get_permalink( $terms_page_id ) ); ?>"><?php esc_html_e( 'Terms of Service', 'woocommerce' ); ?></a> <?php esc_html_e( 'and', 'woocommerce' ); ?> <a class="ma-link-underline" target="_blank" rel="noopener noreferrer" href="<?php echo esc_url( get_permalink( $privacy_page_id ) ); ?>"><?php esc_html_e( 'Privacy Policy.', 'woocommerce' ); ?></a></span>
+							<span class="ma-form__checkbox-label"><?php esc_html_e( 'I agree to the', 'woocommerce' ); ?> <a class="ma-link-underline" target="_blank" rel="noopener noreferrer" href="<?php echo esc_url( get_permalink( $terms_page_id ) ); ?>"><?php esc_html_e( 'Terms of Service', 'woocommerce' ); ?></a> <?php esc_html_e( 'and', 'woocommerce' ); ?> <a class="ma-link-underline" target="_blank" rel="noopener noreferrer" href="<?php echo esc_url( get_permalink( $privacy_page_id ) ); ?>"><?php esc_html_e( 'Privacy Policy.', 'woocommerce' ); ?></a></span>
 						</label>
 						<span x-validate-error="{message: errors.agreeTOS, touched: touched.agreeTOS}"></span>
 					</div>
@@ -191,10 +202,13 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 
 				<?php do_action( 'woocommerce_register_form' ); ?>
 
-				<div class="ma-form-actions">
-					<button type="submit" class="woocommerce-button button" :disabled="isFormSubmitting" :aria-busy="isFormSubmitting" x-loading="isFormSubmitting" data-loading-label="<?php esc_attr_e( 'Creating account...', 'woocommerce' ); ?>">
-						<?php esc_html_e( 'Create Account', 'woocommerce' ); ?>
-					</button>
+				<div class="ma-form__section">
+					<div class="ma-form-actions">
+						<button type="submit" class="ma-btn ma-btn--primary" :disabled="isFormSubmitting" :aria-busy="isFormSubmitting" x-loading="isFormSubmitting" data-loading-label="<?php esc_attr_e( 'Creating account...', 'woocommerce' ); ?>">
+							<span class="ma-btn-content"><?php esc_html_e( 'Create Account', 'woocommerce' ); ?></span>
+							<?php ma_form_icon_arrow_right(); ?>
+						</button>
+					</div>
 				</div>
 
 				<?php do_action( 'woocommerce_register_form_end' ); ?>

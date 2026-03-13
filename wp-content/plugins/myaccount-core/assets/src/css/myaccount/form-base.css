@@ -1,5 +1,6 @@
-
-
+/* -------------------------------------------------------------------------- */
+/* Form base: tokens, layout, inputs, sections, actions (single source)      */
+/* -------------------------------------------------------------------------- */
 
 .woocommerce-account {
     /* Notice icon masks (visual only; size from base.css) */
@@ -9,13 +10,14 @@
     --ma-notice-info-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z'/%3E%3C/svg%3E");
 
     .ma-form {
+        /* Space */
         --ma-form-space-label-bottom: var(--ma-space-sm);
         --ma-form-space-main-gap: var(--ma-space-lg);
-        --ma-form-space-section-gap: var(--ma-space-xl);
+        --ma-form-space-section-gap: var(--ma-space-lg);
         --ma-form-space-section-head-gap: var(--ma-space-sm);
-        --ma-form-space-fields-gap: var(--ma-space-lg);
+        --ma-form-space-fields-gap: var(--ma-space-md);
         --ma-form-space-field-gap: var(--ma-space-sm);
-        --ma-form-space-grid-gap: var(--ma-space-lg);
+        --ma-form-space-grid-gap: var(--ma-space-md);
         --ma-form-space-bordered-top: var(--ma-space-xl);
         --ma-form-space-actions-top: var(--ma-space-xl);
         --ma-form-space-setting-card-gap: var(--ma-space-md);
@@ -32,19 +34,15 @@
         --ma-form-space-input-icon-padding-right: var(--ma-space-2xl);
         --ma-form-space-validate-icon-top: var(--ma-space-sm);
         --ma-form-space-validate-icon-right: var(--ma-space-xs);
-        --ma-form-error-icon-size: var(--ma-font-lg);
-
-        --apl-radio-size: var(--ma-font-lg);
-        --apl-checkbox-size: var(--ma-font-xl);
-        --apl-checkbox-icon-size: var(--ma-font-md);
-
+        /* Size */
+        --ma-form-error-icon-size: var(--ma-font-xs);
+        --ma-form-input-height-md: calc(2 * var(--ma-font-xs) + var(--ma-font-sm) * var(--ma-line-normal));
         --ma-form-font-size-xs: var(--ma-font-xs);
         --ma-form-font-size-sm: var(--ma-font-sm);
         --ma-form-font-size-base: var(--ma-font-base);
         --ma-form-font-size-xl: var(--ma-font-xl);
         --ma-form-line-height-title: var(--ma-line-normal);
-        --ma-form-font-size-checkbox-label: var(--ma-font-xl);
-
+        /* Color */
         --ma-form-color-text: var(--ma-text-primary);
         --ma-form-color-muted: var(--ma-text-muted-dark);
         --ma-form-color-input: var(--ma-text-primary);
@@ -95,7 +93,6 @@
             right: var(--ma-form-space-validate-icon-right);
         }
 
-
         .ma-form__input-wrap {
             position: relative;
         }
@@ -124,39 +121,66 @@
             padding-left: var(--ma-form-space-input-icon-left);
         }
 
+        /* Shared input/textarea base (height vs min-height set below) */
         .input,
         .ma-form__input,
         select,
         textarea {
-            height: 50px;
             border: 1px solid var(--ma-form-color-border);
-            padding-inline: var(--ma-form-space-field-padding-x);
+            border-radius: 0;
+            padding: var(--ma-font-xs) var(--ma-space-md);
             color: var(--ma-form-color-input);
             background-color: var(--ma-form-color-surface);
-            font-size: var(--ma-font-base);
+            font-size: var(--ma-font-sm);
             line-height: var(--ma-line-normal);
-            transition: border-color var(--ma-duration-fast) var(--ma-easing-smooth), box-shadow var(--ma-duration-fast) var(--ma-easing-smooth), background-color var(--ma-duration-fast) var(--ma-easing-smooth);
+            transition: border-color var(--ma-duration-fast) var(--ma-easing-smooth), background-color var(--ma-duration-fast) var(--ma-easing-smooth);
+            box-sizing: border-box;
+        }
+
+        .input,
+        .ma-form__input,
+        select {
+            height: var(--ma-form-input-height-md);
+        }
+
+        textarea {
+            min-height: var(--ma-form-input-height-md);
         }
 
         .ma-form__input:focus,
         select:focus,
         textarea:focus {
-            box-shadow: 0 0 0 1px var(--ma-form-color-focus-ring);
+            outline: none;
+            border-color: var(--ma-text-primary);
         }
 
-        .error {
-            .input,
-            .ma-form__input,
-            select,
-            textarea {
-                border: 1px solid var(--ma-form-color-error);
-            }
+        .ma-form__input:disabled,
+        select:disabled,
+        textarea:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .ma-form__input[readonly],
+        input[readonly],
+        select[readonly],
+        textarea[readonly] {
+            background-color: var(--ma-surface-alt);
+            cursor: default;
+        }
+
+        .error .input,
+        .error .ma-form__input,
+        .error select,
+        .error textarea {
+            border-color: var(--ma-danger-border);
         }
 
         .field-invalid {
-            border: 1px solid var(--ma-form-color-error);
+            border: 1px solid var(--ma-danger-border);
         }
 
+        /* Radio & checkbox base */
         input[type='radio'],
         input[type='checkbox'] {
             -webkit-appearance: none;
@@ -170,33 +194,43 @@
         }
 
         input[type='radio'] {
-            width: var(--apl-radio-size);
-            height: var(--apl-radio-size);
-            min-width: var(--apl-radio-size);
-            min-height: var(--apl-radio-size);
+            border-radius: 50%;
+            width: var(--ma-space-md);
+            height: var(--ma-space-md);
+            min-width: var(--ma-space-md);
+            min-height: var(--ma-space-md);
             cursor: pointer;
+        }
 
-            &:checked {
-                border-color: var(--ma-form-color-text);
-                background: radial-gradient(circle at center, var(--ma-form-color-text) 0 4px, var(--ma-form-color-surface) 4.5px);
-            }
+        input[type='radio']:checked {
+            border-color: var(--ma-text-primary);
+            background: radial-gradient(circle at center, var(--ma-text-primary) 0 calc(var(--ma-space-sm) / 2), var(--ma-form-color-surface) calc(var(--ma-space-sm) / 2 + 0.5px));
+        }
+
+        input[type='radio']:hover {
+            border-color: var(--ma-text-primary);
         }
 
         input[type='checkbox'] {
-            width: var(--apl-checkbox-size);
-            height: var(--apl-checkbox-size);
-            min-width: var(--apl-checkbox-size);
-            min-height: var(--apl-checkbox-size);
+            width: var(--ma-space-md);
+            height: var(--ma-space-md);
+            min-width: var(--ma-space-md);
+            min-height: var(--ma-space-md);
+            border-radius: 0;
             cursor: pointer;
+        }
 
-            &:checked {
-                border-color: var(--ma-form-color-text);
-                background-color: var(--ma-form-color-text);
-                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
-                background-repeat: no-repeat;
-                background-position: center;
-                background-size: var(--apl-checkbox-icon-size) var(--apl-checkbox-icon-size);
-            }
+        input[type='checkbox']:checked {
+            border-color: var(--ma-btn-primary-border);
+            background-color: var(--ma-btn-primary-bg);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: var(--ma-font-xs) var(--ma-font-xs);
+        }
+
+        input[type='checkbox']:hover {
+            border-color: var(--ma-text-primary);
         }
 
         input[type='radio']:focus-visible,
@@ -205,130 +239,264 @@
             outline-offset: 2px;
         }
 
-        label.jk-checkbox {
+        .ma-form__checkbox {
             display: inline-flex;
             align-items: center;
-            gap: var(--ma-space-sm);
+            gap: var(--ma-space-lg);
             cursor: pointer;
         }
 
-        .jk-checkbox-wrapper {
-            display: inline-flex;
-            align-items: center;
-            gap: var(--ma-space-sm);
-            cursor: pointer;
-
-            > input[type='checkbox'] {
-                width: 1px;
-                height: 1px;
-                position: absolute;
-                margin: 0;
-                opacity: 0;
-                overflow: hidden;
-                clip: rect(0 0 0 0);
-                clip-path: inset(50%);
-                white-space: nowrap;
-                pointer-events: none;
-            }
-
-            > .jk-checkbox {
-                width: var(--apl-checkbox-size);
-                height: var(--apl-checkbox-size);
-                min-width: var(--apl-checkbox-size);
-                min-height: var(--apl-checkbox-size);
-                display: inline-block;
-                border: 1px solid var(--ma-form-color-border);
-                background: var(--ma-form-color-surface);
-                flex: none;
-                position: relative;
-                margin-top: 0;
-            }
-
-            > input[type='checkbox']:checked + .jk-checkbox {
-                border-color: var(--ma-form-color-text);
-                background-color: var(--ma-form-color-text);
-            }
-
-            > input[type='checkbox']:checked + .jk-checkbox::after {
-                content: '';
-                position: absolute;
-                left: 50%;
-                top: 50%;
-                width: var(--apl-checkbox-icon-size);
-                height: var(--apl-checkbox-icon-size);
-                transform: translate(-50%, -50%);
-                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
-                background-repeat: no-repeat;
-                background-position: center;
-                background-size: var(--apl-checkbox-icon-size) var(--apl-checkbox-icon-size);
-            }
-
-            > input[type='checkbox']:focus-visible + .jk-checkbox {
-                outline: 2px solid var(--ma-form-color-focus-border);
-                outline-offset: 2px;
-            }
-
-            .jk-checkbox-label {
-                color: var(--ma-form-color-text);
-                font-size: var(--ma-font-base);
-                line-height: var(--ma-line-normal);
-                text-transform: none;
-
-                &::first-letter {
-                    text-transform: uppercase;
-                }
-            }
+        .ma-form__checkbox > input[type='checkbox'] {
+            width: 1px;
+            height: 1px;
+            position: absolute;
+            margin: 0;
+            opacity: 0;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            clip-path: inset(50%);
+            white-space: nowrap;
+            pointer-events: none;
         }
 
-        .button,
-        .woocommerce-button,
-        button[type='submit'],
-        input[type='submit'] {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 50px;
-            border: 1px solid currentColor;
-            font-weight: 500;
-            gap: var(--ma-form-space-button-gap);
-            padding-inline: var(--ma-form-space-button-padding-x);
+        .ma-form__checkbox > .ma-form__checkbox-box {
+            width: var(--ma-space-md);
+            height: var(--ma-space-md);
+            min-width: var(--ma-space-md);
+            min-height: var(--ma-space-md);
+            border-radius: 0;
+            display: inline-block;
+            border: 1px solid var(--ma-form-color-border);
+            background: var(--ma-form-color-surface);
+            flex: none;
+            position: relative;
+            margin-top: 0;
+        }
+
+        .ma-form__checkbox > .ma-form__checkbox-box:hover {
+            border-color: var(--ma-text-primary);
+        }
+
+        .ma-form__checkbox > input[type='checkbox']:checked + .ma-form__checkbox-box {
+            border-color: var(--ma-btn-primary-border);
+            background-color: var(--ma-btn-primary-bg);
+        }
+
+        .ma-form__checkbox > input[type='checkbox']:checked + .ma-form__checkbox-box::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: var(--ma-font-xs);
+            height: var(--ma-font-xs);
+            transform: translate(-50%, -50%);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: var(--ma-font-xs) var(--ma-font-xs);
+        }
+
+        .ma-form__checkbox > input[type='checkbox']:focus-visible + .ma-form__checkbox-box {
+            outline: 2px solid var(--ma-form-color-focus-border);
+            outline-offset: 2px;
+        }
+
+        .ma-form__checkbox .ma-form__checkbox-label {
+            color: var(--ma-text-charcoal);
+            font-size: var(--ma-font-xs);
+            line-height: var(--ma-line-normal);
+            text-transform: uppercase;
+            letter-spacing: var(--ma-tracking-wider);
+        }
+
+        &.loading input,
+        &.loading button,
+        &.loading select,
+        &.loading .ma-btn {
+            pointer-events: none;
+        }
+
+        &.loading .ma-btn {
+            opacity: 0.7;
+        }
+
+        /* Section / field / label / hint / error (BEM under .ma-form) */
+        .ma-form__section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--ma-form-space-section-gap);
+        }
+
+        .ma-form__section--divided {
+            border-top: 1px solid var(--ma-border);
+            padding-top: var(--ma-form-space-bordered-top);
+        }
+
+        .ma-form__section-head {
+            display: flex;
+            flex-direction: column;
+            gap: var(--ma-form-space-section-head-gap);
+        }
+
+        .ma-form__section-title,
+        .ma-form__section-description {
+            margin: 0;
             font-size: var(--ma-form-font-size-base);
-            transition: border-color var(--ma-duration-fast) var(--ma-easing-smooth), box-shadow var(--ma-duration-fast) var(--ma-easing-smooth), background-color var(--ma-duration-fast) var(--ma-easing-smooth), color var(--ma-duration-fast) var(--ma-easing-smooth);
+        }
+        .ma-form__section-title {
+            text-transform: uppercase;
+            letter-spacing: var(--ma-tracking-wider);
+            line-height: var(--ma-form-line-height-title);
+            color: var(--ma-text-primary);
+        }
+        .ma-form__section-description { color: var(--ma-form-color-muted); }
 
-            &:hover {
-                filter: brightness(1.08);
-            }
+        .ma-form__grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--ma-form-space-grid-gap);
+        }
 
-            &:focus-visible {
-                outline: 2px solid currentColor;
-                outline-offset: 2px;
-            }
-
-            &[disabled] {
-                opacity: 0.5;
-                cursor: not-allowed;
-            }
-
-            &.light {
-                &:hover {
-                    filter: brightness(0.97);
-                }
+        @media (min-width: 768px) {
+            .ma-form__grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
             }
         }
 
-        &.loading {
-            input,
-            button,
-            select {
-                pointer-events: none;
-            }
+        .ma-form__fields {
+            display: flex;
+            flex-direction: column;
+            gap: var(--ma-form-space-fields-gap);
+        }
 
-            button {
-                opacity: 0.7;
-            }
+        .ma-form__field {
+            display: flex;
+            flex-direction: column;
+            gap: var(--ma-form-space-field-gap);
+        }
+
+        .ma-form__label,
+        .ma-form__hint {
+            font-size: var(--ma-font-xs);
+            line-height: var(--ma-line-normal);
+            color: var(--ma-form-color-muted);
+        }
+        .ma-form__label {
+            display: block;
+            margin: 0 0 var(--ma-form-space-field-gap) 0;
+            letter-spacing: var(--ma-tracking-wider);
+        }
+        .ma-form__hint { margin: var(--ma-form-space-field-gap) 0 0 0; }
+
+        .ma-form__input--capitalize {
+            text-transform: capitalize;
+        }
+
+        .ma-form__error {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--ma-form-space-error-gap);
+            margin-top: var(--ma-form-space-field-gap);
+            font-size: var(--ma-font-xs);
+            line-height: var(--ma-line-normal);
+            color: var(--ma-form-color-error);
+        }
+
+        .ma-form__error-icon {
+            width: var(--ma-form-error-icon-size);
+            height: var(--ma-form-error-icon-size);
+            flex: none;
+        }
+
+        .ma-form__error-text {
+            display: inline-block;
+        }
+
+        .ma-form__settings {
+            display: flex;
+            flex-direction: column;
+            gap: var(--ma-form-space-fields-gap);
+        }
+
+        .ma-form__setting-card {
+            min-height: 94px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid var(--ma-form-color-border);
+            padding-inline: var(--ma-form-space-setting-card-padding-x);
+            padding-block: var(--ma-form-space-setting-card-padding-y);
+            gap: var(--ma-form-space-setting-card-gap);
+        }
+
+        .ma-form__setting-meta {
+            display: flex;
+            flex-direction: column;
+            gap: var(--ma-form-space-setting-meta-gap);
+        }
+
+        .ma-form__setting-label,
+        .ma-form__setting-value {
+            margin: 0;
+            font-size: var(--ma-font-base);
+            line-height: var(--ma-line-normal);
+        }
+        .ma-form__setting-label {
+            text-transform: uppercase;
+            letter-spacing: var(--ma-tracking-wider);
+            color: var(--ma-form-color-text);
+        }
+        .ma-form__setting-value { color: var(--ma-form-color-muted); }
+
+        .ma-form__setting-action {
+            background: transparent;
+            border: 0;
+            text-transform: uppercase;
+            letter-spacing: var(--ma-tracking-wider);
+            text-decoration: underline;
+            white-space: nowrap;
+            font-size: var(--ma-font-base);
+            line-height: var(--ma-line-normal);
+            color: var(--ma-form-color-text);
+        }
+
+        .ma-form__status-pill {
+            display: inline-flex;
+            text-transform: uppercase;
+            letter-spacing: var(--ma-tracking-wider);
+            font-size: var(--ma-font-base);
+            line-height: var(--ma-line-normal);
+            padding-inline: var(--ma-form-space-status-pill-padding-x);
+            padding-block: var(--ma-form-space-status-pill-padding-y);
+        }
+
+        .ma-form__actions {
+            border-top: 1px solid var(--ma-border);
+            padding-top: var(--ma-form-space-actions-top);
+        }
+
+        .ma-form__checkbox-stack {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ma-form__checkbox-label .ma-form__hint {
+            text-transform: none;
+        }
+
+        .ma-link-underline {
+            text-decoration: underline;
         }
     }
+}
+
+/* Form + form-actions: full-width layout for non-ghost .ma-btn */
+.ma-form .ma-btn:not(.ma-btn--ghost),
+.ma-form-actions > .ma-btn:not(.ma-btn--ghost) {
+    width: 100%;
+    height: 50px;
+    gap: var(--ma-form-space-button-gap, var(--ma-space-sm));
+    padding-inline: var(--ma-form-space-button-padding-x, var(--ma-space-md));
 }
 
 .ma-form-actions {
@@ -336,237 +504,16 @@
     flex-direction: column;
     gap: var(--ma-form-space-fields-gap, var(--ma-space-lg));
     padding-top: var(--ma-form-space-actions-top, var(--ma-space-xl));
-
-    > .button,
-    > button[type='button'],
-    > button[type='submit'],
-    > input[type='submit'],
-    > a.button {
-        width: 100%;
-        height: 50px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid currentColor;
-        font-weight: 500;
-        gap: var(--ma-form-space-button-gap, var(--ma-space-sm));
-        padding-inline: var(--ma-form-space-button-padding-x, var(--ma-space-md));
-        font-size: var(--ma-form-font-size-base);
-        transition: border-color var(--ma-duration-fast) var(--ma-easing-smooth), box-shadow var(--ma-duration-fast) var(--ma-easing-smooth), background-color var(--ma-duration-fast) var(--ma-easing-smooth), color var(--ma-duration-fast) var(--ma-easing-smooth);
-
-        &:hover {
-            filter: brightness(1.08);
-        }
-
-        &.light {
-            &:hover {
-                filter: brightness(0.97);
-            }
-        }
-    }
 }
 
 .ma-form-actions.ma-form-actions--two {
     @media (min-width: 768px) {
         flex-direction: row;
     }
-
-    > .button,
-    > button,
-    > a.button {
-        @media (min-width: 768px) {
-            flex: 1;
-        }
-    }
 }
 
-.woocommerce-account {
-    .ma-form__section {
-        display: flex;
-        flex-direction: column;
-        gap: var(--ma-form-space-section-gap);
-    }
-
-    .ma-form__section--divided {
-        border-top: 1px solid var(--ma-border);
-        padding-top: var(--ma-form-space-bordered-top);
-    }
-
-    .ma-form__section-head {
-        display: flex;
-        flex-direction: column;
-        gap: var(--ma-form-space-section-head-gap);
-    }
-
-    .ma-form__section-title {
-        margin: 0;
-        text-transform: uppercase;
-        letter-spacing: var(--ma-tracking-wider);
-        font-size: var(--ma-form-font-size-base);
-        line-height: var(--ma-form-line-height-title);
-        color: var(--ma-text-primary);
-    }
-
-    .ma-form__section-description {
-        margin: 0;
-        font-size: var(--ma-form-font-size-base);
-        color: var(--ma-form-color-muted);
-    }
-
-    .ma-form__grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: var(--ma-form-space-grid-gap);
-    }
-
+.ma-form-actions.ma-form-actions--two > .ma-btn:not(.ma-btn--ghost) {
     @media (min-width: 768px) {
-        .ma-form__grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-    }
-
-    .ma-form__fields {
-        display: flex;
-        flex-direction: column;
-        gap: var(--ma-form-space-fields-gap);
-    }
-
-    .ma-form__field {
-        display: flex;
-        flex-direction: column;
-        gap: var(--ma-form-space-field-gap);
-    }
-
-    .ma-form__label {
-        display: block;
-        margin: 0;
-        letter-spacing: var(--ma-tracking-wider);
-        font-size: var(--ma-font-base);
-        line-height: var(--ma-line-normal);
-        color: var(--ma-form-color-muted);
-    }
-
-    .ma-form__input {
-        height: 50px;
-        border: 1px solid var(--ma-form-color-border);
-        background-color: var(--ma-form-color-surface);
-        color: var(--ma-form-color-text);
-        padding-inline: var(--ma-form-space-field-padding-x);
-        font-size: var(--ma-font-base);
-        line-height: var(--ma-line-normal);
-    }
-
-    .ma-form__input--capitalize {
-        text-transform: capitalize;
-    }
-
-    .ma-form__hint {
-        margin: 0;
-        font-size: var(--ma-font-sm);
-        line-height: var(--ma-line-normal);
-        color: var(--ma-form-color-muted);
-    }
-
-    .ma-form__error {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--ma-form-space-error-gap);
-        font-size: var(--ma-form-font-size-base);
-        line-height: var(--ma-line-normal);
-        color: var(--ma-form-color-error);
-    }
-
-    .ma-form__error-icon {
-        width: var(--ma-form-error-icon-size);
-        height: var(--ma-form-error-icon-size);
-        flex: none;
-    }
-
-    .ma-form__error-text {
-        display: inline-block;
-    }
-
-    .ma-form__settings {
-        display: flex;
-        flex-direction: column;
-        gap: var(--ma-form-space-fields-gap);
-    }
-
-    .ma-form__setting-card {
-        min-height: 94px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border: 1px solid var(--ma-form-color-border);
-        padding-inline: var(--ma-form-space-setting-card-padding-x);
-        padding-block: var(--ma-form-space-setting-card-padding-y);
-        gap: var(--ma-form-space-setting-card-gap);
-    }
-
-    .ma-form__setting-meta {
-        display: flex;
-        flex-direction: column;
-        gap: var(--ma-form-space-setting-meta-gap);
-    }
-
-    .ma-form__setting-label {
-        margin: 0;
-        text-transform: uppercase;
-        letter-spacing: var(--ma-tracking-wider);
-        font-size: var(--ma-font-base);
-        line-height: var(--ma-line-normal);
-        color: var(--ma-form-color-text);
-    }
-
-    .ma-form__setting-value {
-        margin: 0;
-        font-size: var(--ma-font-base);
-        line-height: var(--ma-line-normal);
-        color: var(--ma-form-color-muted);
-    }
-
-    .ma-form__setting-action {
-        background: transparent;
-        border: 0;
-        text-transform: uppercase;
-        letter-spacing: var(--ma-tracking-wider);
-        text-decoration: underline;
-        white-space: nowrap;
-        font-size: var(--ma-font-base);
-        line-height: var(--ma-line-normal);
-        color: var(--ma-form-color-text);
-    }
-
-    .ma-form__status-pill {
-        display: inline-flex;
-        text-transform: uppercase;
-        letter-spacing: var(--ma-tracking-wider);
-        font-size: var(--ma-font-base);
-        line-height: var(--ma-line-normal);
-        padding-inline: var(--ma-form-space-status-pill-padding-x);
-        padding-block: var(--ma-form-space-status-pill-padding-y);
-    }
-
-    .ma-form__actions {
-        border-top: 1px solid var(--ma-border);
-        padding-top: var(--ma-form-space-actions-top);
+        flex: 1;
     }
 }
-
-.woocommerce-account {
-    .ma-form__checkbox-stack {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .ma-link-underline {
-        text-decoration: underline;
-    }
-}
-
-
-/* auth-shell styles: moved to auth-shell.css */
-/* notices styles: moved to notices.css */
-/* login-register auth styles: moved to login-register.css */
-/* lost-password endpoint styles: moved to lost-password.css */
-/* reset-password endpoint styles: moved to reset-password.css */

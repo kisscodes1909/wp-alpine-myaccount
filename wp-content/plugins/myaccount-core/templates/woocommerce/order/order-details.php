@@ -95,7 +95,7 @@ if ( ! empty( $shipments ) ) {
 				<?php wp_nonce_field( 'cancel_order_action_nonce', 'cancel_order_nonce' ); ?>
 				<input type="hidden" value="<?php echo esc_attr( $order->get_id() ); ?>" name="order_id" />
 				<div class="ma-order-legacy__action-row">
-					<button class="button slim ma-order-legacy__action-button" type="submit" <?php echo $request_order_cancellation ? 'disabled' : ''; ?>><?php esc_html_e( 'Cancel Order', 'woocommerce' ); ?></button>
+					<button class="ma-btn ma-btn--danger ma-order-legacy__action-button" type="submit" <?php echo $request_order_cancellation ? 'disabled' : ''; ?>><?php esc_html_e( 'Cancel Order', 'woocommerce' ); ?></button>
 					<?php if ( $request_order_cancellation ) : ?>
 						<span><?php esc_html_e( 'Your cancelation request has been submitted.', 'woocommerce' ); ?></span>
 					<?php endif; ?>
@@ -106,7 +106,7 @@ if ( ! empty( $shipments ) ) {
 
 	<?php if ( false && $order->get_status() === 'shipped' ) : // Temporarily hide Return Order button. ?>
 		<div class="ma-order-legacy__section ma-order-legacy__section--center">
-			<a href="<?php echo esc_url( wc_get_endpoint_url( 'return-order', $order->get_id() ) ); ?>" class="button slim ma-order-legacy__action-button ma-order-legacy__action-button--narrow"><?php esc_html_e( 'Return Order', 'woocommerce' ); ?></a>
+			<a href="<?php echo esc_url( wc_get_endpoint_url( 'return-order', $order->get_id() ) ); ?>" class="ma-btn ma-btn--secondary ma-order-legacy__action-button"><?php esc_html_e( 'Return Order', 'woocommerce' ); ?></a>
 		</div>
 	<?php endif; ?>
 </div>

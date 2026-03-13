@@ -49,7 +49,7 @@ do_action( 'woocommerce_before_account_orders', $has_orders );
 		<?php if ( 1 < $customer_orders->max_num_pages ) : ?>
 			<div class="woocommerce-pagination woocommerce-pagination--without-numbers woocommerce-Pagination ma-orders__pagination">
 				<?php if ( 1 !== $current_page ) : ?>
-					<a class="slim woocommerce-button woocommerce-button--previous woocommerce-Button woocommerce-Button--previous button<?php echo esc_attr( $wp_button_class ); ?> ma-orders__pagination-button" href="<?php echo esc_url( wc_get_endpoint_url( 'orders', $current_page - 1 ) ); ?>">
+					<a class="ma-btn ma-btn--secondary ma-orders__pagination-button" href="<?php echo esc_url( wc_get_endpoint_url( 'orders', $current_page - 1 ) ); ?>">
 						<svg xmlns="http://www.w3.org/2000/svg" class="ma-orders__pagination-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
 						</svg>
@@ -58,7 +58,7 @@ do_action( 'woocommerce_before_account_orders', $has_orders );
 				<?php endif; ?>
 
 				<?php if ( intval( $customer_orders->max_num_pages ) !== $current_page ) : ?>
-					<a class="slim woocommerce-button woocommerce-button--next woocommerce-Button button<?php echo esc_attr( $wp_button_class ); ?> ma-orders__pagination-button" href="<?php echo esc_url( wc_get_endpoint_url( 'orders', $current_page + 1 ) ); ?>">
+					<a class="ma-btn ma-btn--secondary ma-orders__pagination-button" href="<?php echo esc_url( wc_get_endpoint_url( 'orders', $current_page + 1 ) ); ?>">
 						<span><?php esc_html_e( 'Next', 'woocommerce' ); ?></span>
 						<svg xmlns="http://www.w3.org/2000/svg" class="ma-orders__pagination-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5L15.75 12l-7.5 7.5" />
@@ -72,7 +72,7 @@ do_action( 'woocommerce_before_account_orders', $has_orders );
 
 		<div class="ma-orders__empty">
 			<p class="ma-orders__empty-text">No orders were found</p>
-			<a href="/shop" class="button slim ma-orders__empty-link">
+			<a href="/shop" class="ma-btn ma-btn--primary ma-orders__empty-link">
 				<svg xmlns="http://www.w3.org/2000/svg" class="ma-orders__empty-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
 					<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386a1.5 1.5 0 011.415 1.026L5.91 6.75m0 0h12.84m-12.84 0l1.531 8.677A1.5 1.5 0 008.917 16.5h8.666a1.5 1.5 0 001.476-1.073L20.25 9H6.75m2.25 10.5a1.125 1.125 0 11-2.25 0 1.125 1.125 0 012.25 0zm9 0a1.125 1.125 0 11-2.25 0 1.125 1.125 0 012.25 0z" />
 				</svg>

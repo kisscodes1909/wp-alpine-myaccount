@@ -2,6 +2,17 @@
 /* My Account shared auth shell styles                                        */
 /* -------------------------------------------------------------------------- */
 
+/* Login/signup: no border-radius (sharp corners, override theme) */
+.woocommerce-account .ma-auth-container,
+.woocommerce-account .ma-auth,
+.woocommerce-account .ma-auth .ma-form,
+.woocommerce-account .ma-auth input:not([type='radio']),
+.woocommerce-account .ma-auth button,
+.woocommerce-account .ma-auth select,
+.woocommerce-account .ma-auth textarea {
+    border-radius: 0;
+}
+
 /* Auth container - wraps login/signup/lost/reset forms */
 .woocommerce-account .ma-auth-container {
     width: 100%;

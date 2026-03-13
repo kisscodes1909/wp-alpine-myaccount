@@ -142,7 +142,7 @@ wc_get_template( 'myaccount/page-heading.php', array( 'page_heading' => 'My Info
     <div class="ma-form-actions ma-form__actions">
         <button
                 type="submit"
-                class="button"
+                class="ma-btn ma-btn--primary"
                 :disabled="!allowSubmit || isFormSubmitting"
                 :aria-busy="isFormSubmitting"
                 x-loading="isFormSubmitting"

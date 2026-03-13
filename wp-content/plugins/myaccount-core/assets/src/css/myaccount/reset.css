@@ -22,17 +22,18 @@
         margin: 0;
     }
 
-    /* 3. Form */
+    /* 3. Form – sharp corners per FORM-GUIDE (no border-radius on inputs) */
     fieldset {
         margin: 0;
         padding: 0;
         border: 0;
     }
 
-    input,
+    input:not([type='radio']),
     button,
     select,
     textarea {
         margin: 0;
+        border-radius: 0;
     }
 }

@@ -1,0 +1,108 @@
+/* -------------------------------------------------------------------------- */
+/* My Account shared buttons (.ma-btn) — token-based, no WooCommerce dependency */
+/* Variants: --primary, --secondary, --secondary-light, --danger, --ghost (icon/close) */
+/* -------------------------------------------------------------------------- */
+
+.woocommerce-account {
+    .ma-btn {
+        appearance: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--ma-space-sm);
+        padding: var(--ma-space-sm) var(--ma-space-md);
+        font-family: inherit;
+        font-size: var(--ma-font-xs);
+        font-weight: 500;
+        line-height: var(--ma-line-tight);
+        text-transform: uppercase;
+        letter-spacing: var(--ma-tracking-wider);
+        text-decoration: none;
+        border: 1px solid var(--ma-btn-secondary-border);
+        background: var(--ma-btn-secondary-bg);
+        color: var(--ma-btn-secondary-text);
+        cursor: pointer;
+        border-radius: 0;
+        transition: border-color var(--ma-duration-fast) var(--ma-easing-smooth),
+            background-color var(--ma-duration-fast) var(--ma-easing-smooth),
+            color var(--ma-duration-fast) var(--ma-easing-smooth);
+    }
+
+    .ma-btn:hover {
+        border-color: var(--ma-btn-secondary-border-hover);
+        background: var(--ma-btn-secondary-bg-hover);
+        color: var(--ma-btn-secondary-text);
+    }
+
+    .ma-btn:focus-visible {
+        outline: 2px solid var(--ma-text-primary);
+        outline-offset: 2px;
+    }
+
+    .ma-btn:disabled,
+    .ma-btn[disabled] {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .ma-btn--primary {
+        border-color: var(--ma-btn-primary-border);
+        background: var(--ma-btn-primary-bg);
+        color: var(--ma-btn-primary-text);
+    }
+
+    .ma-btn--primary:hover:not(:disabled) {
+        background: var(--ma-btn-primary-bg-hover);
+        border-color: var(--ma-btn-primary-border);
+        color: var(--ma-btn-primary-text);
+    }
+
+    .ma-btn--secondary-light {
+        border-color: var(--ma-border);
+        background: var(--ma-surface);
+        color: var(--ma-text-primary);
+    }
+
+    .ma-btn--secondary-light:hover:not(:disabled) {
+        border-color: var(--ma-btn-secondary-border-hover);
+        background: var(--ma-btn-secondary-bg-hover);
+        color: var(--ma-text-primary);
+    }
+
+    .ma-btn--danger {
+        border-color: var(--ma-btn-danger-border);
+        background: var(--ma-btn-danger-bg);
+        color: var(--ma-btn-danger-text);
+    }
+
+    .ma-btn--danger:hover:not(:disabled) {
+        border-color: var(--ma-btn-danger-border-hover);
+        background: var(--ma-btn-danger-bg-hover);
+        color: var(--ma-btn-danger-text);
+    }
+
+    /* Ghost: bare icon button (e.g. modal close), no border/bg */
+    .ma-btn--ghost {
+        border-color: transparent;
+        background: transparent;
+        color: var(--ma-text-muted);
+        padding: var(--ma-space-xs);
+    }
+
+    .ma-btn--ghost:hover:not(:disabled) {
+        color: var(--ma-text-primary);
+    }
+
+    .ma-btn--ghost svg {
+        display: block;
+        width: 1rem;
+        height: 1rem;
+    }
+
+    /* Icon inside primary/CTA buttons (e.g. arrow in Sign In / Create Account) */
+    .ma-btn .ma-form__input-icon-svg {
+        width: var(--ma-font-base);
+        height: var(--ma-font-base);
+        flex-shrink: 0;
+    }
+}

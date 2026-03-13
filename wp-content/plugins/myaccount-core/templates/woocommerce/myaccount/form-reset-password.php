@@ -33,9 +33,9 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 
 <!--        <p>--><?php //echo apply_filters( 'woocommerce_reset_password_message', esc_html__( 'Enter a new password below.', 'woocommerce' ) ); ?><!--</p>--><?php //// @codingStandardsIgnoreLine ?>
 
-        <div class="ma-reset-password__section">
-            <div class="ma-reset-password__field" :class="{'error': (touched.password && errors.password)}">
-                <label for="reg_password"><?php esc_html_e('New Password', 'woocommerce'); ?></label>
+        <div class="ma-form__section ma-reset-password__section">
+            <div class="ma-form__field ma-reset-password__field" :class="{'error': (touched.password && errors.password)}">
+                <label for="reg_password" class="ma-form__label"><?php esc_html_e('New Password', 'woocommerce'); ?></label>
                 <div class="ma-form__input-wrap">
                     <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
                     <input x-model="formData.password" minlength="8" type="password"
@@ -78,7 +78,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 
         <div class="ma-form-actions">
             <input type="hidden" name="wc_reset_password" value="true" />
-            <button type="submit" class="woocommerce-Button button<?php echo esc_attr( wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); ?>" value="<?php esc_attr_e( 'Save', 'woocommerce' ); ?>"><?php esc_html_e( 'Save', 'woocommerce' ); ?></button>
+            <button type="submit" class="ma-btn ma-btn--primary" value="<?php esc_attr_e( 'Save', 'woocommerce' ); ?>"><?php esc_html_e( 'Save', 'woocommerce' ); ?></button>
         </div>
 
         <?php wp_nonce_field( 'reset_password', 'woocommerce-reset-password-nonce' ); ?>

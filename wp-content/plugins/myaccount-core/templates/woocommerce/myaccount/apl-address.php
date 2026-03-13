@@ -52,7 +52,7 @@ wc_get_template(
                         $store.userAddress.startEdit(address.id);
                         $store.popup.openPopup(document.getElementById('edit-address').innerHTML);
                         "
-                            class="button light slim ma-address-book__action-button">
+                            class="ma-btn ma-btn--secondary-light ma-address-book__action-button">
                         Edit
                     </button>
                     <button x-show="!address.default || $store.userAddress.isActionLoading('set-default', address.id)"
@@ -61,7 +61,7 @@ wc_get_template(
                             :disabled="$store.userAddress.isActionLoading('set-default', address.id)"
                             x-loading="$store.userAddress.isActionLoading('set-default', address.id)"
                             data-loading-label="Saving..."
-                            class="button light slim ma-address-book__action-button">
+                            class="ma-btn ma-btn--secondary-light ma-address-book__action-button">
                         Set Default
                     </button>
                     <button type="button"
@@ -69,7 +69,7 @@ wc_get_template(
                             :disabled="$store.userAddress.isActionLoading('delete', address.id)"
                             x-loading="$store.userAddress.isActionLoading('delete', address.id)"
                             data-loading-label="Deleting..."
-                            class="button light slim ma-address-book__action-button ma-address-book__action-button--danger">
+                            class="ma-btn ma-btn--danger ma-address-book__action-button">
                         Delete
                     </button>
                 </div>
@@ -90,7 +90,7 @@ wc_get_template(
                 $store.userAddress.startAdd()
                 $store.popup.openPopup(document.getElementById('edit-address').innerHTML)"
                 :disabled="$store.userAddress.stopAdd"
-                class="button slim ma-address-book__add-button">
+                class="ma-btn ma-btn--primary ma-address-book__add-button">
             <svg xmlns="http://www.w3.org/2000/svg" class="ma-address-book__add-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>

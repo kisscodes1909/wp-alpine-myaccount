@@ -244,7 +244,8 @@
     --ma-opacity-90: 0.9;
     --ma-opacity-100: 1;
 
-    /* Shared full-bleed utility for My Account bands inside constrained containers. */
+    /* Shared full-bleed utility for My Account bands inside constrained containers.
+       Uses 100vw centered so the band never extends past the viewport (no layout stretch/overflow). */
     .ma-fullbleed-band {
         position: relative;
         isolation: isolate;
@@ -252,12 +253,16 @@
         --ma-fullbleed-border-top: 0;
         --ma-fullbleed-border-bottom: 0;
 
+        /* Full-bleed: 100vw wide, centered via left 50% + negative margin so band spans viewport without overflow */
         &::before {
             content: "";
             position: absolute;
             z-index: -1;
-            inset-block: 0;
-            inset-inline: -100vmax;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 100vw;
+            margin-left: -50vw;
             background: var(--ma-fullbleed-bg, transparent);
             border-top: var(--ma-fullbleed-border-top, 0);
             border-bottom: var(--ma-fullbleed-border-bottom, 0);

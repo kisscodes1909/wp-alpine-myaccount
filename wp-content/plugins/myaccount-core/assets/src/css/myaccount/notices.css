@@ -98,6 +98,7 @@
     list-style: none;
 }
 
+/* Common ::before for inline notices (message, info, warning, success); error uses separate rule (absolute). */
 .woocommerce-account .woocommerce-message::before,
 .woocommerce-account .woocommerce-info::before,
 .woocommerce-account .woocommerce-warning::before,

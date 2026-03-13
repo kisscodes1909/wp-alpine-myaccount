@@ -13,7 +13,7 @@ $action_icons = array(
 if ( ! empty( $actions ) ) {
 	foreach ( $actions as $key => $action ) { // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$icon = isset( $action_icons[ $key ] ) ? $action_icons[ $key ] : '<svg xmlns="http://www.w3.org/2000/svg" class="ma-order-action__icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>';
-		echo '<a href="' . esc_url( $action['url'] ) . '" class="ma-order-action__button woocommerce-button slim ' . esc_attr( trim( $wp_button_class ) ) . ' button ' . sanitize_html_class( $key ) . '">' . $icon . '<span>' . esc_html( $action['name'] ) . '</span></a>';
+		echo '<a href="' . esc_url( $action['url'] ) . '" class="ma-btn ma-btn--secondary ma-order-action__button ' . sanitize_html_class( $key ) . '">' . $icon . '<span>' . esc_html( $action['name'] ) . '</span></a>';
 	}
 }
 ?>

@@ -2,98 +2,192 @@
 /* My Account endpoint styles: Login & Register                               */
 /* -------------------------------------------------------------------------- */
 
-/* Auth tabs (login/signup) - fashion structure */
-.woocommerce-account .ma-auth-tabs {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    justify-content: center;
-    margin: 0;
-    gap: var(--ma-space-lg);
-    margin-bottom: var(--ma-form-space-section-gap);
-}
-
-.woocommerce-account .ma-auth-tabs__item {
-    display: inline-block;
-    padding: var(--ma-space-sm) var(--ma-space-md);
-    cursor: pointer;
-    background: transparent;
-    border-bottom: 2px solid transparent;
-    font-size: var(--ma-form-font-size-base);
-    color: var(--ma-form-color-muted);
-    transition: color var(--ma-duration-fast) var(--ma-easing-smooth), border-color var(--ma-duration-fast) var(--ma-easing-smooth);
-}
-
-.woocommerce-account .ma-auth-tabs__item:hover {
-    color: var(--ma-form-color-text);
-}
-
-.woocommerce-account .ma-auth-tabs__item--active {
-    font-weight: 600;
-    color: var(--ma-form-color-text);
-    border-color: var(--ma-form-color-text);
-}
-
-@media (min-width: 768px) {
-    .woocommerce-account .ma-auth-tabs__item {
-        font-size: var(--ma-form-font-size-xl);
+.woocommerce-account {
+    /* Auth view header (login + signup) – tokens only */
+    .ma-auth__login-head,
+    .ma-auth__signup-head {
+        display: flex;
+        flex-direction: column;
+        gap: var(--ma-space-sm);
+        margin-bottom: var(--ma-form-space-section-gap);
     }
-}
 
-.woocommerce-account .ma-form__lost-password {
-    margin: 0;
-}
+    .ma-auth__login-welcome,
+    .ma-auth__signup-welcome {
+        margin: 0;
+        font-size: var(--ma-font-xs);
+        line-height: var(--ma-line-normal);
+        color: var(--ma-text-muted);
+        text-transform: uppercase;
+        letter-spacing: var(--ma-tracking-wider);
+    }
 
-/* Options row: Keep me signed in (left) + Forgot password (right) */
-.woocommerce-account .ma-form__options {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: var(--ma-space-sm);
-}
+    .ma-auth__login-title,
+    .ma-auth__signup-title {
+        margin: 0;
+        font-size: var(--ma-font-3xl);
+        line-height: var(--ma-line-tight);
+        color: var(--ma-text-primary);
+    }
 
-.woocommerce-account .ma-form__password-requirements {
-    display: grid;
-    grid-template-columns: 1fr;
-    list-style: none;
-    gap: var(--ma-space-xs);
-    padding: 0;
-    margin: 0;
-    margin-top: var(--ma-space-xs);
-}
+    .ma-auth__login-signup-line,
+    .ma-auth__signup-login-line {
+        margin: 0;
+        font-size: var(--ma-font-sm);
+        line-height: var(--ma-line-normal);
+        color: var(--ma-text-muted-dark);
+    }
 
-@media (min-width: 768px) {
-    .woocommerce-account .ma-form__password-requirements {
+    .ma-auth__login-signup-link,
+    .ma-auth__signup-login-link {
+        color: var(--ma-text-primary);
+        text-decoration: underline;
+    }
+
+    /* Social + divider */
+    .ma-auth__social {
+        display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--ma-space-md);
+        margin-bottom: var(--ma-form-space-section-gap);
+
+        .ma-auth__social-icon {
+            display: block;
+            flex-shrink: 0;
+            width: var(--ma-font-base);
+            height: var(--ma-font-base);
+        }
     }
-}
 
-.woocommerce-account .ma-form__password-requirement {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: var(--ma-space-sm);
-}
+    .ma-auth__divider {
+        display: flex;
+        align-items: center;
+        gap: var(--ma-space-md);
+        margin-bottom: var(--ma-form-space-section-gap);
 
-.woocommerce-account .ma-form__password-requirement-icon {
-    flex: none;
-    width: var(--ma-space-xl);
-    height: var(--ma-space-xl);
-}
+        .ma-auth__divider-line {
+            flex: 1;
+            height: 1px;
+            background: var(--ma-border);
+        }
 
-.woocommerce-account .ma-form__password-requirement-icon--pass {
-    color: var(--ma-success-text);
-}
+        .ma-auth__divider-text {
+            font-size: var(--ma-font-xs);
+            line-height: var(--ma-line-normal);
+            color: var(--ma-text-muted);
+            text-transform: uppercase;
+            letter-spacing: var(--ma-tracking-wider);
+        }
+    }
 
-.woocommerce-account .ma-form__password-requirement-icon--fail {
-    color: var(--ma-danger-text);
-}
+    /* Auth form: password field header, checkbox, options */
+    .ma-auth .ma-form {
+        .ma-form__field-header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--ma-space-sm);
+            margin-bottom: var(--ma-form-space-field-gap);
 
-.woocommerce-account .ma-form__password-requirement-text--pass {
-    color: var(--ma-success-text);
-}
+            .ma-form__label {
+                margin: 0;
+            }
 
-.woocommerce-account .ma-form__password-requirement-text--fail {
-    color: var(--ma-danger-text);
+            .ma-form__lost-password {
+                font-size: var(--ma-font-xs);
+                line-height: var(--ma-line-normal);
+                color: var(--ma-text-muted-dark);
+            }
+        }
+
+        .ma-form__checkbox {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--ma-space-lg);
+            cursor: pointer;
+
+            > .ma-form__checkbox-box {
+                width: var(--ma-space-md);
+                height: var(--ma-space-md);
+                min-width: var(--ma-space-md);
+                min-height: var(--ma-space-md);
+                border: 1px solid var(--ma-form-color-border);
+                background: var(--ma-form-color-surface);
+            }
+
+            > .ma-form__checkbox-box:hover {
+                border-color: var(--ma-text-primary);
+            }
+
+            > input[type='checkbox']:checked + .ma-form__checkbox-box {
+                border-color: var(--ma-btn-primary-border);
+                background-color: var(--ma-btn-primary-bg);
+            }
+
+            .ma-form__checkbox-label {
+                color: var(--ma-text-charcoal);
+                font-size: var(--ma-font-xs);
+                line-height: var(--ma-line-normal);
+                text-transform: uppercase;
+                letter-spacing: var(--ma-tracking-wider);
+            }
+        }
+
+        .ma-form__options {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: flex-start;
+            gap: var(--ma-space-sm);
+        }
+    }
+
+    .ma-form__lost-password {
+        margin: 0;
+    }
+
+    /* Password requirements (register form) */
+    .ma-form__password-requirements {
+        display: grid;
+        grid-template-columns: 1fr;
+        list-style: none;
+        gap: var(--ma-space-xs);
+        padding: 0;
+        margin: 0;
+        margin-top: var(--ma-space-xs);
+
+        @media (min-width: 768px) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    .ma-form__password-requirement {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: var(--ma-space-sm);
+    }
+
+    .ma-form__password-requirement-icon {
+        flex: none;
+        width: var(--ma-space-xl);
+        height: var(--ma-space-xl);
+    }
+
+    .ma-form__password-requirement-icon--pass {
+        color: var(--ma-success-text);
+    }
+
+    .ma-form__password-requirement-icon--fail {
+        color: var(--ma-danger-text);
+    }
+
+    .ma-form__password-requirement-text--pass {
+        color: var(--ma-success-text);
+    }
+
+    .ma-form__password-requirement-text--fail {
+        color: var(--ma-danger-text);
+    }
 }

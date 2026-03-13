@@ -39,9 +39,10 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 
     <!--	<p>--><?php //echo apply_filters( 'woocommerce_lost_password_message', esc_html__( 'Lost your password? Please enter your username or email address. You will receive a link to create a new password via email.', 'woocommerce' ) ); ?><!--</p>--><?php //// @codingStandardsIgnoreLine ?>
 
-        <div class="ma-lost-password__field" x-validate-field="{message: errors.email, touched:touched.email}">
-            <label for="reg_email"><?php esc_html_e('Email address', 'woocommerce'); ?></label>
-            <div class="ma-form__input-wrap">
+        <div class="ma-form__section">
+            <div class="ma-form__field ma-lost-password__field" x-validate-field="{message: errors.email, touched:touched.email}">
+                <label for="reg_email" class="ma-form__label"><?php esc_html_e('Email address', 'woocommerce'); ?></label>
+                <div class="ma-form__input-wrap">
                 <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_envelope(); ?></span>
                 <input id="reg_email" x-model="formData.email"
                        type="text" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input"
@@ -49,11 +50,11 @@ require_once __DIR__ . '/partials/form-field-icons.php';
                        @blur="handler.validateField('email')"
                        name="user_login"
                 />
+                </div>
+                <span x-validate-error="{message: errors.email, touched:touched.email}"></span>
             </div>
-            <span x-validate-error="{message: errors.email, touched:touched.email}"></span>
+            <div class="clear"></div>
         </div>
-
-        <div class="clear"></div>
 
         <?php do_action( 'woocommerce_lostpassword_form' ); ?>
 
@@ -61,8 +62,8 @@ require_once __DIR__ . '/partials/form-field-icons.php';
             <input type="hidden" name="wc_reset_password" value="true" />
             <button
                     :disabled="(Object.values(errors).length > 0  && Object.values(touched).length > 0) || Object.values(touched).length == 0 "
-                    type="submit" class="woocommerce-Button button<?php echo esc_attr( wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); ?>" value="<?php esc_attr_e( 'Reset password', 'woocommerce' ); ?>"><?php esc_html_e( 'Reset password', 'woocommerce' ); ?></button>
-            <a href="<?php echo home_url('/') ?>" class="button light">Go Back</a>
+                    type="submit" class="ma-btn ma-btn--primary" value="<?php esc_attr_e( 'Reset password', 'woocommerce' ); ?>"><?php esc_html_e( 'Reset password', 'woocommerce' ); ?></button>
+            <a href="<?php echo home_url('/') ?>" class="ma-btn ma-btn--secondary">Go Back</a>
         </div>
 
         <?php wp_nonce_field( 'lost_password', 'woocommerce-lost-password-nonce' ); ?>

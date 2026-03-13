@@ -46,18 +46,19 @@
 .woocommerce-account .ma-address-book__identity {
         min-width: 0;
     }
-.woocommerce-account .ma-address-book__name {
+.woocommerce-account .ma-address-book__name,
+    .woocommerce-account .ma-address-book__empty-title {
         margin: 0;
         font-size: var(--ma-font-lg);
-        line-height: var(--ma-line-relaxed);
-        font-weight: 500;
         color: var(--ma-text-primary);
     }
+.woocommerce-account .ma-address-book__name { line-height: var(--ma-line-relaxed); font-weight: 500; }
+.woocommerce-account .ma-address-book__empty-title { text-align: center; }
 .woocommerce-account .ma-address-book__phone {
+        margin-block: 0.5rem 0;
         font-size: var(--ma-font-base);
         line-height: var(--ma-line-normal);
         color: var(--ma-text-muted-dark);
-        margin-block: 0.5rem 0;
     }
 .woocommerce-account .ma-address-book__default-pill {
         display: inline-flex;
@@ -99,12 +100,6 @@
         background: var(--ma-surface);
         padding: var(--ma-space-md);
     }
-.woocommerce-account .ma-address-book__empty-title {
-        margin: 0;
-        font-size: var(--ma-font-lg);
-        text-align: center;
-        color: var(--ma-text-primary);
-    }
 .woocommerce-account .ma-address-book__footer {
         display: flex;
         flex-direction: column;
@@ -133,18 +128,18 @@
 .woocommerce-account .ma-address-form {
         display: flex;
         flex-direction: column;
-        gap: var(--ma-space-sm);
+        gap: var(--ma-form-space-fields-gap);
     }
 .woocommerce-account .ma-address-form__header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: var(--ma-space-xl);
+        margin-bottom: var(--ma-form-space-section-gap);
     }
 .woocommerce-account .ma-address-form__grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: var(--ma-space-sm);
+        gap: var(--ma-form-space-fields-gap);
     }
 @media (min-width: 768px) {
         .woocommerce-account .ma-address-form__grid--two {
