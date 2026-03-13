@@ -43,6 +43,10 @@ const buildTargets = [
     output: 'assets/css/ma-auth.css',
   },
   {
+    input: 'assets/src/css/myaccount-navigation-entry.css',
+    output: 'assets/css/ma-navigation.css',
+  },
+  {
     input: 'assets/src/css/structure-file.css',
     output: 'assets/css/myaccount.css',
   },

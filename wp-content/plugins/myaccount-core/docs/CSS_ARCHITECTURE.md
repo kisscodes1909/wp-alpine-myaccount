@@ -7,14 +7,16 @@ Related:
 - JS architecture and developer coding rules: `docs/JS_ARCHITECTURE.md`
 
 ## Layering
-- Shared layer: global tokens, utilities, and cross-endpoint primitives.
-- Endpoint layer: endpoint-specific blocks and elements.
+- **Shared** ([myaccount-shared.css](assets/src/css/myaccount-shared.css)): reset, base, buttons, empty-state, ui-overlays, layout, notices + small utilities. **Không** gồm `form-base`, `navigation`, `auth-shell` (từng bundle endpoint).
+- **Logged-in nav**: [ma-navigation.css](assets/css/ma-navigation.css) — chỉ `navigation.css`; enqueue khi `is_user_logged_in()` (sau shared).
+- **Endpoint**: mỗi file `myaccount-endpoint-*.css` import thêm `form-base` và/hoặc `auth-shell` nếu cần.
+- Fallback: [structure-file.css](assets/src/css/structure-file.css) → `myaccount.css` (một lần form-base + nav + auth-shell + mọi endpoint).
 
-Entry file:
+Entry file (fallback):
 - `assets/src/css/structure-file.css`
 
-Current output:
-- Single bundle: `assets/css/myaccount.css`
+Output:
+- Split: `ma-shared.css`, `ma-navigation.css`, `ma-{endpoint}.css`; legacy: `myaccount.css`
 
 ## Naming Contract
 - Endpoint file naming: `{endpoint}.css`

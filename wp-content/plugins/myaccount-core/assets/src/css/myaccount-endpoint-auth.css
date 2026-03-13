@@ -1,3 +1,5 @@
+@import "./myaccount/auth-shell.css";
+@import "./myaccount/form-base.css";
 @import "./myaccount/login-register.css";
 @import "./myaccount/lost-password.css";
 @import "./myaccount/reset-password.css";

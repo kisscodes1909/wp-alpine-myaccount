@@ -3,11 +3,9 @@
 @import "./myaccount/buttons.css";
 @import "./myaccount/empty-state.css";
 @import "./myaccount/ui-overlays.css";
-@import "./myaccount/navigation.css";
 @import "./myaccount/layout.css";
-@import "./myaccount/form-base.css";
-@import "./myaccount/auth-shell.css";
 @import "./myaccount/notices.css";
+/* form-base, navigation, auth-shell: endpoint bundles or ma-navigation (logged-in). */
 /* @import "./myaccount/fashion.css"; */
 
 body {
@@ -19,10 +17,6 @@ body {
     color: var(--ma-text-muted-dark);
 }
 
-/*
- * Bordered surface shell — shared by .ma-u-surface-panel and .ma-u-panel-sm.
- * Compose with BEM for padding/layout; do not repeat border/background on callers.
- */
 .woocommerce-account .ma-u-surface-panel,
 .woocommerce-account .ma-u-panel-sm {
     box-sizing: border-box;
@@ -34,13 +28,11 @@ body {
     width: 100%;
 }
 
-/* Compact panel: shell + dense type (meta/settings). Not for order/address list rows. */
 .woocommerce-account .ma-u-panel-sm {
     font-size: var(--ma-font-sm);
     line-height: var(--ma-line-normal);
 }
 
-/* Section headings: My Info, Payment Methods, View order (font-md + tracking-wider). */
 .woocommerce-account .ma-u-section-title {
     margin: 0;
     font-size: var(--ma-font-md);
@@ -63,10 +55,9 @@ body {
     margin: 0;
     font-size: var(--ma-font-sm);
     line-height: var(--ma-line-normal);
-    color: var(--ma-form-color-muted);
+    color: var(--ma-text-muted-dark);
 }
 
-/* Minimal shared utility styles used by My Account Alpine components. */
 [x-cloak] {
     display: none;
 }

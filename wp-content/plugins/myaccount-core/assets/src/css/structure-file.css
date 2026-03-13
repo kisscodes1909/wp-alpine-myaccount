@@ -1,8 +1,13 @@
-/* Legacy aggregate bundle (fallback) */
+/* Legacy aggregate fallback: single copy of form-base, navigation, auth-shell */
 @import "./myaccount-shared.css";
-@import "./myaccount-endpoint-orders.css";
-@import "./myaccount-endpoint-view-order.css";
-@import "./myaccount-endpoint-payment-methods.css";
-@import "./myaccount-endpoint-edit-account.css";
-@import "./myaccount-endpoint-address.css";
-@import "./myaccount-endpoint-auth.css";
+@import "./myaccount/form-base.css";
+@import "./myaccount/navigation.css";
+@import "./myaccount/auth-shell.css";
+@import "./myaccount/order-history.css";
+@import "./myaccount/view-order.css";
+@import "./myaccount/payment-methods.css";
+@import "./myaccount/edit-account.css";
+@import "./myaccount/address-book.css";
+@import "./myaccount/login-register.css";
+@import "./myaccount/lost-password.css";
+@import "./myaccount/reset-password.css";

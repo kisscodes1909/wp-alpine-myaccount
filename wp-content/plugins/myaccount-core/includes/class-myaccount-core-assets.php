@@ -37,6 +37,15 @@ class MyAccount_Core_Assets {
 			$this->asset_path( 'assets/css/ma-shared.css' )
 		);
 
+		$nav_deps = $shared_loaded ? array( 'myaccount-core-css-shared' ) : array();
+		if ( is_user_logged_in() ) {
+			$this->enqueue_style_if_exists(
+				'myaccount-core-css-navigation',
+				$this->asset_path( 'assets/css/ma-navigation.css' ),
+				$nav_deps
+			);
+		}
+
 		$endpoint_file   = $this->resolve_endpoint_css_file( $endpoint );
 		$endpoint_loaded = false;
 		$endpoint_deps   = $shared_loaded ? array( 'myaccount-core-css-shared' ) : array();
