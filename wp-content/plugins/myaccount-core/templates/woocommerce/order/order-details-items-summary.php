@@ -18,7 +18,7 @@ $billing     = $order->get_address( 'billing' );
 	<div class="ma-order-details-items-summary__grid">
 		<div class="ma-order-details-items-summary__main">
 			<div class="ma-order-details-items-summary__items">
-				<h2 class="ma-order-details-items-summary__items-title">
+				<h2 class="ma-order-details-items-summary__items-title ma-u-section-title ma-u-section-title--mb-lg">
 					<?php
 					/* translators: %d: number of items */
 					echo esc_html( sprintf( __( 'Items · %d', 'woocommerce' ), $item_count ) );
@@ -44,7 +44,7 @@ $billing     = $order->get_address( 'billing' );
 			</div>
 
 			<div class="ma-order-details-items-summary__shipping">
-				<h2 class="ma-order-details-items-summary__shipping-title"><?php esc_html_e( 'Shipping Address', 'woocommerce' ); ?></h2>
+				<h2 class="ma-order-details-items-summary__shipping-title ma-u-section-title ma-u-section-title--mb-md"><?php esc_html_e( 'Shipping Address', 'woocommerce' ); ?></h2>
 				<div class="ma-order-details-items-summary__shipping-inner">
 					<div class="ma-order-details-items-summary__shipping-deliver">
 						<p class="ma-order-details-items-summary__shipping-label"><?php esc_html_e( 'Deliver To', 'woocommerce' ); ?></p>

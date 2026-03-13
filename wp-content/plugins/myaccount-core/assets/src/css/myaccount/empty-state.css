@@ -38,14 +38,6 @@
     }
 
     /* CTA = .ma-btn.ma-btn--primary only; no extra rules — shared .ma-btn style */
-
-    /* Panel: Orders, Payment Methods, Address empty — same surface as address-book */
-    .ma-empty-state--panel {
-        width: 100%;
-        box-sizing: border-box;
-        background: var(--ma-surface);
-        padding: var(--ma-space-lg);
-        border: 1px solid var(--ma-border);
-    }
+    /* Panel shell: .ma-u-surface-panel.ma-u-surface-panel--full on root (orders, payments, address empty) */
 
 }

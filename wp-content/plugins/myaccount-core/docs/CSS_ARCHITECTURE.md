@@ -25,7 +25,7 @@ Current output:
 Examples:
 - `.ma-orders__item-status--success`
 - `.ma-view-order__updates-title`
-- `.ma-u-flex-col`
+- `.ma-u-section-title`, `.ma-u-muted`
 
 ## Mobile-first Contract
 - Base styles are for mobile.
@@ -77,9 +77,9 @@ Reference: `assets/src/css/myaccount/navigation.css` (full nested structure).
 Utilities are for repeated generic patterns only.
 
 Allowed:
-- Layout helpers: flex direction, alignment, distribution.
-- Spacing helpers: common gap/section spacing.
-- Lightweight helpers: muted text, common display helpers.
+- Lightweight helpers only when used in templates (e.g. `.ma-u-muted`). Prefer endpoint BEM + tokens for layout instead of a flex/gap utility matrix.
+- **Surface shell**: `.ma-u-surface-panel` (+ optional `.ma-u-surface-panel--full`) — `background` + `border` + `box-sizing`; pair with endpoint BEM for padding/flex. **Compact shell**: `.ma-u-panel-sm` — same border/surface + `font-size: var(--ma-font-sm)` for dense meta only (not order/address list rows).
+- **Section heading**: `.ma-u-section-title` — `font-size: var(--ma-font-md)`, uppercase, `letter-spacing: var(--ma-tracking-wider)`, `font-weight: 500`. Modifiers: `--mb-lg`, `--mb-md`. **Section blurb**: `.ma-u-section-description` — muted, `font-size: var(--ma-font-sm)`. Use on My Info, Payment Methods, View order section headings; avoid duplicating the same typography in endpoint CSS.
 
 Rules:
 - Promote to utility only when a pattern repeats >= 3 times.

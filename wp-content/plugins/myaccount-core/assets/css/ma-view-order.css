@@ -403,14 +403,6 @@
             grid-column: span 4;
         }
     }
-.woocommerce-account .ma-order-details-items-summary__items-title {
-        margin-bottom: var(--ma-space-lg);
-        font-size: var(--ma-font-md);
-        line-height: var(--ma-line-normal);
-        color: var(--ma-text-primary);
-        text-transform: uppercase;
-        letter-spacing: var(--ma-tracking-widest);
-    }
 /* Order details items: list layout on all viewports (mobile-first) */
 .woocommerce-account .ma-order-details-items-summary__items-list {
         display: flex;
@@ -418,6 +410,7 @@
         gap: var(--ma-space-md);
         min-width: 0;
     }
+/* Items/shipping headings: .ma-u-section-title + --mb-lg / --mb-md */
 .woocommerce-account .ma-order-details-items-summary__item {
         display: flex;
         flex-direction: row;
@@ -518,14 +511,6 @@
         margin-top: calc(var(--ma-space-md) * 2.25);
         padding-top: calc(var(--ma-space-md) * 2.25);
         border-top: 1px solid var(--ma-border-divider);
-    }
-.woocommerce-account .ma-order-details-items-summary__shipping-title {
-        margin-bottom: var(--ma-space-md);
-        font-size: var(--ma-font-md);
-        line-height: var(--ma-line-normal);
-        color: var(--ma-text-primary);
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
     }
 .woocommerce-account .ma-order-details-items-summary__shipping-inner {
         display: grid;

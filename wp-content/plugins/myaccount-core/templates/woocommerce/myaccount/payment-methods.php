@@ -36,7 +36,7 @@ wp_enqueue_script( 'wc-add-payment-method' );
 
 <div class="payment-methods-page ma-payment-methods">
     <section id="ma-payment-methods-add" class="payment-methods-section payment-methods-section--add">
-        <h2 class="payment-methods-section__title">
+        <h2 class="payment-methods-section__title ma-u-section-title">
             <svg xmlns="http://www.w3.org/2000/svg" class="payment-methods-section__title-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M3.75 6h16.5A1.5 1.5 0 0 1 21.75 7.5v9A1.5 1.5 0 0 1 20.25 18H3.75a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 3.75 6Z" />
             </svg>
@@ -56,13 +56,13 @@ wp_enqueue_script( 'wc-add-payment-method' );
     <?php remove_filter( 'woocommerce_available_payment_gateways', $filter_add_payment_gateways, 999 ); ?>
 
     <section class="payment-methods-section payment-methods-section--saved">
-        <h2 class="payment-methods-section__title"><?php esc_html_e( 'Saved Payment Methods', 'woocommerce' ); ?></h2>
+        <h2 class="payment-methods-section__title ma-u-section-title"><?php esc_html_e( 'Saved Payment Methods', 'woocommerce' ); ?></h2>
         <div class="payment-methods-section__body">
             <?php if ( $has_methods ) : ?>
                 <div class="payment-methods-list">
                     <?php foreach ( $saved_methods as $type => $methods ) : // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited ?>
                         <?php foreach ( $methods as $method ) : ?>
-                            <article class="payment-methods-item">
+                            <article class="payment-methods-item ma-u-surface-panel">
                                 <div class="payment-methods-item__main">
                                     <div class="payment-methods-item__brand" aria-hidden="true">
                                         <?php
@@ -136,7 +136,7 @@ wp_enqueue_script( 'wc-add-payment-method' );
 						'primary_label'  => esc_html__( 'Add payment method', 'woocommerce' ),
 						'primary_icon'   => false,
 						'heading_level'  => 'h3',
-						'modifier_class' => 'ma-empty-state--panel',
+						'modifier_class' => 'ma-u-surface-panel ma-u-surface-panel--full',
 					)
 				);
 				?>

@@ -151,11 +151,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
 
 /* Section 3: Items list – Figma card and typography (min font-size calc(var(--ma-base) * 1.2)) */
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__items-title {
-    font-size: var(--ma-font-md);
     line-height: var(--ma-line-snug);
-    color: var(--ma-text-primary);
-    text-transform: uppercase;
-    letter-spacing: var(--ma-tracking-widest);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item {

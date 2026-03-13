@@ -31,10 +31,8 @@
     }
 
     .ma-address-book__card {
-        background: var(--ma-surface);
         display: flex;
         flex-direction: column;
-        border: 1px solid var(--ma-border);
         padding: var(--ma-space-xl) var(--ma-space-xl) var(--ma-space-lg) var(--ma-space-xl);
     }
 
@@ -109,7 +107,7 @@
         justify-content: center;
     } */
 
-    /* Empty state: surface via .ma-empty-state--panel inside partial */
+    /* Empty state: .ma-u-surface-panel--full on partial root */
     .ma-address-book__empty {
         margin: 0;
     }

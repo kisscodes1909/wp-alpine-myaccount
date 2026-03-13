@@ -14,42 +14,56 @@ body {
     color: #4d4d4d;
 }
 
-/* Shared utility layer (layout/spacing/helpers only) */
-.ma-u-flex {
-    display: flex;
-}
-
-.ma-u-flex-col {
-    display: flex;
-    flex-direction: column;
-}
-
-.ma-u-items-center {
-    align-items: center;
-}
-
-.ma-u-justify-between {
-    justify-content: space-between;
-}
-
-.ma-u-gap-sm {
-    gap: var(--ma-space-sm);
-}
-
-.ma-u-gap-md {
-    gap: var(--ma-space-md);
-}
-
-.ma-u-gap-lg {
-    gap: var(--ma-space-lg);
-}
-
-.ma-u-section-space {
-    padding-block: var(--ma-space-xl);
-}
-
+/* Shared utilities (only classes used in templates; avoid unused flex/gap matrix). */
 .ma-u-muted {
     color: var(--ma-text-muted-dark);
+}
+
+/*
+ * Bordered surface shell — shared by .ma-u-surface-panel and .ma-u-panel-sm.
+ * Compose with BEM for padding/layout; do not repeat border/background on callers.
+ */
+.woocommerce-account .ma-u-surface-panel,
+.woocommerce-account .ma-u-panel-sm {
+    box-sizing: border-box;
+    background: var(--ma-surface);
+    border: 1px solid var(--ma-border);
+}
+
+.woocommerce-account .ma-u-surface-panel--full {
+    width: 100%;
+}
+
+/* Compact panel: shell + dense type (meta/settings). Not for order/address list rows. */
+.woocommerce-account .ma-u-panel-sm {
+    font-size: var(--ma-font-sm);
+    line-height: var(--ma-line-normal);
+}
+
+/* Section headings: My Info, Payment Methods, View order (font-md + tracking-wider). */
+.woocommerce-account .ma-u-section-title {
+    margin: 0;
+    font-size: var(--ma-font-md);
+    line-height: var(--ma-line-normal);
+    color: var(--ma-text-primary);
+    text-transform: uppercase;
+    letter-spacing: var(--ma-tracking-wider);
+    font-weight: 500;
+}
+
+.woocommerce-account .ma-u-section-title--mb-lg {
+    margin-bottom: var(--ma-space-lg);
+}
+
+.woocommerce-account .ma-u-section-title--mb-md {
+    margin-bottom: var(--ma-space-md);
+}
+
+.woocommerce-account .ma-u-section-description {
+    margin: 0;
+    font-size: var(--ma-font-sm);
+    line-height: var(--ma-line-normal);
+    color: var(--ma-form-color-muted);
 }
 
 /* Minimal shared utility styles used by My Account Alpine components. */
@@ -57,13 +71,17 @@ body {
     display: none;
 }
 
-.apl-heading-chip {
+.apl-heading-chip,
+.apl-heading-chip-sm {
     display: inline-flex;
     align-items: center;
     color: var(--ma-text-primary);
     font-size: var(--ma-font-xl);
-    line-height: 1;
     font-weight: 600;
+}
+
+.apl-heading-chip {
+    line-height: 1;
 
     @media (min-width: 992px) {
         font-size: 34px;
@@ -71,12 +89,7 @@ body {
 }
 
 .apl-heading-chip-sm {
-    display: inline-flex;
-    align-items: center;
-    color: var(--ma-text-primary);
-    font-size: var(--ma-font-xl);
     line-height: var(--ma-line-tight);
-    font-weight: 600;
 }
 
 .loading-icon {

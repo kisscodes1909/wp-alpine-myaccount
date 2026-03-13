@@ -27,8 +27,8 @@ wc_get_template( 'myaccount/page-heading.php', array( 'page_heading' => 'My Info
 >
     <div class="ma-form__section">
         <div class="ma-form__section-head">
-            <h3 class="ma-form__section-title">Personal Information</h3>
-            <p class="ma-form__section-description">Update your personal details</p>
+            <h3 class="ma-form__section-title ma-u-section-title">Personal Information</h3>
+            <p class="ma-form__section-description ma-u-section-description">Update your personal details</p>
         </div>
 
         <div class="ma-form__grid">
@@ -68,8 +68,8 @@ wc_get_template( 'myaccount/page-heading.php', array( 'page_heading' => 'My Info
 
     <div class="ma-form__section ma-form__section--divided">
         <div class="ma-form__section-head">
-            <h3 class="ma-form__section-title">Contact Information</h3>
-            <p class="ma-form__section-description">Manage your contact details</p>
+            <h3 class="ma-form__section-title ma-u-section-title">Contact Information</h3>
+            <p class="ma-form__section-description ma-u-section-description">Manage your contact details</p>
         </div>
 
         <div class="ma-form__fields">
@@ -110,12 +110,12 @@ wc_get_template( 'myaccount/page-heading.php', array( 'page_heading' => 'My Info
 
     <div class="ma-form__section ma-form__section--divided">
         <div class="ma-form__section-head">
-            <h3 class="ma-form__section-title">Account Settings</h3>
-            <p class="ma-form__section-description">Manage your account security</p>
+            <h3 class="ma-form__section-title ma-u-section-title">Account Settings</h3>
+            <p class="ma-form__section-description ma-u-section-description">Manage your account security</p>
         </div>
 
         <div class="ma-form__settings">
-            <div class="ma-form__setting-card">
+            <div class="ma-form__setting-card ma-u-panel-sm">
                 <div class="ma-form__setting-meta">
                     <p class="ma-form__setting-label">Password</p>
                     <p class="ma-form__setting-value">••••••••</p>
@@ -129,7 +129,7 @@ wc_get_template( 'myaccount/page-heading.php', array( 'page_heading' => 'My Info
                 </button>
             </div>
 
-            <div class="ma-form__setting-card">
+            <div class="ma-form__setting-card ma-u-panel-sm">
                 <div class="ma-form__setting-meta">
                     <p class="ma-form__setting-label">Account Status</p>
                     <p class="ma-form__setting-value">Active since <?php echo esc_html( $active_since ); ?></p>

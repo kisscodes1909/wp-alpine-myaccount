@@ -22,7 +22,7 @@ wc_get_template(
 
     <div class="ma-address-book__list">
         <template x-for="address in $store.userAddress.addresses" :key="address.id">
-            <div class="ma-address-book__card">
+            <div class="ma-address-book__card ma-u-surface-panel">
                 <div class="ma-address-book__card-head">
                     <div class="ma-address-book__identity">
                         <h3 class="ma-address-book__name" x-text="`${address.fname} ${address.lname}`"></h3>
@@ -88,7 +88,7 @@ wc_get_template(
 				'primary_label'        => esc_html__( 'Add Address', 'myaccount-core' ),
 				'primary_icon'         => true,
 				'primary_button_attrs' => '@click="$store.userAddress.startAdd(); $store.popup.openPopup(document.getElementById(\'edit-address\').innerHTML)" :disabled="$store.userAddress.stopAdd"',
-				'modifier_class'       => 'ma-empty-state--panel',
+				'modifier_class'       => 'ma-u-surface-panel ma-u-surface-panel--full',
 				'heading_level'        => 'h3',
 			)
 		);
