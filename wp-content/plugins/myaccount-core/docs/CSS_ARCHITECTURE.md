@@ -24,6 +24,8 @@ Output:
 - Shared utility prefix: `.ma-u-*`
 - Shared transition prefix: `.ma-tr-*`
 
+**Panel padding:** `.ma-u-surface-panel` uses **`padding: var(--ma-space-lg)`** on the shell (shared). Blocks that combine `.ma-empty-state.ma-u-surface-panel` zero out empty-state padding so only the panel pads once.
+
 Examples:
 - `.ma-orders__item-status--success`
 - `.ma-view-order__updates-title`

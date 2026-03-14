@@ -1,7 +1,6 @@
 <?php
 /**
- * Order details items + summary: items list (left), order summary (right). Semantic block name.
- * Used on view-order page; order-details.php does not duplicate this.
+ * Order details: row1 = Items | Order Summary; row2 = Shipping | Billing.
  *
  * @package MyAccount_Core
  */
@@ -11,10 +10,9 @@ defined( 'ABSPATH' ) || exit;
 $order_items = $order->get_items( apply_filters( 'woocommerce_purchase_order_item_types', 'line_item' ) );
 $item_count  = array_sum( array_map( function ( $item ) { return $item->get_quantity(); }, $order_items ) );
 $totals      = $order->get_order_item_totals();
-$shipping = $order->get_address( 'shipping' );
-$billing  = $order->get_address( 'billing' );
+$shipping    = $order->get_address( 'shipping' );
+$billing     = $order->get_address( 'billing' );
 
-// Phone from order (output in markup with esc_html only).
 $billing_phone          = trim( (string) $order->get_billing_phone( 'edit' ) ) ?: trim( (string) ( $billing['phone'] ?? '' ) );
 $shipping_phone         = trim( (string) $order->get_shipping_phone( 'edit' ) ) ?: trim( (string) ( $shipping['phone'] ?? '' ) );
 $shipping_contact_phone = $shipping_phone !== '' ? $shipping_phone : $billing_phone;
@@ -22,37 +20,135 @@ $shipping_contact_phone = $shipping_phone !== '' ? $shipping_phone : $billing_ph
 ?>
 <div class="ma-order-details-items-summary">
 	<div class="ma-order-details-items-summary__grid">
-		<div class="ma-order-details-items-summary__main">
-			<div class="ma-order-details-items-summary__items">
-				<h2 class="ma-order-details-items-summary__items-title ma-u-section-title ma-u-section-title--mb-lg">
-					<?php
-					/* translators: %d: number of items */
-					echo esc_html( sprintf( __( 'Items · %d', 'woocommerce' ), $item_count ) );
+		<div class="ma-order-details-items-summary__items">
+			<h2 class="ma-order-details-items-summary__items-title ma-u-section-title ma-u-section-title--mb-md">
+				<?php
+				echo esc_html( sprintf( __( 'Items · %d', 'woocommerce' ), $item_count ) );
+				?>
+			</h2>
+			<div class="ma-order-details-items-summary__items-list">
+				<?php
+				$show_purchase_note = $order->has_status( apply_filters( 'woocommerce_purchase_note_order_statuses', array( 'completed', 'processing' ) ) );
+				do_action( 'woocommerce_order_details_before_order_table_items', $order );
+				foreach ( $order_items as $item_id => $item ) {
+					$product = $item->get_product();
+					wc_get_template(
+						'order/order-details-item.php',
+						array(
+							'order'              => $order,
+							'item_id'            => $item_id,
+							'item'               => $item,
+							'show_purchase_note' => $show_purchase_note,
+							'purchase_note'      => $product ? $product->get_purchase_note() : '',
+							'product'            => $product,
+						)
+					);
+				}
+				do_action( 'woocommerce_order_details_after_order_table_items', $order );
+				?>
+			</div>
+		</div>
+
+		<aside class="ma-order-details-items-summary__summary">
+			<h2 class="ma-u-section-title ma-u-section-title--mb-md"><?php esc_html_e( 'Order Summary', 'woocommerce' ); ?></h2>
+			<div class="ma-order-details-items-summary__summary-card">
+				<div class="ma-order-details-items-summary__summary-inner">
+					<?php if ( $totals ) : ?>
+						<?php foreach ( $totals as $key => $total ) : ?>
+							<?php if ( 'payment_method' === $key ) { continue; } ?>
+							<div class="ma-order-details-items-summary__summary-row <?php echo ( 'order_total' === $key ) ? 'ma-order-details-items-summary__summary-row--total' : ''; ?>">
+								<span class="ma-order-details-items-summary__summary-label"><?php echo esc_html( $total['label'] ); ?></span>
+								<span class="ma-order-details-items-summary__summary-value"><?php echo wp_kses_post( $total['value'] ); ?></span>
+							</div>
+						<?php endforeach; ?>
+					<?php endif; ?>
+				</div>
+
+				<?php if ( $order->get_customer_note() ) : ?>
+				<div class="ma-order-details-items-summary__customer-note">
+					<p class="ma-order-details-items-summary__customer-note-label"><?php esc_html_e( 'Note:', 'woocommerce' ); ?></p>
+					<div class="ma-order-details-items-summary__customer-note-text"><?php echo wp_kses( nl2br( wptexturize( $order->get_customer_note() ) ), array( 'br' => array() ) ); ?></div>
+				</div>
+				<?php endif; ?>
+
+				<?php
+				$payment_title = $order->get_payment_method_title();
+				$payment_last4 = $order->get_meta( 'payment_method_last4' );
+				if ( '' === $payment_last4 && $order->get_payment_method() ) {
+					$payment_last4 = apply_filters( 'woocommerce_myaccount_order_payment_last4', '', $order );
+				}
+				if ( $payment_title || $payment_last4 ) :
 					?>
-				</h2>
-				<div class="ma-order-details-items-summary__items-list">
+				<div class="ma-order-details-items-summary__payment">
+					<p class="ma-order-details-items-summary__payment-label"><?php esc_html_e( 'Payment', 'woocommerce' ); ?></p>
+					<div class="ma-order-details-items-summary__payment-inner">
+						<div class="ma-order-details-items-summary__payment-icon" aria-hidden="true">
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+							</svg>
+						</div>
+						<div class="ma-order-details-items-summary__payment-details">
+							<?php if ( $payment_title ) : ?>
+								<p class="ma-order-details-items-summary__payment-method"><?php echo esc_html( $payment_title ); ?></p>
+							<?php endif; ?>
+							<?php if ( $payment_last4 ) : ?>
+								<p class="ma-order-details-items-summary__payment-masked"><?php echo esc_html( '•••• ' . $payment_last4 ); ?></p>
+							<?php endif; ?>
+						</div>
+					</div>
+				</div>
+				<?php endif; ?>
+
+				<div class="ma-order-details-items-summary__actions">
 					<?php
-					$show_purchase_note = $order->has_status( apply_filters( 'woocommerce_purchase_note_order_statuses', array( 'completed', 'processing' ) ) );
-					do_action( 'woocommerce_order_details_before_order_table_items', $order );
-					foreach ( $order_items as $item_id => $item ) {
-						$product = $item->get_product();
-						wc_get_template(
-							'order/order-details-item.php',
-							array(
-								'order'              => $order,
-								'item_id'            => $item_id,
-								'item'               => $item,
-								'show_purchase_note' => $show_purchase_note,
-								'purchase_note'      => $product ? $product->get_purchase_note() : '',
-								'product'            => $product,
-							)
-						);
+					$invoice_url = apply_filters( 'woocommerce_myaccount_order_invoice_url', '', $order );
+					if ( $order->needs_payment() ) :
+						$pay_url = $order->get_checkout_payment_url();
+						?>
+					<a href="<?php echo esc_url( $pay_url ); ?>" class="ma-btn ma-btn--primary ma-btn--block">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+						</svg>
+						<span><?php esc_html_e( 'Pay', 'woocommerce' ); ?></span>
+					</a>
+					<?php endif; ?>
+					<?php
+					$cancel_statuses = apply_filters( 'woocommerce_valid_order_statuses_for_cancel', array( 'pending', 'failed' ), $order );
+					$can_cancel      = $order->has_status( $cancel_statuses ) && current_user_can( 'cancel_order', $order->get_id() );
+					if ( $can_cancel ) :
+						$cancel_url = $order->get_cancel_order_url( wc_get_page_permalink( 'myaccount' ) );
+						?>
+					<a href="<?php echo esc_url( $cancel_url ); ?>" class="ma-btn ma-btn--danger ma-btn--block">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+						</svg>
+						<span><?php esc_html_e( 'Cancel Order', 'woocommerce' ); ?></span>
+					</a>
+					<?php endif; ?>
+					<?php if ( $invoice_url ) : ?>
+					<a href="<?php echo esc_url( $invoice_url ); ?>" class="ma-btn ma-btn--secondary ma-btn--block" aria-label="<?php esc_attr_e( 'Download invoice', 'woocommerce' ); ?>">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+						</svg>
+						<span><?php esc_html_e( 'Download Invoice', 'woocommerce' ); ?></span>
+					</a>
+					<?php endif; ?>
+					<a href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>" class="ma-btn ma-btn--secondary ma-btn--block" aria-label="<?php esc_attr_e( 'Need help', 'woocommerce' ); ?>">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+						</svg>
+						<span><?php esc_html_e( 'Need Help?', 'woocommerce' ); ?></span>
+					</a>
+					<?php
+					if ( function_exists( 'woocommerce_order_again_button' ) ) {
+						woocommerce_order_again_button( $order );
 					}
-					do_action( 'woocommerce_order_details_after_order_table_items', $order );
 					?>
 				</div>
 			</div>
+		</aside>
 
+		<div class="ma-order-details-items-summary__addresses">
 			<div class="ma-order-details-items-summary__shipping">
 				<h2 class="ma-order-details-items-summary__shipping-title ma-u-section-title ma-u-section-title--mb-md"><?php esc_html_e( 'Shipping Address', 'woocommerce' ); ?></h2>
 				<div class="ma-order-details-items-summary__shipping-inner">
@@ -154,108 +250,5 @@ $shipping_contact_phone = $shipping_phone !== '' ? $shipping_phone : $billing_ph
 				</div>
 			</div>
 		</div>
-
-		<aside class="ma-order-details-items-summary__summary">
-			<div class="ma-order-details-items-summary__summary-card">
-				<div class="ma-order-details-items-summary__summary-header">
-					<h2 class="ma-order-details-items-summary__summary-title"><?php esc_html_e( 'Order Summary', 'woocommerce' ); ?></h2>
-				</div>
-				<div class="ma-order-details-items-summary__summary-inner">
-					<?php if ( $totals ) : ?>
-						<?php foreach ( $totals as $key => $total ) : ?>
-							<?php if ( 'payment_method' === $key ) { continue; } // Shown in Payment block below. ?>
-							<div class="ma-order-details-items-summary__summary-row <?php echo ( 'order_total' === $key ) ? 'ma-order-details-items-summary__summary-row--total' : ''; ?>">
-								<span class="ma-order-details-items-summary__summary-label"><?php echo esc_html( $total['label'] ); ?></span>
-								<span class="ma-order-details-items-summary__summary-value"><?php echo wp_kses_post( $total['value'] ); ?></span>
-							</div>
-						<?php endforeach; ?>
-					<?php endif; ?>
-				</div>
-
-				<?php if ( $order->get_customer_note() ) : ?>
-				<div class="ma-order-details-items-summary__customer-note">
-					<p class="ma-order-details-items-summary__customer-note-label"><?php esc_html_e( 'Note:', 'woocommerce' ); ?></p>
-					<div class="ma-order-details-items-summary__customer-note-text"><?php echo wp_kses( nl2br( wptexturize( $order->get_customer_note() ) ), array( 'br' => array() ) ); ?></div>
-				</div>
-				<?php endif; ?>
-
-				<?php
-				$payment_title = $order->get_payment_method_title();
-				$payment_last4 = $order->get_meta( 'payment_method_last4' );
-				if ( '' === $payment_last4 && $order->get_payment_method() ) {
-					$payment_last4 = apply_filters( 'woocommerce_myaccount_order_payment_last4', '', $order );
-				}
-				if ( $payment_title || $payment_last4 ) :
-					?>
-				<div class="ma-order-details-items-summary__payment">
-					<p class="ma-order-details-items-summary__payment-label"><?php esc_html_e( 'Payment', 'woocommerce' ); ?></p>
-					<div class="ma-order-details-items-summary__payment-inner">
-						<div class="ma-order-details-items-summary__payment-icon" aria-hidden="true">
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-								<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
-							</svg>
-						</div>
-						<div class="ma-order-details-items-summary__payment-details">
-							<?php if ( $payment_title ) : ?>
-								<p class="ma-order-details-items-summary__payment-method"><?php echo esc_html( $payment_title ); ?></p>
-							<?php endif; ?>
-							<?php if ( $payment_last4 ) : ?>
-								<p class="ma-order-details-items-summary__payment-masked"><?php echo esc_html( '•••• ' . $payment_last4 ); ?></p>
-							<?php endif; ?>
-						</div>
-					</div>
-				</div>
-				<?php endif; ?>
-
-				<div class="ma-order-details-items-summary__actions">
-					<?php
-					// Same rules as wc_get_account_orders_actions(): Pay when order still needs payment.
-					$invoice_url = apply_filters( 'woocommerce_myaccount_order_invoice_url', '', $order );
-					if ( $order->needs_payment() ) :
-						$pay_url = $order->get_checkout_payment_url();
-						?>
-					<a href="<?php echo esc_url( $pay_url ); ?>" class="ma-btn ma-btn--primary ma-btn--block">
-						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
-						</svg>
-						<span><?php esc_html_e( 'Pay', 'woocommerce' ); ?></span>
-					</a>
-					<?php endif; ?>
-					<?php
-					// WooCommerce standard: GET + nonce woocommerce-cancel_order (WC_Form_Handler::cancel_order).
-					$cancel_statuses = apply_filters( 'woocommerce_valid_order_statuses_for_cancel', array( 'pending', 'failed' ), $order );
-					$can_cancel      = $order->has_status( $cancel_statuses ) && current_user_can( 'cancel_order', $order->get_id() );
-					if ( $can_cancel ) :
-						$cancel_url = $order->get_cancel_order_url( wc_get_page_permalink( 'myaccount' ) );
-						?>
-					<a href="<?php echo esc_url( $cancel_url ); ?>" class="ma-btn ma-btn--danger ma-btn--block">
-						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-						</svg>
-						<span><?php esc_html_e( 'Cancel Order', 'woocommerce' ); ?></span>
-					</a>
-					<?php endif; ?>
-					<?php if ( $invoice_url ) : ?>
-					<a href="<?php echo esc_url( $invoice_url ); ?>" class="ma-btn ma-btn--secondary ma-btn--block" aria-label="<?php esc_attr_e( 'Download invoice', 'woocommerce' ); ?>">
-						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-						</svg>
-						<span><?php esc_html_e( 'Download Invoice', 'woocommerce' ); ?></span>
-					</a>
-					<?php endif; ?>
-					<a href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>" class="ma-btn ma-btn--secondary ma-btn--block" aria-label="<?php esc_attr_e( 'Need help', 'woocommerce' ); ?>">
-						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
-						</svg>
-						<span><?php esc_html_e( 'Need Help?', 'woocommerce' ); ?></span>
-					</a>
-					<?php
-					if ( function_exists( 'woocommerce_order_again_button' ) ) {
-						woocommerce_order_again_button( $order );
-					}
-					?>
-				</div>
-			</div>
-		</aside>
 	</div>
 </div>

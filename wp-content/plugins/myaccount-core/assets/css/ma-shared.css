@@ -514,6 +514,10 @@
         padding: var(--ma-space-lg);
         text-align: center;
     }
+/* One pad when root is also .ma-u-surface-panel */
+.woocommerce-account .ma-empty-state.ma-u-surface-panel {
+            padding: 0;
+        }
 .woocommerce-account .ma-empty-state__title {
         margin: 0;
         font-size: var(--ma-font-lg);
@@ -623,8 +627,8 @@ body.ma-popup-scroll-lock {
     overflow: auto;
     width: 100%;
     max-width: 700px;
-    max-height: calc(100vh - var(--ma-space-md) * 2);
-    padding: var(--ma-space-xl);
+    max-height: calc(100vh - var(--ma-space-lg) * 2);
+    padding: var(--ma-space-lg);
     box-shadow: var(--ma-shadow-2xl);
 }
 @media (min-width: 768px) {
@@ -856,6 +860,9 @@ body {
     box-sizing: border-box;
     background: var(--ma-surface);
     border: 1px solid var(--ma-border);
+}
+.woocommerce-account .ma-u-surface-panel {
+    padding: var(--ma-space-lg);
 }
 .woocommerce-account .ma-u-surface-panel--full {
     width: 100%;

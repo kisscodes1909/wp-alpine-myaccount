@@ -248,12 +248,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
     border-color: var(--ma-border);
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-header {
-    background: var(--ma-surface-alt);
-    border-bottom-color: var(--ma-border);
-}
-
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary-title {
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__summary > .ma-u-section-title {
     color: var(--ma-text-primary);
 }
 

@@ -24,6 +24,10 @@ body {
     border: 1px solid var(--ma-border);
 }
 
+.woocommerce-account .ma-u-surface-panel {
+    padding: var(--ma-space-lg);
+}
+
 .woocommerce-account .ma-u-surface-panel--full {
     width: 100%;
 }

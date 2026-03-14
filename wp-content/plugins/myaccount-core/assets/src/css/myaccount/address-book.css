@@ -33,7 +33,7 @@
     .ma-address-book__card {
         display: flex;
         flex-direction: column;
-        padding: var(--ma-space-xl) var(--ma-space-xl) var(--ma-space-lg) var(--ma-space-xl);
+        /* Padding: .ma-u-surface-panel */
     }
 
     .ma-address-book__card-head {
