@@ -27,8 +27,8 @@ do_action( 'woocommerce_before_account_orders', $has_orders );
 				$image = wp_sprintf( '<img src="%s" alt="" />', esc_url( wc_placeholder_img_src( 'thumbnail' ) ) );
 			}
 			?>
-			<div class="ma-orders__item">
-				<div class="ma-orders__item-image">
+			<div class="ma-orders__item ma-line-card">
+				<div class="ma-orders__item-image ma-line-card__media">
 					<?php echo $image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- product image or placeholder HTML ?>
 					<?php if ( count( $items ) > 1 ) : ?>
 						<div class="ma-orders__item-image-overlay" aria-hidden="true">
@@ -37,7 +37,7 @@ do_action( 'woocommerce_before_account_orders', $has_orders );
 						</div>
 					<?php endif; ?>
 				</div>
-				<div class="ma-orders__item-body">
+				<div class="ma-orders__item-body ma-line-card__body">
 					<?php wc_get_template( 'order/order-list-item-content.php', array( 'order' => $order ) ); ?>
 				</div>
 			</div>

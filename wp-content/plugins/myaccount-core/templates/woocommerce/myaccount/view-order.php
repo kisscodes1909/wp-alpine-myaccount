@@ -9,15 +9,19 @@ defined( 'ABSPATH' ) || exit;
 
 $notes = $order->get_customer_order_notes();
 
-// Option A: no big title here; "Order Details" is the label inside order-details-header (Figma 36:1502).
+// Order again is shown in order-details-items-summary; avoid duplicate from after_order_table on this endpoint.
+remove_action( 'woocommerce_order_details_after_order_table', 'woocommerce_order_again_button', 10 );
+
 wc_get_template(
 	'myaccount/page-heading.php',
 	array(
-		'page_heading' => '',
-		'prev_page'    => array(
-			'title' => __( 'Order History', 'woocommerce' ),
-			'url'   => wc_get_endpoint_url( 'orders', '', wc_get_page_permalink( 'myaccount' ) ),
+		'page_heading'      => sprintf(
+			/* translators: %s: order number */
+			__( 'Order %s', 'woocommerce' ),
+			'#' . $order->get_order_number()
 		),
+		'page_description'  => __( 'Status, items, and updates for this order.', 'myaccount-core' ),
+		'page_heading_icon' => 'order',
 	)
 );
 
@@ -51,4 +55,3 @@ wc_get_template(
 <?php endif; ?>
 
 <?php do_action( 'woocommerce_view_order', $order_id ); ?>
-

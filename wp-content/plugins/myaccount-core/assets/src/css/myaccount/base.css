@@ -1,6 +1,6 @@
 /* -------------------------------------------------------------------------- */
 /* My Account BEM base layer (core endpoints)                                 */
-/* Blocks: ma-page-heading, ma-orders, ma-view-order,                         */
+/* Blocks: ma-page-heading, ma-orders, ma-line-card, ma-view-order,           */
 /*         ma-order-details-header, ma-order-status-card, ma-order-details-items-summary */
 /*         ma-address-book, ma-payment-methods                                 */
 /* -------------------------------------------------------------------------- */
@@ -296,12 +296,41 @@
             }
         }
 
+        .ma-page-heading__title-row {
+            display: flex;
+            align-items: center;
+            gap: var(--ma-space-sm);
+            margin-bottom: var(--ma-space-xs);
+        }
+
+        .ma-page-heading__lead-icon {
+            display: flex;
+            flex-shrink: 0;
+            width: 2rem;
+            height: 2rem;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--ma-radius-sm, 0.375rem);
+            background: var(--ma-accent-bg, var(--ma-surface-alt));
+            color: var(--ma-text-primary);
+        }
+
+        .ma-page-heading__lead-icon svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
         .ma-page-heading__title {
             font-size: var(--ma-font-xl);
             line-height: var(--ma-line-snug);
-            margin-bottom: var(--ma-space-xs);
+            margin-bottom: 0;
             text-transform: uppercase;
             color: var(--ma-text-primary);
+        }
+
+        .ma-page-heading__title-row .ma-page-heading__title {
+            flex: 1;
+            min-width: 0;
         }
 
         .ma-page-heading__description {

@@ -1,7 +1,7 @@
 <?php
 /**
  * Order Item Details (card layout for view-order Section 3).
- * Replaces table row with image + content card. Used by order-details-items-summary.
+ * Item meta: single inline line, comma-separated (core list markup is blocky).
  *
  * @package MyAccount_Core
  */
@@ -14,30 +14,20 @@ if ( ! apply_filters( 'woocommerce_order_item_visible', true, $item ) ) {
 	return;
 }
 
-$is_visible       = $product && $product->is_visible();
+$is_visible        = $product && $product->is_visible();
 $product_permalink = apply_filters( 'woocommerce_order_item_permalink', $is_visible ? $product->get_permalink( $item ) : '', $item, $order );
-$qty              = $item->get_quantity();
-$refunded_qty     = $order->get_qty_refunded_for_item( $item_id );
-$qty_display      = $refunded_qty ? ( $qty - ( $refunded_qty * -1 ) ) : $qty;
-
-// Build variant line from variation attributes only (e.g. "Black / One Size").
-$meta_data     = $item->get_formatted_meta_data( '', true );
-$variant_parts = array();
-foreach ( $meta_data as $meta ) {
-	// Only include variation attribute meta (WooCommerce stores these as attribute_*).
-	if ( strpos( $meta->key, 'attribute_' ) === 0 ) {
-		$variant_parts[] = $meta->display_value;
-	}
-}
-$variant_line = ! empty( $variant_parts ) ? implode( ' / ', $variant_parts ) : '';
+$qty               = $item->get_quantity();
+$refunded_qty      = $order->get_qty_refunded_for_item( $item_id );
+$qty_display       = $refunded_qty ? ( $qty - ( $refunded_qty * -1 ) ) : $qty;
 
 $item_classes = implode( ' ', array_filter( array(
 	'ma-order-details-items-summary__item',
+	'ma-line-card',
 	apply_filters( 'woocommerce_order_item_class', 'woocommerce-table__line-item order_item', $item, $order ),
 ) ) );
 ?>
 <div class="<?php echo esc_attr( $item_classes ); ?>">
-	<div class="ma-order-details-items-summary__item-image">
+	<div class="ma-order-details-items-summary__item-image ma-line-card__media">
 		<?php
 		if ( $product ) {
 			$image_id = $product->get_image_id();
@@ -51,7 +41,7 @@ $item_classes = implode( ' ', array_filter( array(
 		}
 		?>
 	</div>
-	<div class="ma-order-details-items-summary__item-body">
+	<div class="ma-order-details-items-summary__item-body ma-line-card__body">
 		<h3 class="ma-order-details-items-summary__item-name">
 			<?php
 			echo wp_kses_post( apply_filters(
@@ -62,17 +52,39 @@ $item_classes = implode( ' ', array_filter( array(
 			) );
 			?>
 		</h3>
-		<?php if ( $variant_line ) : ?>
-			<p class="ma-order-details-items-summary__item-meta"><?php echo esc_html( $variant_line ); ?></p>
-		<?php endif; ?>
+		<?php do_action( 'woocommerce_order_item_meta_start', $item_id, $item, $order, false ); ?>
+		<?php
+		// Same source as wc_display_item_meta(): include_all true so variation attrs are not skipped
+		// when already present in the line item name (default get_formatted_meta_data hides them).
+		$meta_parts = array();
+		foreach ( $item->get_all_formatted_meta_data() as $meta ) {
+			$key = isset( $meta->display_key ) ? wp_strip_all_tags( (string) $meta->display_key ) : '';
+			$val = isset( $meta->display_value ) ? wp_strip_all_tags( (string) $meta->display_value ) : '';
+			$key = trim( $key );
+			$val = trim( $val );
+			if ( $key && $val ) {
+				$meta_parts[] = $key . ': ' . $val;
+			} elseif ( $val ) {
+				$meta_parts[] = $val;
+			} elseif ( $key ) {
+				$meta_parts[] = $key;
+			}
+		}
+		$meta_inline = implode( ', ', array_filter( $meta_parts ) );
+		$meta_inline = apply_filters( 'myaccount_core_order_item_meta_inline', $meta_inline, $item, $order );
+		if ( $meta_inline !== '' ) :
+			?>
+		<p class="ma-order-details-items-summary__item-meta"><?php echo esc_html( $meta_inline ); ?></p>
+			<?php
+		endif;
+		?>
+		<?php do_action( 'woocommerce_order_item_meta_end', $item_id, $item, $order, false ); ?>
 		<p class="ma-order-details-items-summary__item-qty">
 			<?php
 			/* translators: %s: quantity */
 			echo esc_html( sprintf( __( 'Qty %s', 'woocommerce' ), $qty_display ) );
 			?>
 		</p>
-		<?php do_action( 'woocommerce_order_item_meta_start', $item_id, $item, $order, false ); ?>
-		<?php do_action( 'woocommerce_order_item_meta_end', $item_id, $item, $order, false ); ?>
 		<p class="ma-order-details-items-summary__item-price"><?php echo wp_kses_post( $order->get_formatted_line_subtotal( $item ) ); ?></p>
 	</div>
 </div>

@@ -77,8 +77,13 @@ body.myaccount-template-fashion.woocommerce-account .ma-form-actions > a.button.
     color: var(--ma-form-color-button-light-text);
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-orders__item {
+body.myaccount-template-fashion.woocommerce-account .ma-orders__item.ma-line-card {
     background: transparent;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-orders__item.ma-line-card:hover,
+body.myaccount-template-fashion.woocommerce-account .ma-orders__item.ma-line-card:focus-within {
+    border-color: var(--ma-border);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-page-heading__description {
@@ -154,34 +159,58 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
     line-height: var(--ma-line-snug);
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item {
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item.ma-line-card {
     background: var(--ma-surface-alt);
     border-color: var(--ma-border);
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-body {
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item.ma-line-card:hover,
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item.ma-line-card:focus-within {
+    border-color: var(--ma-border);
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-body.ma-line-card__body {
     color: var(--ma-text-primary);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-name {
-    font-size: var(--ma-font-md);
-    line-height: var(--ma-line-tight);
+    font-size: var(--ma-font-sm);
+    line-height: var(--ma-line-snug);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-meta,
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-qty {
-    font-size: var(--ma-font-md);
+    font-size: var(--ma-font-xs);
     line-height: var(--ma-line-snug);
+    letter-spacing: var(--ma-tracking-tight);
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-qty {
     text-transform: uppercase;
-    letter-spacing: var(--ma-tracking-widest);
+    letter-spacing: var(--ma-tracking-wider);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-price {
-    font-size: var(--ma-font-md);
+    font-size: var(--ma-font-sm);
     line-height: var(--ma-line-snug);
+    font-weight: 600;
     color: var(--ma-text-primary);
-    text-transform: uppercase;
-    letter-spacing: var(--ma-tracking-widest);
+    letter-spacing: var(--ma-tracking-tight);
+}
+
+@media (min-width: 768px) {
+    body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-name {
+        font-size: var(--ma-font-md);
+    }
+
+    body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-meta,
+    body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-qty {
+        font-size: var(--ma-font-sm);
+    }
+
+    body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-price {
+        font-size: var(--ma-font-md);
+    }
 }
 
 /* Section 3: Shipping – Figma two-column colors */

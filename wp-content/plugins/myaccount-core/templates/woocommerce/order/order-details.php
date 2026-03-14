@@ -1,7 +1,7 @@
 <?php
 /**
- * Order details (post–Section 3 content: downloads, shipments, cancel/return, return list).
- * Main items + summary are in view-order Section 3. This template is loaded via woocommerce_view_order.
+ * Order details (post–Section 3: downloads, hooks, after_order_details).
+ * Main items + summary are in view-order Section 3.
  *
  * @package MyAccount_Core
  */
@@ -14,9 +14,17 @@ if ( ! $order ) {
 	return;
 }
 
-$order_items        = $order->get_items( apply_filters( 'woocommerce_purchase_order_item_types', 'line_item' ) );
-$downloads          = $order->get_downloadable_items();
-$show_downloads     = $order->has_downloadable_item() && $order->is_download_permitted();
+$order_items    = $order->get_items( apply_filters( 'woocommerce_purchase_order_item_types', 'line_item' ) );
+$downloads      = $order->get_downloadable_items();
+$show_downloads = apply_filters(
+	'woocommerce_order_downloads_table_show_downloads',
+	( $order->has_downloadable_item() && $order->is_download_permitted() ),
+	$order
+);
+// My Account view-order: no downloads block in this layout (items + summary only).
+if ( function_exists( 'is_wc_endpoint_url' ) && is_wc_endpoint_url( 'view-order' ) ) {
+	$show_downloads = false;
+}
 
 if ( $show_downloads ) {
 	wc_get_template(
@@ -70,7 +78,6 @@ if ( ! empty( $shipments ) ) {
 <?php endif; ?>
 
 <?php if ( false ) : // Temporarily hide "Not yet shipped" block. ?>
-<!-- Not yet shipped -->
 <?php if ( count( $order_items ) > 0 ) : ?>
 	<?php wc_get_template( 'myaccount/page-heading.php', array( 'page_heading' => __( 'Not yet shipped', 'woocommerce' ) ) ); ?>
 	<?php
@@ -81,38 +88,18 @@ if ( ! empty( $shipments ) ) {
 			'order'       => $order,
 		)
 	);
-	?>
+?>
 <?php endif; ?>
 <?php endif; ?>
 
 <?php do_action( 'woocommerce_order_details_before_order_table', $order ); ?>
 
-<div class="ma-order-legacy__container">
-	<?php if ( in_array( $order->get_status(), apply_filters( 'woocommerce_valid_order_statuses_for_cancel', array( 'pending', 'failed', 'processing' ), $order ), true ) ) : ?>
-		<div class="ma-order-legacy__section">
-			<?php $request_order_cancellation = $order->get_meta( 'request_order_cancellation' ); ?>
-			<form action="" method="post">
-				<?php wp_nonce_field( 'cancel_order_action_nonce', 'cancel_order_nonce' ); ?>
-				<input type="hidden" value="<?php echo esc_attr( $order->get_id() ); ?>" name="order_id" />
-				<div class="ma-order-legacy__action-row">
-					<button class="ma-btn ma-btn--danger ma-order-legacy__action-button" type="submit" <?php echo $request_order_cancellation ? 'disabled' : ''; ?>><?php esc_html_e( 'Cancel Order', 'woocommerce' ); ?></button>
-					<?php if ( $request_order_cancellation ) : ?>
-						<span><?php esc_html_e( 'Your cancelation request has been submitted.', 'woocommerce' ); ?></span>
-					<?php endif; ?>
-				</div>
-			</form>
-		</div>
-	<?php endif; ?>
+<?php
+// Fires after_order_table for third-party hooks; Order again is output in items-summary (see view-order).
+do_action( 'woocommerce_order_details_after_order_table', $order );
+?>
 
-	<?php if ( false && $order->get_status() === 'shipped' ) : // Temporarily hide Return Order button. ?>
-		<div class="ma-order-legacy__section ma-order-legacy__section--center">
-			<a href="<?php echo esc_url( wc_get_endpoint_url( 'return-order', $order->get_id() ) ); ?>" class="ma-btn ma-btn--secondary ma-order-legacy__action-button"><?php esc_html_e( 'Return Order', 'woocommerce' ); ?></a>
-		</div>
-	<?php endif; ?>
-</div>
-
-<?php if ( false ) : // Temporarily hide Return list. ?>
-<!-- Return list -->
+<?php if ( false ) : // Return list hidden. ?>
 <?php
 wc_get_template(
 	'woocommerce/order/order-details-return-list.php',

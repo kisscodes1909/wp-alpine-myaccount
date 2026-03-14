@@ -1,0 +1,81 @@
+/* -------------------------------------------------------------------------- */
+/* Shared line card — mobile-first, responsive via endpoint @media min-width   */
+/* Base = narrowest viewport (80px media). Widen/taller only in breakpoints. */
+/* -------------------------------------------------------------------------- */
+
+.woocommerce-account {
+    .ma-line-card {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        border: 1px solid var(--ma-border);
+        padding: 0;
+        min-width: 0;
+        transition:
+            border-color var(--ma-duration-normal) var(--ma-easing-smooth),
+            box-shadow var(--ma-duration-normal) var(--ma-easing-smooth);
+    }
+
+    .ma-line-card:hover {
+        border-color: var(--ma-text-primary);
+    }
+
+    .ma-line-card:focus-within {
+        border-color: var(--ma-text-primary);
+    }
+
+    /* Mobile base: fixed narrow media column */
+    .ma-line-card__media {
+        position: relative;
+        flex-shrink: 0;
+        width: 80px;
+        min-width: 80px;
+        min-height: 80px;
+        overflow: hidden;
+    }
+
+    .ma-line-card__media img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform var(--ma-duration-normal) var(--ma-easing-smooth);
+    }
+
+    .ma-line-card:hover .ma-line-card__media img,
+    .ma-line-card:focus-within .ma-line-card__media img {
+        transform: scale(1.05);
+    }
+
+    /* Mobile: compact padding + gap so text column usable beside 80px media */
+    .ma-line-card__body {
+        display: flex;
+        flex-direction: column;
+        gap: var(--ma-space-sm);
+        padding: var(--ma-space-sm);
+        flex: 1 1 0;
+        min-width: 0;
+    }
+
+    @media (min-width: 480px) {
+        .ma-line-card__body {
+            gap: var(--ma-space-md);
+            padding: var(--ma-space-md);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .ma-line-card__media img {
+            transition: none;
+        }
+
+        .ma-line-card:hover .ma-line-card__media img,
+        .ma-line-card:focus-within .ma-line-card__media img {
+            transform: none;
+        }
+
+        .ma-line-card {
+            transition: none;
+        }
+    }
+}

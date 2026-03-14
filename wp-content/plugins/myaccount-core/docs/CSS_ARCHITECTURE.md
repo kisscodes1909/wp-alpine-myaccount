@@ -29,6 +29,12 @@ Examples:
 - `.ma-view-order__updates-title`
 - `.ma-u-section-title`, `.ma-u-muted`
 
+**Type scale on card bodies:** Prefer `font-size` + `line-height` once on `.ma-orders__item-body.ma-line-card__body` and `.ma-order-details-items-summary__item-body.ma-line-card__body`; override only children that differ (e.g. status pill `xs`, meta caption smaller + `line-normal`).
+
+**Mobile line cards:** `.ma-line-card__body` tighter `padding`/`gap` below 480px; View link tap target on orders (see `order-history.css`).
+
+**Shared line card (cross-endpoint layout + state):** `.ma-line-card`, `.ma-line-card__media`, `.ma-line-card__body` — horizontal card shell ([`order-line-card.css`](assets/src/css/myaccount/order-line-card.css)). **Mobile-first:** base layout is the narrow viewport (80px media); **wider/taller media and body padding only in `@media (min-width: 480px)` and `(768px)`** in [`order-history.css`](assets/src/css/myaccount/order-history.css) and view-order items block. **States:** hover/focus-within border; media img scale (disabled under `prefers-reduced-motion: reduce`). Fashion may override hover border.
+
 ## Mobile-first Contract
 - Base styles are for mobile.
 - Larger breakpoints are additive via `@media (min-width: ...)` only.
