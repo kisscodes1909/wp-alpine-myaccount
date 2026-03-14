@@ -1,7 +1,7 @@
 (() => {
   // assets/src/js/alpine/stores/userAddress.js
   var MAX_ADDRESSES = 9;
-  var DEFAULT_COUNTRY = "United States";
+  var DEFAULT_COUNTRY = "US";
   var AJAX_ACTION = "save-address";
   var userAddress_default = {
     // State
@@ -9,9 +9,9 @@
     countries: {},
     ajaxUrl: "",
     nonce: "",
+    preferredCountry: "",
     stopAdd: false,
     editAddress: null,
-    isEditing: false,
     form: {
       title: "",
       buttonSaveLabel: "",
@@ -30,9 +30,19 @@
       this.countries = data.countries || {};
       this.ajaxUrl = data.ajaxUrl || window.ajaxurl || "/wp-admin/admin-ajax.php";
       this.nonce = data.nonce || "";
+      this.preferredCountry = data.defaultCountry || "";
       this._inited = true;
+      this.normalizeCountryValues();
       this.ensureOneDefault();
       this.checkMaxAddress();
+    },
+    normalizeCountryValues() {
+      if (!Object.keys(this.countries).length) return;
+      const fallbackCountry = this.getDefaultCountryCode();
+      this.addresses = this.addresses.map((address) => {
+        const countryCode = this._resolveCountryCode(address.country);
+        return { ...address, country: countryCode || fallbackCountry };
+      });
     },
     ensureOneDefault() {
       if (this.addresses.length === 0) return;
@@ -69,18 +79,24 @@
         city: "",
         region: "",
         postalCode: "",
-        country: DEFAULT_COUNTRY,
+        country: this.getDefaultCountryCode(),
         default: false
       };
+    },
+    getDefaultCountryCode() {
+      const preferred = this._resolveCountryCode(this.preferredCountry);
+      if (preferred) return preferred;
+      if (this.countries[DEFAULT_COUNTRY]) return DEFAULT_COUNTRY;
+      const firstCode = Object.keys(this.countries)[0];
+      return firstCode || DEFAULT_COUNTRY;
+    },
+    getCountryLabel(countryCode) {
+      return this.countries[countryCode] || countryCode || "";
     },
     _setFormMode(action, title, buttonLabel) {
       this.form.action = action;
       this.form.title = title;
       this.form.buttonSaveLabel = buttonLabel;
-    },
-    _findAddressById(id) {
-      const idStr = this._normalizeId(id);
-      return this.addresses.find((addr) => this._normalizeId(addr.id) === idStr);
     },
     _findAddressIndex(id) {
       const idStr = this._normalizeId(id);
@@ -101,15 +117,43 @@
     startAdd() {
       this._setFormMode("add", "Add Address", "Add Address");
       this.editAddress = this._getEmptyAddress();
-      this.isEditing = true;
     },
     startEdit(id) {
       this._setFormMode("edit", "Edit Address", "Update Address");
-      const address = this._findAddressById(id);
+      const index = this._findAddressIndex(id);
+      const address = index !== -1 ? this.addresses[index] : null;
       if (address) {
-        this.editAddress = { ...address };
-        this.isEditing = true;
+        const countryCode = this._resolveCountryCode(address.country);
+        this.editAddress = {
+          ...address,
+          country: countryCode || this.getDefaultCountryCode()
+        };
+        return;
       }
+      this.editAddress = this._getEmptyAddress();
+    },
+    _resolveCountryCode(value) {
+      const raw = String(value || "").trim();
+      if (!raw) return "";
+      if (this.countries[raw]) return raw;
+      const lower = raw.toLowerCase();
+      for (const [code, label] of Object.entries(this.countries)) {
+        if (String(label).toLowerCase() === lower) return code;
+      }
+      return "";
+    },
+    initEditAddressForm() {
+      const normalizeCountry = () => {
+        if (!this.editAddress) {
+          this.editAddress = this._getEmptyAddress();
+          return;
+        }
+        const resolved = this._resolveCountryCode(this.editAddress.country);
+        this.editAddress.country = resolved || this.getDefaultCountryCode();
+      };
+      normalizeCountry();
+      requestAnimationFrame(normalizeCountry);
+      return !!this.editAddress?.address2;
     },
     async save() {
       const addresses = [...this.addresses];
@@ -127,7 +171,6 @@
       }
       await this.ajaxRequest(AJAX_ACTION, addresses);
       this.addresses = addresses;
-      this.isEditing = false;
       this.checkMaxAddress();
     },
     async setDefault(id, syncToServer = false) {
@@ -150,7 +193,6 @@
       try {
         await this.ajaxRequest(AJAX_ACTION, addresses);
         this.addresses = addresses;
-        this.isEditing = false;
         Alpine.store("popup").closePopup();
         this.checkMaxAddress();
       } finally {
@@ -158,24 +200,7 @@
         this._setActiveAction();
       }
     },
-    async delete(id) {
-      return this.remove(id);
-    },
     // ==================== AJAX ====================
-    async _sendRequest(action, data) {
-      const response = await fetch(this.ajaxUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: new URLSearchParams({
-          action,
-          nonce: this.nonce,
-          data: JSON.stringify(data)
-        })
-      });
-      return await response.json();
-    },
     async ajaxRequest(action, data, options = {}) {
       const {
         showToast = true,
@@ -183,7 +208,16 @@
       } = options;
       this.saving = true;
       try {
-        const result = await this._sendRequest(action, data);
+        const response = await fetch(this.ajaxUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            action,
+            nonce: this.nonce,
+            data: JSON.stringify(data)
+          })
+        });
+        const result = await response.json();
         if (result.success) {
           const message = result.data && result.data.message || result.data;
           if (showToast) Alpine.store("toast").addToast(message, "success");

@@ -14,7 +14,9 @@ require_once __DIR__ . '/partials/form-field-icons.php';
             </svg>
         </button>
     </div>
-    <form class="ma-form ma-form-address ma-address-form" x-data="{ showAddress2: false }" x-init="showAddress2 = !!$store.userAddress.editAddress.address2">
+    <form class="ma-form ma-form-address ma-address-form"
+          x-data="{ showAddress2: false }"
+          x-init="showAddress2 = $store.userAddress.initEditAddressForm()">
         <div class="ma-address-form__grid ma-address-form__grid--two">
             <div class="ma-form__field">
                 <label for="first-name" class="ma-form__label ma-form__label--required">First name</label>
@@ -63,9 +65,9 @@ require_once __DIR__ . '/partials/form-field-icons.php';
                 <label for="country" class="ma-form__label ma-form__label--required">Country / Region</label>
                 <div class="ma-form__input-wrap">
                     <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_globe_alt(); ?></span>
-                    <select class="ma-form__input" x-model="$store.userAddress.editAddress.country" id="country" name="country" autocomplete="country-name">
+                    <select class="ma-form__input" x-model="$store.userAddress.editAddress.country" id="country" name="country" autocomplete="country">
                         <template x-for="(countryName, countryCode) in $store.userAddress.countries" :key="countryCode">
-                            <option x-bind:value="countryName" x-text="countryName"></option>
+                            <option :value="countryCode" :selected="countryCode === $store.userAddress.editAddress.country" x-text="countryName"></option>
                         </template>
                     </select>
                 </div>

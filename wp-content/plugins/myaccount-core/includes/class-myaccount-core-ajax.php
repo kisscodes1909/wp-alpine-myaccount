@@ -63,6 +63,28 @@ class MyAccount_Core_Ajax {
 		}
 	}
 
+	/**
+	 * Normalize country value to Woo country code (e.g. "US").
+	 * Supports legacy payloads where country is sent as country name.
+	 */
+	private function normalize_country_code( string $value ): string {
+		$value     = sanitize_text_field( $value );
+		$countries = WC()->countries->get_countries();
+
+		if ( isset( $countries[ $value ] ) ) {
+			return $value;
+		}
+
+		$needle = strtolower( $value );
+		foreach ( $countries as $code => $label ) {
+			if ( strtolower( $label ) === $needle ) {
+				return (string) $code;
+			}
+		}
+
+		return '';
+	}
+
 	public function handle_change_password(): void {
 		wc_nocache_headers();
 		$this->verify_nonce_or_die( 'change-password-action', 'nonce' );
@@ -255,6 +277,8 @@ class MyAccount_Core_Ajax {
 
 		foreach ( $new_address as $address ) {
 			if ( ! empty( $address['default'] ) ) {
+				$country_code = $this->normalize_country_code( (string) ( $address['country'] ?? '' ) );
+
 				$customer->set_shipping_first_name( sanitize_text_field( $address['fname'] ?? '' ) );
 				$customer->set_shipping_last_name( sanitize_text_field( $address['lname'] ?? '' ) );
 				$customer->set_shipping_address_1( sanitize_text_field( $address['address'] ?? '' ) );
@@ -262,7 +286,7 @@ class MyAccount_Core_Ajax {
 				$customer->set_shipping_city( sanitize_text_field( $address['city'] ?? '' ) );
 				$customer->set_shipping_state( sanitize_text_field( $address['region'] ?? '' ) );
 				$customer->set_shipping_postcode( sanitize_text_field( $address['postalCode'] ?? '' ) );
-				$customer->set_shipping_country( sanitize_text_field( $address['country'] ?? '' ) );
+				$customer->set_shipping_country( $country_code );
 				$customer->save();
 				break;
 			}
@@ -270,6 +294,7 @@ class MyAccount_Core_Ajax {
 
 		$sanitized_addresses = array();
 		foreach ( $new_address as $addr ) {
+			$country_code          = $this->normalize_country_code( (string) ( $addr['country'] ?? '' ) );
 			$sanitized_addresses[] = array(
 				'id'         => isset( $addr['id'] ) ? sanitize_text_field( (string) $addr['id'] ) : '',
 				'fname'      => sanitize_text_field( $addr['fname'] ?? '' ),
@@ -279,7 +304,7 @@ class MyAccount_Core_Ajax {
 				'city'       => sanitize_text_field( $addr['city'] ?? '' ),
 				'region'     => sanitize_text_field( $addr['region'] ?? '' ),
 				'postalCode' => sanitize_text_field( $addr['postalCode'] ?? '' ),
-				'country'    => sanitize_text_field( $addr['country'] ?? '' ),
+				'country'    => $country_code,
 				'phone'      => sanitize_text_field( $addr['phone'] ?? '' ),
 				'default'    => ! empty( $addr['default'] ),
 			);

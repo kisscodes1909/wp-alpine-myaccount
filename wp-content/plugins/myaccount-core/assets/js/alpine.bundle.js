@@ -6254,7 +6254,7 @@ attempted value: ${formattedValue}
 
   // assets/src/js/alpine/stores/userAddress.js
   var MAX_ADDRESSES = 9;
-  var DEFAULT_COUNTRY = "United States";
+  var DEFAULT_COUNTRY = "US";
   var AJAX_ACTION = "save-address";
   var userAddress_default = {
     // State
@@ -6262,9 +6262,9 @@ attempted value: ${formattedValue}
     countries: {},
     ajaxUrl: "",
     nonce: "",
+    preferredCountry: "",
     stopAdd: false,
     editAddress: null,
-    isEditing: false,
     form: {
       title: "",
       buttonSaveLabel: "",
@@ -6283,9 +6283,19 @@ attempted value: ${formattedValue}
       this.countries = data2.countries || {};
       this.ajaxUrl = data2.ajaxUrl || window.ajaxurl || "/wp-admin/admin-ajax.php";
       this.nonce = data2.nonce || "";
+      this.preferredCountry = data2.defaultCountry || "";
       this._inited = true;
+      this.normalizeCountryValues();
       this.ensureOneDefault();
       this.checkMaxAddress();
+    },
+    normalizeCountryValues() {
+      if (!Object.keys(this.countries).length) return;
+      const fallbackCountry = this.getDefaultCountryCode();
+      this.addresses = this.addresses.map((address) => {
+        const countryCode = this._resolveCountryCode(address.country);
+        return { ...address, country: countryCode || fallbackCountry };
+      });
     },
     ensureOneDefault() {
       if (this.addresses.length === 0) return;
@@ -6322,18 +6332,24 @@ attempted value: ${formattedValue}
         city: "",
         region: "",
         postalCode: "",
-        country: DEFAULT_COUNTRY,
+        country: this.getDefaultCountryCode(),
         default: false
       };
+    },
+    getDefaultCountryCode() {
+      const preferred = this._resolveCountryCode(this.preferredCountry);
+      if (preferred) return preferred;
+      if (this.countries[DEFAULT_COUNTRY]) return DEFAULT_COUNTRY;
+      const firstCode = Object.keys(this.countries)[0];
+      return firstCode || DEFAULT_COUNTRY;
+    },
+    getCountryLabel(countryCode) {
+      return this.countries[countryCode] || countryCode || "";
     },
     _setFormMode(action, title, buttonLabel) {
       this.form.action = action;
       this.form.title = title;
       this.form.buttonSaveLabel = buttonLabel;
-    },
-    _findAddressById(id) {
-      const idStr = this._normalizeId(id);
-      return this.addresses.find((addr) => this._normalizeId(addr.id) === idStr);
     },
     _findAddressIndex(id) {
       const idStr = this._normalizeId(id);
@@ -6354,15 +6370,43 @@ attempted value: ${formattedValue}
     startAdd() {
       this._setFormMode("add", "Add Address", "Add Address");
       this.editAddress = this._getEmptyAddress();
-      this.isEditing = true;
     },
     startEdit(id) {
       this._setFormMode("edit", "Edit Address", "Update Address");
-      const address = this._findAddressById(id);
+      const index = this._findAddressIndex(id);
+      const address = index !== -1 ? this.addresses[index] : null;
       if (address) {
-        this.editAddress = { ...address };
-        this.isEditing = true;
+        const countryCode = this._resolveCountryCode(address.country);
+        this.editAddress = {
+          ...address,
+          country: countryCode || this.getDefaultCountryCode()
+        };
+        return;
       }
+      this.editAddress = this._getEmptyAddress();
+    },
+    _resolveCountryCode(value) {
+      const raw2 = String(value || "").trim();
+      if (!raw2) return "";
+      if (this.countries[raw2]) return raw2;
+      const lower = raw2.toLowerCase();
+      for (const [code, label] of Object.entries(this.countries)) {
+        if (String(label).toLowerCase() === lower) return code;
+      }
+      return "";
+    },
+    initEditAddressForm() {
+      const normalizeCountry = () => {
+        if (!this.editAddress) {
+          this.editAddress = this._getEmptyAddress();
+          return;
+        }
+        const resolved = this._resolveCountryCode(this.editAddress.country);
+        this.editAddress.country = resolved || this.getDefaultCountryCode();
+      };
+      normalizeCountry();
+      requestAnimationFrame(normalizeCountry);
+      return !!this.editAddress?.address2;
     },
     async save() {
       const addresses = [...this.addresses];
@@ -6380,7 +6424,6 @@ attempted value: ${formattedValue}
       }
       await this.ajaxRequest(AJAX_ACTION, addresses);
       this.addresses = addresses;
-      this.isEditing = false;
       this.checkMaxAddress();
     },
     async setDefault(id, syncToServer = false) {
@@ -6403,7 +6446,6 @@ attempted value: ${formattedValue}
       try {
         await this.ajaxRequest(AJAX_ACTION, addresses);
         this.addresses = addresses;
-        this.isEditing = false;
         Alpine.store("popup").closePopup();
         this.checkMaxAddress();
       } finally {
@@ -6411,24 +6453,7 @@ attempted value: ${formattedValue}
         this._setActiveAction();
       }
     },
-    async delete(id) {
-      return this.remove(id);
-    },
     // ==================== AJAX ====================
-    async _sendRequest(action, data2) {
-      const response = await fetch(this.ajaxUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: new URLSearchParams({
-          action,
-          nonce: this.nonce,
-          data: JSON.stringify(data2)
-        })
-      });
-      return await response.json();
-    },
     async ajaxRequest(action, data2, options = {}) {
       const {
         showToast = true,
@@ -6436,7 +6461,16 @@ attempted value: ${formattedValue}
       } = options;
       this.saving = true;
       try {
-        const result = await this._sendRequest(action, data2);
+        const response = await fetch(this.ajaxUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            action,
+            nonce: this.nonce,
+            data: JSON.stringify(data2)
+          })
+        });
+        const result = await response.json();
         if (result.success) {
           const message = result.data && result.data.message || result.data;
           if (showToast) Alpine.store("toast").addToast(message, "success");

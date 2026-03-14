@@ -9,17 +9,6 @@ wc_get_template(
 ?>
 
 <div x-cloak x-data x-init="$store.userAddress.init()" class="ma-address-book">
-    <div x-show="$store.userAddress.showNotification"
-         x-transition:enter="ma-tr-enter"
-         x-transition:enter-start="ma-tr-enter-start"
-         x-transition:enter-end="ma-tr-enter-end"
-         x-transition:leave="ma-tr-leave"
-         x-transition:leave-start="ma-tr-leave-start"
-         x-transition:leave-end="ma-tr-leave-end"
-         class="ma-address-book__toast">
-        <p x-text="$store.userAddress.notificationMessage"></p>
-    </div>
-
     <div class="ma-address-book__list">
         <template x-for="address in $store.userAddress.addresses" :key="address.id">
             <div class="ma-address-book__card ma-u-surface-panel">
@@ -44,7 +33,7 @@ wc_get_template(
                         <p x-text="address.address2"></p>
                     </template>
                     <p x-text="[address.city, address.region, address.postalCode].filter(Boolean).join(', ')"></p>
-                    <p x-text="address.country"></p>
+                    <p x-text="$store.userAddress.getCountryLabel(address.country)"></p>
                 </div>
 
                 <div class="ma-address-book__actions">

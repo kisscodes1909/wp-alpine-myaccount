@@ -1,66 +1,7 @@
 /* Logged-in My Account only (enqueue from PHP). Depends on ma-shared (base tokens). */
 /* -------------------------------------------------------------------------- */
-/* My Account navigation: header (optional), stacked nav list, mobile dropdown */
+/* My Account navigation: stacked nav list + mobile dropdown                  */
 /* -------------------------------------------------------------------------- */
-.woocommerce-account .ma-nav-header {
-        display: none;
-        flex-direction: column;
-        gap: var(--ma-space-sm);
-        margin-bottom: var(--ma-space-sm);
-    }
-.woocommerce-account .ma-nav-header.ma-fullbleed-band {
-        --ma-fullbleed-bg: var(--ma-surface);
-    }
-.woocommerce-account .ma-nav-header__title {
-        text-align: center;
-        font-size: var(--ma-font-xl);
-        line-height: var(--ma-line-normal);
-        font-weight: 600;
-        color: var(--ma-text-primary);
-    }
-.woocommerce-account .ma-nav-header__user {
-        text-align: center;
-        font-size: var(--ma-font-sm);
-        line-height: var(--ma-line-normal);
-        color: var(--ma-text-muted-dark);
-    }
-.woocommerce-account .ma-nav-header__signout {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--ma-space-xs);
-        text-decoration: underline;
-        color: var(--ma-text-primary);
-        font-size: var(--ma-font-base);
-    }
-.woocommerce-account .ma-nav-header__signout:hover {
-            text-decoration: none;
-        }
-.woocommerce-account .ma-nav-header__signout-icon {
-        width: 1rem;
-        height: 1rem;
-    }
-@media (min-width: 992px) {
-        .woocommerce-account .ma-nav-header {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            max-width: var(--ma-container-xl);
-            margin-inline: auto;
-            padding-inline: var(--ma-space-lg);
-            margin-bottom: var(--ma-space-lg);
-        }
-
-        .woocommerce-account .ma-nav-header__title {
-            text-align: left;
-            font-size: var(--ma-font-2xl);
-        }
-
-        .woocommerce-account .ma-nav-header__user {
-            text-align: right;
-            font-size: var(--ma-font-base);
-        }
-    }
 /* Stacked layout: nav band, list, links, icons, hover/active */
 body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation.ma-fullbleed-band {
         --ma-fullbleed-border-top: var(--ma-space-2xs) solid var(--ma-border-divider);
@@ -104,7 +45,8 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lis
             body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--edit-address .woocommerce-MyAccount-navigation-link::before,
             body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--address .woocommerce-MyAccount-navigation-link::before,
             body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--payment-methods .woocommerce-MyAccount-navigation-link::before,
-            body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--settings .woocommerce-MyAccount-navigation-link::before {
+            body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--settings .woocommerce-MyAccount-navigation-link::before,
+            body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--customer-logout .woocommerce-MyAccount-navigation-link::before {
                 display: inline-block;
             }
 body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--orders {
@@ -125,6 +67,9 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lis
             }
 body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--settings {
                 --ma-nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M4.5 12a7.5 7.5 0 0012.75 5.303l2.12 2.12a.75.75 0 101.06-1.06l-2.12-2.12A7.5 7.5 0 1012 19.5M12 7.5v9m4.5-4.5h-9'/%3E%3C/svg%3E");
+            }
+body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--customer-logout {
+                --ma-nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9'/%3E%3C/svg%3E");
             }
 body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-link {
         display: inline-flex;
