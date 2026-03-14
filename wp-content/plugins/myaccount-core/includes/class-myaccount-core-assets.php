@@ -22,6 +22,7 @@ class MyAccount_Core_Assets {
 		$this->use_min_assets = $this->should_use_min_assets();
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ), 20 );
+		add_action( 'wp_head', array( $this, 'preload_shared_css' ), 1 );
 		add_filter( 'body_class', array( $this, 'add_endpoint_body_class' ) );
 		add_filter( 'script_loader_tag', array( $this, 'add_defer_attribute' ), 10, 2 );
 	}
@@ -67,6 +68,12 @@ class MyAccount_Core_Assets {
 		}
 
 		if ( ! $shared_loaded || ! $endpoint_loaded ) {
+			$this->log_asset_fallback(
+				$shared_loaded,
+				$endpoint_loaded,
+				$this->asset_path( 'assets/css/ma-shared.css' ),
+				$endpoint_file
+			);
 			$this->enqueue_style_if_exists(
 				'myaccount-core-css',
 				$this->asset_path( 'assets/css/myaccount.css' )
@@ -273,9 +280,55 @@ class MyAccount_Core_Assets {
 		return in_array( $endpoint, $needs_validation, true );
 	}
 
+	/**
+	 * Preload ma-shared CSS on account pages (reduces render-blocking chain when browser supports preload).
+	 */
+	public function preload_shared_css(): void {
+		if ( ! is_account_page() ) {
+			return;
+		}
+		$path = $this->asset_path( 'assets/css/ma-shared.css' );
+		$file = $this->plugin_dir . $path;
+		if ( ! file_exists( $file ) ) {
+			return;
+		}
+		$url = esc_url( $this->plugin_url . $path );
+		echo '<link rel="preload" href="' . $url . '" as="style" />' . "\n";
+	}
+
+	/**
+	 * Log when split CSS failed so myaccount.css (~94KB min) loads. Enable WP_DEBUG or MYACCOUNT_CORE_LOG_MISSING_ASSETS.
+	 */
+	private function log_asset_fallback( bool $shared_loaded, bool $endpoint_loaded, string $shared_path, string $endpoint_file ): void {
+		if ( ! $this->should_log_missing_assets() ) {
+			return;
+		}
+		$reasons = array();
+		if ( ! $shared_loaded ) {
+			$reasons[] = 'missing shared: ' . $shared_path . ' (expected under ' . $this->plugin_dir . ')';
+		}
+		if ( ! $endpoint_loaded && '' !== $endpoint_file ) {
+			$reasons[] = 'missing endpoint: assets/css/' . $endpoint_file;
+		}
+		if ( empty( $reasons ) ) {
+			return;
+		}
+		error_log( '[myaccount-core] CSS fallback myaccount.css loaded. ' . implode( '; ', $reasons ) . ' — run npm run build:production and deploy ma-*.min.css + ma-shared.min.css.' );
+	}
+
+	private function should_log_missing_assets(): bool {
+		if ( defined( 'MYACCOUNT_CORE_LOG_MISSING_ASSETS' ) && MYACCOUNT_CORE_LOG_MISSING_ASSETS ) {
+			return true;
+		}
+		return defined( 'WP_DEBUG' ) && WP_DEBUG;
+	}
+
 	private function enqueue_style_if_exists( string $handle, string $relative_path, array $deps = array() ): bool {
 		$file = $this->plugin_dir . $relative_path;
 		if ( ! file_exists( $file ) ) {
+			if ( $this->should_log_missing_assets() ) {
+				error_log( '[myaccount-core] Missing asset (not enqueued): ' . $relative_path );
+			}
 			return false;
 		}
 
@@ -294,6 +347,9 @@ class MyAccount_Core_Assets {
 	private function enqueue_script_if_exists( string $handle, string $relative_path, array $deps = array() ): bool {
 		$file = $this->plugin_dir . $relative_path;
 		if ( ! file_exists( $file ) ) {
+			if ( $this->should_log_missing_assets() ) {
+				error_log( '[myaccount-core] Missing asset (not enqueued): ' . $relative_path );
+			}
 			return false;
 		}
 

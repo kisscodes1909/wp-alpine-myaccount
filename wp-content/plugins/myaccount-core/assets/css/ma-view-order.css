@@ -486,8 +486,7 @@
         }
 @media (min-width: 480px) {
 .woocommerce-account .ma-order-details-items-summary .ma-order-details-items-summary__addresses {
-                gap: var(--ma-space-xl);
-                padding-top: var(--ma-space-xl)
+                gap: var(--ma-space-xl)
 
         }
             }

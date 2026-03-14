@@ -449,7 +449,6 @@
 
             @media (min-width: 480px) {
                 gap: var(--ma-space-xl);
-                padding-top: var(--ma-space-xl);
             }
 
             @media (min-width: 768px) {
@@ -559,8 +558,6 @@
         color: var(--ma-text-strong);
         letter-spacing: var(--ma-tracking-tight);
     }
-
-
 
     .ma-order-details-items-summary__item-purchase-note {
         margin-top: var(--ma-space-sm);

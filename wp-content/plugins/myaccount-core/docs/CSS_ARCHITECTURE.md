@@ -18,6 +18,13 @@ Entry file (fallback):
 Output:
 - Split: `ma-shared.css`, `ma-navigation.css`, `ma-{endpoint}.css`; legacy: `myaccount.css`
 
+## Production build & CSS performance
+- **Release (mandatory before deploy):** from plugin root run `npm run build:production` so `assets/css/*.min.css` (and `assets/js/*.min.js`) exist. Staging/production should use `WP_ENVIRONMENT_TYPE=production` and avoid `SCRIPT_DEBUG` so enqueue loads `.min` assets ([class-myaccount-core-assets.php](includes/class-myaccount-core-assets.php)).
+- **Fallback `myaccount.css` (~94KB min):** loaded only when `ma-shared.css` **or** the endpoint CSS file is missing on disk. Missing split files doubles payload; always ship built min files.
+- **Debug:** with `WP_DEBUG` or `define('MYACCOUNT_CORE_LOG_MISSING_ASSETS', true)`, missing assets and fallback enqueue are logged to `error_log`.
+- **Preload:** on account pages, `ma-shared` CSS is preloaded in `wp_head` (same URL as enqueue) to shorten the critical path slightly.
+- **Largest endpoint bundle:** `ma-view-order.min.css` (~29KB min); trim duplicate rules / redundant `@media` in [view-order.css](assets/src/css/myaccount/view-order.css) when touching that page.
+
 ## Naming Contract
 - Endpoint file naming: `{endpoint}.css`
 - Endpoint selector naming: `ma-{endpoint}__{element}--{modifier}`
