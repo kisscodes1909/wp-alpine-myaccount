@@ -165,7 +165,9 @@
         text-transform: uppercase;
         letter-spacing: var(--ma-tracking-wider);
     }
-.woocommerce-account .ma-orders__item-meta-value { margin: 0; color: var(--ma-text-muted-dark); }
+.woocommerce-account .ma-orders__item-meta-value { 
+        margin: 0; color: var(--ma-text-primary); 
+    }
 /* Row 3: Price | View Details, căn 2 bên. */
 .woocommerce-account .ma-orders__item-footer {
         display: flex;
@@ -185,7 +187,7 @@
         }
         .woocommerce-account .ma-orders__item-image { width: 150px; min-width: 150px; }
         .woocommerce-account .ma-orders__item-body {
-            padding: var(--ma-space-lg);
+            padding: var(--ma-space-md) var(--ma-space-lg);
             justify-content: space-between;
             gap: 0;
         }

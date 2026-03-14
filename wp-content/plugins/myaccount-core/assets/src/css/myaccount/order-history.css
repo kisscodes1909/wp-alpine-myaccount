@@ -190,7 +190,9 @@
         text-transform: uppercase;
         letter-spacing: var(--ma-tracking-wider);
     }
-    .ma-orders__item-meta-value { margin: 0; color: var(--ma-text-muted-dark); }
+    .ma-orders__item-meta-value { 
+        margin: 0; color: var(--ma-text-primary); 
+    }
 
     /* Row 3: Price | View Details, căn 2 bên. */
     .ma-orders__item-footer {
@@ -212,7 +214,7 @@
         }
         .ma-orders__item-image { width: 150px; min-width: 150px; }
         .ma-orders__item-body {
-            padding: var(--ma-space-lg);
+            padding: var(--ma-space-md) var(--ma-space-lg);
             justify-content: space-between;
             gap: 0;
         }
