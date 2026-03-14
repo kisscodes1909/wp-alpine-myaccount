@@ -12,6 +12,7 @@ const cssnano = require('cssnano');
 const root = path.resolve(__dirname, '..');
 const isProd = process.env.NODE_ENV === 'production';
 const isWatch = process.argv.includes('--watch');
+const useLivereload = process.argv.includes('--livereload');
 
 const buildTargets = [
   {
@@ -97,6 +98,23 @@ async function buildAll() {
 
 function watch() {
   let timeoutId = null;
+  /** LiveReload server only — không watch assets/css (tránh reload khi mới ghi file đầu, build chưa xong). */
+  let lrServer = null;
+  if (useLivereload) {
+    try {
+      const livereload = require('livereload');
+      /* createServer() đã listen port 35729 (trừ khi noListen). */
+      lrServer = livereload.createServer({ port: 35729 });
+      console.log(
+        '[build-css] LiveReload ws://localhost:35729 — bật extension trên tab My Account, sau đó sửa CSS.'
+      );
+    } catch (e) {
+      console.warn(
+        '[build-css] LiveReload không chạy (npm install livereload?). Watch vẫn hoạt động.',
+        e.message
+      );
+    }
+  }
 
   const debouncedBuild = () => {
     if (timeoutId) {
@@ -106,10 +124,13 @@ function watch() {
     timeoutId = setTimeout(async () => {
       try {
         await buildAll();
+        if (lrServer) {
+          lrServer.refresh('/');
+        }
       } catch (error) {
         console.error('[build-css] Build failed:', error.message);
       }
-    }, 100);
+    }, 150);
   };
 
   fs.watch(path.join(root, 'assets/src/css'), { recursive: true }, debouncedBuild);

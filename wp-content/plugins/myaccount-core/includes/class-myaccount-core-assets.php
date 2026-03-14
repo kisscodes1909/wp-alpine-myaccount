@@ -166,6 +166,10 @@ class MyAccount_Core_Assets {
 		if ( defined( 'MYACCOUNT_CORE_USE_MIN_ASSETS' ) ) {
 			return (bool) MYACCOUNT_CORE_USE_MIN_ASSETS;
 		}
+		// Dev CSS watch writes *.css only — SCRIPT_DEBUG avoids loading stale *.min.css.
+		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
+			return false;
+		}
 		if ( function_exists( 'wp_get_environment_type' ) ) {
 			return wp_get_environment_type() === 'production';
 		}
@@ -275,7 +279,7 @@ class MyAccount_Core_Assets {
 			return false;
 		}
 
-		$version = $this->use_min_assets ? null : filemtime( $file );
+		$version = filemtime( $file );
 
 		wp_enqueue_style(
 			$handle,
@@ -293,7 +297,7 @@ class MyAccount_Core_Assets {
 			return false;
 		}
 
-		$version = $this->use_min_assets ? null : filemtime( $file );
+		$version = filemtime( $file );
 
 		wp_enqueue_script(
 			$handle,

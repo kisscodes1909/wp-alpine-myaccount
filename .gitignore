@@ -20,6 +20,9 @@
 # Configuration
 wp-config.php
 
+# Node / npm (build deps — myaccount-core, themes, v.v.)
+node_modules/
+
 # Cursor IDE (rules, skills – local only)
 .cursor/
 

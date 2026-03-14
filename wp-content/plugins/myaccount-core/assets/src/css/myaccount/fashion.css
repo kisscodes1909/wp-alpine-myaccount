@@ -81,11 +81,6 @@ body.myaccount-template-fashion.woocommerce-account .ma-orders__item.ma-line-car
     background: transparent;
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-orders__item.ma-line-card:hover,
-body.myaccount-template-fashion.woocommerce-account .ma-orders__item.ma-line-card:focus-within {
-    border-color: var(--ma-border);
-}
-
 body.myaccount-template-fashion.woocommerce-account .ma-page-heading__description {
     color: var(--ma-text-muted);
 }
@@ -154,7 +149,7 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
     border-color: var(--ma-border);
 }
 
-/* Section 3: Items list – Figma card and typography (min font-size calc(var(--ma-base) * 1.2)) */
+/* Section 3: Items list — line cards stay sm at all breakpoints */
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__items-title {
     line-height: var(--ma-line-snug);
 }
@@ -164,24 +159,19 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
     border-color: var(--ma-border);
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item.ma-line-card:hover,
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item.ma-line-card:focus-within {
-    border-color: var(--ma-border);
-}
-
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-body.ma-line-card__body {
     color: var(--ma-text-primary);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-name {
     font-size: var(--ma-font-sm);
-    line-height: var(--ma-line-snug);
+    line-height: var(--ma-line-normal);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-meta,
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-qty {
-    font-size: var(--ma-font-xs);
-    line-height: var(--ma-line-snug);
+    font-size: var(--ma-font-sm);
+    line-height: var(--ma-line-normal);
     letter-spacing: var(--ma-tracking-tight);
 }
 
@@ -192,25 +182,10 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-price {
     font-size: var(--ma-font-sm);
-    line-height: var(--ma-line-snug);
+    line-height: var(--ma-line-normal);
     font-weight: 600;
     color: var(--ma-text-primary);
     letter-spacing: var(--ma-tracking-tight);
-}
-
-@media (min-width: 768px) {
-    body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-name {
-        font-size: var(--ma-font-md);
-    }
-
-    body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-meta,
-    body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-qty {
-        font-size: var(--ma-font-sm);
-    }
-
-    body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-price {
-        font-size: var(--ma-font-md);
-    }
 }
 
 /* Section 3: Shipping – Figma two-column colors */

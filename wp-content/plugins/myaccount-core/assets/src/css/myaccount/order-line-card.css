@@ -1,6 +1,6 @@
 /* -------------------------------------------------------------------------- */
 /* Shared line card — mobile-first, responsive via endpoint @media min-width   */
-/* Base = narrowest viewport (80px media). Widen/taller only in breakpoints. */
+/* Media: 120px <768px; 768px+ 150px. __body padding lg all breakpoints. */
 /* -------------------------------------------------------------------------- */
 
 .woocommerce-account {
@@ -11,27 +11,33 @@
         border: 1px solid var(--ma-border);
         padding: 0;
         min-width: 0;
-        transition:
-            border-color var(--ma-duration-normal) var(--ma-easing-smooth),
-            box-shadow var(--ma-duration-normal) var(--ma-easing-smooth);
+        /* sm at every breakpoint — no desktop type bump inside line cards */
+        font-size: var(--ma-font-sm);
+        line-height: var(--ma-line-normal);
     }
 
-    .ma-line-card:hover {
-        border-color: var(--ma-text-primary);
+    /* No underline on links inside line cards (including hover) */
+    .ma-line-card a,
+    .ma-line-card a:hover,
+    .ma-line-card a:focus {
+        text-decoration: none;
     }
 
-    .ma-line-card:focus-within {
-        border-color: var(--ma-text-primary);
-    }
-
-    /* Mobile base: fixed narrow media column */
     .ma-line-card__media {
         position: relative;
         flex-shrink: 0;
-        width: 80px;
-        min-width: 80px;
-        min-height: 80px;
+        width: 120px;
+        min-width: 120px;
+        min-height: 120px;
         overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+        .ma-line-card__media {
+            width: 150px;
+            min-width: 150px;
+            min-height: 150px;
+        }
     }
 
     .ma-line-card__media img {
@@ -47,13 +53,17 @@
         transform: scale(1.05);
     }
 
-    /* Inset: add .ma-u-panel-pad on node (shared myaccount-shared.css) */
+    /* Padding md — same mobile → desktop (no breakpoint shrink) */
     .ma-line-card__body {
+        box-sizing: border-box;
         display: flex;
         flex-direction: column;
         gap: var(--ma-space-sm);
         flex: 1 1 0;
         min-width: 0;
+        padding: var(--ma-space-md);
+        font-size: var(--ma-font-sm);
+        line-height: var(--ma-line-normal);
     }
 
     @media (min-width: 480px) {
@@ -72,8 +82,5 @@
             transform: none;
         }
 
-        .ma-line-card {
-            transition: none;
-        }
     }
 }

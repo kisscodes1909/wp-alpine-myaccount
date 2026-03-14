@@ -25,8 +25,8 @@
 
     .ma-orders__item-image-overlay-count,
     .ma-orders__item-image-overlay-label {
-        font-size: var(--ma-font-xs);
-        line-height: var(--ma-line-tight);
+        font-size: var(--ma-font-sm);
+        line-height: var(--ma-line-normal);
     }
     .ma-orders__item-image-overlay-count {
         font-weight: 600;
@@ -35,18 +35,17 @@
     }
     .ma-orders__item-image-overlay-label {
         font-weight: 400;
-        line-height: var(--ma-line-snug);
         color: var(--ma-text-inverse-soft);
     }
 
     /* Media img: base fill + min-height; zoom/hover on .ma-line-card (order-line-card.css) */
     .ma-orders__item-image img {
-        min-height: 80px;
+        min-height: 120px;
     }
 
     .ma-orders__item-body.ma-line-card__body {
-        font-size: var(--ma-font-xs);
-        line-height: var(--ma-line-snug);
+        font-size: var(--ma-font-sm);
+        line-height: var(--ma-line-normal);
         color: var(--ma-text-primary);
     }
 
@@ -62,6 +61,7 @@
     .ma-orders__item-order-number {
         margin: 0;
         font-size: var(--ma-font-sm);
+        line-height: var(--ma-line-normal);
         font-weight: 600;
         letter-spacing: var(--ma-tracking-tight);
     }
@@ -72,8 +72,8 @@
         gap: var(--ma-space-sm);
         padding: var(--ma-space-xs) var(--ma-space-sm);
         border: 1px solid transparent;
-        font-size: var(--ma-font-xs);
-        line-height: var(--ma-line-tight);
+        font-size: var(--ma-font-sm);
+        line-height: var(--ma-line-normal);
         font-weight: 400;
         text-transform: uppercase;
         letter-spacing: var(--ma-tracking-wider);
@@ -153,7 +153,8 @@
 
     .ma-orders__item-meta-label {
         margin-bottom: var(--ma-space-2xs);
-        line-height: var(--ma-line-tight);
+        font-size: var(--ma-font-sm);
+        line-height: var(--ma-line-normal);
         color: var(--ma-text-muted);
         text-transform: uppercase;
         letter-spacing: var(--ma-tracking-wider);
@@ -161,6 +162,8 @@
 
     .ma-orders__item-meta-value {
         margin: 0;
+        font-size: var(--ma-font-sm);
+        line-height: var(--ma-line-normal);
         color: var(--ma-text-primary);
     }
 
@@ -176,32 +179,26 @@
         border-top: 1px solid var(--ma-border);
     }
 
-    /* 480px+: taller media row before full desktop column (still 80px wide) */
+    /* 480–767px: taller thumb (media column still 120px wide) */
     @media (min-width: 480px) {
         .ma-orders__item .ma-line-card__media {
-            min-height: 100px;
+            min-height: 128px;
         }
 
         .ma-orders__item-image img {
-            min-height: 100px;
+            min-height: 128px;
         }
     }
 
-    /* 768px+: wide media column + body spacing, meta row layout */
+    /* 768px+: 150px media column + taller row */
     @media (min-width: 768px) {
         .ma-orders__item .ma-line-card__media,
         .ma-orders__item-image img {
-            min-height: 155px;
-        }
-        .ma-orders__item .ma-line-card__media {
-            width: 150px;
-            min-width: 150px;
+            min-height: 180px;
         }
         .ma-orders__item-body.ma-line-card__body {
             justify-content: space-between;
             gap: 0;
-            font-size: var(--ma-font-sm);
-            line-height: var(--ma-line-snug);
         }
         .ma-orders__item-meta {
             justify-content: flex-start;
@@ -215,22 +212,12 @@
             padding-top: var(--ma-space-md);
             padding-bottom: var(--ma-space-2xs);
         }
-        .ma-orders__item-order-number {
-            font-size: var(--ma-font-md);
-        }
-
-        .ma-orders__item-status {
-            font-size: var(--ma-font-xs);
-        }
-
-        .ma-orders__item-total {
-            font-size: var(--ma-font-md);
-        }
     }
 
     .ma-orders__item-total {
         margin: 0;
         font-size: var(--ma-font-sm);
+        line-height: var(--ma-line-normal);
         font-weight: 600;
         letter-spacing: var(--ma-tracking-tight);
     }
@@ -243,6 +230,8 @@
         min-height: 44px;
         margin: calc(var(--ma-space-2xs) * -1);
         padding: var(--ma-space-sm) var(--ma-space-sm);
+        font-size: var(--ma-font-sm);
+        line-height: var(--ma-line-normal);
         font-weight: 600;
         color: var(--ma-text-muted);
         text-transform: uppercase;

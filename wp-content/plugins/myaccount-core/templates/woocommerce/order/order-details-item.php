@@ -16,9 +16,13 @@ if ( ! apply_filters( 'woocommerce_order_item_visible', true, $item ) ) {
 
 $is_visible        = $product && $product->is_visible();
 $product_permalink = apply_filters( 'woocommerce_order_item_permalink', $is_visible ? $product->get_permalink( $item ) : '', $item, $order );
-$qty               = $item->get_quantity();
-$refunded_qty      = $order->get_qty_refunded_for_item( $item_id );
-$qty_display       = $refunded_qty ? ( $qty - ( $refunded_qty * -1 ) ) : $qty;
+$qty          = $item->get_quantity();
+$refunded_qty = $order->get_qty_refunded_for_item( $item_id );
+if ( $refunded_qty ) {
+	$qty_display = '<del>' . esc_html( (string) $qty ) . '</del> <ins>' . esc_html( (string) ( $qty - ( $refunded_qty * -1 ) ) ) . '</ins>';
+} else {
+	$qty_display = esc_html( (string) $qty );
+}
 
 $item_classes = implode( ' ', array_filter( array(
 	'ma-order-details-items-summary__item',
@@ -41,7 +45,7 @@ $item_classes = implode( ' ', array_filter( array(
 		}
 		?>
 	</div>
-	<div class="ma-order-details-items-summary__item-body ma-line-card__body ma-u-panel-pad">
+	<div class="ma-order-details-items-summary__item-body ma-line-card__body">
 		<h3 class="ma-order-details-items-summary__item-name">
 			<?php
 			echo wp_kses_post( apply_filters(
@@ -81,8 +85,8 @@ $item_classes = implode( ' ', array_filter( array(
 		<?php do_action( 'woocommerce_order_item_meta_end', $item_id, $item, $order, false ); ?>
 		<p class="ma-order-details-items-summary__item-qty">
 			<?php
-			/* translators: %s: quantity */
-			echo esc_html( sprintf( __( 'Qty %s', 'woocommerce' ), $qty_display ) );
+			// Same as WooCommerce core order-details-item.php (× qty + refunded del/ins + filter).
+			echo wp_kses_post( apply_filters( 'woocommerce_order_item_quantity_html', ' <strong class="product-quantity">' . sprintf( '&times;&nbsp;%s', $qty_display ) . '</strong>', $item ) );
 			?>
 		</p>
 		<p class="ma-order-details-items-summary__item-price"><?php echo wp_kses_post( $order->get_formatted_line_subtotal( $item ) ); ?></p>

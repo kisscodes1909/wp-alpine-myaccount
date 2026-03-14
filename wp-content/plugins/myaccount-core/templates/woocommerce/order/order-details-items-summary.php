@@ -1,6 +1,6 @@
 <?php
 /**
- * Order details: row1 = Items | Order Summary; row2 = Shipping | Billing.
+ * Order details: __grid = Items | Summary (xl); __addresses = Shipping | Billing (sibling, outside grid).
  *
  * @package MyAccount_Core
  */
@@ -147,8 +147,9 @@ $shipping_contact_phone = $shipping_phone !== '' ? $shipping_phone : $billing_ph
 				</div>
 			</div>
 		</aside>
+	</div>
 
-		<div class="ma-order-details-items-summary__addresses">
+	<div class="ma-order-details-items-summary__addresses">
 			<div class="ma-order-details-items-summary__shipping">
 				<h2 class="ma-order-details-items-summary__shipping-title ma-u-section-title ma-u-section-title--mb-md"><?php esc_html_e( 'Shipping Address', 'woocommerce' ); ?></h2>
 				<div class="ma-order-details-items-summary__shipping-inner">
@@ -250,5 +251,4 @@ $shipping_contact_phone = $shipping_phone !== '' ? $shipping_phone : $billing_ph
 				</div>
 			</div>
 		</div>
-	</div>
 </div>

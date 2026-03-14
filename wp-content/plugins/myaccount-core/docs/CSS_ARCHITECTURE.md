@@ -27,7 +27,7 @@ Output:
 **Panel shell (single source, `padding: var(--ma-space-lg)`):**
 - **`.ma-u-surface-panel`** (+ `--full`) — border + surface + inset. Dùng cho address card, payment item, empty state wrapper, payment “Add” section body, v.v.
 - **`.ma-u-panel-sm`** — cùng shell + inset + `font-size: sm`. Dùng trên **cùng node** với `.ma-form__setting-card` — **không** thêm padding riêng trong form-base.
-- **`.ma-u-panel-pad`** — chỉ inset (không border/bg). Dùng **bên trong** shell đã có viền (vd. `.ma-line-card__body`) để trùng token với panel, không lặp rule padding trong `order-line-card.css`.
+- **`.ma-u-panel-pad`** — chỉ inset (không border/bg), padding lg — dùng khi cần pad không kèm shell (line card dùng padding sẵn trên `.ma-line-card__body`).
 
 Blocks that combine `.ma-empty-state.ma-u-surface-panel` zero out empty-state padding so only the panel pads once.
 
@@ -36,11 +36,11 @@ Examples:
 - `.ma-view-order__updates-title`
 - `.ma-u-section-title`, `.ma-u-muted`
 
-**Type scale on card bodies:** Prefer `font-size` + `line-height` once on `.ma-orders__item-body.ma-line-card__body` and `.ma-order-details-items-summary__item-body.ma-line-card__body`; override only children that differ (e.g. status pill `xs`, meta caption smaller + `line-normal`).
+**Type scale on line cards:** `.ma-line-card` sets **`font-size: var(--ma-font-sm)`** + **`line-height: var(--ma-line-normal)`** for the whole card (mobile through desktop — no breakpoint type bump). `.ma-line-card__body` repeats the same for flex children. Override only outside line cards if needed.
 
-**Line cards:** `.ma-line-card__body` + **`.ma-u-panel-pad`** trong template. View-order có thể chỉnh `padding-bottom` theo layout (xem `view-order.css`). View link tap target on orders (see `order-history.css`).
+**Line cards:** `.ma-line-card__body` có **padding lg** trong `order-line-card.css` (không cần `.ma-u-panel-pad` trên body). View-order chỉnh `padding-bottom` theo layout (xem `view-order.css`). View link tap target on orders (see `order-history.css`).
 
-**Shared line card (cross-endpoint layout + state):** `.ma-line-card`, `.ma-line-card__media`, `.ma-line-card__body` — horizontal card shell ([`order-line-card.css`](assets/src/css/myaccount/order-line-card.css)). **Mobile-first:** base layout is the narrow viewport (80px media); **wider/taller media** in `@media` in [`order-history.css`](assets/src/css/myaccount/order-history.css) and view-order items block. **States:** hover/focus-within border; media img scale (disabled under `prefers-reduced-motion: reduce`). Fashion may override hover border.
+**Shared line card (cross-endpoint layout + state):** `.ma-line-card`, `.ma-line-card__media`, `.ma-line-card__body` — horizontal card shell ([`order-line-card.css`](assets/src/css/myaccount/order-line-card.css)). **Media column:** `.ma-line-card__media` is **120px** wide below **768px**, **150px** from **768px** up (`order-line-card.css`). **`.ma-line-card__body`** uses **padding lg** at all breakpoints. Taller **min-heights** in endpoint `@media` ([`order-history.css`](assets/src/css/myaccount/order-history.css), view-order). **States:** media img scale on hover/focus-within (disabled under `prefers-reduced-motion: reduce`). No border change on hover.
 
 ## Mobile-first Contract
 - Base styles are for mobile.
@@ -50,10 +50,11 @@ Examples:
   - `@media (min-width: 480px)`
   - `@media (min-width: 768px)`
   - `@media (min-width: 992px)`
+  - View-order Section 3 **Items | Summary** horizontal row: **`@media (min-width: 1280px)`** (**xl**, `--ma-breakpoint-xl`)
   - `@media (min-width: 1280px)`
 - Forbidden:
   - `@media (max-width: ...)`
-  - `@media (min-width: ...)` values outside the 4 breakpoints above unless explicitly documented as an exception.
+  - `@media (min-width: ...)` values outside the list above unless explicitly documented as an exception.
 
 ## Nesting Contract
 - Nesting is allowed and preferred for endpoint-local readability.
@@ -93,7 +94,7 @@ Utilities are for repeated generic patterns only.
 
 Allowed:
 - Lightweight helpers only when used in templates (e.g. `.ma-u-muted`). Prefer endpoint BEM + tokens for layout instead of a flex/gap utility matrix.
-- **Surface shell**: `.ma-u-surface-panel` (+ optional `.ma-u-surface-panel--full`) — background + border + **padding lg** (single source). **Compact shell**: `.ma-u-panel-sm` — same + `font-size: var(--ma-font-sm)`. **Pad only**: `.ma-u-panel-pad` — padding lg, no shell (inside `.ma-line-card` body).
+- **Surface shell**: `.ma-u-surface-panel` (+ optional `.ma-u-surface-panel--full`) — background + border + **padding lg** (single source). **Compact shell**: `.ma-u-panel-sm` — same + `font-size: var(--ma-font-sm)`. **Pad only**: `.ma-u-panel-pad` — padding lg, no shell (optional; line cards dùng pad trên `.ma-line-card__body`).
 - **Section heading**: `.ma-u-section-title` — `font-size: var(--ma-font-md)`, uppercase, `letter-spacing: var(--ma-tracking-wider)`, `font-weight: 500`. Modifiers: `--mb-lg`, `--mb-md`. **Section blurb**: `.ma-u-section-description` — muted, `font-size: var(--ma-font-sm)`, `letter-spacing: var(--ma-tracking-wider)`. Use on My Info, Payment Methods, View order section headings; avoid duplicating the same typography in endpoint CSS.
 
 Rules:
@@ -174,6 +175,16 @@ Rules:
   - `ma-tr-leave`, `ma-tr-leave-start`, `ma-tr-leave-end`
   - `ma-tr-scale-enter-start`, `ma-tr-scale-enter-end`
   - `ma-tr-scale-leave-start`, `ma-tr-scale-leave-end`
+
+## Development: CSS live reload
+
+1. **`wp-config.php` (bắt buộc nếu site đang `production`):** `define( 'SCRIPT_DEBUG', true );` — plugin sẽ load `ma-*.css` (file mà watch ghi), **không** load `ma-*.min.css` (watch không cập nhật file min → sửa CSS mãi không thấy đổi).
+2. Hoặc: `define( 'WP_ENVIRONMENT_TYPE', 'local' );` và không commit file `.min.css`, hoặc `define( 'MYACCOUNT_CORE_USE_MIN_ASSETS', false );`.
+3. Cài extension **LiveReload**, kết nối `ws://localhost:35729`.
+4. Chạy `npm run watch:css:live` — mỗi lần save source, build xong **một lần** mới gửi reload (tránh reload giữa chừng khi build nhiều file).
+5. Sửa chỉ file trong `assets/src/css/` (hoặc entry import) — trình duyệt **không** đọc trực tiếp `view-order.css`; luôn cần build ra `assets/css/`.
+
+Script thường: `npm run watch:css`. LiveReload: `watch:css:live`.
 
 ## Migration Guardrails
 - Preserve runtime behavior and current single-template output.
