@@ -99,12 +99,12 @@
 
     /* Notice (font-size, space, line-height from base scale) */
     --ma-notice-space-gap: var(--ma-space-md);
-    --ma-notice-padding-y: var(--ma-space-md);
+    --ma-notice-padding-y: var(--ma-space-lg);
     --ma-notice-padding-x: var(--ma-space-md);
     --ma-notice-padding-right: var(--ma-space-2xl);
     --ma-notice-border-width: var(--ma-space-2xs);
-    --ma-notice-font-size: var(--ma-font-base);
-    --ma-notice-font-size-lg: var(--ma-font-md);
+    --ma-notice-font-size: var(--ma-font-sm);
+    --ma-notice-font-size-lg: var(--ma-font-sm);
     --ma-notice-line-height: var(--ma-line-normal);
     --ma-notice-icon-size: var(--ma-font-lg);
 
@@ -313,6 +313,7 @@
         }
 .woocommerce-account .ma-page-heading {
         margin-block: var(--ma-space-xl);
+        letter-spacing: var(--ma-tracking-wide);
     }
 .woocommerce-account .ma-page-heading .ma-page-heading__back-link {
             display: inline-flex;
@@ -330,6 +331,7 @@
 .woocommerce-account .ma-page-heading .ma-page-heading__back-label {
             font-size: var(--ma-font-sm);
             line-height: var(--ma-line-snug);
+            letter-spacing: var(--ma-tracking-wide);
         }
 @media (min-width: 480px) {
 .woocommerce-account .ma-page-heading .ma-page-heading__back-label {
@@ -357,13 +359,6 @@
             width: 1.25rem;
             height: 1.25rem;
         }
-.woocommerce-account .ma-page-heading .ma-page-heading__title {
-            font-size: var(--ma-font-xl);
-            line-height: var(--ma-line-snug);
-            margin-bottom: 0;
-            text-transform: uppercase;
-            color: var(--ma-text-primary);
-        }
 .woocommerce-account .ma-page-heading .ma-page-heading__title-row .ma-page-heading__title {
             flex: 1;
             min-width: 0;
@@ -371,10 +366,35 @@
 .woocommerce-account .ma-page-heading .ma-page-heading__description {
             font-size: var(--ma-font-sm);
             line-height: var(--ma-line-normal);
+            letter-spacing: var(--ma-tracking-wide);
             padding-bottom: var(--ma-space-md);
             border-bottom: 1px solid var(--ma-border-divider);
             color: var(--ma-text-charcoal);
         }
+/* Page / form titles (replaces apl-heading-chip / apl-heading-chip-sm) */
+.woocommerce-account .ma-page-heading__title {
+        display: inline-flex;
+        align-items: center;
+        margin: 0;
+        font-size: var(--ma-font-xl);
+        font-weight: var(--ma-weight-semibold);
+        line-height: 1;
+        text-transform: uppercase;
+        letter-spacing: var(--ma-tracking-wider);
+        color: var(--ma-text-primary);
+    }
+@media (min-width: 992px) {
+.woocommerce-account .ma-page-heading__title {
+            font-size: 34px
+    }
+        }
+.woocommerce-account .ma-page-heading__title--sm {
+        font-size: var(--ma-font-xl);
+        font-weight: var(--ma-weight-semibold);
+        line-height: var(--ma-line-tight);
+        text-transform: none;
+        letter-spacing: var(--ma-tracking-wide);
+    }
 /* -------------------------------------------------------------------------- */
 /* My Account shared buttons (.ma-btn) — token-based, no WooCommerce dependency */
 /* Variants: --primary, --secondary (= secondary-light), --secondary-light, --danger, --ghost, --block */
@@ -527,10 +547,6 @@
         padding: var(--ma-space-lg);
         text-align: center;
     }
-/* One pad when root is also .ma-u-surface-panel */
-.woocommerce-account .ma-empty-state.ma-u-surface-panel {
-            padding: 0;
-        }
 .woocommerce-account .ma-empty-state__title {
         margin: 0;
         font-size: var(--ma-font-lg);
@@ -662,6 +678,8 @@ body.ma-popup-scroll-lock {
     box-shadow: var(--ma-shadow-lg);
     border-left: var(--ma-space-xs) solid transparent;
     pointer-events: auto;
+    font-size: var(--ma-font-sm);
+    line-height: var(--ma-line-normal);
 }
 .ma-ui-toast__item.success {
     background: var(--ma-success-bg);
@@ -710,15 +728,13 @@ body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAcc
             max-width: 1280px;
             margin-inline: auto;
         }
-/* -------------------------------------------------------------------------- */
-/* My Account shared notices styles                                           */
-/* font-size, space, line-height: from base token scale (base.css)            */
-/* -------------------------------------------------------------------------- */
+/* My Account — Woo notices + .ma-notice--* (tokens: base.css --ma-notice-*) */
 .woocommerce-account .woocommerce-notices-wrapper,
 .woocommerce-account .ma-form__notice {
     display: flex;
     flex-direction: column;
     gap: var(--ma-notice-space-gap);
+    margin-top: var(--ma-space-lg);
 }
 .woocommerce-account .ma-form__notice {
     margin-bottom: var(--ma-space-xl);
@@ -726,119 +742,93 @@ body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAcc
 .woocommerce-account .ma-form__notice:empty {
     display: none;
 }
+/* Một hàng: ::before (static) + <li> */
 .woocommerce-account .woocommerce-message,
 .woocommerce-account .woocommerce-info,
 .woocommerce-account .woocommerce-warning,
-.woocommerce-account .ma-notice--warning,
-.woocommerce-account .ma-notice--success {
-    position: relative;
-    list-style: none;
-    margin: 0;
+.woocommerce-account .ma-notice--success,
+.woocommerce-account .ma-notice--warning {
     display: flex;
     align-items: center;
     gap: var(--ma-space-sm);
+    margin: 0;
     padding: var(--ma-notice-padding-y) var(--ma-notice-padding-right) var(--ma-notice-padding-y) var(--ma-notice-padding-x);
+    list-style: none;
     font-size: var(--ma-notice-font-size);
     line-height: var(--ma-notice-line-height);
     font-weight: 500;
 }
-@media (min-width: 768px) {
-    .woocommerce-account .woocommerce-message,
-    .woocommerce-account .woocommerce-info,
-    .woocommerce-account .woocommerce-warning,
-    .woocommerce-account .ma-notice--warning,
-    .woocommerce-account .ma-notice--success {
-        font-size: var(--ma-notice-font-size-lg);
-    }
+.woocommerce-account .woocommerce-message > li,
+.woocommerce-account .woocommerce-info > li,
+.woocommerce-account .woocommerce-warning > li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    flex: 1;
+    min-width: 0;
 }
+/* Lỗi: ::before static dòng đầu, các <li> bên dưới (không absolute) */
 .woocommerce-account .woocommerce-error,
 .woocommerce-account .ma-notice--error {
-    position: relative;
-    list-style: none;
-    margin: 0;
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: var(--ma-space-sm);
-    padding: var(--ma-notice-padding-y) var(--ma-notice-padding-right) var(--ma-notice-padding-y) calc(var(--ma-notice-padding-x) + var(--ma-notice-icon-size) + var(--ma-space-sm));
+    margin: 0;
+    padding: var(--ma-notice-padding-y) var(--ma-notice-padding-right) var(--ma-notice-padding-y) var(--ma-notice-padding-x);
+    list-style: none;
     font-size: var(--ma-notice-font-size);
     line-height: var(--ma-notice-line-height);
     font-weight: 500;
 }
-@media (min-width: 768px) {
-    .woocommerce-account .woocommerce-error,
-    .woocommerce-account .ma-notice--error {
-        font-size: var(--ma-notice-font-size-lg);
-    }
+.woocommerce-account .woocommerce-error li,
+.woocommerce-account .ma-notice--error li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
+/* Màu */
 .woocommerce-account .woocommerce-message,
 .woocommerce-account .ma-notice--success {
-    background-color: var(--ma-success-bg);
+    background: var(--ma-success-bg);
     border: var(--ma-notice-border-width) solid var(--ma-success-border);
     color: var(--ma-success-text);
 }
 .woocommerce-account .woocommerce-error,
 .woocommerce-account .ma-notice--error {
-    background-color: var(--ma-danger-bg);
+    background: var(--ma-danger-bg);
     border: var(--ma-notice-border-width) solid var(--ma-danger-border);
     color: var(--ma-danger-text);
 }
 .woocommerce-account .woocommerce-info {
-    background-color: var(--ma-info-bg);
+    background: var(--ma-info-bg);
     border: var(--ma-notice-border-width) solid var(--ma-info-border);
     color: var(--ma-info-text);
 }
 .woocommerce-account .woocommerce-warning,
 .woocommerce-account .ma-notice--warning {
-    background-color: var(--ma-warning-bg);
+    background: var(--ma-warning-bg);
     border: var(--ma-notice-border-width) solid var(--ma-warning-border);
     color: var(--ma-warning-text);
 }
-.woocommerce-account .woocommerce-error li,
-.woocommerce-account .ma-notice--error li {
-    list-style: none;
-}
-/* Common ::before for inline notices (message, info, warning, success); error uses separate rule (absolute). */
+/* Icon — toàn static (không position absolute) */
 .woocommerce-account .woocommerce-message::before,
 .woocommerce-account .woocommerce-info::before,
 .woocommerce-account .woocommerce-warning::before,
-.woocommerce-account .ma-notice--warning::before,
-.woocommerce-account .ma-notice--success::before {
-    display: inline-block;
-    flex: none;
+.woocommerce-account .ma-notice--success::before,
+.woocommerce-account .ma-notice--warning::before {
     content: '';
+    flex-shrink: 0;
     width: var(--ma-notice-icon-size);
     height: var(--ma-notice-icon-size);
-    margin-right: var(--ma-space-sm);
-    background-color: currentColor;
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-position: center;
-    -webkit-mask-size: contain;
-    mask-repeat: no-repeat;
-    mask-position: center;
-    mask-size: contain;
+    background: currentColor;
+    mask: no-repeat center / contain;
+    -webkit-mask: no-repeat center / contain;
 }
 .woocommerce-account .woocommerce-message::before,
 .woocommerce-account .ma-notice--success::before {
     -webkit-mask-image: var(--ma-notice-success-icon-mask);
     mask-image: var(--ma-notice-success-icon-mask);
-}
-.woocommerce-account .woocommerce-error::before,
-.woocommerce-account .ma-notice--error::before {
-    position: absolute;
-    content: '';
-    width: var(--ma-notice-icon-size);
-    height: var(--ma-notice-icon-size);
-    left: var(--ma-notice-padding-x);
-    top: calc(var(--ma-notice-padding-y) + var(--ma-space-2xs));
-    background-color: currentColor;
-    -webkit-mask-image: var(--ma-notice-error-icon-mask);
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-position: center;
-    -webkit-mask-size: contain;
-    mask-image: var(--ma-notice-error-icon-mask);
-    mask-repeat: no-repeat;
-    mask-position: center;
-    mask-size: contain;
 }
 .woocommerce-account .woocommerce-info::before {
     -webkit-mask-image: var(--ma-notice-info-icon-mask);
@@ -849,13 +839,23 @@ body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAcc
     -webkit-mask-image: var(--ma-notice-warning-icon-mask);
     mask-image: var(--ma-notice-warning-icon-mask);
 }
+.woocommerce-account .woocommerce-error::before,
+.woocommerce-account .ma-notice--error::before {
+    content: '';
+    width: var(--ma-notice-icon-size);
+    height: var(--ma-notice-icon-size);
+    margin-bottom: var(--ma-space-2xs);
+    background: currentColor;
+    -webkit-mask: var(--ma-notice-error-icon-mask) no-repeat center / contain;
+    mask: var(--ma-notice-error-icon-mask) no-repeat center / contain;
+}
 .woocommerce-account .woocommerce-message a,
 .woocommerce-account .woocommerce-error a,
 .woocommerce-account .woocommerce-info a,
 .woocommerce-account .woocommerce-warning a,
-.woocommerce-account .ma-notice--warning a,
 .woocommerce-account .ma-notice--success a,
-.woocommerce-account .ma-notice--error a {
+.woocommerce-account .ma-notice--error a,
+.woocommerce-account .ma-notice--warning a {
     color: inherit;
     text-decoration: underline;
 }
@@ -912,25 +912,6 @@ body {
 }
 [x-cloak] {
     display: none;
-}
-.apl-heading-chip,
-.apl-heading-chip-sm {
-    display: inline-flex;
-    align-items: center;
-    color: var(--ma-text-primary);
-    font-size: var(--ma-font-xl);
-    font-weight: 600;
-}
-.apl-heading-chip {
-    line-height: 1;
-}
-@media (min-width: 992px) {
-.apl-heading-chip {
-        font-size: 34px
-}
-    }
-.apl-heading-chip-sm {
-    line-height: var(--ma-line-tight);
 }
 .loading-icon {
     display: inline-flex;

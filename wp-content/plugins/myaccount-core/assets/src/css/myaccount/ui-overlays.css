@@ -125,6 +125,8 @@ body.ma-popup-scroll-lock {
     box-shadow: var(--ma-shadow-lg);
     border-left: var(--ma-space-xs) solid transparent;
     pointer-events: auto;
+    font-size: var(--ma-font-sm);
+    line-height: var(--ma-line-normal);
 }
 
 .ma-ui-toast__item.success {

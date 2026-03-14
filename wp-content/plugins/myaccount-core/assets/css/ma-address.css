@@ -1,5 +1,8 @@
 /* -------------------------------------------------------------------------- */
 /* Form base: tokens, layout, inputs, sections, actions (single source)      */
+/* Layout: gap only applies to flex/grid containers. Never pair gap with       */
+/* display:block/inline-block on the same node expecting spacing—put gap on    */
+/* the flex/grid parent (e.g. .ma-form__checkbox, .ma-form__error, .ma-btn).   */
 /* -------------------------------------------------------------------------- */
 .woocommerce-account {
     /* Notice icon masks (visual only; size from base.css) */
@@ -31,7 +34,7 @@
         --ma-form-space-validate-icon-top: var(--ma-space-sm);
         --ma-form-space-validate-icon-right: var(--ma-space-xs);
         /* Size */
-        --ma-form-error-icon-size: var(--ma-font-xs);
+        --ma-form-error-icon-size: var(--ma-font-md);
         --ma-form-input-height-md: calc(2 * var(--ma-font-xs) + var(--ma-font-sm) * var(--ma-line-normal));
         --ma-form-font-size-xs: var(--ma-font-xs);
         --ma-form-font-size-sm: var(--ma-font-sm);
@@ -88,8 +91,10 @@
 .woocommerce-account .ma-form .ma-form__input-wrap {
             position: relative;
         }
+/* Above input background so left icon stays visible. */
 .woocommerce-account .ma-form .ma-form__input-icon--left {
             position: absolute;
+            z-index: 2;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -212,6 +217,7 @@
             outline: 2px solid var(--ma-form-color-focus-border);
             outline-offset: 2px;
         }
+/* Flex parent: gap spaces box + label. Children (box, label) are not gap hosts. */
 .woocommerce-account .ma-form .ma-form__checkbox {
             display: inline-flex;
             align-items: center;
@@ -236,7 +242,7 @@
             min-width: var(--ma-space-md);
             min-height: var(--ma-space-md);
             border-radius: 0;
-            display: inline-block;
+            display: block;
             border: 1px solid var(--ma-form-color-border);
             background: var(--ma-form-color-surface);
             flex: none;
@@ -366,16 +372,16 @@
             color: var(--ma-form-color-muted);
             font-weight: 600;
         }
-.woocommerce-account .ma-form .ma-form__hint { margin: var(--ma-form-space-field-gap) 0 0 0; }
+/* .ma-form__hint { margin: var(--ma-form-space-field-gap) 0 0 0; } */
 .woocommerce-account .ma-form .ma-form__input--capitalize {
             text-transform: capitalize;
         }
+/* Flex parent: gap between icon and message. .ma-form__error-text is not a gap host. */
 .woocommerce-account .ma-form .ma-form__error {
             display: inline-flex;
             align-items: center;
             gap: var(--ma-form-space-error-gap);
-            margin-top: var(--ma-form-space-field-gap);
-            font-size: var(--ma-font-xs);
+            font-size: var(--ma-font-sm);
             line-height: var(--ma-line-normal);
             color: var(--ma-form-color-error);
         }
@@ -385,7 +391,8 @@
             flex: none;
         }
 .woocommerce-account .ma-form .ma-form__error-text {
-            display: inline-block;
+            display: block;
+            min-width: 0;
         }
 .woocommerce-account .ma-form .ma-form__settings {
             display: flex;
@@ -457,7 +464,7 @@
 .woocommerce-account .ma-form .ma-link-underline {
             text-decoration: underline;
         }
-/* Form + form-actions: full-width layout for non-ghost .ma-btn */
+/* Form + form-actions: full-width layout for non-ghost .ma-btn (.ma-btn is inline-flex → gap valid) */
 .ma-form .ma-btn:not(.ma-btn--ghost),
 .ma-form-actions > .ma-btn:not(.ma-btn--ghost) {
     width: 100%;
@@ -496,6 +503,8 @@
         top: var(--ma-space-2xl);
         right: var(--ma-space-lg);
         padding: var(--ma-space-sm) var(--ma-space-md);
+        font-size: var(--ma-font-sm);
+        line-height: var(--ma-line-normal);
     }
 .woocommerce-account .ma-address-book__list {
         display: grid;

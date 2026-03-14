@@ -86,15 +86,15 @@
     getValidationSchema() {
       const y = window.yup;
       return y.object().shape({
-        firstName: req("First name is required."),
-        lastName: req("Last name is required."),
-        billing_address_1: req("Street address is required."),
-        billing_city: req("City is required."),
+        firstName: req("Please add your first name."),
+        lastName: req("Please add your last name."),
+        billing_address_1: req("Please add your street address."),
+        billing_city: req("Please add your city."),
         billing_state: window.yup.string(),
         billing_postcode: window.yup.string(),
-        billing_country: req("Country is required."),
-        billing_phone: req("Phone is required."),
-        billing_email: y.string().email("Invalid billing email.").required("Billing email is required."),
+        billing_country: req("Please choose a country."),
+        billing_phone: req("Please add a phone number."),
+        billing_email: y.string().email("Please enter a valid email.").required("Please add your billing email."),
         billing_company: y.string().nullable(),
         billing_address_2: y.string().nullable()
       });
@@ -207,9 +207,9 @@
   var ChangePasswordHandler = class extends BaseFormHandler {
     getValidationSchema() {
       return window.yup.object().shape({
-        currentPassword: window.yup.string().required("The current password is required."),
-        newPassword: window.yup.string().min(8, "The new password must be at least 8 characters long.").required("The new password is required."),
-        confirmPassword: window.yup.string().oneOf([window.yup.ref("newPassword"), null], "Passwords must match.").required("Confirming your new password is required.")
+        currentPassword: window.yup.string().required("Please enter your current password."),
+        newPassword: window.yup.string().min(8, "New password: at least 8 characters.").required("Please enter a new password."),
+        confirmPassword: window.yup.string().oneOf([window.yup.ref("newPassword"), null], "Those passwords don\u2019t match \u2014 try again.").required("Please confirm your new password.")
       });
     }
     getApiEndpoint() {

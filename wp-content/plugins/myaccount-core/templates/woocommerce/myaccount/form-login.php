@@ -35,7 +35,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 					<a href="#" class="ma-auth__login-signup-link" @click.prevent="openTab = 'signUp'"><?php esc_html_e( 'Create one', 'woocommerce' ); ?></a>
 				</p>
 			</div>
-			<?php require __DIR__ . '/partials/auth-social-divider.php'; ?>
+			<?php /* Social login paused — restore: require __DIR__ . '/partials/auth-social-divider.php'; */ ?>
 			<form
 				x-data="login"
 				class="woocommerce-form login ma-form"
@@ -67,7 +67,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 							</div>
 							<div class="ma-form__input-wrap">
 								<span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
-								<input id="login_password" x-model="formData.password" type="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input" autocomplete="username" @keyup="handler.validateField('password')" />
+								<input id="login_password" x-model="formData.password" type="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input" autocomplete="current-password" @keyup="handler.validateField('password')" />
 							</div>
 							<span x-validate-error="{message: errors.password, touched: touched.password}"></span>
 						</div>
@@ -102,17 +102,14 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 
 		<div x-show="openTab === 'signUp'">
 			<div class="ma-auth__signup-head">
-				<p class="ma-auth__signup-welcome"><?php esc_html_e( 'Join Maison', 'woocommerce' ); ?></p>
+				<p class="ma-auth__signup-welcome"><?php esc_html_e( 'Join us', 'woocommerce' ); ?></p>
 				<h2 class="ma-auth__signup-title"><?php esc_html_e( 'Create Account', 'woocommerce' ); ?></h2>
 				<p class="ma-auth__signup-login-line">
 					<?php esc_html_e( 'Already a member?', 'woocommerce' ); ?>
 					<a href="#" class="ma-auth__signup-login-link" @click.prevent="openTab = 'login'"><?php esc_html_e( 'Sign in', 'woocommerce' ); ?></a>
 				</p>
 			</div>
-			<?php
-			$auth_social_context = 'signup';
-			require __DIR__ . '/partials/auth-social-divider.php';
-			?>
+			<?php /* Social signup paused — restore: $auth_social_context = 'signup'; require auth-social-divider.php */ ?>
 			<form
 				@submit.prevent="handleSubmit"
 				x-data="signup"
@@ -161,20 +158,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 								<input id="reg_password" x-model="formData.password" minlength="8" type="password" name="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input" autocomplete="new-password" @keyup="validateField('password')" />
 							</div>
 							<span x-validate-error="{message: errors.password, touched: touched.password}"></span>
-							<p class="ma-form__hint"><?php esc_html_e( 'Password must contain:', 'woocommerce' ); ?></p>
-							<ul class="ma-form__password-requirements">
-								<template x-for="(requirement, index) in Object.values(passwordRequirements)" :key="index">
-									<li class="ma-form__password-requirement">
-										<svg x-show="passedRequirements.includes(requirement.code) && touched.password" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ma-form__password-requirement-icon ma-form__password-requirement-icon--pass" aria-hidden="true">
-											<path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-										</svg>
-										<svg x-show="!passedRequirements.includes(requirement.code) && touched.password" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ma-form__password-requirement-icon ma-form__password-requirement-icon--fail" aria-hidden="true">
-											<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-										</svg>
-										<span class="ma-form__password-requirement-text" :class="{ 'ma-form__password-requirement-text--pass': passedRequirements.includes(requirement.code) && touched.password, 'ma-form__password-requirement-text--fail': !passedRequirements.includes(requirement.code) && touched.password }" x-text="requirement.message"></span>
-									</li>
-								</template>
-							</ul>
+							<?php require __DIR__ . '/partials/password-requirements-hint.php'; ?>
 						</div>
 					</div>
 				</div>

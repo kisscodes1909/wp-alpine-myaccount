@@ -9,8 +9,8 @@ export default class LostPasswordHandler extends BaseFormHandler {
         return window.yup.object().shape({
             email: window.yup
                 .string()
-                .email('Your email address isn\'t valid.')
-                .required('This field is required.'),
+                .email('Please enter a valid email address.')
+                .required('Please enter your email address.'),
         });
     }
 }

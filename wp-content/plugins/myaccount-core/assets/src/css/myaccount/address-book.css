@@ -16,6 +16,8 @@
         top: var(--ma-space-2xl);
         right: var(--ma-space-lg);
         padding: var(--ma-space-sm) var(--ma-space-md);
+        font-size: var(--ma-font-sm);
+        line-height: var(--ma-line-normal);
     }
 
     .ma-address-book__list {

@@ -25,7 +25,7 @@
             <?php
         endif;
         ?>
-        <h2 class="apl-heading-chip ma-page-heading__title"><?php echo esc_html( $page_heading ); ?></h2>
+        <h2 class="ma-page-heading__title"><?php echo esc_html( $page_heading ); ?></h2>
     </div>
     <?php endif; ?>
     <?php if ( ! empty( $page_description ) ) : ?>

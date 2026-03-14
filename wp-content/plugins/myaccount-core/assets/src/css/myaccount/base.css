@@ -62,12 +62,12 @@
 
     /* Notice (font-size, space, line-height from base scale) */
     --ma-notice-space-gap: var(--ma-space-md);
-    --ma-notice-padding-y: var(--ma-space-md);
+    --ma-notice-padding-y: var(--ma-space-lg);
     --ma-notice-padding-x: var(--ma-space-md);
     --ma-notice-padding-right: var(--ma-space-2xl);
     --ma-notice-border-width: var(--ma-space-2xs);
-    --ma-notice-font-size: var(--ma-font-base);
-    --ma-notice-font-size-lg: var(--ma-font-md);
+    --ma-notice-font-size: var(--ma-font-sm);
+    --ma-notice-font-size-lg: var(--ma-font-sm);
     --ma-notice-line-height: var(--ma-line-normal);
     --ma-notice-icon-size: var(--ma-font-lg);
 
@@ -271,6 +271,7 @@
 
     .ma-page-heading {
         margin-block: var(--ma-space-xl);
+        letter-spacing: var(--ma-tracking-wide);
 
         .ma-page-heading__back-link {
             display: inline-flex;
@@ -290,6 +291,7 @@
         .ma-page-heading__back-label {
             font-size: var(--ma-font-sm);
             line-height: var(--ma-line-snug);
+            letter-spacing: var(--ma-tracking-wide);
 
             @media (min-width: 480px) {
                 font-size: var(--ma-font-base);
@@ -320,14 +322,6 @@
             height: 1.25rem;
         }
 
-        .ma-page-heading__title {
-            font-size: var(--ma-font-xl);
-            line-height: var(--ma-line-snug);
-            margin-bottom: 0;
-            text-transform: uppercase;
-            color: var(--ma-text-primary);
-        }
-
         .ma-page-heading__title-row .ma-page-heading__title {
             flex: 1;
             min-width: 0;
@@ -336,10 +330,36 @@
         .ma-page-heading__description {
             font-size: var(--ma-font-sm);
             line-height: var(--ma-line-normal);
+            letter-spacing: var(--ma-tracking-wide);
             padding-bottom: var(--ma-space-md);
             border-bottom: 1px solid var(--ma-border-divider);
             color: var(--ma-text-charcoal);
         }
+    }
+
+    /* Page / form titles (replaces apl-heading-chip / apl-heading-chip-sm) */
+    .ma-page-heading__title {
+        display: inline-flex;
+        align-items: center;
+        margin: 0;
+        font-size: var(--ma-font-xl);
+        font-weight: var(--ma-weight-semibold);
+        line-height: 1;
+        text-transform: uppercase;
+        letter-spacing: var(--ma-tracking-wider);
+        color: var(--ma-text-primary);
+
+        @media (min-width: 992px) {
+            font-size: 34px;
+        }
+    }
+
+    .ma-page-heading__title--sm {
+        font-size: var(--ma-font-xl);
+        font-weight: var(--ma-weight-semibold);
+        line-height: var(--ma-line-tight);
+        text-transform: none;
+        letter-spacing: var(--ma-tracking-wide);
     }
 
     /* ma-orders: moved to base-order-history.css */

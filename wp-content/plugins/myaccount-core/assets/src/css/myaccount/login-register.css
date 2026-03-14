@@ -147,47 +147,33 @@
         margin: 0;
     }
 
-    /* Password requirements (register form) */
-    .ma-form__password-requirements {
+    /* Password rules hint (signup + reset) — static copy, 2 cols ≥768px */
+    .ma-password-rules__title {
+        margin: var(--ma-space-sm) 0 var(--ma-space-xs);
+        font-size: var(--ma-font-sm);
+        line-height: var(--ma-line-normal);
+        color: var(--ma-text-muted-dark);
+    }
+
+    .ma-password-rules {
         display: grid;
         grid-template-columns: 1fr;
+        gap: var(--ma-space-xs) var(--ma-space-lg);
         list-style: none;
-        gap: var(--ma-space-xs);
         padding: 0;
         margin: 0;
-        margin-top: var(--ma-space-xs);
+        font-size: var(--ma-font-sm);
+        line-height: var(--ma-line-normal);
+        color: var(--ma-text-charcoal);
+    }
 
-        @media (min-width: 768px) {
+    @media (min-width: 768px) {
+        .ma-password-rules {
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
     }
 
-    .ma-form__password-requirement {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: var(--ma-space-sm);
-    }
-
-    .ma-form__password-requirement-icon {
-        flex: none;
-        width: var(--ma-space-xl);
-        height: var(--ma-space-xl);
-    }
-
-    .ma-form__password-requirement-icon--pass {
-        color: var(--ma-success-text);
-    }
-
-    .ma-form__password-requirement-icon--fail {
-        color: var(--ma-danger-text);
-    }
-
-    .ma-form__password-requirement-text--pass {
-        color: var(--ma-success-text);
-    }
-
-    .ma-form__password-requirement-text--fail {
-        color: var(--ma-danger-text);
+    .ma-password-rules__item {
+        margin: 0;
     }
 }

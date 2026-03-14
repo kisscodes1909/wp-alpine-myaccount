@@ -39,31 +39,15 @@ require_once __DIR__ . '/partials/form-field-icons.php';
                 <div class="ma-form__input-wrap">
                     <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
                     <input x-model="formData.password" minlength="8" type="password"
-                           class="input-text ma-form__input"
+                           class="woocommerce-Input woocommerce-Input--text input-text ma-form__input"
                            id="reg_password" autocomplete="new-password"
                            @keyup="handler.validateField('password')"
                            name="password_1"
                            autocomplete="new-password"
                     />
-                    <span x-validate-error="{message: errors.password, touched: touched.password}"></span>
-                    <p class="ma-reset-password__requirements-hint">Password must contain:</p>
-                    <ul class="ma-reset-password__requirements">
-                        <template x-for="(requirement, index) in Object.values(passwordRequirements)" :key="index" >
-                            <li class="ma-reset-password__requirement">
-                                <svg x-show="passedRequirements.includes(requirement.code) && touched.password" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ma-reset-password__requirement-icon ma-reset-password__requirement-icon--pass">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                                </svg>
-                                <svg x-show="!passedRequirements.includes(requirement.code) && touched.password" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ma-reset-password__requirement-icon ma-reset-password__requirement-icon--fail">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                                </svg>
-                                <span class="ma-reset-password__requirement-text" :class="{
-                                'ma-reset-password__requirement-text--pass' : passedRequirements.includes(requirement.code) && touched.password,
-                                'ma-reset-password__requirement-text--fail' : !passedRequirements.includes(requirement.code) && touched.password,
-                            }" x-text="requirement.message"></span>
-                            </li>
-                        </template>
-                    </ul>
                 </div>
+                <span x-validate-error="{message: errors.password, touched: touched.password}"></span>
+                <?php require __DIR__ . '/partials/password-requirements-hint.php'; ?>
             </div>
         </div>
 

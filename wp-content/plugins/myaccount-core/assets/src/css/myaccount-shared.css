@@ -71,27 +71,6 @@ body {
     display: none;
 }
 
-.apl-heading-chip,
-.apl-heading-chip-sm {
-    display: inline-flex;
-    align-items: center;
-    color: var(--ma-text-primary);
-    font-size: var(--ma-font-xl);
-    font-weight: 600;
-}
-
-.apl-heading-chip {
-    line-height: 1;
-
-    @media (min-width: 992px) {
-        font-size: 34px;
-    }
-}
-
-.apl-heading-chip-sm {
-    line-height: var(--ma-line-tight);
-}
-
 .loading-icon {
     display: inline-flex;
     align-items: center;

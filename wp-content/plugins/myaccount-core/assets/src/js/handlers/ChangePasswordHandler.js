@@ -7,12 +7,12 @@ import BaseFormHandler from '../BaseFormHandler.js';
 export default class ChangePasswordHandler extends BaseFormHandler {
     getValidationSchema() {
         return window.yup.object().shape({
-            currentPassword: window.yup.string().required('The current password is required.'),
-            newPassword: window.yup.string().min(8, 'The new password must be at least 8 characters long.')
-                .required('The new password is required.'),
+            currentPassword: window.yup.string().required('Please enter your current password.'),
+            newPassword: window.yup.string().min(8, 'New password: at least 8 characters.')
+                .required('Please enter a new password.'),
             confirmPassword: window.yup.string()
-                .oneOf([window.yup.ref('newPassword'), null], 'Passwords must match.')
-                .required('Confirming your new password is required.')
+                .oneOf([window.yup.ref('newPassword'), null], 'Those passwords don’t match — try again.')
+                .required('Please confirm your new password.')
         });
     }
 

@@ -6660,8 +6660,8 @@ attempted value: ${formattedValue}
   var LoginHandler = class extends BaseFormHandler {
     getValidationSchema() {
       return window.yup.object().shape({
-        password: window.yup.string().required("This field is required.").min(8, "Your password isn't valid."),
-        email: window.yup.string().email("Your email address isn't valid.").required("This field is required.")
+        password: window.yup.string().required("Please enter your password.").min(8, "Password must be at least 8 characters."),
+        email: window.yup.string().email("Please enter a valid email address.").required("Please enter your email address.")
       });
     }
     done() {
@@ -6708,19 +6708,19 @@ attempted value: ${formattedValue}
       super(formData, additionalData);
       this.passedRequirements = [];
       this.passwordRequirements = {
-        minLength: { regex: /.{8,}/, message: "At least 8 characters", code: "ERR_PASSWORD_MINLENGTH" },
-        uppercase: { regex: /(?=.*[A-Z])/, message: "1 uppercase letter", code: "ERR_PASSWORD_UPPERCASE" },
-        number: { regex: /(?=.*[0-9])/, message: "1 number", code: "ERR_PASSWORD_NUMBER" },
-        lowercase: { regex: /(?=.*[a-z])/, message: "1 lowercase letter", code: "ERR_PASSWORD_LOWERCASE" }
+        minLength: { regex: /.{8,}/, message: "8 or more characters", code: "ERR_PASSWORD_MINLENGTH" },
+        uppercase: { regex: /(?=.*[A-Z])/, message: "One uppercase letter", code: "ERR_PASSWORD_UPPERCASE" },
+        number: { regex: /(?=.*[0-9])/, message: "One number", code: "ERR_PASSWORD_NUMBER" },
+        lowercase: { regex: /(?=.*[a-z])/, message: "One lowercase letter", code: "ERR_PASSWORD_LOWERCASE" }
       };
     }
     getValidationSchema() {
       return window.yup.object().shape({
-        firstName: window.yup.string().required("This field is required.").matches(/^[A-Za-z]+$/, "Your name isn't valid."),
-        lastName: window.yup.string().required("This field is required.").matches(/^[A-Za-z]+$/, "Your name isn't valid."),
-        email: window.yup.string().email("Your email address isn't valid.").required("This field is required."),
-        agreeTOS: window.yup.boolean().required("You must accept the Terms of Service.").oneOf([true], "You must accept the Terms of Service."),
-        password: window.yup.string().required("This field is required.").test("password-complexity", "Your password does not meet the requirements.", (value) => {
+        firstName: window.yup.string().required("Please enter your first name.").matches(/^[A-Za-z]+$/, "First name: letters only, please."),
+        lastName: window.yup.string().required("Please enter your last name.").matches(/^[A-Za-z]+$/, "Last name: letters only, please."),
+        email: window.yup.string().email("Please enter a valid email address.").required("Please enter your email address."),
+        agreeTOS: window.yup.boolean().required("Please accept the Terms of Service to continue.").oneOf([true], "Please accept the Terms of Service to continue."),
+        password: window.yup.string().required("Please choose a password.").test("password-complexity", "Almost there \u2014 add everything in the list above (8+ chars, upper, lower, and a number).", (value) => {
           const passedRequirements = [];
           Object.entries(this.passwordRequirements).forEach(([, requirement]) => {
             if (requirement.regex.test(value || "")) {
@@ -6818,7 +6818,7 @@ attempted value: ${formattedValue}
   var LostPasswordHandler = class extends BaseFormHandler {
     getValidationSchema() {
       return window.yup.object().shape({
-        email: window.yup.string().email("Your email address isn't valid.").required("This field is required.")
+        email: window.yup.string().email("Please enter a valid email address.").required("Please enter your email address.")
       });
     }
   };
@@ -6857,15 +6857,15 @@ attempted value: ${formattedValue}
       super(formData, additionalData);
       this.passedRequirements = [];
       this.passwordRequirements = {
-        minLength: { regex: /.{8,}/, message: "At least 8 characters", code: "ERR_PASSWORD_MINLENGTH" },
-        uppercase: { regex: /(?=.*[A-Z])/, message: "1 uppercase letter", code: "ERR_PASSWORD_UPPERCASE" },
-        number: { regex: /(?=.*[0-9])/, message: "1 number", code: "ERR_PASSWORD_NUMBER" },
-        lowercase: { regex: /(?=.*[a-z])/, message: "1 lowercase letter", code: "ERR_PASSWORD_LOWERCASE" }
+        minLength: { regex: /.{8,}/, message: "8 or more characters", code: "ERR_PASSWORD_MINLENGTH" },
+        uppercase: { regex: /(?=.*[A-Z])/, message: "One uppercase letter", code: "ERR_PASSWORD_UPPERCASE" },
+        number: { regex: /(?=.*[0-9])/, message: "One number", code: "ERR_PASSWORD_NUMBER" },
+        lowercase: { regex: /(?=.*[a-z])/, message: "One lowercase letter", code: "ERR_PASSWORD_LOWERCASE" }
       };
     }
     getValidationSchema() {
       return window.yup.object().shape({
-        password: window.yup.string().required("This field is required.").test("password-complexity", "Your password does not meet the requirements.", (value) => {
+        password: window.yup.string().required("Please choose a new password.").test("password-complexity", "Almost there \u2014 add everything in the list above (8+ chars, upper, lower, and a number).", (value) => {
           const passedRequirements = [];
           Object.values(this.passwordRequirements).forEach((requirement) => {
             if (requirement.regex.test(value || "")) {
@@ -6930,15 +6930,15 @@ attempted value: ${formattedValue}
     getValidationSchema() {
       const y = window.yup;
       return y.object().shape({
-        firstName: req("First name is required."),
-        lastName: req("Last name is required."),
-        billing_address_1: req("Street address is required."),
-        billing_city: req("City is required."),
+        firstName: req("Please add your first name."),
+        lastName: req("Please add your last name."),
+        billing_address_1: req("Please add your street address."),
+        billing_city: req("Please add your city."),
         billing_state: window.yup.string(),
         billing_postcode: window.yup.string(),
-        billing_country: req("Country is required."),
-        billing_phone: req("Phone is required."),
-        billing_email: y.string().email("Invalid billing email.").required("Billing email is required."),
+        billing_country: req("Please choose a country."),
+        billing_phone: req("Please add a phone number."),
+        billing_email: y.string().email("Please enter a valid email.").required("Please add your billing email."),
         billing_company: y.string().nullable(),
         billing_address_2: y.string().nullable()
       });
@@ -7051,9 +7051,9 @@ attempted value: ${formattedValue}
   var ChangePasswordHandler = class extends BaseFormHandler {
     getValidationSchema() {
       return window.yup.object().shape({
-        currentPassword: window.yup.string().required("The current password is required."),
-        newPassword: window.yup.string().min(8, "The new password must be at least 8 characters long.").required("The new password is required."),
-        confirmPassword: window.yup.string().oneOf([window.yup.ref("newPassword"), null], "Passwords must match.").required("Confirming your new password is required.")
+        currentPassword: window.yup.string().required("Please enter your current password."),
+        newPassword: window.yup.string().min(8, "New password: at least 8 characters.").required("Please enter a new password."),
+        confirmPassword: window.yup.string().oneOf([window.yup.ref("newPassword"), null], "Those passwords don\u2019t match \u2014 try again.").required("Please confirm your new password.")
       });
     }
     getApiEndpoint() {

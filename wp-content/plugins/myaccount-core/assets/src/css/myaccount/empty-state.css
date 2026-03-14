@@ -11,11 +11,6 @@
         gap: var(--ma-space-md);
         padding: var(--ma-space-lg);
         text-align: center;
-
-        /* One pad when root is also .ma-u-surface-panel */
-        &.ma-u-surface-panel {
-            padding: 0;
-        }
     }
 
     .ma-empty-state__title {

@@ -8,10 +8,10 @@ import BaseFormHandler from '../BaseFormHandler.js';
 export default class LoginHandler extends BaseFormHandler {
     getValidationSchema() {
         return window.yup.object().shape({
-            password: window.yup.string().required('This field is required.')
-                .min(8, 'Your password isn\'t valid.'),
-            email: window.yup.string().email('Your email address isn\'t valid.')
-                .required('This field is required.'),
+            password: window.yup.string().required('Please enter your password.')
+                .min(8, 'Password must be at least 8 characters.'),
+            email: window.yup.string().email('Please enter a valid email address.')
+                .required('Please enter your email address.'),
         });
     }
 
