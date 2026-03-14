@@ -418,6 +418,19 @@
         opacity: 0.5;
         cursor: not-allowed;
     }
+/* Keep primary CTA look when disabled/loading (WC/theme often resets button:disabled to light bg). */
+.woocommerce-account .ma-btn--primary:disabled,
+    .woocommerce-account .ma-btn--primary[disabled],
+    .woocommerce-account .ma-btn--primary[aria-busy='true'] {
+        background: var(--ma-btn-primary-bg);
+        border-color: var(--ma-btn-primary-border);
+        color: var(--ma-btn-primary-text);
+        opacity: 0.92;
+    }
+.woocommerce-account .ma-btn--primary .ma-btn-loading,
+    .woocommerce-account .ma-btn--primary .button-loading-label {
+        color: inherit;
+    }
 /* Icons inside any .ma-btn (empty state, address, auth, etc.) — one size */
 .woocommerce-account .ma-btn svg {
         display: block;
@@ -581,7 +594,7 @@
     overflow-y: auto;
     align-items: center;
     justify-content: center;
-    padding: var(--ma-space-md);
+    padding: var(--ma-space-lg);
 }
 /* Loader container: full viewport, teleport target */
 .ma-ui-loader-container {
@@ -618,7 +631,7 @@ body.ma-popup-scroll-lock {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--ma-space-md);
+    padding: var(--ma-space-lg);
 }
 .ma-ui-popup__panel {
     position: relative;
@@ -645,7 +658,7 @@ body.ma-popup-scroll-lock {
 .ma-ui-toast__item {
     --ma-tr-duration: var(--ma-duration-normal);
     position: relative;
-    padding: var(--ma-space-md) var(--ma-space-lg);
+    padding: var(--ma-space-lg);
     box-shadow: var(--ma-shadow-lg);
     border-left: var(--ma-space-xs) solid transparent;
     pointer-events: auto;
@@ -855,13 +868,12 @@ body {
 .ma-u-muted {
     color: var(--ma-text-muted-dark);
 }
+/* Panel shell: border + surface + inset (single source — no extra padding on children) */
 .woocommerce-account .ma-u-surface-panel,
 .woocommerce-account .ma-u-panel-sm {
     box-sizing: border-box;
     background: var(--ma-surface);
     border: 1px solid var(--ma-border);
-}
-.woocommerce-account .ma-u-surface-panel {
     padding: var(--ma-space-lg);
 }
 .woocommerce-account .ma-u-surface-panel--full {
@@ -870,6 +882,11 @@ body {
 .woocommerce-account .ma-u-panel-sm {
     font-size: var(--ma-font-sm);
     line-height: var(--ma-line-normal);
+}
+/* Inset only (inside an existing bordered shell, e.g. .ma-line-card) — same token as panel */
+.woocommerce-account .ma-u-panel-pad {
+    box-sizing: border-box;
+    padding: var(--ma-space-lg);
 }
 .woocommerce-account .ma-u-section-title {
     margin: 0;
@@ -891,6 +908,7 @@ body {
     font-size: var(--ma-font-sm);
     line-height: var(--ma-line-normal);
     color: var(--ma-text-muted-dark);
+    letter-spacing: var(--ma-tracking-wider);
 }
 [x-cloak] {
     display: none;

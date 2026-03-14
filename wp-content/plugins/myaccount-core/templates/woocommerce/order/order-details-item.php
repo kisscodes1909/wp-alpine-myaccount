@@ -41,7 +41,7 @@ $item_classes = implode( ' ', array_filter( array(
 		}
 		?>
 	</div>
-	<div class="ma-order-details-items-summary__item-body ma-line-card__body">
+	<div class="ma-order-details-items-summary__item-body ma-line-card__body ma-u-panel-pad">
 		<h3 class="ma-order-details-items-summary__item-name">
 			<?php
 			echo wp_kses_post( apply_filters(

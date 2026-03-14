@@ -17,14 +17,14 @@ require_once __DIR__ . '/partials/form-field-icons.php';
     <form class="ma-form ma-form-address ma-address-form" x-data="{ showAddress2: false }" x-init="showAddress2 = !!$store.userAddress.editAddress.address2">
         <div class="ma-address-form__grid ma-address-form__grid--two">
             <div class="ma-form__field">
-                <label for="first-name" class="ma-form__label">First name</label>
+                <label for="first-name" class="ma-form__label ma-form__label--required">First name</label>
                 <div class="ma-form__input-wrap">
                     <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_user(); ?></span>
                     <input class="ma-form__input" x-model="$store.userAddress.editAddress.fname" type="text" name="first-name" id="first-name" autocomplete="given-name" />
                 </div>
             </div>
             <div class="ma-form__field">
-                <label for="last-name" class="ma-form__label">Last name</label>
+                <label for="last-name" class="ma-form__label ma-form__label--required">Last name</label>
                 <div class="ma-form__input-wrap">
                     <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_user(); ?></span>
                     <input class="ma-form__input" x-model="$store.userAddress.editAddress.lname" type="text" name="last-name" id="last-name" autocomplete="family-name" />
@@ -33,7 +33,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
         </div>
 
         <div class="ma-form__field">
-            <label for="address" class="ma-form__label">Address</label>
+            <label for="address" class="ma-form__label ma-form__label--required">Address</label>
             <div class="ma-form__input-wrap">
                 <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_map_pin(); ?></span>
                 <input class="ma-form__input" x-model="$store.userAddress.editAddress.address" type="text" name="address" id="address" autocomplete="street-address" />
@@ -60,7 +60,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 
         <div class="ma-address-form__grid ma-address-form__grid--three">
             <div class="ma-form__field">
-                <label for="country" class="ma-form__label">Country / Region</label>
+                <label for="country" class="ma-form__label ma-form__label--required">Country / Region</label>
                 <div class="ma-form__input-wrap">
                     <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_globe_alt(); ?></span>
                     <select class="ma-form__input" x-model="$store.userAddress.editAddress.country" id="country" name="country" autocomplete="country-name">
@@ -87,7 +87,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
         </div>
 
         <div class="ma-form__field">
-            <label for="city" class="ma-form__label">Town / City</label>
+            <label for="city" class="ma-form__label ma-form__label--required">Town / City</label>
             <div class="ma-form__input-wrap">
                 <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_map_pin(); ?></span>
                 <input class="ma-form__input" x-model="$store.userAddress.editAddress.city" type="text" name="city" id="city" autocomplete="address-level2" />
@@ -95,7 +95,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
         </div>
 
         <div class="ma-form__field">
-            <label for="phone-number" class="ma-form__label">Phone</label>
+            <label for="phone-number" class="ma-form__label ma-form__label--required">Phone</label>
             <div class="ma-form__input-wrap">
                 <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_phone(); ?></span>
                 <input class="ma-form__input" @input="$store.userAddress.formatUSPhoneNumber()" x-model="$store.userAddress.editAddress.phone" type="text" name="phone-number" id="phone-number" maxlength="14" />

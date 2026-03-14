@@ -47,12 +47,11 @@
         transform: scale(1.05);
     }
 
-    /* Mobile: compact padding + gap so text column usable beside 80px media */
+    /* Inset: add .ma-u-panel-pad on node (shared myaccount-shared.css) */
     .ma-line-card__body {
         display: flex;
         flex-direction: column;
         gap: var(--ma-space-sm);
-        padding: var(--ma-space-sm);
         flex: 1 1 0;
         min-width: 0;
     }
@@ -60,7 +59,6 @@
     @media (min-width: 480px) {
         .ma-line-card__body {
             gap: var(--ma-space-md);
-            padding: var(--ma-space-md);
         }
     }
 

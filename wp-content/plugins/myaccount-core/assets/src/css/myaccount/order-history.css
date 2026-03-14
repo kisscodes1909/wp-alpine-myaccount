@@ -198,7 +198,6 @@
             min-width: 150px;
         }
         .ma-orders__item-body.ma-line-card__body {
-            padding: var(--ma-space-md) var(--ma-space-lg);
             justify-content: space-between;
             gap: 0;
             font-size: var(--ma-font-sm);

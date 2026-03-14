@@ -142,7 +142,7 @@
         display: flex;
         flex-direction: column;
         gap: var(--ma-space-md);
-        padding: var(--ma-space-lg) var(--ma-vo-md-175) var(--ma-space-2xs);
+        padding: var(--ma-space-lg);
         border-bottom: 1px solid var(--ma-border);
         background: var(--ma-surface-alt);
         min-height: calc(var(--ma-space-md) * 6.0625);
@@ -223,7 +223,7 @@
     }
 
     .ma-order-status-card__timeline {
-        padding: var(--ma-space-lg) var(--ma-vo-md-175) var(--ma-vo-md-175);
+        padding: var(--ma-space-lg);
         background: transparent;
     }
 
@@ -493,8 +493,9 @@
         background: var(--ma-border);
     }
 
-    .ma-order-details-items-summary__item-body.ma-line-card__body {
-        padding: var(--ma-space-sm) var(--ma-space-sm) 0;
+    /* .ma-u-panel-pad = horizontal+top inset; flush bottom on narrow card rows */
+    .ma-order-details-items-summary__item-body.ma-line-card__body.ma-u-panel-pad {
+        padding-bottom: 0;
         gap: var(--ma-space-xs);
         color: var(--ma-text-primary);
         font-size: var(--ma-font-sm);
@@ -502,9 +503,6 @@
     }
 
     @media (min-width: 480px) {
-        .ma-order-details-items-summary__item-body.ma-line-card__body {
-            padding: var(--ma-space-lg) var(--ma-space-lg) 0;
-        }
 
         .ma-order-details-items-summary__item-image img,
         .ma-order-details-items-summary__item-image-placeholder {
@@ -598,8 +596,8 @@
             min-height: 120px;
         }
 
-        .ma-order-details-items-summary__item-body.ma-line-card__body {
-            padding: var(--ma-space-lg);
+        .ma-order-details-items-summary__item-body.ma-line-card__body.ma-u-panel-pad {
+            padding-bottom: var(--ma-space-lg);
             gap: var(--ma-space-sm);
             font-size: var(--ma-font-md);
             line-height: var(--ma-line-snug);
@@ -950,11 +948,11 @@
         }
 
         .ma-order-status-card__header {
-            padding: var(--ma-space-lg) var(--ma-vo-md-175);
+            padding: var(--ma-space-lg);
         }
 
         .ma-order-status-card__timeline {
-            padding: var(--ma-space-lg) var(--ma-vo-md-175);
+            padding: var(--ma-space-lg);
         }
 
         .ma-view-order__updates {

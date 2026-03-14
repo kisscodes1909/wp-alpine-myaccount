@@ -35,7 +35,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 
         <div class="ma-form__section ma-reset-password__section">
             <div class="ma-form__field ma-reset-password__field" :class="{'error': (touched.password && errors.password)}">
-                <label for="reg_password" class="ma-form__label"><?php esc_html_e('New Password', 'woocommerce'); ?></label>
+                <label for="reg_password" class="ma-form__label ma-form__label--required"><?php esc_html_e('New Password', 'woocommerce'); ?></label>
                 <div class="ma-form__input-wrap">
                     <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
                     <input x-model="formData.password" minlength="8" type="password"

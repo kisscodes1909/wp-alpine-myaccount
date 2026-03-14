@@ -24,7 +24,12 @@ Output:
 - Shared utility prefix: `.ma-u-*`
 - Shared transition prefix: `.ma-tr-*`
 
-**Panel padding:** `.ma-u-surface-panel` uses **`padding: var(--ma-space-lg)`** on the shell (shared). Blocks that combine `.ma-empty-state.ma-u-surface-panel` zero out empty-state padding so only the panel pads once.
+**Panel shell (single source, `padding: var(--ma-space-lg)`):**
+- **`.ma-u-surface-panel`** (+ `--full`) — border + surface + inset. Dùng cho address card, payment item, empty state wrapper, payment “Add” section body, v.v.
+- **`.ma-u-panel-sm`** — cùng shell + inset + `font-size: sm`. Dùng trên **cùng node** với `.ma-form__setting-card` — **không** thêm padding riêng trong form-base.
+- **`.ma-u-panel-pad`** — chỉ inset (không border/bg). Dùng **bên trong** shell đã có viền (vd. `.ma-line-card__body`) để trùng token với panel, không lặp rule padding trong `order-line-card.css`.
+
+Blocks that combine `.ma-empty-state.ma-u-surface-panel` zero out empty-state padding so only the panel pads once.
 
 Examples:
 - `.ma-orders__item-status--success`
@@ -33,9 +38,9 @@ Examples:
 
 **Type scale on card bodies:** Prefer `font-size` + `line-height` once on `.ma-orders__item-body.ma-line-card__body` and `.ma-order-details-items-summary__item-body.ma-line-card__body`; override only children that differ (e.g. status pill `xs`, meta caption smaller + `line-normal`).
 
-**Mobile line cards:** `.ma-line-card__body` tighter `padding`/`gap` below 480px; View link tap target on orders (see `order-history.css`).
+**Line cards:** `.ma-line-card__body` + **`.ma-u-panel-pad`** trong template. View-order có thể chỉnh `padding-bottom` theo layout (xem `view-order.css`). View link tap target on orders (see `order-history.css`).
 
-**Shared line card (cross-endpoint layout + state):** `.ma-line-card`, `.ma-line-card__media`, `.ma-line-card__body` — horizontal card shell ([`order-line-card.css`](assets/src/css/myaccount/order-line-card.css)). **Mobile-first:** base layout is the narrow viewport (80px media); **wider/taller media and body padding only in `@media (min-width: 480px)` and `(768px)`** in [`order-history.css`](assets/src/css/myaccount/order-history.css) and view-order items block. **States:** hover/focus-within border; media img scale (disabled under `prefers-reduced-motion: reduce`). Fashion may override hover border.
+**Shared line card (cross-endpoint layout + state):** `.ma-line-card`, `.ma-line-card__media`, `.ma-line-card__body` — horizontal card shell ([`order-line-card.css`](assets/src/css/myaccount/order-line-card.css)). **Mobile-first:** base layout is the narrow viewport (80px media); **wider/taller media** in `@media` in [`order-history.css`](assets/src/css/myaccount/order-history.css) and view-order items block. **States:** hover/focus-within border; media img scale (disabled under `prefers-reduced-motion: reduce`). Fashion may override hover border.
 
 ## Mobile-first Contract
 - Base styles are for mobile.
@@ -88,8 +93,8 @@ Utilities are for repeated generic patterns only.
 
 Allowed:
 - Lightweight helpers only when used in templates (e.g. `.ma-u-muted`). Prefer endpoint BEM + tokens for layout instead of a flex/gap utility matrix.
-- **Surface shell**: `.ma-u-surface-panel` (+ optional `.ma-u-surface-panel--full`) — `background` + `border` + `box-sizing`; pair with endpoint BEM for padding/flex. **Compact shell**: `.ma-u-panel-sm` — same border/surface + `font-size: var(--ma-font-sm)` for dense meta only (not order/address list rows).
-- **Section heading**: `.ma-u-section-title` — `font-size: var(--ma-font-md)`, uppercase, `letter-spacing: var(--ma-tracking-wider)`, `font-weight: 500`. Modifiers: `--mb-lg`, `--mb-md`. **Section blurb**: `.ma-u-section-description` — muted, `font-size: var(--ma-font-sm)`. Use on My Info, Payment Methods, View order section headings; avoid duplicating the same typography in endpoint CSS.
+- **Surface shell**: `.ma-u-surface-panel` (+ optional `.ma-u-surface-panel--full`) — background + border + **padding lg** (single source). **Compact shell**: `.ma-u-panel-sm` — same + `font-size: var(--ma-font-sm)`. **Pad only**: `.ma-u-panel-pad` — padding lg, no shell (inside `.ma-line-card` body).
+- **Section heading**: `.ma-u-section-title` — `font-size: var(--ma-font-md)`, uppercase, `letter-spacing: var(--ma-tracking-wider)`, `font-weight: 500`. Modifiers: `--mb-lg`, `--mb-md`. **Section blurb**: `.ma-u-section-description` — muted, `font-size: var(--ma-font-sm)`, `letter-spacing: var(--ma-tracking-wider)`. Use on My Info, Payment Methods, View order section headings; avoid duplicating the same typography in endpoint CSS.
 
 Rules:
 - Promote to utility only when a pattern repeats >= 3 times.

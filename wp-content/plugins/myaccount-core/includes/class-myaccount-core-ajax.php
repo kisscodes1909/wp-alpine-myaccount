@@ -121,27 +121,119 @@ class MyAccount_Core_Ajax {
 
 		$first_name = wc_clean( wp_unslash( $_POST['firstName'] ?? '' ) );
 		$last_name  = wc_clean( wp_unslash( $_POST['lastName'] ?? '' ) );
-		$email      = sanitize_email( wp_unslash( $_POST['email'] ?? '' ) );
-
-		$current_user = get_user_by( 'id', $user_id );
 
 		$user             = new stdClass();
 		$user->ID         = $user_id;
 		$user->first_name = ucfirst( $first_name );
 		$user->last_name  = ucfirst( $last_name );
 
-		if ( $email ) {
-			if ( ! is_email( $email ) ) {
-				$this->send_json_error( __( 'Please provide a valid email address.', 'woocommerce' ) );
-			}
-			if ( email_exists( $email ) && $email !== $current_user->user_email ) {
-				$this->send_json_error( __( 'This email address is already registered.', 'woocommerce' ) );
-			}
-			$user->user_email = $email;
+		// Billing name fields follow Personal (WC requires them on save); not shown in Contact UI.
+		$_POST['billing_first_name'] = $first_name;
+		$_POST['billing_last_name']  = $last_name;
+
+		$billing_errors = $this->validate_and_save_billing_address( $user_id );
+		if ( true !== $billing_errors ) {
+			$this->send_json_error( $billing_errors );
 		}
 
 		wp_update_user( $user );
-		$this->send_json_success( __( 'Your account details have been updated.', 'myaccount-core' ) );
+
+		$this->send_json_success( __( 'Your account and contact details have been updated.', 'myaccount-core' ) );
+	}
+
+	/**
+	 * Validate billing fields like WC_Form_Handler::save_address, persist WC_Customer billing, fire Woo hook.
+	 *
+	 * @param int $user_id Current user.
+	 * @return true|string True on success, error message on failure.
+	 */
+	private function validate_and_save_billing_address( int $user_id ) {
+		$country = isset( $_POST['billing_country'] ) ? wc_clean( wp_unslash( $_POST['billing_country'] ) ) : '';
+		if ( '' === $country ) {
+			return __( 'Please select a country / region.', 'woocommerce' );
+		}
+
+		$customer = new WC_Customer( $user_id );
+		if ( ! $customer || ! $customer->get_id() ) {
+			return __( 'User was not found!', 'woocommerce' );
+		}
+
+		$address_type = 'billing';
+		$address      = WC()->countries->get_address_fields( $country, $address_type . '_' );
+
+		foreach ( $address as $key => $field ) {
+			if ( ! isset( $field['type'] ) ) {
+				$field['type'] = 'text';
+			}
+
+			if ( 'checkbox' === $field['type'] ) {
+				$value = (int) isset( $_POST[ $key ] );
+			} else {
+				$value = isset( $_POST[ $key ] ) ? wc_clean( wp_unslash( $_POST[ $key ] ) ) : '';
+			}
+
+			$value = apply_filters( 'woocommerce_process_myaccount_field_' . $key, $value );
+
+			if ( ! empty( $field['required'] ) && ( '' === $value || null === $value ) ) {
+				return sprintf(
+					/* translators: %s: Field label */
+					__( '%s is a required field.', 'woocommerce' ),
+					isset( $field['label'] ) ? wp_strip_all_tags( $field['label'] ) : $key
+				);
+			}
+
+			if ( ! empty( $value ) && ! empty( $field['validate'] ) && is_array( $field['validate'] ) ) {
+				foreach ( $field['validate'] as $rule ) {
+					switch ( $rule ) {
+						case 'postcode':
+							$value = wc_format_postcode( $value, $country );
+							if ( '' !== $value && ! WC_Validation::is_postcode( $value, $country ) ) {
+								return __( 'Please enter a valid postcode / ZIP.', 'woocommerce' );
+							}
+							break;
+						case 'phone':
+							if ( '' !== $value && ! WC_Validation::is_phone( $value ) ) {
+								return __( 'Please enter a valid phone number.', 'woocommerce' );
+							}
+							break;
+						case 'email':
+							$value = strtolower( $value );
+							if ( ! is_email( $value ) ) {
+								return __( 'Please enter a valid billing email address.', 'woocommerce' );
+							}
+							break;
+					}
+				}
+			}
+
+			try {
+				if ( is_callable( array( $customer, 'set_' . $key ) ) ) {
+					$customer->{ 'set_' . $key }( $value );
+				} else {
+					$customer->update_meta_data( $key, $value );
+				}
+			} catch ( WC_Data_Exception $e ) {
+				if ( 'customer_invalid_billing_email' !== $e->getErrorCode() ) {
+					return $e->getMessage();
+				}
+			}
+		}
+
+		/**
+		 * Same hook as Woo when saving address from My Account.
+		 *
+		 * @param int         $user_id      User ID.
+		 * @param string      $address_type billing|shipping.
+		 * @param array       $address      Field definitions.
+		 * @param WC_Customer $customer     Customer object.
+		 */
+		do_action( 'woocommerce_after_save_address_validation', $user_id, $address_type, $address, $customer );
+
+		$customer->save();
+
+		do_action( 'woocommerce_customer_save_address', $user_id, $address_type );
+
+		return true;
 	}
 
 	public function save_address_book(): void {

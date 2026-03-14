@@ -17,14 +17,12 @@ body {
     color: var(--ma-text-muted-dark);
 }
 
+/* Panel shell: border + surface + inset (single source — no extra padding on children) */
 .woocommerce-account .ma-u-surface-panel,
 .woocommerce-account .ma-u-panel-sm {
     box-sizing: border-box;
     background: var(--ma-surface);
     border: 1px solid var(--ma-border);
-}
-
-.woocommerce-account .ma-u-surface-panel {
     padding: var(--ma-space-lg);
 }
 
@@ -35,6 +33,12 @@ body {
 .woocommerce-account .ma-u-panel-sm {
     font-size: var(--ma-font-sm);
     line-height: var(--ma-line-normal);
+}
+
+/* Inset only (inside an existing bordered shell, e.g. .ma-line-card) — same token as panel */
+.woocommerce-account .ma-u-panel-pad {
+    box-sizing: border-box;
+    padding: var(--ma-space-lg);
 }
 
 .woocommerce-account .ma-u-section-title {
@@ -60,6 +64,7 @@ body {
     font-size: var(--ma-font-sm);
     line-height: var(--ma-line-normal);
     color: var(--ma-text-muted-dark);
+    letter-spacing: var(--ma-tracking-wider);
 }
 
 [x-cloak] {

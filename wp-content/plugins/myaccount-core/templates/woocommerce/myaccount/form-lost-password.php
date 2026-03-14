@@ -41,7 +41,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 
         <div class="ma-form__section">
             <div class="ma-form__field ma-lost-password__field" x-validate-field="{message: errors.email, touched:touched.email}">
-                <label for="reg_email" class="ma-form__label"><?php esc_html_e('Email address', 'woocommerce'); ?></label>
+                <label for="reg_email" class="ma-form__label ma-form__label--required"><?php esc_html_e('Email address', 'woocommerce'); ?></label>
                 <div class="ma-form__input-wrap">
                 <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_envelope(); ?></span>
                 <input id="reg_email" x-model="formData.email"

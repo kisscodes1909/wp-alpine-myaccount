@@ -37,7 +37,7 @@ do_action( 'woocommerce_before_account_orders', $has_orders );
 						</div>
 					<?php endif; ?>
 				</div>
-				<div class="ma-orders__item-body ma-line-card__body">
+				<div class="ma-orders__item-body ma-line-card__body ma-u-panel-pad">
 					<?php wc_get_template( 'order/order-list-item-content.php', array( 'order' => $order ) ); ?>
 				</div>
 			</div>

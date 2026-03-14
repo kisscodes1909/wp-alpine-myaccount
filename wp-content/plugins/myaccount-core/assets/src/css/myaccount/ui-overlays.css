@@ -49,7 +49,7 @@
     overflow-y: auto;
     align-items: center;
     justify-content: center;
-    padding: var(--ma-space-md);
+    padding: var(--ma-space-lg);
 }
 
 /* Loader container: full viewport, teleport target */
@@ -91,7 +91,7 @@ body.ma-popup-scroll-lock {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--ma-space-md);
+    padding: var(--ma-space-lg);
 }
 
 .ma-ui-popup__panel {
@@ -121,7 +121,7 @@ body.ma-popup-scroll-lock {
 .ma-ui-toast__item {
     --ma-tr-duration: var(--ma-duration-normal);
     position: relative;
-    padding: var(--ma-space-md) var(--ma-space-lg);
+    padding: var(--ma-space-lg);
     box-shadow: var(--ma-shadow-lg);
     border-left: var(--ma-space-xs) solid transparent;
     pointer-events: auto;

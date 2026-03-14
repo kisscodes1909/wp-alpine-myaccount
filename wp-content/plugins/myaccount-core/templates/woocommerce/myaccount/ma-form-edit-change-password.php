@@ -16,7 +16,7 @@
             </div>
 
             <div class="ma-form__field">
-                <label for="change-password-current" class="ma-form__label"><?php esc_html_e( 'Password', 'woocommerce' ); ?></label>
+                <label for="change-password-current" class="ma-form__label ma-form__label--required"><?php esc_html_e( 'Password', 'woocommerce' ); ?></label>
                 <div class="ma-form__input-wrap">
                     <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
                     <input
@@ -32,7 +32,7 @@
             </div>
 
             <div class="ma-form__field">
-                <label for="change-password-new" class="ma-form__label"><?php esc_html_e( 'New Password', 'woocommerce' ); ?></label>
+                <label for="change-password-new" class="ma-form__label ma-form__label--required"><?php esc_html_e( 'New Password', 'woocommerce' ); ?></label>
                 <div class="ma-form__input-wrap">
                     <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
                     <input
@@ -48,7 +48,7 @@
             </div>
 
             <div class="ma-form__field">
-                <label for="change-password-confirm" class="ma-form__label"><?php esc_html_e( 'Confirm Password', 'woocommerce' ); ?></label>
+                <label for="change-password-confirm" class="ma-form__label ma-form__label--required"><?php esc_html_e( 'Confirm Password', 'woocommerce' ); ?></label>
                 <div class="ma-form__input-wrap">
                     <span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
                     <input

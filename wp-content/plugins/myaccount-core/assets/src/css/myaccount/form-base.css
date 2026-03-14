@@ -20,8 +20,6 @@
         --ma-form-space-bordered-top: var(--ma-space-xl);
         --ma-form-space-actions-top: var(--ma-space-xl);
         --ma-form-space-setting-card-gap: var(--ma-space-md);
-        --ma-form-space-setting-card-padding-x: var(--ma-space-lg);
-        --ma-form-space-setting-card-padding-y: var(--ma-space-lg);
         --ma-form-space-setting-meta-gap: var(--ma-space-xs);
         --ma-form-space-status-pill-padding-x: var(--ma-space-sm);
         --ma-form-space-status-pill-padding-y: var(--ma-space-xs);
@@ -349,7 +347,35 @@
             .ma-form__grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
+
+            .ma-form__grid--three {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            /* Two equal columns (Country+Company, Street+Apt, Phone+Email) */
+            .ma-form__grid--equal-2 {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            /* Three equal columns (City, State, Postcode) */
+            .ma-form__grid--equal-3 {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            /* Contact block: same column gap + top-align so labels/inputs line up row to row */
+            .ma-form__contact-row {
+                align-items: start;
+            }
         }
+
+        /* Even vertical rhythm between Contact rows (narrower than section main gap) */
+        .ma-form__contact-fields {
+            display: flex;
+            flex-direction: column;
+            gap: var(--ma-form-space-grid-gap);
+            width: 100%;
+        }
+
 
         .ma-form__fields {
             display: flex;
@@ -363,6 +389,10 @@
             gap: var(--ma-form-space-field-gap);
         }
 
+        .ma-form__field--wide {
+            margin-top: var(--ma-form-space-grid-gap);
+        }
+
         .ma-form__label,
         .ma-form__hint {
             font-size: var(--ma-font-xs);
@@ -372,6 +402,12 @@
         .ma-form__label {
             display: block;
             letter-spacing: var(--ma-tracking-wider);
+        }
+        .ma-form__label.ma-form__label--required::after,
+        label.ma-form__checkbox.ma-form__label--required .ma-form__checkbox-label::after {
+            content: ' *';
+            color: var(--ma-form-color-muted);
+            font-weight: 600;
         }
         .ma-form__hint { margin: var(--ma-form-space-field-gap) 0 0 0; }
 
@@ -405,13 +441,12 @@
             gap: var(--ma-form-space-fields-gap);
         }
 
+        /* Shell + inset: .ma-u-panel-sm on same node (shared — no duplicate padding here) */
         .ma-form__setting-card {
             min-height: 94px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding-inline: var(--ma-form-space-setting-card-padding-x);
-            padding-block: var(--ma-form-space-setting-card-padding-y);
             gap: var(--ma-form-space-setting-card-gap);
         }
 

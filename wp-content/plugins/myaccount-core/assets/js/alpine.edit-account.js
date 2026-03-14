@@ -81,12 +81,22 @@
   };
 
   // assets/src/js/handlers/UpdateAccountHandler.js
+  var req = (msg) => window.yup.string().required(msg);
   var UpdateAccountHandler = class extends BaseFormHandler {
     getValidationSchema() {
-      return window.yup.object().shape({
-        firstName: window.yup.string().required("First name is required."),
-        lastName: window.yup.string().required("Last name is required."),
-        email: window.yup.string().email("Invalid email address.").required("Email is required.")
+      const y = window.yup;
+      return y.object().shape({
+        firstName: req("First name is required."),
+        lastName: req("Last name is required."),
+        billing_address_1: req("Street address is required."),
+        billing_city: req("City is required."),
+        billing_state: window.yup.string(),
+        billing_postcode: window.yup.string(),
+        billing_country: req("Country is required."),
+        billing_phone: req("Phone is required."),
+        billing_email: y.string().email("Invalid billing email.").required("Billing email is required."),
+        billing_company: y.string().nullable(),
+        billing_address_2: y.string().nullable()
       });
     }
     getApiEndpoint() {
@@ -96,11 +106,17 @@
       await this.validateForm();
       if (Object.keys(this.errors).length > 0) {
         this.isFormSubmitting = false;
+        const first = Object.values(this.errors).find(Boolean);
+        if (first) {
+          window.Alpine?.store("toast")?.addToast(first, "error");
+        }
         return;
       }
       this.isFormSubmitting = true;
       const payload = {
         ...this.formData,
+        billing_first_name: this.formData.firstName,
+        billing_last_name: this.formData.lastName,
         nonce: this.additionalData.nonce
       };
       window.wp.ajax.post(this.getApiEndpoint(), payload).done((response) => {
@@ -125,6 +141,19 @@
   };
 
   // assets/src/js/alpine/components/forms/updateAccount.js
+  function billingDefaults(data) {
+    return {
+      billing_company: data.billing_company || "",
+      billing_address_1: data.billing_address_1 || "",
+      billing_address_2: data.billing_address_2 || "",
+      billing_city: data.billing_city || "",
+      billing_state: data.billing_state || "",
+      billing_postcode: data.billing_postcode || "",
+      billing_country: data.billing_country || "",
+      billing_phone: data.billing_phone || "",
+      billing_email: data.billing_email || ""
+    };
+  }
   var updateAccount_default = () => {
     const userData = window.accountData || {};
     const nonce = window.saveAccountDetailsNonce || "";
@@ -132,9 +161,10 @@
       formData: {
         firstName: userData.firstName || "",
         lastName: userData.lastName || "",
-        email: userData.email || ""
+        ...billingDefaults(userData)
       },
-      allowSubmit: false,
+      /* Save enabled without forcing a prior @input (readonly email no longer triggers input). */
+      allowSubmit: true,
       isFormSubmitting: false,
       errors: {},
       touched: {},

@@ -52,7 +52,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 				<div class="ma-form__section">
 					<div class="ma-form__fields">
 						<div class="ma-form__field" x-validate-field="{message: errors.email, touched:touched.email}" :class="{ 'error': (touched.email && errors.email) }">
-							<label for="login_email" class="ma-form__label"><?php esc_html_e( 'Email address', 'woocommerce' ); ?></label>
+							<label for="login_email" class="ma-form__label ma-form__label--required"><?php esc_html_e( 'Email address', 'woocommerce' ); ?></label>
 							<div class="ma-form__input-wrap">
 								<span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_envelope(); ?></span>
 								<input id="login_email" x-model="formData.email" type="text" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input" autocomplete="email" @blur="handler.validateField('email')" />
@@ -62,7 +62,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 
 						<div class="ma-form__field" :class="{ 'error': (touched.password && errors.password) }">
 							<div class="ma-form__field-header">
-								<label for="login_password" class="ma-form__label"><?php esc_html_e( 'Password', 'woocommerce' ); ?></label>
+								<label for="login_password" class="ma-form__label ma-form__label--required"><?php esc_html_e( 'Password', 'woocommerce' ); ?></label>
 								<a class="ma-form__lost-password ma-link-underline" href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php esc_html_e( 'Forgot password?', 'woocommerce' ); ?></a>
 							</div>
 							<div class="ma-form__input-wrap">
@@ -128,7 +128,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 				<div class="ma-form__section">
 					<div class="ma-form__grid">
 						<div class="ma-form__field" x-validate-field="{message: errors.firstName, touched:touched.firstName}" :class="{ 'error': (touched.firstName && errors.firstName) }">
-							<label for="reg_firstName" class="ma-form__label"><?php esc_html_e( 'First name', 'woocommerce' ); ?></label>
+							<label for="reg_firstName" class="ma-form__label ma-form__label--required"><?php esc_html_e( 'First name', 'woocommerce' ); ?></label>
 							<div class="ma-form__input-wrap">
 								<span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_user(); ?></span>
 								<input id="reg_firstName" x-model="formData.firstName" type="text" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input" autocomplete="firstName" @blur="validateField('firstName')" />
@@ -136,7 +136,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 							<span x-validate-error="{message: errors.firstName, touched: touched.firstName}"></span>
 						</div>
 						<div class="ma-form__field" x-validate-field="{message: errors.lastName, touched:touched.lastName}" :class="{ 'error': (touched.lastName && errors.lastName) }">
-							<label for="reg_lastName" class="ma-form__label"><?php esc_html_e( 'Last name', 'woocommerce' ); ?></label>
+							<label for="reg_lastName" class="ma-form__label ma-form__label--required"><?php esc_html_e( 'Last name', 'woocommerce' ); ?></label>
 							<div class="ma-form__input-wrap">
 								<span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_user(); ?></span>
 								<input id="reg_lastName" x-model="formData.lastName" type="text" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input" autocomplete="lastName" @blur="validateField('lastName')" />
@@ -146,7 +146,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 					</div>
 					<div class="ma-form__fields">
 						<div class="ma-form__field" x-validate-field="{message: errors.email, touched:touched.email}" :class="{ 'error': (touched.email && errors.email) }">
-							<label for="reg_email" class="ma-form__label"><?php esc_html_e( 'Email address', 'woocommerce' ); ?></label>
+							<label for="reg_email" class="ma-form__label ma-form__label--required"><?php esc_html_e( 'Email address', 'woocommerce' ); ?></label>
 							<div class="ma-form__input-wrap">
 								<span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_envelope(); ?></span>
 								<input id="reg_email" x-model="formData.email" type="text" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input" autocomplete="email" @blur="validateField('email')" />
@@ -155,7 +155,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 						</div>
 
 						<div class="ma-form__field" :class="{ 'error': (touched.password && errors.password) }">
-							<label for="reg_password" class="ma-form__label"><?php esc_html_e( 'Password', 'woocommerce' ); ?></label>
+							<label for="reg_password" class="ma-form__label ma-form__label--required"><?php esc_html_e( 'Password', 'woocommerce' ); ?></label>
 							<div class="ma-form__input-wrap">
 								<span class="ma-form__input-icon ma-form__input-icon--left" aria-hidden="true"><?php ma_form_icon_lock_closed(); ?></span>
 								<input id="reg_password" x-model="formData.password" minlength="8" type="password" name="password" class="woocommerce-Input woocommerce-Input--text input-text ma-form__input" autocomplete="new-password" @keyup="validateField('password')" />
@@ -187,7 +187,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 					</label>
 
 					<div class="ma-form__field" :class="{ 'error': errors.agreeTOS }">
-						<label class="ma-form__checkbox">
+						<label class="ma-form__checkbox ma-form__label--required">
 							<input @change="validateField('agreeTOS')" x-model="formData.agreeTOS" type="checkbox" id="agree-tos">
 							<span class="ma-form__checkbox-box"></span>
 							<?php

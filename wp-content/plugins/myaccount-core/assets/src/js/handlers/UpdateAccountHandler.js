@@ -1,15 +1,25 @@
 /**
- * Update Account Handler
- * Extends BaseFormHandler to handle account updates
+ * Update Account Handler — profile + full billing (WC_Customer billing_*).
  */
 import BaseFormHandler from '../BaseFormHandler.js';
 
+const req = (msg) => window.yup.string().required(msg);
+
 export default class UpdateAccountHandler extends BaseFormHandler {
     getValidationSchema() {
-        return window.yup.object().shape({
-            firstName: window.yup.string().required('First name is required.'),
-            lastName: window.yup.string().required('Last name is required.'),
-            email: window.yup.string().email('Invalid email address.').required('Email is required.'),
+        const y = window.yup;
+        return y.object().shape({
+            firstName: req('First name is required.'),
+            lastName: req('Last name is required.'),
+            billing_address_1: req('Street address is required.'),
+            billing_city: req('City is required.'),
+            billing_state: window.yup.string(),
+            billing_postcode: window.yup.string(),
+            billing_country: req('Country is required.'),
+            billing_phone: req('Phone is required.'),
+            billing_email: y.string().email('Invalid billing email.').required('Billing email is required.'),
+            billing_company: y.string().nullable(),
+            billing_address_2: y.string().nullable(),
         });
     }
 
@@ -22,6 +32,10 @@ export default class UpdateAccountHandler extends BaseFormHandler {
 
         if (Object.keys(this.errors).length > 0) {
             this.isFormSubmitting = false;
+            const first = Object.values(this.errors).find(Boolean);
+            if (first) {
+                window.Alpine?.store('toast')?.addToast(first, 'error');
+            }
             return;
         }
 
@@ -29,6 +43,8 @@ export default class UpdateAccountHandler extends BaseFormHandler {
 
         const payload = {
             ...this.formData,
+            billing_first_name: this.formData.firstName,
+            billing_last_name: this.formData.lastName,
             nonce: this.additionalData.nonce,
         };
 
