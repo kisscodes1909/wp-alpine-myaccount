@@ -14,12 +14,12 @@
             aria-label="<?php echo esc_attr__( 'Dialog', 'woocommerce' ); ?>"
             @click.self="$store.popup.closePopup()"
             @keydown.escape.window="$store.popup.open && $store.popup.closePopup()"
-            x-effect="$store.popup.open && $store.popup.content && $nextTick(() => {
+            x-effect="$store.popup.open && $store.popup.content && $nextTick(() => $nextTick(() => {
                 const el = document.getElementById('popup-content-wrap');
                 if (el && el.children.length && typeof Alpine !== 'undefined' && Alpine.initTree) Alpine.initTree(el);
                 const first = el && el.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex=\'-1\'])');
                 if (first && typeof first.focus === 'function') first.focus();
-            })">
+            }))">
         <div
                 id="popup-content-wrap"
                 class="ma-ui-popup__panel"

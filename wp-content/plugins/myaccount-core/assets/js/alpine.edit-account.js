@@ -216,7 +216,7 @@
       return "change_password";
     }
     async handleSubmit() {
-      await this.validateForm();
+      await this.validateForm(["keepSignedIn"]);
       if (Object.keys(this.errors).length > 0) {
         this.isFormSubmitting = false;
         return;
@@ -248,10 +248,8 @@
       window.Alpine?.store("popup")?.closePopup();
     }
     fail(error) {
-      const message = this.getErrorMessage(error);
-      if (message) {
-        window.Alpine?.store("toast")?.addToast(message, "error");
-      }
+      const message = this.getErrorMessage(error) || "Something went wrong. Please try again.";
+      window.Alpine?.store("toast")?.addToast(message, "error");
     }
   };
 

@@ -6253,7 +6253,7 @@ attempted value: ${formattedValue}
   };
 
   // assets/src/js/alpine/stores/userAddress.js
-  var MAX_ADDRESSES = 9;
+  var MAX_ADDRESSES = 4;
   var DEFAULT_COUNTRY = "US";
   var AJAX_ACTION = "save-address";
   var userAddress_default = {
@@ -7094,7 +7094,7 @@ attempted value: ${formattedValue}
       return "change_password";
     }
     async handleSubmit() {
-      await this.validateForm();
+      await this.validateForm(["keepSignedIn"]);
       if (Object.keys(this.errors).length > 0) {
         this.isFormSubmitting = false;
         return;
@@ -7126,10 +7126,8 @@ attempted value: ${formattedValue}
       window.Alpine?.store("popup")?.closePopup();
     }
     fail(error2) {
-      const message = this.getErrorMessage(error2);
-      if (message) {
-        window.Alpine?.store("toast")?.addToast(message, "error");
-      }
+      const message = this.getErrorMessage(error2) || "Something went wrong. Please try again.";
+      window.Alpine?.store("toast")?.addToast(message, "error");
     }
   };
 

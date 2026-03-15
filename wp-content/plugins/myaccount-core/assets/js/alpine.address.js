@@ -1,6 +1,6 @@
 (() => {
   // assets/src/js/alpine/stores/userAddress.js
-  var MAX_ADDRESSES = 9;
+  var MAX_ADDRESSES = 4;
   var DEFAULT_COUNTRY = "US";
   var AJAX_ACTION = "save-address";
   var userAddress_default = {

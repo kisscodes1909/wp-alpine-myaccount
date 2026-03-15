@@ -5,7 +5,7 @@
  */
 
 // Constants
-const MAX_ADDRESSES = 9;
+const MAX_ADDRESSES = 4;
 const DEFAULT_COUNTRY = 'US';
 const AJAX_ACTION = 'save-address';
 

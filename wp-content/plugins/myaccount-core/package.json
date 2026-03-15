@@ -10,11 +10,13 @@
     "build:js": "cross-env NODE_ENV=development node ./scripts/build-js.js",
     "build:js:min": "cross-env NODE_ENV=production node ./scripts/build-js.js",
     "watch:js": "cross-env NODE_ENV=development node ./scripts/build-js.js --watch",
+    "watch": "npx concurrently \"npm run watch:css\" \"npm run watch:js\"",
     "build": "npm run build:css && npm run build:js",
     "build:production": "npm run build:css:min && npm run build:js:min"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.17",
+    "concurrently": "^9.1.0",
     "cross-env": "^7.0.3",
     "cssnano": "^7.0.0",
     "esbuild": "^0.25.9",

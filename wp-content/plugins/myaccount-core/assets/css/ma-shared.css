@@ -824,6 +824,7 @@ body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAcc
     background: currentColor;
     mask: no-repeat center / contain;
     -webkit-mask: no-repeat center / contain;
+    position:static;
 }
 .woocommerce-account .woocommerce-message::before,
 .woocommerce-account .ma-notice--success::before {

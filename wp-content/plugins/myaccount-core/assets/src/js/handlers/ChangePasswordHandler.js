@@ -21,7 +21,8 @@ export default class ChangePasswordHandler extends BaseFormHandler {
     }
 
     async handleSubmit() {
-        await this.validateForm();
+        // Only validate schema fields; formData.keepSignedIn is UI-only, not in schema
+        await this.validateForm(['keepSignedIn']);
 
         if (Object.keys(this.errors).length > 0) {
             this.isFormSubmitting = false;
@@ -29,6 +30,7 @@ export default class ChangePasswordHandler extends BaseFormHandler {
         }
 
         this.isFormSubmitting = true;
+
 
         const payload = {
             ...this.additionalData,
@@ -61,9 +63,7 @@ export default class ChangePasswordHandler extends BaseFormHandler {
     }
 
     fail(error) {
-        const message = this.getErrorMessage(error);
-        if (message) {
-            window.Alpine?.store('toast')?.addToast(message, 'error');
-        }
+        const message = this.getErrorMessage(error) || 'Something went wrong. Please try again.';
+        window.Alpine?.store('toast')?.addToast(message, 'error');
     }
 }
