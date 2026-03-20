@@ -1,10 +1,22 @@
-# CSS Architecture (My Account)
+# Kiến trúc CSS (My Account)
 
-## Scope
-This document defines CSS contracts for My Account styles in `myaccount-core`.
+## Phạm vi
+Tài liệu này quy định “hợp đồng” CSS cho giao diện My Account trong `myaccount-core`.
 
-Related:
-- JS architecture and developer coding rules: `docs/JS_ARCHITECTURE.md`
+Liên quan:
+- Kiến trúc JS và quy tắc dev: [JS_ARCHITECTURE.md](JS_ARCHITECTURE.md) (cùng thư mục plugin `docs/`).
+- Pattern nút & form (Maison, token `--ma-*`): [BUTTON-GUIDE.md](BUTTON-GUIDE.md), [FORM-GUIDE.md](FORM-GUIDE.md) (cùng thư mục plugin `docs/`).
+
+## Quy tắc CSS dự án (checklist đội)
+
+Các quy tắc chính cho CSS My Account trong repo. Các link dưới đây trỏ tới mục chi tiết trong cùng file (tiêu đề mục vẫn dùng tiếng Anh để giữ anchor ổn định).
+
+1. **Mobile first** — Style mặc định cho màn nhỏ; layout lớn hơn chỉ **cộng thêm** bằng `@media (min-width: …)`. Xem [Mobile-first Contract](#mobile-first-contract).
+2. **CSS lồng nhau (nested)** — Viết rule lồng dưới một root rõ ràng; giữ độ sâu nông. Xem [Nesting Contract](#nesting-contract) và [Nested CSS writing style](#nested-css-writing-style).
+3. **Chữ và màu chung trên phần tử cha** — Nếu nhiều phần tử con dùng chung `font-size`, `color` hoặc thuộc tính kế thừa tương tự, khai báo **một lần** ở tổ tiên thay vì lặp từng con (trừ khi một con cần override có chủ đích).
+4. **Không dùng `!important`** — Tăng độ mạnh bằng selector và cấu trúc markup; **tuyệt đối không** dùng `!important`. Ngoại lệ phải được đồng ý rõ ràng và có comment ngắn trong code.
+5. **Utilities cho pattern lặp** — Component / style lặp nhiều → đưa vào utility dùng chung (`.ma-u-*`, `.ma-tr-*`), gắn class trong template thay vì copy CSS. Xem [Naming Contract](#naming-contract) và [Utility Contract (`.ma-u-*`)](#utility-contract-ma-u).
+6. **Token trong `base.css`** — Không đổi tên, xóa hay sửa giá trị biến `--ma-*` hiện có nếu chưa hỏi / chưa thống nhất thiết kế; cần token mới thì **thêm biến mới**. Xem [Token Usage](#token-usage) và mục §1 trong `myaccount-core-engineering.mdc`.
 
 ## Layering
 - **Shared** ([myaccount-shared.css](assets/src/css/myaccount-shared.css)): reset, base, buttons, empty-state, ui-overlays, layout, notices + small utilities. **Không** gồm `form-base`, `navigation`, `auth-shell` (từng bundle endpoint).
@@ -96,6 +108,8 @@ body.woocommerce-account {
 
 Reference: `assets/src/css/myaccount/navigation.css` (full nested structure).
 
+<a id="utility-contract-ma-u"></a>
+
 ## Utility Contract (`.ma-u-*`)
 Utilities are for repeated generic patterns only.
 
@@ -108,7 +122,7 @@ Rules:
 - Promote to utility only when a pattern repeats >= 3 times.
 - Utilities must remain generic and not encode business semantics.
 - Use `--ma-*` tokens for values where token exists.
-- Do not grow utilities into a Tailwind-like class matrix.
+- Do not grow utilities into a large atomic-utility class grid.
 
 ## Token Usage
 - Prefer tokenized values from `.woocommerce-account` custom properties.
@@ -119,7 +133,7 @@ Rules:
 
 ## Build Pipeline
 - CSS is built with PostCSS (import + nesting + autoprefixer).
-- Tailwind directives (`@tailwind`) and utility expansion (`@apply`) are not part of this architecture.
+- Source in `assets/src/css/` must stay plain CSS compatible with that pipeline only (no directives or tooling from other CSS stacks).
 - Build output is split into shared + endpoint bundles, plus legacy fallback bundle.
 
 ## AlpineJS Loading Architecture
@@ -172,11 +186,11 @@ Rules:
 - If shared or endpoint bundle is missing, enqueue `myaccount.css` as fallback.
 
 ## Template Class Contract
-- Managed templates must not use Tailwind utility classes in `class=""`.
-- Use semantic `ma-*` classes and map styles in shared/endpoint CSS files.
+- Managed templates: in `class=""` use semantic `ma-*`, required WooCommerce classes, and plugin utilities (`.ma-u-*`, `.ma-tr-*`) only — no ad-hoc atomic utility strings.
+- Map layout and visuals in shared/endpoint CSS files.
 
 ## Alpine Transition Contract
-- Do not use Tailwind-like tokens inside `x-transition:*` values.
+- Do not use framework-style shorthand tokens inside `x-transition:*` values.
 - Use semantic transition classes only:
   - `ma-tr-enter`, `ma-tr-enter-start`, `ma-tr-enter-end`
   - `ma-tr-leave`, `ma-tr-leave-start`, `ma-tr-leave-end`
@@ -196,4 +210,4 @@ Script thường: `npm run watch:css`. LiveReload: `watch:css:live`.
 ## Migration Guardrails
 - Preserve runtime behavior and current single-template output.
 - Keep changes local to CSS architecture unless a minimal hook is needed.
-- Verify no `@apply` or `@tailwind` remains in `assets/src/css`.
+- Verify `assets/src/css/` stays limited to CSS valid for this PostCSS stack (no foreign utility-framework directives).

@@ -23,7 +23,7 @@
         padding-left: 0;
         margin: 0;
     }
-/* 3. Form – sharp corners per FORM-GUIDE (no border-radius on inputs) */
+/* 3. Form – sharp corners (see plugin docs/FORM-GUIDE.md; no border-radius on inputs) */
 .woocommerce-account fieldset {
         margin: 0;
         padding: 0;

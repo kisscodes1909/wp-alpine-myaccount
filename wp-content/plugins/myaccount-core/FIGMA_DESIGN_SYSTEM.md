@@ -5,9 +5,9 @@ Use this doc when translating Figma designs into this codebase via Figma MCP or 
 ## 1. Token definitions
 
 - **Where:** Plugin `assets/src/css/myaccount/fashion.css` (fashion template), `base.css` (base layer). Built to `assets/css/myaccount.css`.
-- **Format:** CSS custom properties on `body.myaccount-template-fashion.woocommerce-account`: `--ma-fashion-surface`, `--ma-form-color-text`, `--ma-form-color-muted`, `--ma-form-color-border`, `--ma-form-color-button-*`, etc. No separate JSON/JS tokens; map Figma colors to these vars or Tailwind semantics.
+- **Format:** CSS custom properties on `body.myaccount-template-fashion.woocommerce-account`: `--ma-fashion-surface`, `--ma-form-color-text`, `--ma-form-color-muted`, `--ma-form-color-border`, `--ma-form-color-button-*`, etc. No separate JSON/JS tokens; map Figma colors to these vars and to `--ma-*` tokens in `base.css` where applicable.
 - **px → rem:** Convert all Figma px to rem (base 16px). Use rem for font-size, line-height, spacing, height, gap (e.g. 8px → 0.5rem, 12px → 0.75rem, 14px → 0.875rem, 38px → 2.375rem, 48px → 3rem, 124px → 7.75rem).
-- **Typography:** Inter-like; use rem: 0.75rem uppercase labels, 0.875rem body/date, 1rem headings, 3rem order number/total. Use `@apply` with Tailwind text utilities and existing classes where they output rem.
+- **Typography:** Inter-like; use rem: 0.75rem uppercase labels, 0.875rem body/date, 1rem headings, 3rem order number/total. Implement in plugin CSS with `var(--ma-font-*)` / explicit rem so sizing stays token-driven.
 
 ### Scale tokens (`--ma-base`)
 
@@ -47,8 +47,8 @@ Use this doc when translating Figma designs into this codebase via Figma MCP or 
 ## 3. Frameworks and styling
 
 - **Stack:** WordPress, WooCommerce, Bricks child theme, Alpine.js for My Account interactions.
-- **Styling:** Tailwind via `@apply` in CSS; utility classes in markup; mobile-first; semantic BEM for My Account (`.ma-*`). Plugin builds CSS from `assets/src/css/` to `assets/css/myaccount.css`. Do not add Tailwind as npm dependency unless instructed; use existing build.
-- **Conversion rule:** Figma React+Tailwind output must be converted to PHP + existing CSS (Tailwind utilities or BEM + @apply). Preserve WooCommerce class names where used for hooks/compatibility.
+- **Styling:** PostCSS-built CSS in the plugin (`assets/src/css/` → split bundles under `assets/css/`); mobile-first; semantic BEM for My Account (`.ma-*`) and shared utilities (`.ma-u-*`, `.ma-tr-*`). Markup uses those classes, not a separate utility-class framework.
+- **Conversion rule:** Figma / MCP output (often React + arbitrary utility classes) must be converted to PHP templates + plugin CSS (`ma-*` / tokens). Preserve WooCommerce class names where used for hooks/compatibility.
 
 ## 4. Assets and icons
 

@@ -13,6 +13,8 @@ class MyAccount_Core_Plugin {
 		self::$plugin_dir  = plugin_dir_path( $plugin_file );
 		self::$plugin_url  = plugin_dir_url( $plugin_file );
 
+		self::register_autoloader();
+
 		register_activation_hook( $plugin_file, array( __CLASS__, 'activate' ) );
 		register_deactivation_hook( $plugin_file, array( __CLASS__, 'deactivate' ) );
 
@@ -23,12 +25,6 @@ class MyAccount_Core_Plugin {
 		if ( ! class_exists( 'WooCommerce' ) ) {
 			return;
 		}
-
-		require_once self::$plugin_dir . 'includes/class-myaccount-core-hooks.php';
-		require_once self::$plugin_dir . 'includes/class-myaccount-core-template-loader.php';
-		require_once self::$plugin_dir . 'includes/class-myaccount-core-assets.php';
-		require_once self::$plugin_dir . 'includes/class-myaccount-core-ajax.php';
-		require_once self::$plugin_dir . 'includes/class-myaccount-core-admin.php';
 
 		MyAccount_Core_Admin::instance();
 
@@ -46,9 +42,27 @@ class MyAccount_Core_Plugin {
 		add_option( self::OPTION_OWNER_MODE, 'plugin' );
 
 		if ( class_exists( 'WooCommerce' ) ) {
-			require_once self::$plugin_dir . 'includes/class-myaccount-core-hooks.php';
 			MyAccount_Core_Hooks::register_endpoints();
 			flush_rewrite_rules();
+		}
+	}
+
+	/**
+	 * WordPress class file naming: MyAccount_Core_Foo_Bar → includes/class-myaccount-core-foo-bar.php
+	 */
+	private static function register_autoloader(): void {
+		spl_autoload_register( array( __CLASS__, 'autoload' ) );
+	}
+
+	private static function autoload( string $class ): void {
+		if ( 0 !== strpos( $class, 'MyAccount_Core_' ) ) {
+			return;
+		}
+
+		$path = self::$plugin_dir . 'includes/class-' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
+
+		if ( is_readable( $path ) ) {
+			require_once $path;
 		}
 	}
 

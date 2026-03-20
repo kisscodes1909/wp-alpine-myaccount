@@ -20,6 +20,9 @@ class MyAccount_Core_Hooks {
 	private function __construct() {
 		add_action( 'init', array( __CLASS__, 'register_endpoints' ) );
 
+		// Hide Hello Elementor theme page header on My Account pages only.
+		add_filter( 'hello_elementor_page_title', array( $this, 'hide_hello_page_title_on_account' ), 10, 1 );
+
 		add_filter( 'woocommerce_account_menu_items', array( $this, 'remove_dashboard_tab' ) );
 		add_filter( 'woocommerce_account_menu_items', array( $this, 'rename_menu_labels' ) );
 		add_filter( 'woocommerce_account_menu_items', array( $this, 'add_address_menu_item' ) );
@@ -72,6 +75,19 @@ class MyAccount_Core_Hooks {
 	public function add_address_query_var( array $vars ): array {
 		$vars['address'] = 'address';
 		return $vars;
+	}
+
+	/**
+	 * Hide Hello Elementor theme page title only on WooCommerce My Account pages.
+	 *
+	 * @param bool $show Whether to show the page title.
+	 * @return bool
+	 */
+	public function hide_hello_page_title_on_account( $show ): bool {
+		if ( function_exists( 'is_account_page' ) && is_account_page() ) {
+			return false;
+		}
+		return (bool) $show;
 	}
 
 	public function render_address_endpoint(): void {

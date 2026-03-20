@@ -34,7 +34,7 @@ class MyAccount_Core_Ajax {
 	 * @param string $message User-facing message.
 	 * @param array  $extra   Optional extra keys (e.g. 'email', 'redirect').
 	 */
-	private function send_json_success( string $message, array $extra = [] ): void {
+	private function send_json_success( string $message, array $extra = array() ): void {
 		wc_nocache_headers();
 		wp_send_json_success( array_merge( array( 'message' => $message ), $extra ) );
 	}
