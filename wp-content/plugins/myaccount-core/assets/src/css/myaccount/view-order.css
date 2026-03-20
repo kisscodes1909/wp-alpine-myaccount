@@ -148,15 +148,6 @@
         min-height: calc(var(--ma-space-md) * 6.0625);
     }
 
-    @media (min-width: 768px) {
-        .ma-order-status-card__header {
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            min-height: calc(var(--ma-space-md) * 6.0625);
-        }
-    }
-
     .ma-order-status-card__header-left {
         display: flex;
         align-items: center;
@@ -333,8 +324,15 @@
         color: var(--ma-border-strong);
     }
 
-    /* Desktop: horizontal timeline (line + 3 steps: placed → processing → complete). */
+    /* Desktop: header row + horizontal timeline (line + 3 steps: placed → processing → complete). */
     @media (min-width: 768px) {
+        .ma-order-status-card__header {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            min-height: calc(var(--ma-space-md) * 6.0625);
+        }
+
         .ma-order-status-card__timeline-track {
             position: relative;
             flex-direction: row;

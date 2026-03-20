@@ -863,8 +863,9 @@ body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAcc
 }
 /* form-base, navigation, auth-shell: endpoint bundles or ma-navigation (logged-in). */
 /* @import "./myaccount/fashion.css"; */
-body {
-    color: #4d4d4d;
+/* Account pages: body carries .woocommerce-account — token matches base #4d4d4d. */
+body.woocommerce-account {
+    color: var(--ma-text-charcoal);
 }
 /* Shared utilities (only classes used in templates; avoid unused flex/gap matrix). */
 .ma-u-muted {
@@ -2182,14 +2183,6 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
         background: var(--ma-surface-alt);
         min-height: calc(var(--ma-space-md) * 6.0625);
     }
-@media (min-width: 768px) {
-        .woocommerce-account .ma-order-status-card__header {
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            min-height: calc(var(--ma-space-md) * 6.0625);
-        }
-    }
 .woocommerce-account .ma-order-status-card__header-left {
         display: flex;
         align-items: center;
@@ -2341,13 +2334,20 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
 .woocommerce-account .ma-order-status-card__step--active:not(.ma-order-status-card__step--current) .ma-order-status-card__step-date {
         color: var(--ma-border-strong);
     }
-/* Desktop: horizontal timeline (line + 3 steps: placed → processing → complete). */
+/* Desktop: header row + horizontal timeline (line + 3 steps: placed → processing → complete). */
 @media (min-width: 768px) {
 .woocommerce-account {
 
         /* Line between center of first and last dot (3 equal columns → 16.67% … 83.33%). */
 
 }
+        .woocommerce-account .ma-order-status-card__header {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            min-height: calc(var(--ma-space-md) * 6.0625);
+        }
+
         .woocommerce-account .ma-order-status-card__timeline-track {
             position: relative;
             flex-direction: row;

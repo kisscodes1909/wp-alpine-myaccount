@@ -208,14 +208,6 @@
         background: var(--ma-surface-alt);
         min-height: calc(var(--ma-space-md) * 6.0625);
     }
-@media (min-width: 768px) {
-        .woocommerce-account .ma-order-status-card__header {
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            min-height: calc(var(--ma-space-md) * 6.0625);
-        }
-    }
 .woocommerce-account .ma-order-status-card__header-left {
         display: flex;
         align-items: center;
@@ -367,13 +359,20 @@
 .woocommerce-account .ma-order-status-card__step--active:not(.ma-order-status-card__step--current) .ma-order-status-card__step-date {
         color: var(--ma-border-strong);
     }
-/* Desktop: horizontal timeline (line + 3 steps: placed → processing → complete). */
+/* Desktop: header row + horizontal timeline (line + 3 steps: placed → processing → complete). */
 @media (min-width: 768px) {
 .woocommerce-account {
 
         /* Line between center of first and last dot (3 equal columns → 16.67% … 83.33%). */
 
 }
+        .woocommerce-account .ma-order-status-card__header {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            min-height: calc(var(--ma-space-md) * 6.0625);
+        }
+
         .woocommerce-account .ma-order-status-card__timeline-track {
             position: relative;
             flex-direction: row;

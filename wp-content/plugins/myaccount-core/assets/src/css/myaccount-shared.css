@@ -8,8 +8,9 @@
 /* form-base, navigation, auth-shell: endpoint bundles or ma-navigation (logged-in). */
 /* @import "./myaccount/fashion.css"; */
 
-body {
-    color: #4d4d4d;
+/* Account pages: body carries .woocommerce-account — token matches base #4d4d4d. */
+body.woocommerce-account {
+    color: var(--ma-text-charcoal);
 }
 
 /* Shared utilities (only classes used in templates; avoid unused flex/gap matrix). */

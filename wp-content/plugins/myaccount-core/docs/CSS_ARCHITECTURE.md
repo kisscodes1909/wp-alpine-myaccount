@@ -32,10 +32,15 @@ Output:
 
 ## Production build & CSS performance
 - **Release (mandatory before deploy):** from plugin root run `npm run build:production` so `assets/css/*.min.css` (and `assets/js/*.min.js`) exist. Staging/production should use `WP_ENVIRONMENT_TYPE=production` and avoid `SCRIPT_DEBUG` so enqueue loads `.min` assets ([class-myaccount-core-assets.php](includes/class-myaccount-core-assets.php)).
+- **Checklist deploy (tránh fallback ~94KB):** trước khi release, xác nhận trên disk có đủ `ma-shared.min.css`, `ma-{endpoint}.min.css` tương ứng, và `ma-navigation.min.css` khi user đăng nhập; không xóa nhầm các file split; nếu nghi site đang tải `myaccount.css`, bật log (`MYACCOUNT_CORE_LOG_MISSING_ASSETS` hoặc `WP_DEBUG`) và kiểm tra `error_log`.
 - **Fallback `myaccount.css` (~94KB min):** loaded only when `ma-shared.css` **or** the endpoint CSS file is missing on disk. Missing split files doubles payload; always ship built min files.
 - **Debug:** with `WP_DEBUG` or `define('MYACCOUNT_CORE_LOG_MISSING_ASSETS', true)`, missing assets and fallback enqueue are logged to `error_log`.
 - **Preload:** on account pages, `ma-shared` CSS is preloaded in `wp_head` (same URL as enqueue) to shorten the critical path slightly.
 - **Largest endpoint bundle:** `ma-view-order.min.css` (~29KB min); trim duplicate rules / redundant `@media` in [view-order.css](assets/src/css/myaccount/view-order.css) when touching that page.
+
+### Optional: `view-order-legacy.css`
+- File [view-order-legacy.css](assets/src/css/myaccount/view-order-legacy.css) định nghĩa block `.ma-order-legacy__*` cho tương thích template/order block cũ; **không** được import mặc định (dòng comment trong [myaccount-endpoint-view-order.css](assets/src/css/myaccount-endpoint-view-order.css)).
+- Chỉ bật `@import "./myaccount/view-order-legacy.css"` khi thực sự cần markup/class legacy; hiện không có template plugin nào tham chiếu các class này.
 
 ## Naming Contract
 - Endpoint file naming: `{endpoint}.css`
