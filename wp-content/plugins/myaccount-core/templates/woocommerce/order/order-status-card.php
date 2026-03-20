@@ -1,28 +1,20 @@
 <?php
 /**
- * Order status card (Section 2): icon, title, description, est. delivery, 3-step timeline (core Woo: no shipped).
+ * Order status card (Section 2): icon, title, description, est. delivery, tracking-aware timeline.
  *
  * @package MyAccount_Core
  */
 
 defined( 'ABSPATH' ) || exit;
 
-$status      = $order->get_status();
-$status_name = wc_get_order_status_name( $status );
-
-// Timeline: 1 = Placed, 2 = Processing, 3 = Complete (maps to Woo completed/refunded).
-if ( in_array( $status, array( 'cancelled', 'failed' ), true ) ) {
-	$current_step = 1;
-} elseif ( in_array( $status, array( 'pending', 'on-hold' ), true ) ) {
-	$current_step = 1;
-} elseif ( 'processing' === $status ) {
-	$current_step = 2;
-} elseif ( 'completed' === $status || 'refunded' === $status ) {
-	$current_step = 3;
-} else {
-	$current_step = (int) apply_filters( 'myaccount_core_order_status_card_timeline_step', 2, $status, $order );
-	$current_step = min( 3, max( 1, $current_step ) );
-}
+$status            = $order->get_status();
+$status_name       = wc_get_order_status_name( $status );
+$timeline_context  = MyAccount_Core_Tracking_Resolver::instance()->get_timeline_context( $order );
+$is_tracking_mode  = isset( $timeline_context['mode'] ) && 'tracking' === $timeline_context['mode'];
+$step_count        = max( 1, (int) ( $timeline_context['step_count'] ?? 3 ) );
+$current_step      = min( $step_count, max( 1, (int) ( $timeline_context['current_step'] ?? 1 ) ) );
+$current_key       = sanitize_key( (string) ( $timeline_context['current_key'] ?? 'placed' ) );
+$latest_ship_date  = isset( $timeline_context['latest_ship_date'] ) && is_string( $timeline_context['latest_ship_date'] ) ? $timeline_context['latest_ship_date'] : '';
 
 $est_delivery = $order->get_meta( '_estimated_delivery' );
 $est_delivery = $est_delivery ? sanitize_text_field( $est_delivery ) : '';
@@ -36,11 +28,45 @@ $status_descriptions = array(
 	'cancelled'  => __( 'This order has been cancelled.', 'woocommerce' ),
 	'failed'     => __( 'Payment for this order failed.', 'woocommerce' ),
 );
+
+$tracking_descriptions = array(
+	'placed'     => __( 'Your order has been received and is awaiting payment.', 'woocommerce' ),
+	'processing' => __( 'Your order has been confirmed and is being prepared for processing.', 'woocommerce' ),
+	'shipped'    => __( 'Your order has shipped and is on the way.', 'myaccount-core' ),
+	'delivered'  => __( 'Tracking shows your order was delivered.', 'myaccount-core' ),
+);
+
 $status_description = isset( $status_descriptions[ $status ] ) ? $status_descriptions[ $status ] : sprintf( __( 'Order status: %s', 'woocommerce' ), $status_name );
+
+if ( $is_tracking_mode && isset( $tracking_descriptions[ $current_key ] ) ) {
+	$status_description = $tracking_descriptions[ $current_key ];
+}
+
 $status_description = apply_filters( 'woocommerce_myaccount_order_status_description', $status_description, $order );
 
-// Progress: 2 segments between 3 dots → step 1 = 0%, 2 = 50%, 3 = 100%.
-$progress_pct = 3 === $current_step ? 100 : ( $current_step - 1 ) * 50;
+$current_titles = array(
+	'placed'     => __( 'Order Placed', 'woocommerce' ),
+	'processing' => __( 'Processing', 'woocommerce' ),
+	'shipped'    => __( 'Shipped', 'myaccount-core' ),
+	'delivered'  => __( 'Delivered', 'myaccount-core' ),
+	'complete'   => __( 'Delivered', 'woocommerce' ),
+);
+
+$current_title = isset( $current_titles[ $current_key ] ) ? $current_titles[ $current_key ] : __( 'Order Placed', 'woocommerce' );
+
+if ( ! $is_tracking_mode ) {
+	$status_titles = array(
+		'cancelled' => __( 'Cancelled', 'woocommerce' ),
+		'failed'    => __( 'Payment Failed', 'woocommerce' ),
+		'refunded'  => __( 'Refunded', 'woocommerce' ),
+	);
+
+	if ( isset( $status_titles[ $status ] ) ) {
+		$current_title = $status_titles[ $status ];
+	}
+}
+
+$progress_pct = 1 === $step_count ? 100 : ( ( $current_step - 1 ) / ( $step_count - 1 ) ) * 100;
 ?>
 <section class="ma-order-status-card" aria-labelledby="ma-order-status-card-heading">
 	<div class="ma-order-status-card__header">
@@ -51,11 +77,11 @@ $progress_pct = 3 === $current_step ? 100 : ( $current_step - 1 ) * 50;
 				</svg>
 			</div>
 			<div class="ma-order-status-card__header-text">
-				<h2 id="ma-order-status-card-heading" class="ma-order-status-card__title"><?php esc_html_e( 'Order Placed', 'woocommerce' ); ?></h2>
+				<h2 id="ma-order-status-card-heading" class="ma-order-status-card__title"><?php echo esc_html( $current_title ); ?></h2>
 				<p class="ma-order-status-card__description"><?php echo esc_html( $status_description ); ?></p>
 			</div>
 		</div>
-		<?php if ( $est_delivery && $current_step < 3 && ! in_array( $status, array( 'cancelled', 'failed' ), true ) ) : ?>
+		<?php if ( $est_delivery && $current_step < $step_count && ! in_array( $status, array( 'cancelled', 'failed' ), true ) ) : ?>
 			<div class="ma-order-status-card__est-delivery">
 				<p class="ma-order-status-card__est-label"><?php esc_html_e( 'Est. Delivery', 'woocommerce' ); ?></p>
 				<p class="ma-order-status-card__est-date"><?php echo esc_html( $est_delivery ); ?></p>
@@ -64,7 +90,7 @@ $progress_pct = 3 === $current_step ? 100 : ( $current_step - 1 ) * 50;
 	</div>
 
 	<div class="ma-order-status-card__timeline">
-		<div class="ma-order-status-card__timeline-track" style="--ma-timeline-progress: <?php echo (float) $progress_pct; ?>;">
+		<div class="ma-order-status-card__timeline-track" style="--ma-timeline-progress: <?php echo esc_attr( (string) $progress_pct ); ?>; --ma-timeline-steps: <?php echo (int) $step_count; ?>;">
 			<div class="ma-order-status-card__timeline-line" aria-hidden="true"></div>
 			<div class="ma-order-status-card__timeline-line-fill" aria-hidden="true"></div>
 			<?php
@@ -73,26 +99,53 @@ $progress_pct = 3 === $current_step ? 100 : ( $current_step - 1 ) * 50;
 			$date_paid   = $order->get_date_paid() ? $order->get_date_paid()->date_i18n( $fmt ) : '';
 			$date_done   = $order->get_date_completed() ? $order->get_date_completed()->date_i18n( $fmt ) : '';
 
-			$steps = array(
-				array(
-					'key'      => 'placed',
-					'label'    => __( 'Placed', 'woocommerce' ),
-					'sublabel' => __( 'Order received', 'woocommerce' ),
-					'date'     => $date_placed,
-				),
-				array(
-					'key'      => 'processing',
-					'label'    => __( 'Processing', 'woocommerce' ),
-					'sublabel' => __( 'Preparing', 'woocommerce' ),
-					'date'     => ( $current_step >= 2 && $date_paid ) ? $date_paid : '',
-				),
-				array(
-					'key'      => 'complete',
-					'label'    => __( 'Complete', 'woocommerce' ),
-					'sublabel' => __( 'Delivered', 'woocommerce' ),
-					'date'     => ( $current_step >= 3 && $date_done ) ? $date_done : '',
-				),
-			);
+			$steps = $is_tracking_mode
+				? array(
+					array(
+						'key'      => 'placed',
+						'label'    => __( 'Placed', 'woocommerce' ),
+						'sublabel' => __( 'Order received', 'woocommerce' ),
+						'date'     => $date_placed,
+					),
+					array(
+						'key'      => 'processing',
+						'label'    => __( 'Processing', 'woocommerce' ),
+						'sublabel' => __( 'Preparing', 'woocommerce' ),
+						'date'     => ( $current_step >= 2 && $date_paid ) ? $date_paid : '',
+					),
+					array(
+						'key'      => 'shipped',
+						'label'    => __( 'Shipped', 'myaccount-core' ),
+						'sublabel' => __( 'In transit', 'myaccount-core' ),
+						'date'     => ( $current_step >= 3 && $latest_ship_date ) ? $latest_ship_date : '',
+					),
+					array(
+						'key'      => 'delivered',
+						'label'    => __( 'Delivered', 'myaccount-core' ),
+						'sublabel' => __( 'Order arrived', 'myaccount-core' ),
+						'date'     => ( $current_step >= 4 && $date_done ) ? $date_done : '',
+					),
+				)
+				: array(
+					array(
+						'key'      => 'placed',
+						'label'    => __( 'Placed', 'woocommerce' ),
+						'sublabel' => __( 'Order received', 'woocommerce' ),
+						'date'     => $date_placed,
+					),
+					array(
+						'key'      => 'processing',
+						'label'    => __( 'Processing', 'woocommerce' ),
+						'sublabel' => __( 'Preparing', 'woocommerce' ),
+						'date'     => ( $current_step >= 2 && $date_paid ) ? $date_paid : '',
+					),
+					array(
+						'key'      => 'complete',
+						'label'    => __( 'Complete', 'woocommerce' ),
+						'sublabel' => __( 'Delivered', 'woocommerce' ),
+						'date'     => ( $current_step >= 3 && $date_done ) ? $date_done : '',
+					),
+				);
 			$step_index = 1;
 			foreach ( $steps as $step ) :
 				$is_active  = $current_step >= $step_index;

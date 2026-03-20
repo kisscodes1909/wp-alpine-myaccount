@@ -72,7 +72,7 @@ wc_get_template(
 			'myaccount/partials/ma-empty-state.php',
 			array(
 				'title'                => esc_html__( 'You have not added any addresses yet.', 'myaccount-core' ),
-				'description'          => esc_html__( 'Add a shipping or billing address to speed up checkout.', 'myaccount-core' ),
+				'description'          => esc_html__( 'Add a shipping or billing address to check out faster and keep your delivery details ready.', 'myaccount-core' ),
 				'primary_as_button'    => true,
 				'primary_label'        => esc_html__( 'Add Address', 'myaccount-core' ),
 				'primary_icon'         => true,

@@ -25,7 +25,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
     <div class="ma-auth-container__notices">
         <?php
         if ( isset( $_GET['reset-link-sent'] ) ) {
-            wc_print_notice( esc_html__( 'Instructions to reset your password has been emailed to you.', 'woocommerce' ), 'notice' );
+            wc_print_notice( esc_html__( 'We have emailed your password reset link. If you do not see it within a few minutes, please check your spam or junk folder.', 'myaccount-core' ), 'notice' );
         } else {
             wc_print_notices();
         }
@@ -51,6 +51,9 @@ require_once __DIR__ . '/partials/form-field-icons.php';
                        name="user_login"
                 />
                 </div>
+                <p class="ma-form__hint">
+                    <?php esc_html_e( 'We will send a reset link to this email. If it does not arrive, check your spam or junk folder.', 'myaccount-core' ); ?>
+                </p>
                 <span x-validate-error="{message: errors.email, touched:touched.email}"></span>
             </div>
             <div class="clear"></div>

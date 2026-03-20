@@ -27,6 +27,7 @@ class MyAccount_Core_Template_Loader {
 		'order/order-total.php',
 		'order/order-details-header.php',
 		'order/order-status-card.php',
+		'order/order-tracking-block.php',
 		'order/order-details-items-summary.php',
 		'order/order-details-item.php',
 		'order/order-details.php',

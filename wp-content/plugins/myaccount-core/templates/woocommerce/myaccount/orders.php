@@ -85,10 +85,10 @@ do_action( 'woocommerce_before_account_orders', $has_orders );
 	wc_get_template(
 		'myaccount/partials/ma-empty-state.php',
 		array(
-			'title'          => esc_html__( 'No order has been made yet.', 'woocommerce' ),
-			'description'    => esc_html__( 'When you place an order, it will appear here so you can track delivery and view details.', 'woocommerce' ),
+			'title'          => esc_html__( 'You have not placed any orders yet.', 'woocommerce' ),
+			'description'    => esc_html__( 'Start shopping and your orders will appear here so you can track delivery and view details anytime.', 'woocommerce' ),
 			'primary_url'    => esc_url( apply_filters( 'woocommerce_return_to_shop_redirect', wc_get_page_permalink( 'shop' ) ) ),
-			'primary_label'  => esc_html__( 'Browse products', 'woocommerce' ),
+			'primary_label'  => esc_html__( 'Start shopping', 'woocommerce' ),
 			'primary_icon'   => true,
 			'modifier_class' => 'ma-u-surface-panel ma-u-surface-panel--full',
 		)

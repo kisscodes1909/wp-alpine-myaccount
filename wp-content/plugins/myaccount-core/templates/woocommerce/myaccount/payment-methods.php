@@ -130,8 +130,8 @@ wp_enqueue_script( 'wc-add-payment-method' );
 				wc_get_template(
 					'myaccount/partials/ma-empty-state.php',
 					array(
-						'title'          => esc_html__( 'No saved payment methods', 'woocommerce' ),
-						'description'    => esc_html__( 'Save a card when you check out, or add one using the form above.', 'myaccount-core' ),
+						'title'          => esc_html__( 'No saved payment methods yet.', 'woocommerce' ),
+						'description'    => esc_html__( 'Add a card now to check out faster next time, or save one during checkout.', 'myaccount-core' ),
 						'primary_url'    => esc_url( wc_get_account_endpoint_url( 'payment-methods' ) . '#ma-payment-methods-add' ),
 						'primary_label'  => esc_html__( 'Add payment method', 'woocommerce' ),
 						'primary_icon'   => false,

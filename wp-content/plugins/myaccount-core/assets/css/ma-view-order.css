@@ -361,11 +361,6 @@
     }
 /* Desktop: header row + horizontal timeline (line + 3 steps: placed → processing → complete). */
 @media (min-width: 768px) {
-.woocommerce-account {
-
-        /* Line between center of first and last dot (3 equal columns → 16.67% … 83.33%). */
-
-}
         .woocommerce-account .ma-order-status-card__header {
             flex-direction: row;
             align-items: center;
@@ -386,9 +381,10 @@
         .woocommerce-account .ma-order-status-card__step-dot {
             position: static;
         }
+
         .woocommerce-account .ma-order-status-card__timeline-line {
-            left: calc(100% / 6);
-            width: calc(100% * 2 / 3);
+            left: calc(100% / (var(--ma-timeline-steps, 3) * 2));
+            width: calc(100% * (var(--ma-timeline-steps, 3) - 1) / var(--ma-timeline-steps, 3));
             top: var(--ma-vo-md-375);
             bottom: auto;
             height: var(--ma-space-2xs);
@@ -396,9 +392,9 @@
         }
 
         .woocommerce-account .ma-order-status-card__timeline-line-fill {
-            left: calc(100% / 6);
+            left: calc(100% / (var(--ma-timeline-steps, 3) * 2));
             top: var(--ma-vo-md-375);
-            width: calc((100% * 2 / 3) * var(--ma-timeline-progress, 0) / 100);
+            width: calc((100% * (var(--ma-timeline-steps, 3) - 1) / var(--ma-timeline-steps, 3)) * var(--ma-timeline-progress, 0) / 100);
             height: var(--ma-space-2xs);
             transform: none;
         }
@@ -417,6 +413,84 @@
         .woocommerce-account .ma-order-status-card__step-labels {
             align-items: center;
             text-align: center;
+        }
+    }
+.woocommerce-account .ma-view-order-tracking {
+        margin-top: var(--ma-space-lg);
+    }
+.woocommerce-account .ma-view-order-tracking__card {
+        border: 1px solid var(--ma-border);
+        padding: var(--ma-space-lg);
+        background: var(--ma-surface-base, #fff);
+    }
+.woocommerce-account .ma-view-order-tracking__list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--ma-space-md);
+    }
+.woocommerce-account .ma-view-order-tracking__item + .ma-view-order-tracking__item {
+        padding-top: var(--ma-space-md);
+        border-top: 1px solid var(--ma-border-divider);
+    }
+.woocommerce-account .ma-view-order-tracking__item-head {
+        display: flex;
+        flex-direction: column;
+        gap: var(--ma-space-sm);
+    }
+.woocommerce-account .ma-view-order-tracking__carrier,
+    .woocommerce-account .ma-view-order-tracking__number,
+    .woocommerce-account .ma-view-order-tracking__status,
+    .woocommerce-account .ma-view-order-tracking__date,
+    .woocommerce-account .ma-view-order-tracking__detail {
+        margin: 0;
+    }
+.woocommerce-account .ma-view-order-tracking__carrier {
+        color: var(--ma-text-primary);
+        font-size: var(--ma-font-base);
+        line-height: var(--ma-line-snug);
+        font-weight: 500;
+    }
+.woocommerce-account .ma-view-order-tracking__number {
+        color: var(--ma-text-muted-dark);
+        font-size: var(--ma-font-sm);
+        line-height: var(--ma-line-normal);
+        word-break: break-word;
+    }
+.woocommerce-account .ma-view-order-tracking__meta {
+        display: flex;
+        flex-direction: column;
+        gap: var(--ma-space-2xs);
+    }
+.woocommerce-account .ma-view-order-tracking__status {
+        color: var(--ma-text-primary);
+        font-size: var(--ma-font-xs);
+        line-height: var(--ma-line-tight);
+        letter-spacing: var(--ma-tracking-wider);
+        text-transform: uppercase;
+    }
+.woocommerce-account .ma-view-order-tracking__date,
+    .woocommerce-account .ma-view-order-tracking__detail {
+        color: var(--ma-text-muted-dark);
+        font-size: var(--ma-font-sm);
+        line-height: var(--ma-line-normal);
+    }
+.woocommerce-account .ma-view-order-tracking__detail {
+        margin-top: var(--ma-space-sm);
+    }
+.woocommerce-account .ma-view-order-tracking__actions {
+        margin-top: var(--ma-space-md);
+    }
+@media (min-width: 768px) {
+        .woocommerce-account .ma-view-order-tracking__item-head {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: var(--ma-space-lg);
+        }
+
+        .woocommerce-account .ma-view-order-tracking__meta {
+            align-items: flex-end;
+            text-align: right;
         }
     }
 /* Section 3: DRY tokens + mobile-first */

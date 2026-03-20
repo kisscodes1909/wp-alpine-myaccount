@@ -8,6 +8,12 @@
 defined( 'ABSPATH' ) || exit;
 
 $notes = $order->get_customer_order_notes();
+$tracking_resolver = MyAccount_Core_Tracking_Resolver::instance();
+$tracking_entries  = $tracking_resolver->get_entries( $order );
+
+if ( ! empty( $tracking_entries ) ) {
+	$tracking_resolver->maybe_suppress_view_order_output( $order );
+}
 
 // Order again is shown in order-details-items-summary; avoid duplicate from after_order_table on this endpoint.
 remove_action( 'woocommerce_order_details_after_order_table', 'woocommerce_order_again_button', 10 );
@@ -30,6 +36,7 @@ wc_get_template(
 <div class="ma-view-order">
 	<?php wc_get_template( 'order/order-details-header.php', array( 'order' => $order ) ); ?>
 	<?php wc_get_template( 'order/order-status-card.php', array( 'order' => $order ) ); ?>
+	<?php wc_get_template( 'order/order-tracking-block.php', array( 'order' => $order, 'tracking_entries' => $tracking_entries ) ); ?>
 	<?php wc_get_template( 'order/order-details-items-summary.php', array( 'order' => $order ) ); ?>
 </div>
 
