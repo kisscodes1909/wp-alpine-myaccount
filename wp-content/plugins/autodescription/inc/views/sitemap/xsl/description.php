@@ -6,18 +6,18 @@
 
 namespace The_SEO_Framework;
 
-\defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) or die;
+( \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) ) or die;
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Data\Filter\Sanitize,
 	Helper\Format\Markdown,
 };
 
-// phpcs:disable, WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
+// phpcs:disable WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2021 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2021 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -76,15 +76,15 @@ printf(
 	),
 	\esc_xml(
 		Sanitize::metadata_content(
-			Data\Blog::get_public_blog_name() . ' &mdash; ' . \__( 'XML Sitemap', 'autodescription' )
-		)
-	)
+			Data\Blog::get_public_blog_name() . ' &mdash; ' . \__( 'XML Sitemap', 'autodescription' ),
+		),
+	),
 );
 ?>
 
 <p>
 	<?php
-	// phpcs:ignore, WordPress.Security.EscapeOutput.OutputNotEscaped -- convert_markdown escapes.
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- convert_markdown escapes.
 	echo Markdown::convert(
 		/* translators: URLs are in Markdown. Don't forget to localize the URLs. */
 		\esc_xml( \__( 'This is an optimized XML sitemap meant to be processed quickly by search engines like [Google](https://www.google.com/) or [Bing](https://www.bing.com/).', 'autodescription' ) ),
@@ -95,8 +95,8 @@ printf(
 </p>
 <p>
 	<?php
-	// phpcs:ignore, WordPress.Security.EscapeOutput.OutputNotEscaped -- convert_markdown escapes.
-	Markdown::convert(
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- convert_markdown escapes.
+	echo Markdown::convert(
 		/* translators: URLs are in Markdown. Don't localize this URL. */
 		\esc_xml( \__( 'You can find more information on XML sitemaps at [sitemaps.org](https://www.sitemaps.org/).', 'autodescription' ) ),
 		[ 'a' ],

@@ -8,13 +8,13 @@ namespace The_SEO_Framework\Meta\Robots;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use const \The_SEO_Framework\ROBOTS_ASSERT;
+use const The_SEO_Framework\ROBOTS_ASSERT;
 
-use function \The_SEO_Framework\umemo;
+use function The_SEO_Framework\umemo;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -92,7 +92,7 @@ final class Main {
 	 * @return Main
 	 */
 	public static function instance() {
-		return static::$instance ??= new static;
+		return self::$instance ??= new self;
 	}
 
 	/**
@@ -125,8 +125,8 @@ final class Main {
 
 		// If this leads to 0 getters, so be it: The dev might've used a deprecated value, which is fine. Continue method.
 		$get = ( $get ?? false )
-			? array_intersect( static::GETTERS, $get )
-			: static::GETTERS;
+			? array_intersect( self::GETTERS, $get )
+			: self::GETTERS;
 
 		// Remit FETCH_OBJ_R opcode calls every time we'd otherwise use $this->options hereinafter.
 		$options = $this->options;
@@ -141,7 +141,7 @@ final class Main {
 		$start     = $factory::START;
 		$generator = $factory->set(
 			$this->args,
-			$options
+			$options,
 		)::generator();
 
 		$results = [];
@@ -150,7 +150,7 @@ final class Main {
 			$generator->send( $g );
 
 			do {
-				// phpcs:ignore, WordPress.CodeAnalysis.AssignmentInCondition.Found -- Shhh. It's OK. I'm a professional.
+				// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.Found -- Shhh. It's OK. I'm a professional.
 				if ( ( $r = $generator->current() ) === $halt ) continue; // goto while() -- motivating generator.
 
 				$results[ $g ] = $r;
@@ -173,12 +173,16 @@ final class Main {
 	 * @return The_SEO_Framework\Builders\Robots\<Args|Front>
 	 */
 	private function get_factory() {
-		return umemo( __METHOD__, null, isset( $this->args ) )
-			?? umemo(
-				__METHOD__,
-				isset( $this->args ) ? new Args : new Front,
-				isset( $this->args )
-			);
+		return umemo(
+			__METHOD__,
+			null,
+			isset( $this->args ),
+		)
+		?? umemo(
+			__METHOD__,
+			isset( $this->args ) ? new Args : new Front,
+			isset( $this->args ),
+		);
 	}
 
 	/**
@@ -217,7 +221,7 @@ final class Main {
 	 * @see $this->collect_assertions()
 	 */
 	private function reset_assertions() {
-		// phpcs:ignore, VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- No function by reference support?
+		// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- No function by reference support?
 		$assertions = &$this->collect_assertions();
 		$assertions = [];
 	}

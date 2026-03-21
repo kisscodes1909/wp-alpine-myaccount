@@ -41,7 +41,7 @@ if ( true == $responsive_check ) {
 							if ( ! empty( $last_order_time_created ) ) {
 								echo esc_html( date_i18n( wc_date_format(), $last_order_time_created ) );
 							} else {
-								esc_html_e( '-', 'decorator-woocommerce-email-customizer' );
+								echo '-';
 							}
 							?>
 						</p>
@@ -81,7 +81,7 @@ if ( true == $responsive_check ) {
 						if ( ! empty( $last_order_time_created ) ) {
 							echo esc_html( date_i18n( wc_date_format(), $last_order_time_created ) );
 						} else {
-							esc_html_e( '-', 'decorator-woocommerce-email-customizer' );
+							echo '-';
 						}
 						?>
 					</td>

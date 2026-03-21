@@ -8,13 +8,13 @@ namespace The_SEO_Framework\Sitemap\Optimized;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Data,
 	Data\Filter\Escape,
 	Meta,
 	Sitemap,
 };
-use \The_SEO_Framework\Helper\{
+use The_SEO_Framework\Helper\{
 	Format\Time,
 	Post_Type,
 	Query,
@@ -22,7 +22,7 @@ use \The_SEO_Framework\Helper\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -45,6 +45,8 @@ use \The_SEO_Framework\Helper\{
  * @since 5.0.0 Moved from `\The_SEO_Framework\Builders\Sitemap`.
  *
  * @access private
+ *
+ * @NOTE: All static:: calls within this class are intentional to allow overrides in subclasses.
  */
 class Base extends Main {
 
@@ -84,7 +86,7 @@ class Base extends Main {
 		if ( false !== Sitemap\Cache::get_cached_sitemap_content( $sitemap_id ) ) return;
 
 		$ini_max_execution_time = (int) ini_get( 'max_execution_time' );
-		if ( 0 !== $ini_max_execution_time )
+		if ( 0 !== $ini_max_execution_time && \function_exists( 'set_time_limit' ) )
 			set_time_limit( max( $ini_max_execution_time, 3 * \MINUTE_IN_SECONDS ) );
 
 		// Somehow, the 'base' key is unavailable, the database failed, or a lock is already in place. Either way, bail.
@@ -274,7 +276,7 @@ class Base extends Main {
 			$_args = (array) \apply_filters(
 				'the_seo_framework_sitemap_nhpt_query_args',
 				[
-					// phpcs:ignore, WordPress.WP.PostsPerPage -- This is a sitemap, it will be slow.
+					// phpcs:ignore WordPress.WP.PostsPerPage -- This is a sitemap, it will be slow.
 					'posts_per_page' => Sitemap\Utils::get_sitemap_post_limit( 'nonhierarchical' ),
 					'post_type'      => $non_hierarchical_post_types,
 					'orderby'        => 'lastmod',

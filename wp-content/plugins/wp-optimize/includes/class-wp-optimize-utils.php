@@ -16,6 +16,10 @@ class WP_Optimize_Utils {
 		if (!is_dir($upload_base . 'wpo/logs')) {
 			wp_mkdir_p($upload_base . 'wpo/logs');
 		}
+		// Ensure index.php in log folder to stop directory listing
+		if (!file_exists($upload_base . 'wpo/logs/index.php')) {
+			file_put_contents($upload_base . 'wpo/logs/index.php', "<?php");
+		}
 		return $upload_base . 'wpo/logs/';
 	}
 
@@ -26,7 +30,8 @@ class WP_Optimize_Utils {
 	 * @return string The generated log file name.
 	 */
 	public static function get_log_file_name($prefix) {
-		return $prefix . '-' . substr(md5(wp_salt()), 0, 20) . '.log';
+		$secret = defined('AUTH_KEY') ? AUTH_KEY : 'WP_Optimize';
+		return $prefix . '-' . substr(md5($secret), 0, 20) . '.log';
 	}
 
 	/**
@@ -51,8 +56,8 @@ class WP_Optimize_Utils {
 			$timezone = new DateTimeZone($timezone_string);
 			$gmt_offset = $timezone->getOffset(new DateTime());
 		} else {
-			$gmt_offset_option = get_option('gmt_offset');
-			$gmt_offset = (int) (3600 * $gmt_offset_option);
+			$gmt_offset_option = (int) get_option('gmt_offset');
+			$gmt_offset = 3600 * $gmt_offset_option;
 		}
 
 		return $gmt_offset;
@@ -109,6 +114,55 @@ class WP_Optimize_Utils {
 	}
 
 	/**
+	 * Returns folder staticstics - size and file count
+	 *
+	 * @param string $folder
+	 * @return array
+	 */
+	public static function get_folder_stats($folder, $files_to_ignore = array()) {
+		clearstatcache();
+
+		$size = 0;
+		$file_count = 0;
+
+		if (is_dir($folder)) {
+			try {
+				$dir = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($folder, FilesystemIterator::SKIP_DOTS));
+				
+				foreach ($dir as $file) {
+					if (!empty($files_to_ignore) && is_array($files_to_ignore) && in_array($file->getFilename(), $files_to_ignore)) continue;
+					$size += $file->getSize();
+					$file_count++;
+				}
+			} catch (UnexpectedValueException $e) {
+				error_log($e->getMessage()); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Catching exception for debugging purpose
+			}
+		}
+
+		return array(
+			'size' => $size,
+			'file_count' => $file_count,
+		);
+	}
+
+	/**
+	 * Fetches the content of a remote file via HTTP request.
+	 *
+	 * @param string $url  The URL of the remote file to retrieve.
+	 * @param array $args Request arguments passed to wp_remote_get()
+	 * @return string|false The content of the remote file on success, or false on failure.
+	 */
+	public static function get_remote_file_content($url, $args = array()) {
+		$response = wp_safe_remote_get($url, $args);
+		if (is_wp_error($response) || 200 !== wp_remote_retrieve_response_code($response)) return false;
+		
+		$body = wp_remote_retrieve_body($response);
+		if (empty($body)) return false;
+		
+		return $body;
+	}
+
+	/**
 	 * Parse tag attributes and return array with them.
 	 *
 	 * @param string $tag
@@ -135,7 +189,10 @@ class WP_Optimize_Utils {
 	 * @return bool
 	 */
 	public static function is_valid_html($html) {
-		if (is_feed()) return false;
+		global $wp_query;
+		
+		// is_feed() works only when $wp_query is set, and it raises a warning otherwise.
+		if (isset($wp_query) && is_feed()) return false;
 
 		// To prevent issue with `simple_html_dom` class
 		// Exit if it doesn't look like HTML
@@ -166,6 +223,154 @@ class WP_Optimize_Utils {
 		return str_get_html($html_buffer, false, false,
 			get_option('blog_charset'), false, DEFAULT_BR_TEXT,
 			DEFAULT_SPAN_TEXT, false);
+	}
+
+	/**
+	 * Unserialize data
+	 *
+	 * @param string        $serialized_data Data to be unserialized, should be one that is already serialized
+	 * @param boolean|array $allowed_classes Either an array of class names which should be accepted, false to accept no classes, or true to accept all classes
+	 * @param integer       $max_depth       The maximum depth of structures permitted during unserialization, and is intended to prevent stack overflows
+	 * @return mixed Unserialized data can be any of types (integer, float, boolean, string, array or object)
+	 */
+	public static function unserialize($serialized_data, $allowed_classes = false, $max_depth = 0) {
+		// phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.unserialize_optionsFound -- Used in PHP 7.0+
+		// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress PHP warning in case of failure
+		return @unserialize(trim($serialized_data), array('allowed_classes' => $allowed_classes, 'max_depth' => $max_depth));
+	}
+
+	/**
+	 * Checks whether supplied data is serialized or not, and if so, unserializes it
+	 *
+	 * @param string        $serialized_data Data to be unserialized, should be one that is already serialized
+	 * @param boolean|array $allowed_classes Either an array of class names which should be accepted, false to accept no classes, or true to accept all classes
+	 * @param integer       $max_depth       The maximum depth of structures permitted during unserialization, and is intended to prevent stack overflows
+	 * @return mixed Unserialized data can be any of types (integer, float, boolean, string, array or object)
+	 */
+	public static function maybe_unserialize($serialized_data, $allowed_classes = false, $max_depth = 0) {
+		if (!is_serialized($serialized_data)) return $serialized_data;
+
+		return self::unserialize($serialized_data, $allowed_classes, $max_depth);
+	}
+			
+	/**
+	 * Get associative array with tag attributes and their values and build tag attribute string.
+	 *
+	 * @param array $attributes
+	 * @return string
+	 */
+	public static function build_attributes($attributes) {
+		$_attributes = array();
+
+		if (!empty($attributes)) {
+			foreach ($attributes as $key => $value) {
+				$_attributes[] = $key . '="' . esc_attr($value) . '"';
+			}
+		}
+
+		return join(' ', $_attributes);
+	}
+
+	/**
+	 * Get user_agent for desktop or mobile used for different requests via wp_remote_get
+	 *
+	 * @param string $type
+	 *
+	 * @return string
+	 */
+	public static function get_user_agent($type = 'desktop') {
+		$user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36';
+		if ('mobile' === $type) {
+			$user_agent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/21F79 Safari/604.1';
+		}
+
+		return $user_agent;
+	}
+
+	/**
+	 * Builds a one-line summary string from debug backtrace.
+	 *
+	 * Intended for use in error_log() for identifying the caller's context.
+	 * Example output: C:Test_Class|F:test_function()|L:100
+	 *
+	 * @return string
+	 */
+	public static function get_backtrace_summary() {
+		$debug_backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace -- Used for debugging purposes
+		$caller = $debug_backtrace[2] ?? array();
+
+		$class = $caller['class'] ?? 'N/A';
+		$function = $caller['function'] ?? 'N/A';
+		$line   = $debug_backtrace[1]['line'] ?? 'N/A';
+
+		return sprintf('C:%s|F:%s()|L:%s', $class, $function, $line);
+	}
+
+	/**
+	 * Check if the server is using HTTP/1.x
+	 *
+	 * @return bool
+	 */
+	public static function is_request_protocol_http1(): bool {
+		$protocol = isset($_SERVER['SERVER_PROTOCOL']) ? sanitize_text_field(wp_unslash($_SERVER['SERVER_PROTOCOL'])) : '';
+		return stripos($protocol, 'HTTP/1.') !== false;
+	}
+
+	/**
+	 * Wrapper for wp_delete_file() to ensure compatibility with WordPress versions prior to 6.1.
+	 *
+	 * In WordPress versions earlier than 6.1, wp_delete_file() returns void, in that case we check
+	 * if the file is actually deleted or not to determine the boolean value to return
+	 *
+	 * @param string $file
+	 * @return bool
+	 */
+	public static function wp_delete_file($file) {
+		$wp_delete_file_result = wp_delete_file($file);
+
+		// when wp_delete_file() returns void we check if the file is deleted
+		if (null === $wp_delete_file_result) {
+			$wp_delete_file_result = false === is_file($file);
+		}
+
+		return $wp_delete_file_result;
+	}
+
+	/**
+	 * Add UTM parameters to a URL and return the modified URL.
+	 *
+	 * @param string  $url                 The original URL.
+	 * @param array   $params              Optional UTM parameters.
+	 * @param bool    $override_url_params if true, it will override existing parameters in the url if matched.
+	 *
+	 * @return string Modified URL with UTM parameters added.
+	 */
+	public static function add_utm_params($url, $params = array(), $override_url_params = false): string {
+		$default_params = array(
+			'utm_source'  => 'wpo-plugin',
+			'utm_medium'  => 'referral',
+		);
+
+		$utm_params = wp_parse_args($params, $default_params);
+
+		if ($override_url_params) {
+			return esc_url(add_query_arg($utm_params, $url));
+		}
+
+		$parsed = wp_parse_url($url, PHP_URL_QUERY);
+		$original_url_params = array();
+
+		if (!empty($parsed)) {
+			parse_str($parsed, $original_url_params);
+		}
+
+		foreach ($utm_params as $key => $value) {
+			if (isset($original_url_params[$key])) {
+				unset($utm_params[$key]);
+			}
+		}
+
+		return esc_url(add_query_arg($utm_params, $url));
 	}
 }
 

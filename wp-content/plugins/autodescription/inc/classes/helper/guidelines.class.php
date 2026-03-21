@@ -8,11 +8,11 @@ namespace The_SEO_Framework\Helper;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\memo;
+use function The_SEO_Framework\memo;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -65,10 +65,10 @@ class Guidelines {
 		// Strip the "_formal" and other suffixes. 5 length max: xx_YY
 		$locale = substr( $locale ?? \get_locale(), 0, 5 );
 
-		// phpcs:ignore, WordPress.CodeAnalysis.AssignmentInCondition -- I know.
+		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
 		if ( null !== $memo = memo( null, $locale ) ) return $memo;
 
-		// phpcs:disable, WordPress.WhiteSpace.OperatorSpacing.SpacingAfter
+		// phpcs:disable WordPress.WhiteSpace.OperatorSpacing.SpacingAfter
 		$character_adjustments = [
 			'as'    => 148 / 160, // Assamese (অসমীয়া)
 			'de_AT' => 158 / 160, // Austrian German (Österreichisch Deutsch)
@@ -83,7 +83,7 @@ class Guidelines {
 			'zh_HK' =>  70 / 160, // Hong Kong (Chinese version) (香港中文版)
 			'zh_CN' =>  70 / 160, // Mandarin (Simplified Chinese) (简体中文)
 		];
-		// phpcs:enable, WordPress.WhiteSpace.OperatorSpacing.SpacingAfter
+		// phpcs:enable WordPress.WhiteSpace.OperatorSpacing.SpacingAfter
 
 		// Default to 1 (160/160 = no adjustment).
 		$c_adjust = $character_adjustments[ $locale ] ?? 1;
@@ -100,7 +100,7 @@ class Guidelines {
 		// Default to 1 (910/910 = no adjustment).
 		$p_adjust = $pixel_adjustments[ $locale ] ?? 1;
 
-		// phpcs:disable, WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned
+		// phpcs:disable WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned
 		/**
 		 * @since 3.1.0
 		 * @since 4.2.7 Added two more parameters (`$c_adjust` and `$locale`)
@@ -188,7 +188,7 @@ class Guidelines {
 			),
 			$locale,
 		);
-		// phpcs:enable, WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned
+		// phpcs:enable WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned
 	}
 
 	/**

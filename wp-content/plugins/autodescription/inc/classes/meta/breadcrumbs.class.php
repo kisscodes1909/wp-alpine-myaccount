@@ -8,13 +8,13 @@ namespace The_SEO_Framework\Meta;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\{
-	memo,
+use function The_SEO_Framework\{
 	get_query_type_from_args,
+	memo,
 	normalize_generation_args,
 };
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Data,
 	Helper\Query,
 	Helper\Taxonomy,
@@ -23,7 +23,7 @@ use \The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -48,19 +48,30 @@ use \The_SEO_Framework\{
 class Breadcrumbs {
 
 	/**
+	 * @since 5.1.4
+	 * @var array The options for breadcrumb generation.
+	 */
+	private static $options = [];
+
+	/**
 	 * Returns a list of breadcrumbs by URL and name.
 	 *
 	 * @since 5.0.0
+	 * @since 5.1.4 Added the `$options` parameter.
 	 * @todo consider wp_force_plain_post_permalink()
-	 * @todo add extra parameter for $options; create (class?) constants for them.
-	 *       -> Is tsf()->breadcrumbs()::CONSTANT possible?
-	 *       -> Then, forward the options to a class variable, and build therefrom. Use as argument for memo().
+	 * @todo add extra parameters for $options?
 	 *       -> Requested features (for shortcode): Remove home, remove current page.
-	 *       -> Requested features (globally): Remove/show archive prefixes, hide PTA/terms, select home name, select SEO vs custom title (popular).
+	 *       -> Requested features (globally): Remove/show archive prefixes, hide PTA/terms, select home name.
 	 *       -> Add generation args to every crumb; this way we can perform custom lookups for titles after the crumb is generated.
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
+	 * @param array|null $args    The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                            Leave null to autodetermine query.
+	 * @param array      $options Optional. {
+	 *     The options for breadcrumb generation
+	 *
+	 *     @type ?bool $use_meta_title Whether to consider meta titles before using page titles.
+	 *                                 Default determined by 'breadcrumb_use_meta_title' option.
+	 * }
 	 * @return array[] {
 	 *     The breadcrumb list items in order of appearance.
 	 *
@@ -68,31 +79,65 @@ class Breadcrumbs {
 	 *     @type string $name The breadcrumb page title.
 	 * }
 	 */
-	public static function get_breadcrumb_list( $args = null ) {
+	public static function get_breadcrumb_list( $args = null, $options = [] ) {
+
+		// The default options must be ordered alphabetically to ensure consistent cache keys.
+		self::$options = array_merge(
+			[
+				'use_meta_title' => (bool) Data\Plugin::get_option( 'breadcrumb_use_meta_title' ),
+			],
+			array_filter(
+				$options,
+				fn( $v ) => null !== $v,
+			),
+		);
+
+		// Sort options alphabetically to ensure consistent cache keys regardless of input order.
+		ksort( self::$options );
 
 		if ( isset( $args ) ) {
 			normalize_generation_args( $args );
-			$list = static::get_breadcrumb_list_from_args( $args );
+			$list = self::get_breadcrumb_list_from_args( $args );
 		} else {
-			$list = memo() ?? memo( static::get_breadcrumb_list_from_query() );
+			$list = memo( null, self::$options ) ?? memo( self::get_breadcrumb_list_from_query(), self::$options );
 		}
 
 		/**
 		 * @since 5.0.0
+		 * @since 5.1.4 Added the `$options` parameter.
 		 * @param array[] {
 		 *     The breadcrumb list items in order of appearance.
 		 *
 		 *     @type string $url  The breadcrumb URL.
 		 *     @type string $name The breadcrumb page title.
 		 * }
-		 * @param array|null $args The query arguments. Contains 'id', 'tax', 'pta', and 'uid'.
-		 *                         Is null when the query is auto-determined.
+		 * @param array|null $args    The query arguments. Contains 'id', 'tax', 'pta', and 'uid'.
+		 *                            Is null when the query is auto-determined.
+		 * @param array      $options The options used for breadcrumb generation.
 		 */
 		return (array) \apply_filters(
 			'the_seo_framework_breadcrumb_list',
 			$list,
 			$args,
+			self::$options,
 		);
+	}
+
+	/**
+	 * Returns the breadcrumb title based on the current setting.
+	 *
+	 * @since 5.1.4
+	 *
+	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                         Leave null to autodetermine query.
+	 * @return string The breadcrumb title.
+	 */
+	private static function get_breadcrumb_title( $args = null ) {
+
+		if ( self::$options['use_meta_title'] )
+			return Meta\Title::get_bare_title( $args );
+
+		return Meta\Title::get_bare_generated_title( $args );
 	}
 
 	/**
@@ -110,23 +155,23 @@ class Breadcrumbs {
 	private static function get_breadcrumb_list_from_query() {
 
 		if ( Query::is_real_front_page() ) {
-			$list = static::get_front_page_breadcrumb_list();
+			$list = self::get_front_page_breadcrumb_list();
 		} elseif ( Query::is_singular() ) {
-			$list = static::get_singular_breadcrumb_list();
+			$list = self::get_singular_breadcrumb_list();
 		} elseif ( Query::is_archive() ) {
 			if ( Query::is_editable_term() ) {
-				$list = static::get_term_breadcrumb_list();
+				$list = self::get_term_breadcrumb_list();
 			} elseif ( \is_post_type_archive() ) {
-				$list = static::get_pta_breadcrumb_list();
+				$list = self::get_pta_breadcrumb_list();
 			} elseif ( Query::is_author() ) {
-				$list = static::get_author_breadcrumb_list();
+				$list = self::get_author_breadcrumb_list();
 			} elseif ( \is_date() ) {
-				$list = static::get_date_breadcrumb_list();
+				$list = self::get_date_breadcrumb_list();
 			}
 		} elseif ( Query::is_search() ) {
-			$list = static::get_search_breadcrumb_list();
+			$list = self::get_search_breadcrumb_list();
 		} elseif ( \is_404() ) {
-			$list = static::get_404_breadcrumb_list();
+			$list = self::get_404_breadcrumb_list();
 		}
 
 		// The ?? operator is redundant here, but the query might be mangled.
@@ -151,22 +196,22 @@ class Breadcrumbs {
 		switch ( get_query_type_from_args( $args ) ) {
 			case 'single':
 				if ( Query::is_static_front_page( $args['id'] ) ) {
-					$list = static::get_front_page_breadcrumb_list();
+					$list = self::get_front_page_breadcrumb_list();
 				} else {
-					$list = static::get_singular_breadcrumb_list( $args['id'] );
+					$list = self::get_singular_breadcrumb_list( $args['id'] );
 				}
 				break;
 			case 'term':
-				$list = static::get_term_breadcrumb_list( $args['id'], $args['tax'] );
+				$list = self::get_term_breadcrumb_list( $args['id'], $args['tax'] );
 				break;
 			case 'homeblog':
-				$list = static::get_front_page_breadcrumb_list();
+				$list = self::get_front_page_breadcrumb_list();
 				break;
 			case 'pta':
-				$list = static::get_pta_breadcrumb_list( $args['pta'] );
+				$list = self::get_pta_breadcrumb_list( $args['pta'] );
 				break;
 			case 'user':
-				$list = static::get_author_breadcrumb_list( $args['uid'] );
+				$list = self::get_author_breadcrumb_list( $args['uid'] );
 		}
 
 		return $list;
@@ -185,7 +230,7 @@ class Breadcrumbs {
 	 * }
 	 */
 	private static function get_front_page_breadcrumb_list() {
-		return [ static::get_front_breadcrumb() ];
+		return [ self::get_front_breadcrumb() ];
 	}
 
 	/**
@@ -216,7 +261,7 @@ class Breadcrumbs {
 		if ( \get_post_type_object( $post_type )->has_archive ?? false ) {
 			$crumbs[] = [
 				'url'  => Meta\URI::get_bare_pta_url( $post_type ),
-				'name' => Meta\Title::get_bare_title( [ 'pta' => $post_type ] ),
+				'name' => self::get_breadcrumb_title( [ 'pta' => $post_type ] ),
 			];
 		}
 
@@ -230,53 +275,43 @@ class Breadcrumbs {
 
 		// If there's no ID, then there's no term assigned.
 		if ( $primary_term_id ) {
-			$ancestors = \get_ancestors(
+			foreach ( Data\Term::get_term_parents(
 				$primary_term_id,
 				$taxonomy,
-				'taxonomy',
-			);
-
-			foreach ( array_reverse( $ancestors ) as $ancestor_id ) {
+				true, // Include self
+			) as $parent ) {
 				$crumbs[] = [
-					'url'  => Meta\URI::get_bare_term_url( $ancestor_id, $taxonomy ),
-					'name' => Meta\Title::get_bare_title( [
-						'id'  => $ancestor_id,
-						'tax' => $taxonomy,
+					'url'  => Meta\URI::get_bare_term_url( $parent->term_id, $parent->taxonomy ),
+					'name' => self::get_breadcrumb_title( [
+						'id'  => $parent->term_id,
+						'tax' => $parent->taxonomy,
 					] ),
 				];
 			}
-
-			$crumbs[] = [
-				'url'  => Meta\URI::get_bare_term_url( $primary_term_id, $taxonomy ),
-				'name' => Meta\Title::get_bare_title( [
-					'id'  => $primary_term_id,
-					'tax' => $taxonomy,
-				] ),
-			];
 		}
 
-		// get_post_ancestors() has no filter. get_ancestors() isn't used for posts in WP.
-		foreach ( array_reverse( $post->ancestors ) as $ancestor_id ) {
+		// Exclude self, we add it below (current post is cached if $id is null).
+		foreach ( Data\Post::get_post_parents( $post->ID ) as $parent ) {
 			$crumbs[] = [
-				'url'  => Meta\URI::get_bare_singular_url( $ancestor_id ),
-				'name' => Meta\Title::get_bare_title( [ 'id' => $ancestor_id ] ),
+				'url'  => Meta\URI::get_bare_singular_url( $parent->ID ),
+				'name' => self::get_breadcrumb_title( [ 'id' => $parent->ID ] ),
 			];
 		}
 
 		if ( isset( $id ) ) {
 			$crumbs[] = [
 				'url'  => Meta\URI::get_bare_singular_url( $post->ID ),
-				'name' => Meta\Title::get_bare_title( [ 'id' => $post->ID ] ),
+				'name' => self::get_breadcrumb_title( [ 'id' => $post->ID ] ),
 			];
 		} else {
 			$crumbs[] = [
 				'url'  => Meta\URI::get_bare_singular_url(),
-				'name' => Meta\Title::get_bare_title(),
+				'name' => self::get_breadcrumb_title(),
 			];
 		}
 
 		return [
-			static::get_front_breadcrumb(),
+			self::get_front_breadcrumb(),
 			...$crumbs,
 		];
 	}
@@ -286,7 +321,7 @@ class Breadcrumbs {
 	 *
 	 * @since 5.0.0
 	 *
-	 * @param int|null $term_id  The term ID.
+	 * @param int|null $term_id  The term ID. Leave null to autodetermine.
 	 * @param string   $taxonomy The taxonomy. Leave empty to autodetermine.
 	 * @return array[] {
 	 *     The breadcrumb list items in order of appearance.
@@ -300,48 +335,43 @@ class Breadcrumbs {
 		$crumbs = [];
 
 		if ( isset( $term_id ) ) {
-			$taxonomy  = $taxonomy ?: \get_term( $term_id )->taxonomy ?? '';
-			$ancestors = \get_ancestors( $term_id, $taxonomy, 'taxonomy' );
+			$taxonomy = $taxonomy ?: ( \get_term( $term_id )->taxonomy ?? '' );
+		} else {
+			// Always override taxonomy when term_id is null
+			$taxonomy = Query::get_current_taxonomy();
+		}
 
-			foreach ( array_reverse( $ancestors ) as $ancestor_id ) {
-				$crumbs[] = [
-					'url'  => Meta\URI::get_bare_term_url( $ancestor_id, $taxonomy ),
-					'name' => Meta\Title::get_bare_title( [
-						'id'  => $ancestor_id,
-						'tax' => $taxonomy,
-					] ),
-				];
-			}
+		foreach ( Data\Term::get_term_parents(
+			$term_id,
+			$taxonomy,
+			false, // Exclude self, we add it below (current term is cached if $term_id is null).
+		) as $parent ) {
+			$crumbs[] = [
+				'url'  => Meta\URI::get_bare_term_url( $parent->term_id, $parent->taxonomy ),
+				'name' => self::get_breadcrumb_title( [
+					'id'  => $parent->term_id,
+					'tax' => $parent->taxonomy,
+				] ),
+			];
+		}
 
+		if ( isset( $term_id ) ) {
 			$crumbs[] = [
 				'url'  => Meta\URI::get_bare_term_url( $term_id, $taxonomy ),
-				'name' => Meta\Title::get_bare_title( [
+				'name' => self::get_breadcrumb_title( [
 					'id'  => $term_id,
 					'tax' => $taxonomy,
 				] ),
 			];
 		} else {
-			$taxonomy  = Query::get_current_taxonomy();
-			$ancestors = \get_ancestors( Query::get_the_real_id(), $taxonomy, 'taxonomy' );
-
-			foreach ( array_reverse( $ancestors ) as $ancestor_id ) {
-				$crumbs[] = [
-					'url'  => Meta\URI::get_bare_term_url( $ancestor_id, $taxonomy ),
-					'name' => Meta\Title::get_bare_title( [
-						'id'  => $ancestor_id,
-						'tax' => $taxonomy,
-					] ),
-				];
-			}
-
 			$crumbs[] = [
 				'url'  => Meta\URI::get_bare_term_url(),
-				'name' => Meta\Title::get_bare_title(),
+				'name' => self::get_breadcrumb_title(),
 			];
 		}
 
 		return [
-			static::get_front_breadcrumb(),
+			self::get_front_breadcrumb(),
 			...$crumbs,
 		];
 	}
@@ -367,17 +397,17 @@ class Breadcrumbs {
 		if ( isset( $post_type ) ) {
 			$crumbs[] = [
 				'url'  => Meta\URI::get_pta_url( $post_type ),
-				'name' => Meta\Title::get_bare_title( [ 'pta' => $post_type ] ),
+				'name' => self::get_breadcrumb_title( [ 'pta' => $post_type ] ),
 			];
 		} else {
 			$crumbs[] = [
 				'url'  => Meta\URI::get_bare_pta_url(),
-				'name' => Meta\Title::get_bare_title(),
+				'name' => self::get_breadcrumb_title(),
 			];
 		}
 
 		return [
-			static::get_front_breadcrumb(),
+			self::get_front_breadcrumb(),
 			...$crumbs,
 		];
 	}
@@ -402,17 +432,17 @@ class Breadcrumbs {
 		if ( isset( $id ) ) {
 			$crumbs[] = [
 				'url'  => Meta\URI::get_author_url( $id ),
-				'name' => Meta\Title::get_bare_title( [ 'uid' => $id ] ),
+				'name' => self::get_breadcrumb_title( [ 'uid' => $id ] ),
 			];
 		} else {
 			$crumbs[] = [
 				'url'  => Meta\URI::get_bare_author_url(),
-				'name' => Meta\Title::get_bare_title(),
+				'name' => self::get_breadcrumb_title(), // NOTE: has no meta title (yet), but we'll add that in 5.2.0
 			];
 		}
 
 		return [
-			static::get_front_breadcrumb(),
+			self::get_front_breadcrumb(),
 			...$crumbs,
 		];
 	}
@@ -434,14 +464,14 @@ class Breadcrumbs {
 	 */
 	private static function get_date_breadcrumb_list() {
 		return [
-			static::get_front_breadcrumb(),
+			self::get_front_breadcrumb(),
 			[
 				'url'  => Meta\URI::get_bare_date_url(
 					\get_query_var( 'year' ),
 					\get_query_var( 'monthnum' ),
 					\get_query_var( 'day' ),
 				),
-				'name' => Meta\Title::get_bare_title(),
+				'name' => Meta\Title::get_bare_generated_title(), // discrepancy, has no meta title
 			],
 		];
 	}
@@ -460,10 +490,10 @@ class Breadcrumbs {
 	 */
 	private static function get_search_breadcrumb_list() {
 		return [
-			static::get_front_breadcrumb(),
+			self::get_front_breadcrumb(),
 			[
 				'url'  => Meta\URI::get_search_url(),
-				'name' => Meta\Title::get_search_query_title(), // discrepancy
+				'name' => Meta\Title::get_search_query_title(), // discrepancy, has no meta title
 			],
 		];
 	}
@@ -482,10 +512,10 @@ class Breadcrumbs {
 	 */
 	private static function get_404_breadcrumb_list() {
 		return [
-			static::get_front_breadcrumb(),
+			self::get_front_breadcrumb(),
 			[
 				'url'  => '',
-				'name' => Meta\Title::get_404_title(), // discrepancy
+				'name' => Meta\Title::get_404_title(), // discrepancy, has no meta title
 			],
 		];
 	}
@@ -505,7 +535,7 @@ class Breadcrumbs {
 	private static function get_front_breadcrumb() {
 		return [
 			'url'  => Meta\URI::get_bare_front_page_url(),
-			'name' => Meta\Title::get_front_page_title(), // discrepancy
+			'name' => Meta\Title::get_front_page_title(), // discrepancy, has no meta title
 		];
 	}
 }

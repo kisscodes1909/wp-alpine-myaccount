@@ -6,15 +6,15 @@
 
 namespace The_SEO_Framework;
 
-\defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) or die;
+( \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) ) or die;
 
-use \The_SEO_Framework\Helper\Format\Minify;
+use The_SEO_Framework\Helper\Format\Minify;
 
-// phpcs:disable, WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
+// phpcs:disable WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2021 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2021 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -119,12 +119,15 @@ CSS;
 ?>
 <style style="text/css">
 <?php
-// phpcs:disable, WordPress.Security.EscapeOutput
+// phpcs:disable WordPress.Security.EscapeOutput
 /**
  * @since 3.1.0
  * @param string $styles The sitemap XHTML styles. Must be escaped.
  */
-echo Minify::css( \apply_filters( 'the_seo_framework_sitemap_styles', $styles ) );
-// phpcs:enable, WordPress.Security.EscapeOutput
+echo Minify::css( \apply_filters(
+	'the_seo_framework_sitemap_styles',
+	$styles,
+) );
+// phpcs:enable WordPress.Security.EscapeOutput
 ?>
 </style>

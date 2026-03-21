@@ -1,4 +1,4 @@
-# Copyright (C) 2024 Variation Swatches for WooCommerce
+# Copyright (C) 2026 Variation Swatches for WooCommerce
 # This file is distributed under the same license as the Variation Swatches for WooCommerce package.
 msgid ""
 msgstr ""
@@ -7,7 +7,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language-Team: Emran Ahmed <emran.bd.08@gmail.com>\n"
-"POT-Creation-Date: 2024-08-29 12:38+0000\n"
+"POT-Creation-Date: 2026-02-08 12:03+0000\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -59,67 +59,67 @@ msgstr ""
 msgid "Create value"
 msgstr ""
 
-#: ../includes/class-woo-variation-swatches-backend.php:221, ../includes/class-woo-variation-swatches-backend.php:310
+#: ../includes/class-woo-variation-swatches-backend.php:226, ../includes/class-woo-variation-swatches-backend.php:315
 msgid "Choose an Image"
 msgstr ""
 
-#: ../includes/class-woo-variation-swatches-backend.php:222
+#: ../includes/class-woo-variation-swatches-backend.php:227
 msgid "Add Attribute"
 msgstr ""
 
-#: ../includes/class-woo-variation-swatches-backend.php:223
+#: ../includes/class-woo-variation-swatches-backend.php:228
 msgid "Add"
 msgstr ""
 
-#: ../includes/class-woo-variation-swatches-backend.php:224
+#: ../includes/class-woo-variation-swatches-backend.php:229
 msgid "Cancel"
 msgstr ""
 
-#: ../includes/class-woo-variation-swatches-backend.php:225
+#: ../includes/class-woo-variation-swatches-backend.php:230
 msgid "Use Image"
 msgstr ""
 
-#: ../includes/class-woo-variation-swatches-backend.php:226
+#: ../includes/class-woo-variation-swatches-backend.php:231
 msgid "Add Media"
 msgstr ""
 
-#: ../includes/class-woo-variation-swatches-backend.php:230
+#: ../includes/class-woo-variation-swatches-backend.php:235
 msgid "Variation Swatches Settings"
 msgstr ""
 
-#: ../includes/class-woo-variation-swatches-backend.php:232
+#: ../includes/class-woo-variation-swatches-backend.php:237
 msgid "Are you sure you want to reset it to default setting?"
 msgstr ""
 
-#: ../includes/class-woo-variation-swatches-backend.php:233
+#: ../includes/class-woo-variation-swatches-backend.php:238
 msgid "Please save changed first."
 msgstr ""
 
-#: ../includes/class-woo-variation-swatches-backend.php:240
+#: ../includes/class-woo-variation-swatches-backend.php:245
 msgid "Select"
 msgstr ""
 
-#: ../includes/class-woo-variation-swatches-backend.php:241, ../includes/class-woo-variation-swatches-backend.php:300
+#: ../includes/class-woo-variation-swatches-backend.php:246, ../includes/class-woo-variation-swatches-backend.php:305
 msgid "Color"
 msgstr ""
 
-#: ../includes/class-woo-variation-swatches-backend.php:242, ../includes/class-woo-variation-swatches-backend.php:309
+#: ../includes/class-woo-variation-swatches-backend.php:247, ../includes/class-woo-variation-swatches-backend.php:314
 msgid "Image"
 msgstr ""
 
-#: ../includes/class-woo-variation-swatches-backend.php:243
+#: ../includes/class-woo-variation-swatches-backend.php:248
 msgid "Button"
 msgstr ""
 
-#: ../includes/class-woo-variation-swatches-backend.php:244
+#: ../includes/class-woo-variation-swatches-backend.php:249
 msgid "Radio"
 msgstr ""
 
-#: ../includes/class-woo-variation-swatches-backend.php:252
+#: ../includes/class-woo-variation-swatches-backend.php:257
 msgid "Mixed"
 msgstr ""
 
-#: ../includes/class-woo-variation-swatches-backend.php:301
+#: ../includes/class-woo-variation-swatches-backend.php:306
 msgid "Choose a color"
 msgstr ""
 
@@ -214,7 +214,7 @@ msgstr ""
 msgid "%s left"
 msgstr ""
 
-#: ../includes/class-woo-variation-swatches-product-page.php:821, ../includes/class-woo-variation-swatches-product-page.php:847
+#: ../includes/class-woo-variation-swatches-product-page.php:830, ../includes/class-woo-variation-swatches-product-page.php:856
 msgid "Choose an option"
 msgstr ""
 
@@ -342,7 +342,7 @@ msgstr ""
 msgid "Special Attributes"
 msgstr ""
 
-#: ../includes/class-woo-variation-swatches-settings.php:302, ../includes/class-woo-variation-swatches-term-meta.php:182
+#: ../includes/class-woo-variation-swatches-settings.php:302, ../includes/class-woo-variation-swatches-term-meta.php:195
 msgid "Group"
 msgstr ""
 
@@ -730,11 +730,11 @@ msgstr ""
 msgid "Show Attribute taxonomies in large size."
 msgstr ""
 
-#: ../includes/class-woo-variation-swatches-term-meta.php:405
+#: ../includes/class-woo-variation-swatches-term-meta.php:418
 msgid "Upload / Add image"
 msgstr ""
 
-#: ../includes/class-woo-variation-swatches-term-meta.php:411
+#: ../includes/class-woo-variation-swatches-term-meta.php:424
 msgid "Remove image"
 msgstr ""
 

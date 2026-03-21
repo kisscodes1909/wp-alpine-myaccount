@@ -10,7 +10,7 @@ namespace The_SEO_Framework\Admin\Script;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -31,7 +31,7 @@ namespace The_SEO_Framework\Admin\Script;
  * @since 5.0.0
  * @access private
  */
-class Utils {
+final class Utils {
 
 	/**
 	 * Decodes entities of a string, making it workable for different encoding in both JS and HTML.
@@ -60,10 +60,10 @@ class Utils {
 	public static function decode_all_entities( $values ) {
 
 		if ( \is_scalar( $values ) )
-			return static::decode_entities( $values );
+			return self::decode_entities( $values );
 
 		foreach ( $values as &$v )
-			$v = static::decode_entities( $v );
+			$v = self::decode_entities( $v );
 
 		return $values;
 	}

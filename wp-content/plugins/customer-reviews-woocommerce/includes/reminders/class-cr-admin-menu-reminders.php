@@ -105,6 +105,13 @@ class CR_Reminders_Admin_Menu {
 						$reminder_type
 					);
 				}
+				break;
+			case 'delete':
+				check_admin_referer( 'bulk-reminders' );
+				$reminders = ( isset( $_GET['reminders'] ) && is_array( $_GET['reminders'] ) ) ? $_GET['reminders'] : array();
+				break;
+			default:
+				break;
 		}
 
 		$cancelled = 0;
@@ -118,40 +125,42 @@ class CR_Reminders_Admin_Menu {
 					wp_clear_scheduled_hook( 'ivole_send_reminder', $cron_arg );
 					// logging
 					$ord = wc_get_order( $order[0] );
-					if ( ! $verification ) {
-						$mailer = get_option( 'ivole_mailer_review_reminder', 'cr' );
-						$verification = ( 'wp' === $mailer ) ? 'local' : 'verified';
-					}
-					$log = new CR_Reminders_Log();
-					$l_result = $log->add(
-						$order[0],
-						apply_filters( 'cr_reminders_table_type_log', 'a', $order[1] ),
-						'email',
-						array(
-							200,
-							__( 'Review reminder was canceled by a manual action', 'customer-reviews-woocommerce' ),
+					if ( $ord ) {
+						if ( ! $verification ) {
+							$mailer = get_option( 'ivole_mailer_review_reminder', 'cr' );
+							$verification = ( 'wp' === $mailer ) ? 'local' : 'verified';
+						}
+						$log = new CR_Reminders_Log();
+						$l_result = $log->add(
+							$order[0],
+							apply_filters( 'cr_reminders_table_type_log', 'a', $order[1] ),
+							'email',
 							array(
-								'data' => array(
-									'email' => array(
-										'to' => Ivole_Email::get_customer_email( $ord )
-									),
-									'customer' => array(
-										'firstname' => $ord->get_billing_first_name(),
-										'lastname' => $ord->get_billing_last_name()
-									),
-									'verification' => $verification,
-									'language' => Ivole_Email::fetch_language_trnsl( $order[0], $ord )
+								200,
+								__( 'Review reminder was canceled by a manual action', 'customer-reviews-woocommerce' ),
+								array(
+									'data' => array(
+										'email' => array(
+											'to' => Ivole_Email::get_customer_email( $ord )
+										),
+										'customer' => array(
+											'firstname' => $ord->get_billing_first_name(),
+											'lastname' => $ord->get_billing_last_name()
+										),
+										'verification' => $verification,
+										'language' => Ivole_Email::fetch_language_trnsl( $order[0], $ord )
+									)
 								)
 							)
-						)
-					);
+						);
+					}
 					// end of logging
 					$cancelled++;
 					break;
 				case 'send':
 				case 'sendreminder':
 					wp_clear_scheduled_hook( 'ivole_send_reminder', $cron_arg );
-					wp_schedule_single_event( 1, 'ivole_send_reminder', $cron_arg );
+					do_action( 'ivole_send_reminder', ...$cron_arg );
 					$sent++;
 					break;
 				default:
@@ -162,10 +171,6 @@ class CR_Reminders_Admin_Menu {
 		if ( 0 < count( $reminders ) ) {
 			$log = new CR_Reminders_Log();
 			$log->delete( $reminders );
-		}
-
-		if ( $sent ) {
-			wp_cron();
 		}
 
 		$redirect_to = remove_query_arg( array( 'reminder' ), wp_get_referer() );
@@ -284,7 +289,7 @@ class CR_Reminders_Admin_Menu {
 		);
 		$crons = _get_cron_array();
 		foreach ( $crons as $timestamp => $hooks ) {
-			if ( isset( $hooks['ivole_send_reminder'] ) && $timestamp > 1 ) {
+			if ( isset( $hooks['ivole_send_reminder'] ) ) {
 				foreach ( $hooks['ivole_send_reminder'] as $hash => $event ) {
 					$ch = 'email';
 					if ( isset( $out_channels[$ch] ) ) {

@@ -27,10 +27,12 @@ if (!defined('ABSPATH')) {
         <meta charset="<?php bloginfo('charset'); ?>" />
         <meta name="viewport" content="width=device-width" />
 
-        <title><?php echo __('Decorator', 'decorator-woocommerce-email-customizer'); ?></title>
+        <title><?php echo esc_html__('Decorator', 'decorator-woocommerce-email-customizer'); ?></title>
 
         <style type="text/css" id="rp_decorator_custom_css">
-            <?php echo RP_Decorator_Customizer::opt('custom_css'); ?></style>
+            <?php 
+            echo wp_kses_post( RP_Decorator_Customizer::opt('custom_css') ); 
+            ?></style>
 
     </head>
 

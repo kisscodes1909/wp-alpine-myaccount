@@ -8,11 +8,11 @@ namespace The_SEO_Framework\Meta\Robots;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\Data;
+use The_SEO_Framework\Data;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -33,6 +33,8 @@ use \The_SEO_Framework\Data;
  * @since 4.2.0
  * @since 5.0.0 Moved from `\The_SEO_Framework\Builders\Robots`.
  * @access private
+ *
+ * @NOTE: All static:: calls within this class are intentional to allow overrides in subclasses.
  */
 class Factory {
 
@@ -73,8 +75,10 @@ class Factory {
 	 * @return Factory $this
 	 */
 	public function set( $args = null, $options = 0 ) {
+
 		static::$args    = $args;
 		static::$options = $options;
+
 		return $this;
 	}
 
@@ -86,7 +90,8 @@ class Factory {
 	 * @generator
 	 */
 	public static function generator() {
-		// phpcs:ignore, WordPress.CodeAnalysis.AssignmentInCondition.Found -- Shhh. It's OK.
+
+		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.Found -- Shhh. It's OK.
 		while ( true ) switch ( $sender = yield static::START ) {
 			case 'noindex':
 			case 'nofollow':

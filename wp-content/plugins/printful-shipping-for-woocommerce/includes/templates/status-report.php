@@ -1,3 +1,7 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) exit;
+?>
+
 <div class="support-report-wrap">
 	<p>
 		<?php esc_html_e('Copy the box content below and add it to your support message', 'printful'); ?>

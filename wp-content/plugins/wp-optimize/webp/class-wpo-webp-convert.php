@@ -16,12 +16,13 @@ class WPO_WebP_Convert {
 	 * Converts uploaded image to webp format
 	 *
 	 * @param string $source - path of the source file
+	 * @return bool
 	 */
 	public function convert($source) {
 		if (count($this->converters) < 1) return false;
 
 		$destination = $this->get_destination_path($source);
-		$this->check_converters_and_do_conversion($source, $destination);
+		return $this->check_converters_and_do_conversion($source, $destination);
 	}
 
 	/**
@@ -31,10 +32,9 @@ class WPO_WebP_Convert {
 	 *
 	 * @return string $destination - path of destination file
 	 */
-	protected function get_destination_path($source) {
+	public function get_destination_path($source) {
 		$path_parts = pathinfo($source);
-		$destination =   $path_parts['dirname'] . '/'. basename($source) . '.webp';
-		return $destination;
+		return $path_parts['dirname'] . '/'. basename($source) . '.webp';
 	}
 
 	/**
@@ -42,12 +42,16 @@ class WPO_WebP_Convert {
 	 *
 	 * @param string $source      - path of source file
 	 * @param string $destination - path of destination file
+	 *
+	 * @return bool
 	 */
 	protected function check_converters_and_do_conversion($source, $destination) {
 		foreach ($this->converters as $converter) {
 			WPO_WebP_Utils::perform_webp_conversion($converter, $source, $destination);
-			break;
+			if (is_file($destination)) return true;
 		}
+
+		return false;
 	}
 }
 endif;

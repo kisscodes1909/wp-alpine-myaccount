@@ -21,10 +21,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 <table class="td" cellspacing="0" cellpadding="6" style="width: 100%; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;" border="1">
 	<thead>
 		<tr>
-			<th class="td" scope="col" style="text-align:left;"><?php esc_html_e( 'Subscription', 'woocommerce-subscriptions' ); ?></th>
-			<th class="td" scope="col" style="text-align:left;"><?php echo esc_html_x( 'Price', 'table headings in notification email', 'woocommerce-subscriptions' ); ?></th>
-			<th class="td" scope="col" style="text-align:left;"><?php echo esc_html_x( 'Last Order Date', 'table heading', 'woocommerce-subscriptions' ); ?></th>
-			<th class="td" scope="col" style="text-align:left;"><?php echo esc_html_x( 'End Date', 'table headings in notification email', 'woocommerce-subscriptions' ); ?></th>
+			<th class="td" scope="col" style="text-align:left;"><?php esc_html_e( 'Subscription', 'decorator-woocommerce-email-customizer' ); ?></th>
+			<th class="td" scope="col" style="text-align:left;"><?php echo esc_html_x( 'Price', 'table headings in notification email', 'decorator-woocommerce-email-customizer' ); ?></th>
+			<th class="td" scope="col" style="text-align:left;"><?php echo esc_html_x( 'Last Order Date', 'table heading', 'decorator-woocommerce-email-customizer' ); ?></th>
+			<th class="td" scope="col" style="text-align:left;"><?php echo esc_html_x( 'End Date', 'table headings in notification email', 'decorator-woocommerce-email-customizer' ); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -41,7 +41,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				if ( ! empty( $last_order_time_created ) ) {
 					echo esc_html( date_i18n( wc_date_format(), $last_order_time_created ) );
 				} else {
-					esc_html_e( '-', 'woocommerce-subscriptions' );
+					echo '-';
 				}
 				?>
 			</td>

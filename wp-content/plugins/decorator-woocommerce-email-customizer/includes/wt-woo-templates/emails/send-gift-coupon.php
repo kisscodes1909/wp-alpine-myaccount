@@ -11,12 +11,12 @@ if ( ! defined( 'ABSPATH' ) ) {
     if($coupon_message)
     {
         ?>
-        </p><?php echo $coupon_message; ?></p>
+        </p><?php echo esc_html( $coupon_message ); ?></p>
         <?php
     }else 
     {   
         ?>
-        <p><?php _e("You've got a gift!", 'wt-smart-coupons-for-woocommerce-pro'); ?></p>
+        <p><?php esc_html_e("You've got a gift!", 'decorator-woocommerce-email-customizer'); ?></p>
         <?php
     }
     
@@ -31,7 +31,11 @@ if ( ! defined( 'ABSPATH' ) ) {
             $coupon = new WC_Coupon( $coupon_title );
             $coupon_data  = Wt_Smart_Coupon_Public::get_coupon_meta_data($coupon);                  
             ?>
-            <p><?php echo Wt_Smart_Coupon_Public::get_coupon_html($coupon, $coupon_data, 'email_coupon'); ?></p>
+            <p>
+                <?php 
+                echo Wt_Smart_Coupon_Public::get_coupon_html($coupon, $coupon_data, 'email_coupon'); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                ?>
+            </p>
             <?php
         }
     }

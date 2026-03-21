@@ -10,7 +10,7 @@ namespace The_SEO_Framework;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -30,15 +30,12 @@ namespace The_SEO_Framework;
  *
  * Holds various functions that relay to the new APIs.
  *
+ * @NOTE: All static:: calls within this class are intentional, to allow overrides in deprecators.
+ *
  * @since 5.0.0
  * You can access these methods via `tsf()` and `the_seo_framework()`.
  */
 class Legacy_API {
-
-	/**
-	 * Calling any top file without __construct() is forbidden.
-	 */
-	private function __construct() { }
 
 	/**
 	 * Return SEO options from the SEO options database.

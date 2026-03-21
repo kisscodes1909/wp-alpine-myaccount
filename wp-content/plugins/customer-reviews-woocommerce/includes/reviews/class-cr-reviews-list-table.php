@@ -34,10 +34,6 @@ class CR_Reviews_List_Table extends WP_List_Table {
 
 		$post_id = isset( $_REQUEST['p'] ) ? absint( $_REQUEST['p'] ) : 0;
 
-		if ( get_option( 'show_avatars' ) ) {
-			add_filter( 'comment_author', array( $this, 'floated_admin_avatar' ), 10, 2 );
-		}
-
 		$this->ivole_verified_page = get_option( 'ivole_reviews_verified_page', Ivole_Email::get_blogdomain() );
 		$this->cr_ajax_enabled = ( 'yes' === get_option( 'ivole_ajax_reviews', 'no' ) ? true : false );
 		$this->cust_avatars = $args['avatars'];
@@ -48,12 +44,6 @@ class CR_Reviews_List_Table extends WP_List_Table {
 			'ajax'     => true,
 			'screen'   => isset( $args['screen'] ) ? $args['screen'] : null,
 		) );
-	}
-
-	public function floated_admin_avatar( $name, $comment_ID ) {
-		$comment = get_comment( $comment_ID );
-		$avatar = get_avatar( $comment, 32, 'mystery' );
-		return "$avatar $name";
 	}
 
 	/**
@@ -358,7 +348,7 @@ class CR_Reviews_List_Table extends WP_List_Table {
 			'post_status' => 'publish',
 			'status' => $status,
 			'meta_key' => 'ivole_order',
-			'type__not_in' => 'cr_qna',
+			'type__not_in' => array( 'cr_qna' ),
 			'count' => true
 		);
 		if( 0 < get_comments( $args ) ) {
@@ -657,24 +647,32 @@ class CR_Reviews_List_Table extends WP_List_Table {
 		$this->user_can = current_user_can( 'edit_comment', $comment->comment_ID );
 
 		$comment->rating = intval( get_comment_meta( $comment->comment_ID, 'rating', true ) );
-		if ( "" !== get_comment_meta( $comment->comment_ID, 'ivole_order', true ) ) {
+		$comment->cr_order = get_comment_meta( $comment->comment_ID, 'ivole_order', true );
+		$comment->via_cr = '';
+		if ( $comment->cr_order ) {
 			// reviews collected via CusRev in the Live mode
 			$comment->via_cr = sprintf(
 				'%s<img src="' . plugins_url( '/img/shield-20.png', dirname( dirname( __FILE__ ) ) ) . '" alt="' . __( 'Verified review', 'customer-reviews-woocommerce' ) . '" class="ivole-verified-badge-icon">',
 				esc_html( __( 'via CR', 'customer-reviews-woocommerce' ) )
 			);
-		} elseif ( "" !== get_comment_meta( $comment->comment_ID, 'ivole_order_locl', true ) ) {
-			// reviews collected locally
-			$comment->via_cr = esc_html( __( 'via CR (Local)', 'customer-reviews-woocommerce' ) );
-		} elseif ( "" !== get_comment_meta( $comment->comment_ID, 'ivole_order_priv', true ) ) {
-			// reviews collected via CusRev in the Private mode
-			$comment->via_cr = esc_html( __( 'via CR (Private)', 'customer-reviews-woocommerce' ) );
-		} elseif ( "" !== get_comment_meta( $comment->comment_ID, 'ivole_order_unve', true ) ) {
-			// reviews collected via CusRev in the Live mode with removed verification (unverified)
-			$comment->via_cr = esc_html( __( 'via CR', 'customer-reviews-woocommerce' ) );
 		} else {
-			// other reviews
-			$comment->via_cr = '';
+			$comment->cr_order = get_comment_meta( $comment->comment_ID, 'ivole_order_locl', true );
+			if ( $comment->cr_order ) {
+				// reviews collected locally
+				$comment->via_cr = esc_html( __( 'via CR (Local)', 'customer-reviews-woocommerce' ) );
+			} else {
+				$comment->cr_order = get_comment_meta( $comment->comment_ID, 'ivole_order_priv', true );
+				if ( $comment->cr_order ) {
+					// reviews collected via CusRev in the Test mode
+					$comment->via_cr = esc_html( __( 'via CR (Test)', 'customer-reviews-woocommerce' ) );
+				} else {
+					$comment->cr_order = get_comment_meta( $comment->comment_ID, 'ivole_order_unve', true );
+					if ( $comment->cr_order ) {
+						// reviews collected via CusRev in the Live mode with removed verification (unverified)
+						$comment->via_cr = esc_html( __( 'via CR', 'customer-reviews-woocommerce' ) );
+					}
+				}
+			}
 		}
 
 		echo "<tr id='comment-$comment->comment_ID' class='$the_comment_class'>";
@@ -966,6 +964,11 @@ class CR_Reviews_List_Table extends WP_List_Table {
 		</div>
 		<?php
 
+		$title = get_comment_meta( $comment->comment_ID, 'cr_rev_title', true );
+		if ( $title ) {
+			echo '<div class="cr-comment-head-text">' . esc_html( $title ) . '</div>';
+		}
+
 		if( $this->cr_ajax_enabled ) {
 			if( 0 < get_comment_meta( $comment->comment_ID, 'ivole_featured', true ) ) {
 				$featured_class = 'cr-featured-badge-admin';
@@ -975,6 +978,48 @@ class CR_Reviews_List_Table extends WP_List_Table {
 			echo '<div class="' . $featured_class . '"><span>';
 			echo __( 'Featured Review', 'customer-reviews-woocommerce' );
 			echo '</span></div>';
+		}
+
+		if ( $comment->via_cr ):
+			$cr_order = wc_get_order( $comment->cr_order );
+			if ( $cr_order ) : ?>
+				<div class="cr-all-reviews-details">
+					<span class="dashicons dashicons-cart"></span>
+					<a href="<?php echo esc_attr( $cr_order->get_edit_order_url() ); ?>">
+						<?php echo esc_html( $cr_order->get_order_number() ); ?>
+					</a>
+					<?php
+					echo CR_Admin::cr_help_tip(
+						sprintf(
+							__( 'This review was submitted in response to a review invitation sent for the order %s', 'customer-reviews-woocommerce' ),
+							$cr_order->get_order_number()
+						)
+					);
+					?>
+				</div><?php
+			endif;
+		endif;
+
+		$coupon_code = get_comment_meta( $comment->comment_ID, 'cr_coupon_code', true );
+		if ( $coupon_code ) {
+			$coupon_id = wc_get_coupon_id_by_code( $coupon_code );
+			$incentivized_badge_icon = '<svg  xmlns="http://www.w3.org/2000/svg"  width="12"  height="12"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="cr-incentivized-svg"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 15l6 -6" /><circle cx="9.5" cy="9.5" r=".5" fill="currentColor" /><circle cx="14.5" cy="14.5" r=".5" fill="currentColor" /><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /></svg>';
+			$incentivized_label = esc_html( $coupon_code );
+			if ( $coupon_id ) {
+				$edit_coupon_link = admin_url( 'post.php?post=' . intval( $coupon_id ) . '&action=edit' );
+				$incentivized_label = '<a href="' . esc_url( $edit_coupon_link ) . '">' . esc_html( $coupon_code ) . '</a>';
+			}
+			$incentivized_badge_content = '<span class="cr-incentivized-icon">' . $incentivized_badge_icon . '</span>' . $incentivized_label;
+			?>
+				<div class="cr-all-reviews-details">
+					<?php
+						echo '<div class="cr-incentivized-badge">' . $incentivized_badge_content . '</div>';
+						echo CR_Admin::cr_help_tip(
+							__( 'Coupon code that was sent to the reviewer after they submitted this review', 'customer-reviews-woocommerce' )
+						);
+					?>
+				</div>
+			<?php
 		}
 
 		comment_text( $comment );
@@ -987,10 +1032,10 @@ class CR_Reviews_List_Table extends WP_List_Table {
 		$pics_local = get_comment_meta( $comment->comment_ID, 'ivole_review_image2' );
 		$pics_v = get_comment_meta( $comment->comment_ID, 'ivole_review_video' );
 		$pics_v_local = get_comment_meta( $comment->comment_ID, 'ivole_review_video2' );
-		$pics_n = count( $pics );
-		$pics_local_n = count( $pics_local );
-		$pics_v_n = count( $pics_v );
-		$pics_v_local_n = count( $pics_v_local );
+		$pics_n = ( is_array( $pics ) ? count( $pics ) : 0 );
+		$pics_local_n = ( is_array( $pics_local ) ? count( $pics_local ) : 0 );
+		$pics_v_n = ( is_array( $pics_v ) ? count( $pics_v ) : 0 );
+		$pics_v_local_n = ( is_array( $pics_v_local ) ? count( $pics_v_local ) : 0 );
 		$cr_query = '?crsrc=wp';
 		if ( 0 < $pics_n || 0 < $pics_local_n || 0 < $pics_v_n || 0 < $pics_v_local_n ) {
 			echo '<div class="cr-comment-images cr-comment-videos">';
@@ -1000,9 +1045,11 @@ class CR_Reviews_List_Table extends WP_List_Table {
 				for ( $i = 0; $i < $pics_n; $i++ ) {
 					if ( isset( $pics[$i]['url'] ) ) {
 						echo '<div class="iv-comment-image">';
-						echo '<a href="' . $pics[$i]['url'] . $cr_query . '" class="cr-comment-a" rel="nofollow"><img src="' .
-						$pics[$i]['url'] . $cr_query . '" alt="' . sprintf( __( 'Image #%1$d from ', 'customer-reviews-woocommerce' ), $k ) .
-						$comment->comment_author . '"></a>';
+						echo '<a href="' . esc_url( $pics[$i]['url'] . $cr_query ) . '" class="cr-comment-a" rel="nofollow"><img src="' .
+						esc_url( $pics[$i]['url'] . $cr_query ) . '" alt="' .
+						esc_attr(
+							sprintf( __( 'Image #%1$d from %2$s', 'customer-reviews-woocommerce' ), $k, $comment->comment_author )
+						) . '"></a>';
 						echo '</div>';
 						$k++;
 					}
@@ -1019,9 +1066,11 @@ class CR_Reviews_List_Table extends WP_List_Table {
 					if ( $attachmentUrl ) {
 						$temp_comment_content_flag = true;
 						$temp_comment_content .= '<div class="iv-comment-image">';
-						$temp_comment_content .= '<a href="' . $attachmentUrl . '" class="cr-comment-a"><img src="' .
-						$attachmentUrl . '" alt="' . sprintf( __( 'Image #%1$d from ', 'customer-reviews-woocommerce' ), $k ) .
-						$comment->comment_author . '" /></a>';
+						$temp_comment_content .= '<a href="' . esc_url( $attachmentUrl ) . '" class="cr-comment-a"><img src="' .
+						esc_url( $attachmentUrl ) . '" alt="' .
+						esc_attr(
+							sprintf( __( 'Image #%1$d from %2$s', 'customer-reviews-woocommerce' ), $k, $comment->comment_author )
+						) . '" /></a>';
 						$temp_comment_content .= '</div>';
 						$k++;
 					}
@@ -1039,11 +1088,13 @@ class CR_Reviews_List_Table extends WP_List_Table {
 					echo '<div class="cr-comment-video cr-comment-video-' . $k . '">';
 					echo '<div class="cr-video-cont">';
 					echo '<video preload="metadata" class="cr-video-a" ';
-					echo 'src="' . $pics_v[$i]['url'] . $cr_query;
+					echo 'src="' . esc_url( $pics_v[$i]['url'] . $cr_query . '#t=0.1' );
 					echo '"></video>';
 					echo '<img class="cr-comment-videoicon" src="' . plugin_dir_url( dirname( dirname( __FILE__ ) ) ) . 'img/video.svg" ';
-					echo 'alt="' . sprintf( __( 'Video #%1$d from %2$s', 'customer-reviews-woocommerce' ), $k, $comment->comment_author ) . '">';
-					echo '<button class="cr-comment-video-close">' . CR_Reviews::get_close_button_svg() . '</button>';
+					echo 'alt="' . esc_attr(
+						sprintf( __( 'Video #%1$d from %2$s', 'customer-reviews-woocommerce' ), $k, $comment->comment_author )
+					) . '">';
+					echo '<button class="cr-comment-video-close" aria-label="' . esc_attr__( 'Close', 'customer-reviews-woocommerce' ) . '">' . CR_Reviews::get_close_button_svg() . '</button>';
 					echo '</div></div>';
 					$k++;
 				}
@@ -1061,11 +1112,13 @@ class CR_Reviews_List_Table extends WP_List_Table {
 						$temp_comment_content .= '<div class="cr-comment-video cr-comment-video-' . $k . '">';
 						$temp_comment_content .= '<div class="cr-video-cont">';
 						$temp_comment_content .= '<video preload="metadata" class="cr-video-a" ';
-						$temp_comment_content .= 'src="' . $attachmentUrl;
+						$temp_comment_content .= 'src="' . esc_url( $attachmentUrl . '#t=0.1' );
 						$temp_comment_content .= '"></video>';
 						$temp_comment_content .= '<img class="cr-comment-videoicon" src="' . plugin_dir_url( dirname( dirname( __FILE__ ) ) ) . 'img/video.svg" ';
-						$temp_comment_content .= 'alt="' . sprintf( __( 'Video #%1$d from %2$s', 'customer-reviews-woocommerce' ), $k, $comment->comment_author ) . '">';
-						$temp_comment_content .= '<button class="cr-comment-video-close">' . CR_Reviews::get_close_button_svg() . '</button>';
+						$temp_comment_content .= 'alt="' . esc_attr(
+							sprintf( __( 'Video #%1$d from %2$s', 'customer-reviews-woocommerce' ), $k, $comment->comment_author )
+						) . '">';
+						$temp_comment_content .= '<button class="cr-comment-video-close" aria-label="' . esc_attr__( 'Close', 'customer-reviews-woocommerce' ) . '">' . CR_Reviews::get_close_button_svg() . '</button>';
 						$temp_comment_content .= '</div></div>';
 						$k++;
 					}
@@ -1155,7 +1208,27 @@ class CR_Reviews_List_Table extends WP_List_Table {
 		if ( 'hidden' !== $this->cust_avatars ) {
 			echo '<div class="cr-admin-avatar">' . get_avatar( $comment, 32, '' ) . '</div>';
 		}
-		echo "<strong>" . esc_html( get_comment_author( $comment ) ) . '</strong><br />';
+
+		// location information if available
+		$country_string = '';
+		$country = get_comment_meta( $comment->comment_ID, 'ivole_country', true );
+		if ( is_array( $country ) && 2 === count( $country ) ) {
+			if ( isset( $country['code'] ) && $country['code'] ) {
+				$country_string = '<div class="cr-review-country-cont"><img src="' .
+					plugin_dir_url( dirname( dirname( __FILE__ ) ) ) .
+					'img/flags/' .
+					rawurlencode( strtolower( $country['code'] ) ) .
+					'.svg" class="cr-review-country-icon" alt="' .
+					esc_attr( strtoupper( $country['code'] ) ) .
+					'">';
+				if ( isset( $country['desc'] ) ) {
+					$country_string .= '<span class="cr-review-country-text">' . $country['desc'] . '</span>';
+				}
+				$country_string .= '</div>';
+			}
+		}
+
+		echo "<strong>" . esc_html( get_comment_author( $comment ) ) . '</strong><br />' . $country_string;
 		if ( ! empty( $author_url_display ) ) {
 			printf( '<a href="%s">%s</a><br />', esc_url( $author_url ), esc_html( $author_url_display ) );
 		}
@@ -1173,7 +1246,7 @@ class CR_Reviews_List_Table extends WP_List_Table {
 
 		$author_type_label = '';
 		if ( isset( $comment->user_id ) && 0 < $comment->user_id ) {
-			if( user_can( $comment->user_id, 'manage_woocommerce' ) ) {
+			if ( user_can( $comment->user_id, 'manage_woocommerce' ) ) {
 				$author_type_label = __(
 					apply_filters( 'cr_reviews_store_manager', __( 'Store manager', 'customer-reviews-woocommerce' ) ),
 					'customer-reviews-woocommerce'
@@ -1181,7 +1254,7 @@ class CR_Reviews_List_Table extends WP_List_Table {
 			}
 		}
 		if ( ! $author_type_label ) {
-			if ( wc_review_is_from_verified_owner( $comment->comment_ID ) ) {
+			if ( CR_Reviews::cr_review_is_from_verified_owner( $comment ) ) {
 				$cr_verified_label = get_option( 'ivole_verified_owner', '' );
 				if( $cr_verified_label ) {
 					if ( function_exists( 'pll__' ) ) {

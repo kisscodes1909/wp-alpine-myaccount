@@ -1,3 +1,7 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) exit;
+?>
+
 <div class="support-info-wrap">
 
 	<div class="support-info-block">

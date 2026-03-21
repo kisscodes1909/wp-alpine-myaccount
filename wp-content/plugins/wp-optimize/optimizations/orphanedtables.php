@@ -28,10 +28,11 @@ class WP_Optimization_orphanedtables extends WP_Optimization {
 	 */
 	public function optimize() {
 		// check if the data contain action attribute then lead to innoDb conversion.
-		if (isset($this->data['optimization_action']) && 'toinnodb' == $this->data['optimization_action']) {
+		if (isset($this->data['optimization_action']) && 'toinnodb' === $this->data['optimization_action']) {
 			$table = $this->optimizer->get_table($this->data['optimization_table']);
 			if (false === $table) {
 				$this->register_meta('error', 1);
+				// translators: %s is the table name
 				$this->register_meta('message', sprintf(__('The table "%s" does not exist.', 'wp-optimize'), $this->data['optimization_table']));
 				return false;
 			}
@@ -46,11 +47,12 @@ class WP_Optimization_orphanedtables extends WP_Optimization {
 		}
 		
 		// check if single table name posted or optimize all tables.
-		if (isset($this->data['optimization_table']) && '' != $this->data['optimization_table']) {
+		if (isset($this->data['optimization_table']) && '' !== $this->data['optimization_table']) {
 			$table = $this->optimizer->get_table($this->data['optimization_table']);
 
 			if (false === $table) {
 				$this->register_meta('error', 1);
+				// translators: %s is the table name
 				$this->register_meta('message', sprintf(__('The table "%s" does not exist.', 'wp-optimize'), $this->data['optimization_table']));
 				return false;
 			}
@@ -75,10 +77,12 @@ class WP_Optimization_orphanedtables extends WP_Optimization {
 				}
 			}
 
-			$this->register_output(sprintf(_n('%s orphaned table deleted', '%s orphaned tables deleted', $deleted), $deleted));
+			// translators: %s is the number of deleted orphaned tables
+			$this->register_output(sprintf(_n('%s orphaned table deleted', '%s orphaned tables deleted', $deleted, 'wp-optimize'), $deleted));
 
 			if ($deleted > 0) {
-				$this->register_output(sprintf(_n('Deleting %s orphaned table was unsuccessful', 'Repairing %s orphaned tables were unsuccessful', $deleted), $deleted));
+				// translators: %s is the number of tables
+				$this->register_output(sprintf(_n('Deleting %s orphaned table was unsuccessful', 'Repairing %s orphaned tables were unsuccessful', $deleted, 'wp-optimize'), $deleted));
 			}
 		}
 	}
@@ -98,27 +102,27 @@ class WP_Optimization_orphanedtables extends WP_Optimization {
 		// check InnoDB is Active
 		$mysql_engine = $wpdb->get_results('SHOW ENGINES');
 		foreach ($mysql_engine as $check) {
-			if ('InnoDB' == $check->Engine && ('DEFAULT' == $check->Support || 'YES' == $check->Support)) {
+			if ('InnoDB' === $check->Engine && ('DEFAULT' === $check->Support || 'YES' === $check->Support)) {
 				$inno_db=1;
 			}
 		}
 		
 
-		if (0 == $inno_db) return false;
+		if (0 === $inno_db) return false;
 		// If InnoDB is active then convert MyISAM to InnoDB.
 		else {
-			$table_name = sanitize_text_field($table_obj->Name);
-			$sql_query = $wpdb->prepare("ALTER TABLE `%1s`  ENGINE=InnoDB", $table_name);
+			$table_name = esc_sql($table_obj->Name);
+			$sql_query = "ALTER TABLE `{$table_name}` ENGINE=InnoDB";
 			$this->logger->info($sql_query);
-			$result = $wpdb->query($sql_query);
+			$result = $wpdb->query($sql_query); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Statement is safe, not using user input
 		}
 		// check if alter query finished successfully.
-		if ('' != $wpdb->last_error) {
+		if ('' !== $wpdb->last_error) {
 			$this->last_message = $wpdb->last_error;
 			$this->logger->info($wpdb->last_error);
 		}
 		
-		return $result;
+		return (bool) $result;
 	}
 
 	/**
@@ -134,20 +138,20 @@ class WP_Optimization_orphanedtables extends WP_Optimization {
 		// don't delete table if it in use and plugin active.
 		if (!$table_obj->can_be_removed) return true;
 
-		$table_name = sanitize_text_field($table_obj->Name);
-		$sql_query = $wpdb->prepare("DROP TABLE `%1s`", $table_name);
+		$table_name = esc_sql($table_obj->Name);
+		$sql_query = "DROP TABLE `{$table_name}`";
 
 		$this->logger->info($sql_query);
 
-		$result = $wpdb->query($sql_query);
+		$result = $wpdb->query($sql_query); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Statement is safe, not using user input
 
 		// check if drop query finished successfully.
-		if ('' != $wpdb->last_error) {
+		if ('' !== $wpdb->last_error) {
 			$this->last_message = $wpdb->last_error;
 			$this->logger->info($wpdb->last_error);
 		}
 
-		return $result;
+		return (bool) $result;
 	}
 
 	/**
@@ -162,7 +166,7 @@ class WP_Optimization_orphanedtables extends WP_Optimization {
 
 		if (!empty($tablesinfo)) {
 			foreach ($tablesinfo as $tableinfo) {
-				if (false == $tableinfo->is_using) {
+				if (!$tableinfo->is_using) {
 					$unused_tables++;
 				}
 			}
@@ -178,10 +182,11 @@ class WP_Optimization_orphanedtables extends WP_Optimization {
 
 		$corrupted_tables = $this->get_unused_tables_count();
 
-		if (0 == $corrupted_tables) {
+		if (0 === $corrupted_tables) {
 			$this->register_output(__('No corrupted tables found', 'wp-optimize'));
 		} else {
-			$this->register_output(sprintf(_n('%s corrupted table found', '%s corrupted tables found', $corrupted_tables), $corrupted_tables));
+			// translators: %s is the number of corrupted tables
+			$this->register_output(sprintf(_n('%s corrupted table found', '%s corrupted tables found', $corrupted_tables, 'wp-optimize'), $corrupted_tables));
 		}
 	}
 

@@ -10,7 +10,7 @@ namespace The_SEO_Framework\Meta\Image;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -117,7 +117,7 @@ class Utils {
 	 * @param int $max_size     The largest acceptable dimension in pixels. Accounts for both width and height.
 	 * @param int $max_filesize The largest acceptable filesize in bytes. Default 5MB (5242880).
 	 * @return array|false {
-	 *     Array of image data, or boolean false if no image is available.
+	 *     Array of image data, or Boolean false if no image is available.
 	 *
 	 *     @type string $0 Image source URL.
 	 *     @type int    $1 Image width in pixels.

@@ -6,24 +6,24 @@
 
 namespace The_SEO_Framework;
 
-\defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) or die;
+( \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) ) or die;
 
-use \The_SEO_Framework\Admin\Settings\Layout\{
+use The_SEO_Framework\Admin\Settings\Layout\{
 	Form,
 	HTML,
 	Input,
 };
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Data\Filter\Sanitize,
 	Helper\Compatibility,
 	Helper\Post_Type,
 };
 
-// phpcs:disable, WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
+// phpcs:disable WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2021 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2021 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -66,7 +66,7 @@ switch ( $instance ) :
 
 		printf(
 			'<span class=hidden id=tsf-post-type-archive-data %s></span>',
-			// phpcs:ignore, WordPress.Security.EscapeOutput.OutputNotEscaped -- This escapes.
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- This escapes.
 			HTML::make_data_attributes( [ 'postTypes' => $post_types_data ] )
 		);
 
@@ -117,15 +117,15 @@ switch ( $instance ) :
 			// Hide subsequent wraps to prevent layout shifts (bounce) during load: They get hidden by JS anyway.
 			printf(
 				'<div class="tsf-post-type-archive-wrap%s" %s>',
-				// phpcs:ignore, WordPress.Security.EscapeOutput.OutputNotEscaped -- Shut it, noob.
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Shut it, noob.
 				$post_type_index ? ' hide-if-tsf-js' : '',
-				// phpcs:ignore, WordPress.Security.EscapeOutput.OutputNotEscaped -- This escapes.
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- This escapes.
 				HTML::make_data_attributes( [ 'postType' => $post_type ] )
 			);
 			?>
 				<div class=tsf-post-type-header>
 					<?php
-					// phpcs:ignore, WordPress.Security.EscapeOutput.OutputNotEscaped -- it is.
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- it is.
 					echo HTML::get_header_title( vsprintf(
 						'%s &ndash; <span class=tsf-post-type-archive-details><code>%s</code> %s</span>',
 						[
@@ -270,8 +270,15 @@ switch ( $instance ) :
 		</p>
 		<?php
 		// Output these unconditionally, with inline CSS attached to allow reacting on settings.
-		Form::output_character_counter_wrap( Input::get_field_id( $args['options']['description'] ), (bool) Data\Plugin::get_option( 'display_character_counter' ) );
-		Form::output_pixel_counter_wrap( Input::get_field_id( $args['options']['description'] ), 'description', (bool) Data\Plugin::get_option( 'display_pixel_counter' ) );
+		Form::output_character_counter_wrap(
+			Input::get_field_id( $args['options']['description'] ),
+			(bool) Data\Plugin::get_option( 'display_character_counter' ),
+		);
+		Form::output_pixel_counter_wrap(
+			Input::get_field_id( $args['options']['description'] ),
+			'description',
+			(bool) Data\Plugin::get_option( 'display_pixel_counter' ),
+		);
 		?>
 		<p>
 			<textarea name="<?php Input::field_name( $args['options']['description'] ); ?>" class=large-text id="<?php Input::field_id( $args['options']['description'] ); ?>" rows=3 cols=70><?= \esc_attr( Data\Plugin\PTA::get_meta_item( 'description', $args['post_type'] ) ) ?></textarea>
@@ -324,7 +331,10 @@ switch ( $instance ) :
 		</p>
 		<?php
 		// Output this unconditionally, with inline CSS attached to allow reacting on settings.
-		Form::output_character_counter_wrap( Input::get_field_id( $args['options']['og_title'] ), (bool) Data\Plugin::get_option( 'display_character_counter' ) );
+		Form::output_character_counter_wrap(
+			Input::get_field_id( $args['options']['og_title'] ),
+			(bool) Data\Plugin::get_option( 'display_character_counter' ),
+		);
 		?>
 		<p>
 			<input type=text name="<?php Input::field_name( $args['options']['og_title'] ); ?>" class=large-text id="<?php Input::field_id( $args['options']['og_title'] ); ?>" value="<?= \esc_html( Sanitize::metadata_content( Data\Plugin\PTA::get_meta_item( 'og_title', $args['post_type'] ) ) ) ?>" autocomplete=off data-tsf-social-group=<?= \esc_attr( "pta_social_settings_{$args['post_type']}" ) ?> data-tsf-social-type=ogTitle>
@@ -337,7 +347,10 @@ switch ( $instance ) :
 		</p>
 		<?php
 		// Output this unconditionally, with inline CSS attached to allow reacting on settings.
-		Form::output_character_counter_wrap( Input::get_field_id( $args['options']['og_description'] ), (bool) Data\Plugin::get_option( 'display_character_counter' ) );
+		Form::output_character_counter_wrap(
+			Input::get_field_id( $args['options']['og_description'] ),
+			(bool) Data\Plugin::get_option( 'display_character_counter' ),
+		);
 		?>
 		<p>
 			<textarea name="<?php Input::field_name( $args['options']['og_description'] ); ?>" class=large-text id="<?php Input::field_id( $args['options']['og_description'] ); ?>" rows=3 cols=70 autocomplete=off data-tsf-social-group=<?= \esc_attr( "pta_social_settings_{$args['post_type']}" ) ?> data-tsf-social-type=ogDesc><?= \esc_attr( Data\Plugin\PTA::get_meta_item( 'og_description', $args['post_type'] ) ) ?></textarea>
@@ -352,7 +365,10 @@ switch ( $instance ) :
 		</p>
 		<?php
 		// Output this unconditionally, with inline CSS attached to allow reacting on settings.
-		Form::output_character_counter_wrap( Input::get_field_id( $args['options']['tw_title'] ), (bool) Data\Plugin::get_option( 'display_character_counter' ) );
+		Form::output_character_counter_wrap(
+			Input::get_field_id( $args['options']['tw_title'] ),
+			(bool) Data\Plugin::get_option( 'display_character_counter' ),
+		);
 		?>
 		<p>
 			<input type=text name="<?php Input::field_name( $args['options']['tw_title'] ); ?>" class=large-text id="<?php Input::field_id( $args['options']['tw_title'] ); ?>" value="<?= \esc_html( Sanitize::metadata_content( Data\Plugin\PTA::get_meta_item( 'tw_title', $args['post_type'] ) ) ) ?>" autocomplete=off data-tsf-social-group=<?= \esc_attr( "pta_social_settings_{$args['post_type']}" ) ?> data-tsf-social-type=twTitle>
@@ -365,7 +381,10 @@ switch ( $instance ) :
 		</p>
 		<?php
 		// Output this unconditionally, with inline CSS attached to allow reacting on settings.
-		Form::output_character_counter_wrap( Input::get_field_id( $args['options']['tw_description'] ), (bool) Data\Plugin::get_option( 'display_character_counter' ) );
+		Form::output_character_counter_wrap(
+			Input::get_field_id( $args['options']['tw_description'] ),
+			(bool) Data\Plugin::get_option( 'display_character_counter' ),
+		);
 		?>
 		<p>
 			<textarea name="<?php Input::field_name( $args['options']['tw_description'] ); ?>" class=large-text id="<?php Input::field_id( $args['options']['tw_description'] ); ?>" rows=3 cols=70 autocomplete=off data-tsf-social-group=<?= \esc_attr( "pta_social_settings_{$args['post_type']}" ) ?> data-tsf-social-type=twDesc><?= \esc_attr( Data\Plugin\PTA::get_meta_item( 'tw_description', $args['post_type'] ) ) ?></textarea>
@@ -384,7 +403,7 @@ switch ( $instance ) :
 		</p>
 		<p>
 			<?php
-			// phpcs:disable, WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
+			// phpcs:disable WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
 			echo Form::make_single_select_form( [
 				'id'       => Input::get_field_id( $args['options']['tw_card_type'] ),
 				'class'    => 'tsf-select-block',
@@ -399,7 +418,7 @@ switch ( $instance ) :
 					'defaultI18n' => $_default_i18n,
 				],
 			] );
-			// phpcs:enable, WordPress.Security.EscapeOutput
+			// phpcs:enable WordPress.Security.EscapeOutput
 			?>
 		</p>
 
@@ -422,9 +441,9 @@ switch ( $instance ) :
 		</p>
 		<p class=hide-if-no-tsf-js>
 			<?php
-			// phpcs:disable, WordPress.Security.EscapeOutput -- get_image_uploader_form escapes. (phpcs breaks here, so we use disable)
+			// phpcs:disable WordPress.Security.EscapeOutput -- get_image_uploader_form escapes. (phpcs breaks here, so we use disable)
 			echo Form::get_image_uploader_form( [ 'id' => "tsf_pta_socialimage_{$args['post_type']}" ] );
-			// phpcs:enable, WordPress.Security.EscapeOutput
+			// phpcs:enable WordPress.Security.EscapeOutput
 			?>
 		</p>
 		<?php
@@ -509,7 +528,7 @@ switch ( $instance ) :
 		$_default_unknown_i18n = \__( 'Default (unknown)', 'autodescription' );
 
 		foreach ( $robots_settings as $_r_type => $_rs ) {
-			// phpcs:enable, WordPress.Security.EscapeOutput
+			// phpcs:enable WordPress.Security.EscapeOutput
 			HTML::wrap_fields(
 				vsprintf(
 					'<p><label for="%1$s"><strong>%2$s</strong> %3$s</label></p>',
@@ -525,7 +544,7 @@ switch ( $instance ) :
 				),
 				true,
 			);
-			// phpcs:disable, WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
+			// phpcs:disable WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
 			echo Form::make_single_select_form( [
 				'id'       => Input::get_field_id( $args['options'][ $_r_type ] ),
 				'class'    => 'tsf-select-block',

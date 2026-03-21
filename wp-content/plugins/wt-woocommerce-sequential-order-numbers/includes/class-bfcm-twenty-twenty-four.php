@@ -14,10 +14,10 @@ if ( !class_exists( 'Wtso_Bfcm_Twenty_Twenty_Four' ) ) {
     class Wtso_Bfcm_Twenty_Twenty_Four {
         
         private $banner_id = 'wtso-bfcm-twenty-twenty-four';
-        private static $banner_state_option_name = "wtso_bfcm_twenty_twenty_four_banner_state"; // Banner state, 1: Show, 2: Closed by user, 3: Clicked the grab button, 4: Expired
+        private static $banner_state_option_name = "wtso_bfcm_twenty_twenty_five_banner_state"; // Banner state, 1: Show, 2: Closed by user, 3: Clicked the grab button, 4: Expired
         private $banner_state = 1;
         private static $show_banner = null;
-        private static $ajax_action_name = "wtso_bcfm_twenty_twenty_four_banner_state";
+        private static $ajax_action_name = "wtso_bfcm_twenty_twenty_four_banner_state";
         private static $promotion_link = "https://www.webtoffee.com/plugins/?utm_source=BFCM_accounting&utm_medium=invoice&utm_campaign=BFCM-Accounting";
         private static $banner_version = '';
         
@@ -70,18 +70,18 @@ if ( !class_exists( 'Wtso_Bfcm_Twenty_Twenty_Four' ) ) {
                             </div>
                             <div class="wtso-bfcm-banner-body-info">
                                 <div class="never-miss-this-deal">
-                                    <p><?php echo esc_html__( 'Never Miss This Deal', '' ); ?></p>
+                                    <p><?php echo esc_html__( 'Never Miss This Deal', 'wt-woocommerce-sequential-order-numbers' ); ?></p>
                                 </div>
                                 <div class="info">
                                     <p><?php 
-                                        echo sprintf(
-                                                __( 'Your Last Chance to Avail %1$s on WebToffee Plugins. Grab the deal before it`s gone!', '' ), 
-                                                '<span>30% '.__("OFF","").'</span>'
+                                        // translators: %1$s: discount percentage
+                                        echo sprintf( esc_html__( 'Your Last Chance to Avail %1$s on WebToffee Plugins. Grab the deal before it\'s gone!', 'wt-woocommerce-sequential-order-numbers' ), 
+                                                '<span>30% '.esc_html__('OFF', 'wt-woocommerce-sequential-order-numbers').'</span>'
                                             );
                                     ?></p>
                                 </div>
-                                <div class="wtso-bfcm-banner-body-button">
-                                    <a href="<?php echo  esc_url(self::$promotion_link); ?>" class="bfcm_cta_button" target="_blank"><?php echo esc_html__( 'View plugins', '' ); ?> <span class="dashicons dashicons-arrow-right-alt"></span></a>
+                                <div class="info-button">
+                                    <a href="<?php echo  esc_url(self::$promotion_link); ?>" class="bfcm_cta_button" target="_blank"><?php echo esc_html__( 'View plugins', 'wt-woocommerce-sequential-order-numbers' ); ?> <span class="dashicons dashicons-arrow-right-alt"></span></a>
                                 </div>
                             </div>
                         </div>
@@ -91,9 +91,9 @@ if ( !class_exists( 'Wtso_Bfcm_Twenty_Twenty_Four' ) ) {
         }
 
         public function is_show_banner () {
-            $start_date = new \DateTime( '25-NOV-2024, 12:00 AM', new \DateTimeZone( 'Asia/Kolkata' ) ); // Start date.
+            $start_date = new \DateTime( '17-NOV-2025, 12:00 AM', new \DateTimeZone( 'Asia/Kolkata' ) ); // Start date.
             $current_date = new \DateTime( 'now', new \DateTimeZone( 'Asia/Kolkata' ) ); // Current date.
-            $end_date = new \DateTime( '02-DEC-2024, 11:59 PM', new \DateTimeZone( 'Asia/Kolkata' ) ); // End date.
+            $end_date = new \DateTime( '04-DEC-2025, 11:59 PM', new \DateTimeZone( 'Asia/Kolkata' ) ); // End date.
             /**
              * check if the current date is less than the start date then wait for the start date.
              */
@@ -133,8 +133,10 @@ if ( !class_exists( 'Wtso_Bfcm_Twenty_Twenty_Four' ) ) {
             $screen_id = $screen ? $screen->id : '';
             self::$show_banner = false;
             if ( 'woocommerce_page_wc-settings' === $screen_id ) {
-                $current_tab    = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : '';
-                $current_section = isset( $_GET['section'] ) ? sanitize_text_field( $_GET['section'] ) : '';
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                $current_tab    = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash($_GET['tab']) ) : '';
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                $current_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash($_GET['section']) ) : '';
                 if ( 'wts_settings' === $current_tab ) {
                     self::$show_banner = true;
                 }
@@ -150,7 +152,7 @@ if ( !class_exists( 'Wtso_Bfcm_Twenty_Twenty_Four' ) ) {
     		check_ajax_referer( 'wtso_bfcm_twenty_twenty_four_banner_nonce' );
     		if ( isset( $_POST['wtso_bfcm_twenty_twenty_four_banner_action_type'] ) ) {
 	            
-	            $action_type = absint( sanitize_text_field( $_POST['wtso_bfcm_twenty_twenty_four_banner_action_type'] ) );
+	            $action_type = absint( sanitize_text_field( wp_unslash($_POST['wtso_bfcm_twenty_twenty_four_banner_action_type']) ) );
 	            // Current action is allowed?
 	            if ( in_array( $action_type, array( 2, 3 ) ) ) {
 	                update_option( self::$banner_state_option_name, $action_type );
@@ -159,9 +161,9 @@ if ( !class_exists( 'Wtso_Bfcm_Twenty_Twenty_Four' ) ) {
 	        exit();
     	}
         public static function is_bfcm_season() {
-            $start_date = new DateTime( '25-NOV-2024, 12:00 AM', new DateTimeZone( 'Asia/Kolkata' ) ); 
+            $start_date = new DateTime( '17-NOV-2025, 12:00 AM', new DateTimeZone( 'Asia/Kolkata' ) ); 
             $current_date = new DateTime( 'now', new DateTimeZone( 'Asia/Kolkata' ) ); // Current date.
-            $end_date = new DateTime( '02-DEC-2024, 11:59 PM', new DateTimeZone( 'Asia/Kolkata' ) ); // End date.
+            $end_date = new DateTime( '04-DEC-2025, 11:59 PM', new DateTimeZone( 'Asia/Kolkata' ) ); // End date.
             /**
              * check if the date is on or between the start and end date of black friday and cyber monday banner for 2024.
              */

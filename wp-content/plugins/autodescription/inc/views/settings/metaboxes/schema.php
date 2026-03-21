@@ -6,20 +6,23 @@
 
 namespace The_SEO_Framework;
 
-\defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) or die;
+( \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) ) or die;
 
-use \The_SEO_Framework\Admin\Settings\Layout\{
+use The_SEO_Framework\Admin\Settings\Layout\{
 	Form,
 	HTML,
 	Input,
 };
-use \The_SEO_Framework\Helper\Compatibility;
+use The_SEO_Framework\Helper\{
+	Compatibility,
+	Format\Markdown,
+};
 
-// phpcs:disable, WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
+// phpcs:disable WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2016 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2016 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -49,15 +52,20 @@ switch ( $instance ) :
 		HTML::description( \__( 'This is also known as the "Knowledge Graph" and "Structured Data", which is under heavy active development by several search engines. Therefore, the usage of the outputted markup is not guaranteed.', 'autodescription' ) );
 
 		$tabs = [
-			'general'  => [
+			'general'     => [
 				'name'     => \__( 'General', 'autodescription' ),
 				'callback' => [ Admin\Settings\Plugin::class, '_schema_metabox_general_tab' ],
 				'dashicon' => 'admin-generic',
 			],
-			'presence' => [
+			'presence'    => [
 				'name'     => \__( 'Presence', 'autodescription' ),
 				'callback' => [ Admin\Settings\Plugin::class, '_schema_metabox_presence_tab' ],
 				'dashicon' => 'networking',
+			],
+			'breadcrumbs' => [
+				'name'     => \__( 'Breadcrumbs', 'autodescription' ),
+				'callback' => [ Admin\Settings\Plugin::class, '_schema_metabox_breadcrumbs_tab' ],
+				'dashicon' => 'ellipsis',
 			],
 		];
 
@@ -68,7 +76,7 @@ switch ( $instance ) :
 			 * @since 5.0.0 Removed the 'structure' index and added the 'general' index.
 			 * @param array $defaults The default tabs.
 			 */
-			(array) \apply_filters( 'the_seo_framework_schema_settings_tabs', $tabs )
+			(array) \apply_filters( 'the_seo_framework_schema_settings_tabs', $tabs ),
 		);
 		break;
 
@@ -204,7 +212,7 @@ switch ( $instance ) :
 				</p>
 				<p class=hide-if-no-tsf-js>
 					<?php
-					// phpcs:ignore, WordPress.Security.EscapeOutput.OutputNotEscaped -- already escaped.
+					// phpcs:disable WordPress.Security.EscapeOutput -- already escaped.
 					echo Form::get_image_uploader_form( [
 						'id'   => 'knowledge_logo',
 						'data' => [
@@ -220,6 +228,7 @@ switch ( $instance ) :
 							'button_text'  => \__( 'Select Logo', 'autodescription' ),
 						],
 					] );
+					// phpcs:enable WordPress.Security.EscapeOutput
 					?>
 				</p>
 			</div>
@@ -317,4 +326,29 @@ switch ( $instance ) :
 			</p>
 			<?php
 		}
+		break;
+
+	case 'breadcrumbs':
+		HTML::header_title( \__( 'Breadcrumbs Output Settings', 'autodescription' ) );
+
+		HTML::wrap_fields(
+			Input::make_checkbox( [
+				'id'          => 'breadcrumb_use_meta_title',
+				'label'       => \esc_html__( 'Use meta titles for breadcrumbs?', 'autodescription' ),
+				'description' => \esc_html__( 'Meta titles are the custom SEO titles inputted via the SEO settings. If disabled, page titles from the editor will be used.', 'autodescription' ),
+			] ),
+			true,
+		);
+
+		HTML::description_noesc(
+			Markdown::convert(
+				\sprintf(
+					/* translators: %s = Documentation URL in Markdown */
+					\esc_html__( 'You can also use a shortcode to output breadcrumbs. [Learn more](%s).', 'autodescription' ),
+					'https://kb.theseoframework.com/?p=212',
+				),
+				[ 'a' ],
+				[ 'a_internal' => false ],
+			),
+		);
 endswitch;

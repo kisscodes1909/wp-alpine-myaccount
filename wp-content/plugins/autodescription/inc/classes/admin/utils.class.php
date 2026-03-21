@@ -7,11 +7,11 @@ namespace The_SEO_Framework\Admin;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\Helper\Format\Markdown;
+use The_SEO_Framework\Helper\Format\Markdown;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -80,10 +80,10 @@ class Utils {
 			if ( \in_array(
 				'Location: ' . \wp_sanitize_redirect( $target ),
 				headers_list(),
-				true
+				true,
 			) ) exit;
 
-			// phpcs:disable, WordPress.Security.EscapeOutput -- convert_markdown escapes. Added esc_url() for sanity.
+			// phpcs:disable WordPress.Security.EscapeOutput -- convert_markdown escapes. Added esc_url() for sanity.
 			printf(
 				'<p><strong>%s</strong></p>',
 				Markdown::convert(

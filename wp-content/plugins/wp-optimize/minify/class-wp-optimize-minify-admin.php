@@ -3,20 +3,16 @@ if (!defined('ABSPATH')) die('No direct access allowed');
 
 class WP_Optimize_Minify_Admin {
 
-	private $wp_version_required = '4.5';
-
 	/**
 	 * Initialize, add actions and filters
 	 *
 	 * @return void
 	 */
 	public function __construct() {
-		if (WPO_MINIFY_PHP_VERSION_MET) {
-			// exclude processing for editors and administrators (fix editors)
-			add_action('wp_optimize_admin_page_wpo_minify_status', array($this, 'check_permissions_admin_notices'));
-		}
+		// exclude processing for editors and administrators (fix editors)
+		add_action('wp_optimize_admin_page_wpo_minify_status', array($this, 'check_permissions_admin_notices'));
 
-		add_action('wp_optimize_admin_page_wpo_minify_status', array($this, 'admin_notices_activation_errors'));
+		add_action('wp_optimize_admin_page_wpo_minify_status', array($this, 'admin_notices_activation_error'));
 
 		add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts'));
 
@@ -30,9 +26,10 @@ class WP_Optimize_Minify_Admin {
 		add_action('elementor/editor/after_save', array('WP_Optimize_Minify_Cache_Functions', 'reset'));
 		add_action('fusion_cache_reset_after', array('WP_Optimize_Minify_Cache_Functions', 'reset'));
 		// Output asset preload placeholder, replaced by premium
-		add_action('wpo_minify_settings_tabs', array($this, 'output_assets_preload_placeholder'), 10, 1);
+		add_action('wpo_minify_settings_tabs', array($this, 'output_assets_preload_placeholder'));
 
 		add_action('wp_optimize_register_admin_content', array($this, 'register_content'));
+		add_action('wpo_after_minify_javascript_options', array($this, 'output_capo_js_settings'));
 	}
 
 	/**
@@ -52,6 +49,19 @@ class WP_Optimize_Minify_Admin {
 	}
 
 	/**
+	 * Output Capo JS settings
+	 *
+	 * @return void
+	 */
+	public function output_capo_js_settings() {
+		$wpo_minify_options = wp_optimize_minify_config()->get();
+		$extract = array(
+			'enable_capo_js' => $wpo_minify_options['enable_capo_js'] ?? false,
+		);
+		WP_Optimize()->include_template('minify/capo-js.php', false, $extract);
+	}
+
+	/**
 	 * Load scripts for controlling the admin pages
 	 *
 	 * @param string $hook
@@ -61,38 +71,20 @@ class WP_Optimize_Minify_Admin {
 		$enqueue_version = WP_Optimize()->get_enqueue_version();
 		$min_or_not_internal = WP_Optimize()->get_min_or_not_internal_string();
 		if (preg_match('/wp\-optimize/i', $hook)) {
-			wp_enqueue_script('wp-optimize-min-js', WPO_PLUGIN_URL.'js/minify' . $min_or_not_internal . '.js', array('jquery', 'wp-optimize-admin-js'), $enqueue_version);
+			wp_enqueue_script('wp-optimize-min-js', WPO_PLUGIN_URL.'js/minify' . $min_or_not_internal . '.js', array('jquery', 'wp-optimize-admin-js'), $enqueue_version, true);
 		}
 	}
 
 	/**
-	 * Conditionally runs upon the WP action admin_notices to display errors
+	 * Conditionally runs upon the WP action admin_notices to display error
 	 *
 	 * @return void
 	 */
-	public function admin_notices_activation_errors() {
-		global $wp_version;
-		include ABSPATH . WPINC . '/version.php';
-		$errors = array();
-		
-		if (!WPO_MINIFY_PHP_VERSION_MET) {
-			$errors[] = __('WP-Optimize Minify requires PHP 5.4 or higher.', 'wp-optimize') . ' ' . sprintf(__("You're using version %s.", 'wp-optimize'), PHP_VERSION);
-		}
-
+	public function admin_notices_activation_error() {
 		if (!extension_loaded('mbstring')) {
-			$errors[] = __('WP-Optimize Minify requires the PHP mbstring module to be installed on the server; please ask your web hosting company for advice on how to enable it on your server.', 'wp-optimize');
-		}
-		
-		if (version_compare($wp_version, $this->wp_version_required, '<')) {
-			$errors[] = sprintf(__('WP-Optimize Minify requires WordPress version %s or higher.', 'wp-optimize'), $this->wp_version_required) . ' ' . sprintf(__("You're using version %s.", 'wp-optimize'),  $wp_version);
-		}
-
-		foreach ($errors as $error) {
-			?>
-			<div class="notice notice-error wpo-warning">
-				<p><?php echo $error; ?></p>
-			</div>
-			<?php
+			echo '<div class="notice notice-error wpo-warning">';
+			echo '<p>' . esc_html__('WP-Optimize Minify requires the PHP mbstring module to be installed on the server; please ask your web hosting company for advice on how to enable it on your server.', 'wp-optimize') . '</p>';
+			echo '</div>';
 		}
 	}
 
@@ -105,25 +97,32 @@ class WP_Optimize_Minify_Admin {
 		// get cache path
 		$cache_path = WP_Optimize_Minify_Cache_Functions::cache_path();
 		$cache_dir = $cache_path['cachedir'];
-		if (is_dir($cache_dir) && !is_writable($cache_dir)) {
+		if (is_dir($cache_dir) && !wp_is_writable($cache_dir)) {
 			$chmod = substr(sprintf('%o', fileperms($cache_dir)), -4);
 			?>
 			<div class="notice notice-error wpo-warning">
 				<p>
-					<?php printf(__('WP-Optimize Minify needs write permissions on the folder %s.', 'wp-optimize'), "<strong>".htmlspecialchars($cache_dir)."</strpmg>"); ?>
-				</p>
-			</div>
-			<div class="notice notice-error wpo-warning">
-				<p>
-					<?php printf(__('The current permissions for WP-Optimize Minify are chmod %s.', 'wp-optimize'), "<strong>$chmod</strong>"); ?>
+					<?php
+						// translators: %s is a directory
+						echo wp_kses_post(sprintf(__('WP-Optimize Minify needs write permissions on the folder %s.', 'wp-optimize'), "<strong>". esc_html($cache_dir)."</strong>"));
+					?>
 				</p>
 			</div>
 			<div class="notice notice-error wpo-warning">
 				<p>
 					<?php
-						printf(__('If you need something more than %s for it to work, then your server is probably misconfigured.', 'wp-optimize'), '<strong>775</strong>');
+						// translators: %s is a file permissions code
+						echo wp_kses_post(sprintf(__('The current permissions for WP-Optimize Minify are chmod %s.', 'wp-optimize'), "<strong>" . esc_html($chmod) . "</strong>"));
+					?>
+				</p>
+			</div>
+			<div class="notice notice-error wpo-warning">
+				<p>
+					<?php
+						// translators: %s is a file permissions code
+						echo wp_kses_post(sprintf(__('If you need something more than %s for it to work, then your server is probably misconfigured.', 'wp-optimize'), '<strong>775</strong>'));
 						echo " ";
-						_e('Please contact your hosting provider.', 'wp-optimize');
+						esc_html_e('Please contact your hosting provider.', 'wp-optimize');
 					?>
 				</p>
 			</div>
@@ -160,11 +159,13 @@ class WP_Optimize_Minify_Admin {
 	 */
 	public function output_font_settings() {
 		$wpo_minify_options = wp_optimize_minify_config()->get();
+		
 		WP_Optimize()->include_template(
 			'minify/font-settings-tab.php',
 			false,
 			array(
-				'wpo_minify_options' => $wpo_minify_options
+				'wpo_minify_options' => $wpo_minify_options,
+				'fonts_cache_size' => WP_Optimize()::is_premium() ? WP_Optimize_Host_Google_Fonts::instance()->get_cache_stats() : '',
 			)
 		);
 	}
@@ -176,9 +177,9 @@ class WP_Optimize_Minify_Admin {
 	 */
 	public function output_analytics_settings() {
 		$config = wp_optimize_minify_config()->get();
-		$id = isset($config['tracking_id']) ? $config['tracking_id'] : '';
-		$method = isset($config['analytics_method']) ? $config['analytics_method'] : '';
-		$is_enabled = isset($config['enable_analytics']) ? $config['enable_analytics'] : false;
+		$id = $config['tracking_id'] ?? '';
+		$method = $config['analytics_method'] ?? '';
+		$is_enabled = $config['enable_analytics'] ?? false;
 	
 		WP_Optimize()->include_template(
 			'minify/analytics-settings-tab.php',
@@ -192,18 +193,76 @@ class WP_Optimize_Minify_Admin {
 	}
 
 	/**
+	 * Minify - Get the output settings for the CSS or JS settings tabs
+	 *
+	 * @param string $type - css or js
+	 *
+	 * @return array
+	 */
+	private function get_output_setting($type) {
+		$wpo_minify_options = wp_optimize_minify_config()->get();
+		$is_http1 = WP_Optimize_Utils::is_request_protocol_http1();
+		$protocol = $is_http1 ? 'HTTP/1.x' : 'HTTP/2/3';
+
+		$merge_enabled = !empty($wpo_minify_options['enable_merging_of_'.$type]);
+
+		// Determine if the notice should be shown
+		$should_show_notice = (($is_http1 && !$merge_enabled) || (!$is_http1 && $merge_enabled));
+		$user_dismissed = get_user_meta(get_current_user_id(), 'wpo_hide_'.$type.'_merging_notice', true);
+
+		// Only show if a user hasn't dismissed yet
+		$show_section_notice = $should_show_notice && !$user_dismissed;
+		$is_enabled_minification = $wpo_minify_options['enable_'.$type.'_minification'];
+
+		$label = 'js' === $type ? 'JavaScript' : 'CSS';
+
+		// Notice text
+		$notice_text = sprintf(
+		/* translators: 1: File type (CSS/JS), 2: HTTP protocol */
+			__('Merging %1$s files may improve performance on HTTP/1.1, but could reduce speed on HTTP/2/3.<br><b>Note:</b> Your site is currently using %2$s.', 'wp-optimize'),
+			$label,
+			$protocol
+		);
+
+		// Tooltip parts
+		$tooltip_parts = array(
+			sprintf(
+			/* translators: %s: File type (CSS/JS) */
+				__('Combines multiple %s files into one to reduce HTTP requests.', 'wp-optimize'),
+				$label
+			),
+			__('May improve performance on HTTP/1.1, but could reduce speed on HTTP/2/3.', 'wp-optimize'),
+			__('Disable this option if your site experiences issues.', 'wp-optimize'),
+			sprintf(
+			/* translators: %s: HTTP protocol */
+				__('Note: Your site is currently using %s.', 'wp-optimize'),
+				$protocol
+			),
+		);
+		$tooltip = implode(' ', $tooltip_parts);
+
+		return array(
+			'protocol' => $protocol,
+			'show_section_notice' => $show_section_notice,
+			'wpo_minify_options' => $wpo_minify_options,
+			'is_enabled_minification' => $is_enabled_minification,
+			'notice_text' => $notice_text,
+			'tooltip' => $tooltip,
+		);
+	}
+
+	/**
 	 * Minify - Outputs the CSS settings tab
 	 *
 	 * @return void
 	 */
 	public function output_css_settings() {
-		$wpo_minify_options = wp_optimize_minify_config()->get();
+		$template_args = $this->get_output_setting('css');
+		$template_args['show_unused_css'] = WP_Optimize::is_premium() && $template_args['is_enabled_minification'];
 		WP_Optimize()->include_template(
 			'minify/css-settings-tab.php',
 			false,
-			array(
-				'wpo_minify_options' => $wpo_minify_options
-			)
+			$template_args
 		);
 	}
 
@@ -213,13 +272,11 @@ class WP_Optimize_Minify_Admin {
 	 * @return void
 	 */
 	public function output_js_settings() {
-		$wpo_minify_options = wp_optimize_minify_config()->get();
+		$template_args = $this->get_output_setting('js');
 		WP_Optimize()->include_template(
 			'minify/js-settings-tab.php',
 			false,
-			array(
-				'wpo_minify_options' => $wpo_minify_options
-			)
+			$template_args
 		);
 	}
 
@@ -230,7 +287,7 @@ class WP_Optimize_Minify_Admin {
 	 */
 	public function output_settings() {
 		$wpo_minify_options = wp_optimize_minify_config()->get();
-		$url = parse_url(get_home_url());
+		$url = wp_parse_url(get_home_url());
 		WP_Optimize()->include_template(
 			'minify/settings-tab.php',
 			false,
@@ -272,7 +329,7 @@ class WP_Optimize_Minify_Admin {
 			array(
 				'is_cache_enabled' => $cache_config->get_option('enable_page_caching'),
 				'is_running' => $is_running,
-				'status_message' => isset($status['message']) ? $status['message'] : '',
+				'status_message' => $status['message'] ?? '',
 			)
 		);
 	}
@@ -285,7 +342,7 @@ class WP_Optimize_Minify_Admin {
 	public function output_advanced() {
 		$wpo_minify_options = wp_optimize_minify_config()->get();
 		$files = false;
-		if (apply_filters('wpo_minify_status_show_files_on_load', true) && WPO_MINIFY_PHP_VERSION_MET) {
+		if (apply_filters('wpo_minify_status_show_files_on_load', true)) {
 			$files = WP_Optimize_Minify_Cache_Functions::get_cached_files();
 		}
 

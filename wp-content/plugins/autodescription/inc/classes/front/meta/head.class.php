@@ -8,19 +8,19 @@ namespace The_SEO_Framework\Front\Meta;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\{
+use function The_SEO_Framework\{
 	memo,
 	_bootstrap_timer,
 };
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Data,
 	Helper\Query,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -71,11 +71,11 @@ final class Head {
 		 */
 		$print_start = hrtime( true );
 
-		static::print_plugin_indicator( 'before' );
+		self::print_plugin_indicator( 'before' );
 
-		static::print_tags();
+		self::print_tags();
 
-		static::print_plugin_indicator(
+		self::print_plugin_indicator(
 			'after',
 			( hrtime( true ) - $print_start ) / 1e9,
 			$bootstrap_timer,
@@ -127,55 +127,20 @@ final class Head {
 				];
 		}
 
-		/**
-		 * @since 3.1.4
-		 * @since 5.0.0 Deprecated
-		 * @deprecated
-		 * @param bool $use_og_tags
-		 */
-		if ( ! \apply_filters_deprecated(
-			'the_seo_framework_use_og_tags',
-			[ (bool) Data\Plugin::get_option( 'og_tags' ) ],
-			'5.0.0 of The SEO Framework',
-			'the_seo_framework_meta_generator_pools',
-		) ) {
-			// phpcs:ignore, VariableAnalysis.CodeAnalysis.VariableAnalysis -- coalescable.
+		if ( ! Data\Plugin::get_option( 'og_tags' ) )
 			$remove_pools[] = 'Open_Graph';
-		}
-		/**
-		 * @since 3.1.4
-		 * @since 5.0.0 Deprecated
-		 * @deprecated
-		 * @param bool $use_facebook_tags
-		 */
-		if ( ! \apply_filters_deprecated(
-			'the_seo_framework_use_facebook_tags',
-			[ (bool) Data\Plugin::get_option( 'facebook_tags' ) ],
-			'5.0.0 of The SEO Framework',
-			'the_seo_framework_meta_generator_pools',
-		) ) {
+
+		if ( ! Data\Plugin::get_option( 'facebook_tags' ) )
 			$remove_pools[] = 'Facebook';
-		}
-		/**
-		 * @since 3.1.4
-		 * @since 5.0.0 Deprecated
-		 * @deprecated
-		 * @param bool $use_twitter_tags
-		 */
-		if ( ! \apply_filters_deprecated(
-			'the_seo_framework_use_twitter_tags',
-			[ (bool) Data\Plugin::get_option( 'twitter_tags' ) ],
-			'5.0.0 of The SEO Framework',
-			'the_seo_framework_meta_generator_pools',
-		) ) {
+
+		if ( ! Data\Plugin::get_option( 'twitter_tags' ) )
 			$remove_pools[] = 'Twitter';
-		}
 
 		/**
 		 * @since 5.0.0
 		 * @param string[] $generator_pools A list of tag pools requested for the current query.
-		 *                                  The tag pool names correspond directly to the classes'.
-		 *                                  Do not register new pools, it'll cause a fatal error.
+		 *                                  The tag pool names correspond directly to their classes.
+		 *                                  Do not register new pools; it'll cause a fatal error.
 		 */
 		$generator_pools = \apply_filters(
 			'the_seo_framework_meta_generator_pools',
@@ -215,7 +180,7 @@ final class Head {
 		 * @param callable[] $tag_generators   A list of meta tag generator callbacks.
 		 *                                     The generators may offload work to other generators.
 		 */
-		$tags_render_data = \apply_filters( // phpcs:ignore, Generic.Formatting -- bug in PHPCS.
+		$tags_render_data = \apply_filters( // phpcs:ignore Generic.Formatting -- bug in PHPCS.
 			'the_seo_framework_meta_render_data',
 			$tags_render_data = &Tags::tags_render_data(),
 			$tag_generators,
@@ -265,7 +230,7 @@ final class Head {
 					 * @since 2.4.0
 					 * @param bool $sybre Whether to show the author name in the indicator.
 					 */
-					\apply_filters( 'sybre_waaijer_<3', true ) // phpcs:ignore, WordPress.NamingConventions.ValidHookName -- Easter egg.
+					\apply_filters( 'sybre_waaijer_<3', true ) // phpcs:ignore WordPress.NamingConventions.ValidHookName -- Easter egg.
 						? \__( 'by Sybre Waaijer', 'autodescription' )
 						: '',
 				]
@@ -276,7 +241,7 @@ final class Head {
 
 		switch ( $where ) {
 			case 'before':
-				// phpcs:ignore, WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped earlier.
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped earlier.
 				echo "\n<!-- {$cache['annotation']} -->\n";
 				break;
 			case 'after':
@@ -290,7 +255,7 @@ final class Head {
 					$timers = '';
 				}
 
-				// phpcs:ignore, WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped earlier.
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped earlier.
 				echo "<!-- / {$cache['annotation']}{$timers} -->\n\n";
 		}
 	}

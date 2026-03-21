@@ -8,7 +8,7 @@ namespace The_SEO_Framework\Front;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Data,
 	Helper,
 	Helper\Format,
@@ -16,7 +16,7 @@ use \The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2020 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2020 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -104,9 +104,9 @@ final class Feed {
 					 */
 					\apply_filters(
 						'the_seo_framework_feed_source_link_text',
-						\_x( 'Source', 'The content source', 'autodescription' )
-					)
-				)
+						\_x( 'Source', 'The content source', 'autodescription' ),
+					),
+				),
 			);
 		}
 

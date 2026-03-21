@@ -15,13 +15,13 @@
  * Plugin Name:       Sequential Order Numbers for WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/wt-woocommerce-sequential-order-numbers/
  * Description:       Automatically sets sequential order number for WooCommerce orders placed by either customers or by admin through backend.
- * Version:           1.6.7
+ * Version:           1.7.7
  * Author:            WebToffee
  * Author URI:        https://www.webtoffee.com/
  * License:           GPLv3
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
  * WC requires at least: 3.0.1
- * WC tested up to:   9.4.2
+ * WC tested up to:   10.4.3
  * Text Domain:       wt-woocommerce-sequential-order-numbers
  * Domain Path:       /languages
  */
@@ -52,7 +52,8 @@ if(!$wt_seq_order_no_plugin_conflict)
 {
     //return;
     deactivate_plugins(plugin_basename(__FILE__));
-    wp_die(sprintf(__("The plugins %s and %s cannot be active in your store at the same time. Kindly deactivate one of these prior to activating the other.", 'wt-woocommerce-sequential-order-numbers'), $active_plugin_name, $current_plugin_name), "", array('link_url' => admin_url('plugins.php'), 'link_text' => __('Go to plugins page', 'wt-woocommerce-sequential-order-numbers') ));
+    // translators: %1$s: active plugin name, %2$s: current plugin name
+    wp_die(sprintf(esc_html__('The plugins %1$s and %2$s cannot be active in your store at the same time. Kindly deactivate one of these prior to activating the other.', 'wt-woocommerce-sequential-order-numbers'), esc_html($active_plugin_name), esc_html($current_plugin_name)), "", array('link_url' => esc_url(admin_url('plugins.php')), 'link_text' => esc_html__('Go to plugins page', 'wt-woocommerce-sequential-order-numbers') ));
 }
 
 /**
@@ -61,7 +62,7 @@ if(!$wt_seq_order_no_plugin_conflict)
  * Rename this for your plugin and update it as you release new versions.
  */
 if (!defined('WT_SEQUENCIAL_ORDNUMBER_VERSION')) {
-    define('WT_SEQUENCIAL_ORDNUMBER_VERSION', '1.6.7');
+    define('WT_SEQUENCIAL_ORDNUMBER_VERSION', '1.7.7');
 }
 
 if (!defined('WT_SEQUENCIAL_ORDNUMBER_BASE_NAME')) {
@@ -144,7 +145,10 @@ if(function_exists('run_wt_advanced_order_number'))
             {
                 ?>
                 <div class="error">
-                    <p><?php echo sprintf(__('%s Sequential Order Number for WooCommerce %s is enabled but not effective. It requires %s WooCommerce %s in order to work.', 'wt-woocommerce-sequential-order-numbers'), '<b>', '</b>', '<a href="https://wordpress.org/plugins/woocommerce/" target="_blank">', '</a>'); ?></p>
+                    <p><?php
+                        // translators: %1$s: plugin name, %2$s: plugin name, %3$s: WooCommerce link, %4$s: WooCommerce link
+                        echo sprintf(esc_html__('%1$s Sequential Order Number for WooCommerce %2$s is enabled but not effective. It requires %3$s WooCommerce %4$s in order to work.', 'wt-woocommerce-sequential-order-numbers'), '<b>', '</b>', '<a href="https://wordpress.org/plugins/woocommerce/" target="_blank">', '</a>');
+                    ?></p>
                 </div>
                 <?php
             }

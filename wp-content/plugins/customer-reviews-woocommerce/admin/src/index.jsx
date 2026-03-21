@@ -6,7 +6,11 @@ import Reminders from './Reminders.jsx'
 const elReviews = document.getElementById( 'cr_reviews_top_charts' );
 if ( elReviews ) {
   const reviewCharts = createRoot( elReviews );
-  reviewCharts.render( <Reviews nonce={elReviews.getAttribute('data-nonce')} /> );
+  reviewCharts.render(
+    <Reviews
+      nonce={elReviews.getAttribute('data-nonce')}
+    />
+  );
 }
 
 // Reminders page

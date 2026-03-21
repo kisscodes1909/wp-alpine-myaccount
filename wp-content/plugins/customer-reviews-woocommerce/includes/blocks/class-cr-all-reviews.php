@@ -10,7 +10,6 @@ if (! class_exists('CR_All_Reviews')) :
 	{
 		private $shortcode_atts;
 		private $shop_page_id;
-		private $crsearch = 'crsearch';
 		private $search = '';
 		private $tags = array();
 		private $default_per_page = 10;
@@ -55,7 +54,8 @@ if (! class_exists('CR_All_Reviews')) :
 				'min_chars' => 0,
 				'avatars' => 'initials',
 				'users' => 'all',
-				'add_review' => false
+				'add_review' => 'false',
+				'schema_markup' => 'false'
 			);
 
 			if ( isset( $attributes['categories'] ) && ! is_array( $attributes['categories'] ) ) {
@@ -87,6 +87,9 @@ if (! class_exists('CR_All_Reviews')) :
 					$products = array_filter( $products, 'is_numeric' );
 					$products = array_map( 'intval', $products );
 
+					$attributes['products'] = $products;
+				} else {
+					$products = array_map( 'intval', $attributes['products'] );
 					$attributes['products'] = $products;
 				}
 			}
@@ -142,6 +145,7 @@ if (! class_exists('CR_All_Reviews')) :
 			} else {
 				$this->shortcode_atts['add_review'] = false;
 			}
+			$this->shortcode_atts['schema_markup'] = $this->shortcode_atts['schema_markup'] === 'true' ? true : false;
 		}
 
 		public function render_all_reviews_shortcode( $attributes ) {
@@ -189,7 +193,7 @@ if (! class_exists('CR_All_Reviews')) :
 					'status'       => 'approve',
 					'orderby'      => 'comment_date_gmt',
 					'order'        => $this->shortcode_atts['sort'],
-					'type__not_in' => 'cr_qna',
+					'type__not_in' => array( 'cr_qna' ),
 					'offset'       => $this->page * $limit_per_page,
 					'cache_domain' => $this->get_cache_domain()
 				);
@@ -293,6 +297,14 @@ if (! class_exists('CR_All_Reviews')) :
 				}
 				if ( function_exists( 'pll_current_language' ) ) {
 					// Polylang compatibility
+					if ( apply_filters( 'cr_reviews_polylang_merge', true ) ) {
+						foreach ( $this->shortcode_atts['products'] as $product_id ) {
+							$translationIds = PLL()->model->post->get_translations( $product_id );
+							foreach ( $translationIds as $key => $translationID ) {
+								$this->shortcode_atts['products'][] = intval( $translationID );
+							}
+						}
+					}
 					$args['lang'] = '';
 				} elseif ( has_filter( 'wpml_current_language' ) ) {
 					// WPML compatibility
@@ -492,9 +504,12 @@ if (! class_exists('CR_All_Reviews')) :
 			$return .= '<ol class="commentlist">';
 			if ( 'initials' === $this->shortcode_atts['avatars'] ) {
 				add_filter( 'get_avatar', array( 'CR_Reviews_Grid', 'cr_get_avatar' ), 10, 5 );
+			} else {
+				add_filter( 'get_avatar', array( 'CR_Reviews', 'change_avatar_class' ), 10, 6 );
 			}
 			$return .= wp_list_comments( apply_filters('ivole_product_review_list_args', array(
 				'callback' => array( 'CR_Reviews', 'callback_comments' ),
+				'max_depth' => 5,
 				'page'  => 1,
 				'per_page' => $per_page,
 				'reverse_top_level' => false,
@@ -504,6 +519,8 @@ if (! class_exists('CR_All_Reviews')) :
 			)), $comments );
 			if ( 'initials' === $this->shortcode_atts['avatars'] ) {
 				remove_filter( 'get_avatar', array( 'CR_Reviews_Grid', 'cr_get_avatar' ) );
+			} else {
+				remove_filter( 'get_avatar', array( 'CR_Reviews', 'change_avatar_class' ) );
 			}
 			$return .= '<span class="cr-pagination-review-spinner"></span>';
 			$return .= '</ol>';
@@ -600,9 +617,12 @@ if (! class_exists('CR_All_Reviews')) :
 
 			if ( 'initials' === $this->shortcode_atts['avatars'] ) {
 				add_filter( 'get_avatar', array( 'CR_Reviews_Grid', 'cr_get_avatar' ), 10, 5 );
+			} else {
+				add_filter( 'get_avatar', array( 'CR_Reviews', 'change_avatar_class' ), 10, 6 );
 			}
 			$html .= wp_list_comments( apply_filters( 'ivole_product_review_list_args', array(
 				'callback' => array( 'CR_Reviews', 'callback_comments' ),
+				'max_depth' => 5,
 				'page'  => 1,
 				'per_page' => $per_page,
 				'reverse_top_level' => false,
@@ -612,6 +632,8 @@ if (! class_exists('CR_All_Reviews')) :
 			) ), $comments );
 			if ( 'initials' === $this->shortcode_atts['avatars'] ) {
 				remove_filter( 'get_avatar', array( 'CR_Reviews_Grid', 'cr_get_avatar' ) );
+			} else {
+				remove_filter( 'get_avatar', array( 'CR_Reviews', 'change_avatar_class' ) );
 			}
 
 			$last_page = false;
@@ -660,12 +682,10 @@ if (! class_exists('CR_All_Reviews')) :
 				$assets_version = Ivole::CR_VERSION;
 				$disable_lightbox = 'yes' === get_option( 'ivole_disable_lightbox', 'no' ) ? true : false;
 				// Load gallery scripts on product pages only if supported.
-				if ( 'yes' === get_option( 'ivole_attach_image', 'no' ) || 'yes' === get_option( 'ivole_form_attach_media', 'no' ) ) {
-					if ( ! $disable_lightbox ) {
-						$this->enqueue_wc_script( 'photoswipe-ui-default' );
-						$this->enqueue_wc_style( 'photoswipe-default-skin' );
-						add_action( 'wp_footer', array( $this, 'cr_photoswipe' ) );
-					}
+				if ( ! $disable_lightbox ) {
+					$this->enqueue_wc_script( 'wc-photoswipe-ui-default' );
+					$this->enqueue_wc_style( 'photoswipe-default-skin' );
+					add_action( 'wp_footer', array( $this, 'cr_photoswipe' ) );
 				}
 
 				wp_register_style( 'cr-frontend-css', plugins_url( '/css/frontend.css', dirname( dirname( __FILE__ ) ) ), array(), $assets_version, 'all' );
@@ -713,7 +733,7 @@ if (! class_exists('CR_All_Reviews')) :
 					'status'       => 'approve',
 					'parent'       => 0,
 					'count'        => true,
-					'type__not_in' => 'cr_qna',
+					'type__not_in' => array( 'cr_qna' ),
 					'comment__in'  => $comment_in,
 					'meta_key'     => 'rating',
 					'cache_domain' => $this->get_cache_domain()
@@ -853,7 +873,7 @@ if (! class_exists('CR_All_Reviews')) :
 			}
 			$output .= '<div class="cr-overall-rating-wrap">';
 			$output .= '<div class="cr-average-rating"><span>' . number_format_i18n( $average, 1 ) . '</span></div>';
-			$output .= '<div class="cr-average-rating-stars"><div class="crstar-rating"><span style="width:'.($average / 5 * 100).'%;"></span></div></div>';
+			$output .= '<div class="cr-average-rating-stars"><div class="crstar-rating-svg" role="img" aria-label="' . esc_attr( sprintf( __( 'Rated %s out of 5', 'woocommerce' ), number_format_i18n( $average, 1 ) ) ) . '">' . CR_Reviews::get_star_rating_svg( $average, 0, '' ) . '</div></div>';
 			$output .= '<div class="cr-total-rating-count">' . sprintf( _n( 'Based on %s review', 'Based on %s reviews', $all, 'customer-reviews-woocommerce' ), number_format_i18n( $all ) ) . '</div>';
 			$output .= '</div>';
 			$output .= '<div class="cr-summary-separator"><div class="cr-summary-separator-int"></div></div>';
@@ -939,6 +959,36 @@ if (! class_exists('CR_All_Reviews')) :
 				$output .= '</div>';
 				$output .= '<div class="cr-summary-separator-side"></div>';
 			}
+
+			// add structured data
+			if (
+				$this->shortcode_atts['schema_markup'] &&
+				$this->shortcode_atts['product_reviews'] &&
+				! $this->shortcode_atts['shop_reviews'] &&
+				$this->shortcode_atts['products'] &&
+				is_array( $this->shortcode_atts['products'] ) &&
+				1 === count( $this->shortcode_atts['products'] )
+			) {
+				$prod_temp = wc_get_product( $this->shortcode_atts['products'][0] );
+				if ( $prod_temp ) {
+					$prod_name = esc_html( strip_tags( $prod_temp->get_title() ) );
+					$schema = array(
+						'@context' => 'https://schema.org/',
+						'@type' => 'Product',
+						'name' => $prod_name,
+						'aggregateRating' => array(
+							'@type' => 'aggregateRating',
+							'ratingValue' => round( $average, 1 ),
+							'bestRating' => 5,
+							'ratingCount' => $all
+						)
+					);
+					$output .= '<script type="application/ld+json">';
+					$output .= wp_json_encode( $schema );
+					$output .= '</script>';
+				}
+			}
+
 			$output .= '</div>';
 			return $output;
 		}
@@ -1083,6 +1133,7 @@ if (! class_exists('CR_All_Reviews')) :
 		}
 
 		public static function get_count_wording( $count, $page, $per_page, $pagination, $rating, $all ) {
+			$per_page = intval( $per_page );
 			// optional strings that need to be displayed when reviews are filtered by rating
 			$rating_string = '';
 			$all_reviews_string = '';
@@ -1175,7 +1226,8 @@ if (! class_exists('CR_All_Reviews')) :
 					'cr_form_item_media_desc' => $cr_form_item_media_desc,
 					'cr_form_permissions' => $cr_form_permissions,
 					'cr_form_checkbox' => $cr_form_checkbox,
-					'cr_form_checkbox_text' => wp_specialchars_decode( $cr_form_checkbox_text, ENT_QUOTES )
+					'cr_form_checkbox_text' => wp_specialchars_decode( $cr_form_checkbox_text, ENT_QUOTES ),
+					'cr_form_settings_array' => $form_settings
 				),
 				'customer-reviews-woocommerce',
 				dirname( dirname( dirname( __FILE__ ) ) ) . '/templates/'
@@ -1268,6 +1320,9 @@ if (! class_exists('CR_All_Reviews')) :
 											'rating' => intval( $rating )
 										)
 									);
+									// compatibility with 'WP Comment Policy Checkbox' plugin that calls wp_die
+									remove_filter( 'preprocess_comment', 'wpcpc_verify_policy_check', 10 );
+									//
 									add_filter( 'pre_comment_approved', array( 'CR_All_Reviews', 'is_review_approved' ), 10, 2 );
 									$result = wp_new_comment( $commentdata, true );
 									remove_filter( 'pre_comment_approved', array( 'CR_All_Reviews', 'is_review_approved' ), 10 );

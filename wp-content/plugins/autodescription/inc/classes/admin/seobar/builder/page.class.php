@@ -8,16 +8,16 @@ namespace The_SEO_Framework\Admin\SEOBar\Builder;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use const \The_SEO_Framework\ROBOTS_ASSERT;
+use const The_SEO_Framework\ROBOTS_ASSERT;
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Data,
 	Data\Filter\Sanitize,
 	Meta,
 	RobotsTXT,
 	Admin\SEOBar\Builder, // Yes, it is legal to import the same namespace.
 };
-use \The_SEO_Framework\Helper\{
+use The_SEO_Framework\Helper\{
 	Guidelines,
 	Format\Strings,
 	Migrate,
@@ -26,7 +26,7 @@ use \The_SEO_Framework\Helper\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -67,7 +67,7 @@ final class Page extends Main {
 	 * @abstract
 	 */
 	protected function prime_cache() {
-		// phpcs:disable, PEAR.Functions.FunctionCallSignature.Indent -- False negative.
+		// phpcs:disable PEAR.Functions.FunctionCallSignature.Indent -- False negative.
 		static::get_cache( 'general/i18n/textsizeguidelines' )
 			or static::set_cache(
 				'general/i18n/textsizeguidelines',
@@ -92,7 +92,7 @@ final class Page extends Main {
 					],
 				],
 			);
-		// phpcs:enable, PEAR.Functions.FunctionCallSignature.Indent -- False negative.
+		// phpcs:enable PEAR.Functions.FunctionCallSignature.Indent -- False negative.
 	}
 
 	/**

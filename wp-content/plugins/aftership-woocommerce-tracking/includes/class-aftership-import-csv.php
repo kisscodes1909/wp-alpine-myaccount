@@ -62,7 +62,26 @@ class AfterShip_Import_Csv {
 		if ( empty( $_GET['vi_at_file'] ) ) {
 			wp_die( esc_html__( 'No log file selected.', 'aftership-orders-tracking' ) );
 		}
+		
 		$file = urldecode( wp_unslash( wc_clean( $_GET['vi_at_file'] ) ) );
+		
+		// Security check: validate file name suffix
+		if ( !preg_match('/import_tracking\.txt$/', basename($file)) ) {
+			wp_die( esc_html__( 'Invalid log file format. Only import_tracking.txt files are allowed.', 'aftership-orders-tracking' ) );
+		}
+		
+		// Security check: normalize path and prevent directory traversal
+		$file = realpath($file);
+		if ( $file === false ) {
+			wp_die( esc_html__( 'Invalid file path.', 'aftership-orders-tracking' ) );
+		}
+		
+		// Security check: ensure file is within allowed directory
+		$allowed_dir = realpath(AFTERSHIP_TRACKING_CACHE);
+		if ( $allowed_dir === false || strpos($file, $allowed_dir) !== 0 ) {
+			wp_die( esc_html__( 'Access denied. File must be in allowed directory.', 'aftership-orders-tracking' ) );
+		}
+		
 		if ( ! is_file( $file ) ) {
 			wp_die( esc_html__( 'Log file not found.', 'aftership-orders-tracking' ) );
 		}
@@ -183,6 +202,55 @@ class AfterShip_Import_Csv {
 	}
 
 	/**
+	 * Validate CSV file path for security
+	 * 
+	 * @param string $file_path File path to validate
+	 * @return bool True if valid, false otherwise
+	 */
+	private function validate_csv_file_path($file_path) {
+		if (empty($file_path)) {
+			return false;
+		}
+		
+		// Normalize path
+		$file_path = wp_normalize_path($file_path);
+		
+		// 1. Check if path contains 'uploads/'
+		if (strpos($file_path, 'uploads/') === false) {
+			return false;
+		}
+		
+		// 2. Check file extension is .csv
+		if (strtolower(pathinfo($file_path, PATHINFO_EXTENSION)) !== 'csv') {
+			return false;
+		}
+		
+		// 3. Prevent directory traversal attacks
+		if (strpos($file_path, '../') !== false || strpos($file_path, '..\\') !== false) {
+			return false;
+		}
+		
+		// 4. Ensure file is within WordPress upload directory
+		$upload_dir = wp_upload_dir();
+		if (!$upload_dir || !isset($upload_dir['basedir'])) {
+			return false;
+		}
+		
+		$normalized_file = realpath($file_path);
+		$normalized_upload_dir = realpath($upload_dir['basedir']);
+		
+		if ($normalized_file === false || $normalized_upload_dir === false) {
+			return false;
+		}
+		
+		if (strpos($normalized_file, $normalized_upload_dir) !== 0) {
+			return false;
+		}
+		
+		return true;
+	}
+
+	/**
 	 * Get selected couriers of user
 	 *
 	 * @return array
@@ -207,6 +275,13 @@ class AfterShip_Import_Csv {
 		if ( $pagenow === 'admin.php' && $page === 'aftership-orders-tracking-import-csv' ) {
 			$this->step     = isset( $_REQUEST['step'] ) ? sanitize_text_field( $_REQUEST['step'] ) : '';
 			$this->file_url = isset( $_REQUEST['file_url'] ) ? urldecode_deep( wp_unslash( wc_clean( $_REQUEST['file_url'] ) ) ) : '';
+
+			// Security check: validate CSV file path if provided
+			if (!empty($this->file_url) && !$this->validate_csv_file_path($this->file_url)) {
+				$this->step = '';
+				$this->error = esc_html__( 'Invalid file path. File must be in uploads directory with .csv extension.', 'aftership-orders-tracking' );
+				return;
+			}
 
 			if ( $this->step == 'mapping' ) {
 				if ( is_file( $this->file_url ) ) {
@@ -544,6 +619,17 @@ class AfterShip_Import_Csv {
 		}
 
 		$file_url           = isset( $_POST['file_url'] ) ? stripslashes( $_POST['file_url'] ) : '';
+		
+		// Security check: validate CSV file path
+		if (!$this->validate_csv_file_path($file_url)) {
+			wp_send_json(
+				array(
+					'status'  => 'error',
+					'message' => esc_html__( 'Invalid file path. File must be in uploads directory with .csv extension.', 'aftership-orders-tracking' ),
+				)
+			);
+			return;
+		}
 		$start              = isset( $_POST['start'] ) ? absint( sanitize_text_field( $_POST['start'] ) ) : 0;
 		$ftell              = isset( $_POST['ftell'] ) ? absint( sanitize_text_field( $_POST['ftell'] ) ) : 0;
 		$total              = isset( $_POST['total'] ) ? absint( sanitize_text_field( $_POST['total'] ) ) : 0;

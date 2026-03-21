@@ -1,19 +1,18 @@
 === Brevo for WooCommerce ===
 Contributors: neeraj_slit
-Tags: email, marketing, newsletter, automation, chat, CRM, contacts, email marketing, marketing automation, analytics, woocommerce email, woocommerce SMS, woocommerce text message, woocommerce sendinblue, brevo, ecommerce email confirmation, ecommerce sms confirmation, ecommerce statistics, woocommerce Add-on, confirmation emails, confirmation text message, email autoresponder
+Tags: email marketing, marketing automation, newsletter, SMS, WooCommerce
 Requires at least: 4.3.1
-Tested up to: 6.6.2
+Tested up to: 6.9.1
 Requires PHP: 5.6
 Stable tag: trunk
 License: GNU General Public License v2.0 or later
 
-The all-in-one marketing add-on for your WooCommerce store that helps you power up the marketing funnels in minutes.
-Email marketing, marketing automation, live chat, CRM tool to design, manage, and track customer communications.
+All-in-one WooCommerce email marketing, automation, SMS, and CRM by Brevo. Grow your store with powerful marketing tools.
 
 == Description ==
 
 <p>Brevo’s plugin for WooCommerce is the easiest way to integrate your store and send better communications.</p>
-<p>Trusted by over 400,000 businesses worldwide, <a href="https://www.brevo.com/?utm_medium=plugin&utm_source=woocommerce_plugin">Brevo</a> is an all-in-one marketing platform for engaging with your contacts and building better customer relationships through targeted and meaningful communication.</p>
+<p>Trusted by over 600,000 businesses worldwide, <a href="https://www.brevo.com/?utm_medium=plugin&utm_source=woocommerce_plugin">Brevo</a> is an all-in-one marketing platform for engaging with your contacts and building better customer relationships through targeted and meaningful communication.</p>
 
 ## Cover your entire marketing funnel with one single tool:
 
@@ -139,7 +138,7 @@ This plugin was created by <a href="http://www.brevo.com?utm_medium=plugin&utm_s
 
 == Frequently Asked Questions ==
 = What is Brevo? =
-Brevo is a powerful all-in-one marketing platform. Over 300 000 companies around the world trust Brevo to deliver their emails and SMS messages.
+Brevo is a powerful all-in-one marketing platform. Over 600 000 companies around the world trust Brevo to deliver their emails and SMS messages.
 Brevo combines competitive pricing and excellent deliverability & powerful features such as Email, SMS, Facebook, Chat, CRM, and marketing automation.
 Brevo is available and supported in 6 languages: English, French, Spanish, German, Italian, and Portuguese.
 
@@ -168,6 +167,75 @@ If you need some assistance, you can post an issue in the Support tab, or send u
 4. You can access your settings by clicking on “Settings” at the top right of the screen.
 
 == Changelog ==
+=
+= 4.0.52 =
+* Plugin made compatible with Wordpress v6.9.1
+
+= 4.0.51 =
+* Security Update: Patched a potential vulnerability in the plugin code that could allow attackers to execute code in administrator contexts
+* Improved plugin security through enhanced input sanitization and output escaping.
+* Included support for a banner on the plugin page to inform users about future account and security notices.
+
+= 4.0.50 =
+* Plugin improvements related to callback url
+
+= 4.0.49 =
+* Plugin improvements related to anonymous tracking
+
+= 4.0.48 =
+* Plugin improvements related to Automation Tracking Events
+
+= 4.0.47 =
+* Included price with tax for individual products in the payloads of cart_updated and order_completed events
+
+= 4.0.46 =
+* Plugin Improvements to support Brevo Push
+
+= 4.0.45 =
+* Plugin Improvements to stop auto enable of Ecommerce
+
+= 4.0.44 =
+* Plugin enhancements to handle Back-In-Stock subscription functionality
+
+= 4.0.43 =
+* Improvement related to anonymous flow for multi-store
+* Improvement related to guest user api
+
+= 4.0.42 =
+* Fixed bug related to Checkout Block
+
+= 4.0.41 =
+* Plugin made compatible with Wordpress v6.8.1
+
+= 4.0.40 =
+* Improvements related to Ecommerce enable call
+* Fixed bug related to Products image
+
+= 4.0.39 =
+* Plugin made compatible with Wordpress v6.7.2
+
+= 4.0.38 =
+* Plugin enhancements to start syncing product inventory counts
+
+= 4.0.37 =
+* Improvements related to plugin_updated call
+* Plugin code enhancements for WooCommerce Checkout Block
+
+= 4.0.36 =
+* Fixed bug related to checkbox appearing twice on Checkout page
+
+= 4.0.35 =
+* Declare compatibility for WooCommerce Checkout Block and related improvements
+
+= 4.0.34 =
+* Improvements related to cart calculations for cart_updated events
+
+= 4.0.33 =
+* Improvements related to fetching the shop url
+
+= 4.0.32 =
+* Included Customer Note in Order Events
+
 = 4.0.31 =
 * Enhancements to Brevo tracking script for automation events and syncing
 

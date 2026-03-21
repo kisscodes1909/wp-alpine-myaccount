@@ -103,8 +103,6 @@ var WP_Optimize_Smush = function() {
 				smush_completed = false;
 				if (smush_timer_locked) return;
 				block_ui('', $.extend(block_ui_custom_options, {message: $('#wpo_smush_images_information_container')}), false, true);
-				$('#wpo_smush_images_information_server').html(wposmush.smush_settings.compression_server);
-
 				clear_smush_stats();
 
 				smush_timer_handle = window.setInterval(smush_timer, 1000);
@@ -726,7 +724,7 @@ var WP_Optimize_Smush = function() {
 				if ('update_failed_no_working_webp_converter' === resp.error_code) {
 					var html_msg = '<p>'
 						+ wposmush.webp_conversion_tool_error
-						+ ' <a href="https://getwpo.com/faqs/#How-can-I-get-WebP-conversion-tools-to-work-" target="_blank">'
+						+ ' <a href="https://teamupdraft.com/documentation/wp-optimize/topics/image-compression/troubleshooting/the-webp-conversion-tool-is-not-working/" target="_blank">'
 						+ wposmush.webp_conversion_tool_how_to
 						+ '</a></p>';
 					$('#smush-information-modal .smush-information').html(html_msg);
@@ -746,7 +744,7 @@ var WP_Optimize_Smush = function() {
 			'attachment_id': $(this).data('attachment-id'),
 			skip_notice: true
 		};
-		block_ui(wposmush.converting_to_webp);
+		block_ui(wposmush.converting_to_webp, {}, 0, true);
 		smush_manager_send_command('convert_to_webp_format', data, function(response) {
 			if (response.error) {
 				block_ui(response.error, {}, 2000);
@@ -929,7 +927,7 @@ var WP_Optimize_Smush = function() {
 	/**
 	 * Update images optimization tab view with data returned from images optimization.
 	 *
-	 * @param {Object} data - meta data returned from task manager
+	 * @param {Object} data - metadata returned from task manager
 	 *
 	 * @return void
 	 */
@@ -991,8 +989,6 @@ var WP_Optimize_Smush = function() {
 		if (smush_timer_locked) return;
 
 		block_ui('', $.extend(block_ui_custom_options, {message: $('#wpo_smush_images_information_container')}), false, true);
-		service = $('.compression_server input[type="radio"]:checked + label small').text();
-		$('#wpo_smush_images_information_server').html(service);
 
 		clear_smush_stats();
 
@@ -1069,6 +1065,9 @@ var WP_Optimize_Smush = function() {
 
 		(function(single_callback) {
 			heartbeat_agents.push(heartbeat.add_agent({
+				// We have to use a non-unique agent in the complete action because the info update subactions
+				// have the same names, and the agent may not be added. This ensures that the "smush_complete" action will run.
+				_unique: false,
 				_wait: false,
 				_keep: false,
 				command: 'updraft_smush_ajax',
@@ -1076,6 +1075,10 @@ var WP_Optimize_Smush = function() {
 				callback: function(resp) {
 
 					summary = resp.session_stats;
+					// Prevent pops with undefined headers
+					if (!resp.session_stats) {
+						return;
+					}
 
 					if (0 != resp.completed_task_count) {
 						summary += '<hr>' + resp.summary;
@@ -1218,7 +1221,8 @@ var WP_Optimize_Smush = function() {
 
 		data = {
 			selected_image: selected_image,
-			smush_options: smush_options
+			smush_options: smush_options,
+			skip_notice: true
 		}
 
 		block_ui(wposmush.compress_single_image_dialog, {}, false, true);
@@ -1306,7 +1310,9 @@ var WP_Optimize_Smush = function() {
 				}
 			}
 		} else {
-			block_ui(resp.error_message);
+			// Update the error message to be user-friendly
+			if (/exceeded_max_filesize/.test(resp.error_message)) resp.error_message = wposmush.exceeded_max_filesize
+			block_ui(resp.error_message, {}, 4000);
 		}
 	}
 
@@ -1445,7 +1451,12 @@ var WP_Optimize_Smush = function() {
 
 		json_parse = ('undefined' === typeof json_parse) ? true : json_parse;
 
-		data = (data.hasOwnProperty('skip_notice') && Object.keys(data).length === 1) || $.isEmptyObject(data) ? {'use_cache' : false} : data;
+		var skip_notice = data.hasOwnProperty('skip_notice');
+		var data_has_only_skip_notice = skip_notice && 1 === Object.keys(data).length;
+		var is_data_empty = $.isEmptyObject(data);
+
+		data = is_data_empty ? {'use_cache' : false} : data;
+		if (data_has_only_skip_notice) data.use_cache = false;
 
 		(function(single_callback, _keep, _unique) {
 			heartbeat_agents.push(heartbeat.add_agent({

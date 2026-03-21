@@ -8,11 +8,11 @@ namespace The_SEO_Framework\Data;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\umemo;
+use function The_SEO_Framework\umemo;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -48,7 +48,7 @@ class User {
 	public static function user_has_author_info_cap_on_network( $user ) {
 
 		if ( ! \is_object( $user ) )
-			$user = static::get_userdata( $user );
+			$user = self::get_userdata( $user );
 
 		// User is logged out, how did I get here? (nice song btw)
 		if ( ! $user )
@@ -89,6 +89,7 @@ class User {
 	 * Gets user data by key.
 	 *
 	 * This is an alias of WP Core's `\get_userdata()`, but with proper memoization.
+	 * Due to the memoization, it should not be used in contexts where user data changes.
 	 *
 	 * @since 5.1.0
 	 * @since 5.1.1 1. The second parameter is now nullable and null by default.

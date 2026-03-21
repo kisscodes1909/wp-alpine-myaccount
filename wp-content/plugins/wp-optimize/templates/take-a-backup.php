@@ -4,8 +4,8 @@ if (!defined('WPO_VERSION')) die('No direct access allowed');
 
 global $wpo_backup_initialized, $wpo_take_backup_checkbox_id;
 
-$updraftplus_admin = !empty($GLOBALS['updraftplus_admin']) ? $GLOBALS['updraftplus_admin'] : null;
-$updraftplus = !empty($GLOBALS['updraftplus']) ? $GLOBALS['updraftplus'] : null;
+$updraftplus_admin = empty($GLOBALS['updraftplus_admin']) ? null : $GLOBALS['updraftplus_admin'];
+$updraftplus = empty($GLOBALS['updraftplus']) ? null : $GLOBALS['updraftplus'];
 
 // Check if UpdraftPlus plugin status.
 $updraftplus_status = $this->is_installed('UpdraftPlus - Backup/Restore');
@@ -59,7 +59,7 @@ if (!isset($default_checkbox_value)) {
 
 $option_value = $options->get_option($checkbox_name, $default_checkbox_value);
 
-$is_checked = ('true' == $option_value);
+$is_checked = ('true' === $option_value);
 
 ?>
 <p class="wpo-take-a-backup">
@@ -68,7 +68,7 @@ $is_checked = ('true' == $option_value);
 
 	<?php
 	// UpdraftPlus is not installed.
-	if ('disabled' == $disabled_backup && !$updraftplus_status['installed']) {
+	if ('disabled' === $disabled_backup && !$updraftplus_status['installed']) {
 		echo '<small><a href="'.esc_url(wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=updraftplus'), 'install-plugin_updraftplus')).'"> '.esc_html__('Follow this link to install UpdraftPlus, to take a backup before optimization', 'wp-optimize').' </a></small>';
 	} else {
 		// Build activate url.

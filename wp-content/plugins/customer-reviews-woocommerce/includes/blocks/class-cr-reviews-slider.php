@@ -48,7 +48,7 @@ if ( ! class_exists( 'CR_Reviews_Slider' ) ) {
 			wp_enqueue_script( 'cr-reviews-slider' );
 			$max_reviews = $attributes['count'];
 			$order_by = $attributes['sort_by'] === 'date' ? 'comment_date_gmt' : 'rating';
-			$order = $attributes['sort'];
+			$order = strtoupper( $attributes['sort'] );
 			$inactive_products = $attributes['inactive_products'];
 			$avatars = 'initials';
 			if( isset( $attributes['avatars'] ) ) {
@@ -57,6 +57,9 @@ if ( ! class_exists( 'CR_Reviews_Slider' ) ) {
 				} elseif( 'standard' === $attributes['avatars'] ) {
 					$avatars = 'standard';
 				}
+			}
+			if ( 'RAND' === $order ) {
+				$order_by = $order;
 			}
 
 			$post_ids = $attributes['products'];
@@ -140,9 +143,41 @@ if ( ! class_exists( 'CR_Reviews_Slider' ) ) {
 
 			if ( function_exists( 'pll_current_language' ) ) {
 				// Polylang compatibility
+				if ( apply_filters( 'cr_reviews_polylang_merge', true ) ) {
+					foreach ( $post_ids as $product_id ) {
+						$translationIds = PLL()->model->post->get_translations( $product_id );
+						foreach ( $translationIds as $key => $translationID ) {
+							$post_ids[] = intval( $translationID );
+						}
+					}
+					$args['post__in'] = $post_ids;
+				}
 				$args['lang'] = '';
 			} elseif ( has_filter( 'wpml_current_language' ) ) {
-				// WPML compatibility
+				// Check for the 'show reviews in all languages' setting of WPML
+				$is_filtered = apply_filters(
+					'wpml_is_comment_query_filtered',
+					true,
+					null,
+					(object) array( 'query_vars' => array( 'post_type' => 'product' ) )
+				);
+				if ( false === $is_filtered ) {
+					foreach ( $post_ids as $product_id ) {
+						$trid = apply_filters( 'wpml_element_trid', NULL, $product_id, 'post_product' );
+						if ( $trid ) {
+							$translations = apply_filters( 'wpml_get_element_translations', NULL, $trid, 'post_product' );
+							if ( $translations && is_array( $translations ) ) {
+								foreach ( $translations as $translation ) {
+									if ( isset( $translation->element_id ) ) {
+										$post_ids[] = intval( $translation->element_id );
+									}
+								}
+							}
+						}
+					}
+					$args['post__in'] = $post_ids;
+				}
+				//
 				global $sitepress;
 				if ( $sitepress ) {
 					remove_filter( 'comments_clauses', array( $sitepress, 'comments_clauses' ), 10, 2 );
@@ -155,29 +190,14 @@ if ( ! class_exists( 'CR_Reviews_Slider' ) ) {
 				$this->min_chars = $attributes['min_chars'];
 				add_filter( 'comments_clauses', array( $this, 'min_chars_comments_clauses' ) );
 			}
-			if( 'RAND' === $order ) {
-				$all_product_reviews = get_comments( $args );
-				$count_all_product_reviews = count( $all_product_reviews );
-				if (
-					0 < $count_all_product_reviews &&
-					0 < $max_reviews
-				) {
-					$max_reviews = ( $count_all_product_reviews < $max_reviews ) ? $count_all_product_reviews : $max_reviews;
-					$random_keys = array_rand( $all_product_reviews, $max_reviews );
-					if( is_array( $random_keys ) ) {
-						for( $i = 0; $i < $max_reviews; $i++ ) {
-							$reviews[] = $all_product_reviews[$random_keys[$i]];
-						}
-					} else {
-						$reviews[] = $all_product_reviews[$random_keys];
-					}
-				}
-			} else {
-				if( 0 < $max_reviews ) {
-					$args['order'] = $order;
-					$args['number'] = $max_reviews;
-					$reviews = get_comments( $args );
-				}
+			// Query needs to be modified if random sorting is required
+			if ( 'RAND' === $order ) {
+				add_filter( 'comments_clauses', array( $this, 'random_order_comments_clauses' ), 10, 2 );
+			}
+			if ( 0 < $max_reviews ) {
+				$args['order'] = $order;
+				$args['number'] = $max_reviews;
+				$reviews = get_comments( $args );
 			}
 
 			$shop_page_id = wc_get_page_id( 'shop' );
@@ -197,29 +217,13 @@ if ( ! class_exists( 'CR_Reviews_Slider' ) ) {
 						$args_s['lang'] = '';
 					}
 					$shop_reviews = [];
-					if( 'RAND' === $order ) {
-						$all_shop_reviews = get_comments( $args_s );
-						$count_all_shop_reviews = count( $all_shop_reviews );
-						if( 0 < $count_all_shop_reviews ) {
-							$max_shop_reviews = ( $count_all_shop_reviews < $max_shop_reviews ) ? $count_all_shop_reviews : $max_shop_reviews;
-							$random_keys = array_rand( $all_shop_reviews, $max_shop_reviews );
-							if( is_array( $random_keys ) ) {
-								for( $i = 0; $i < $max_shop_reviews; $i++ ) {
-									$shop_reviews[] = $all_shop_reviews[$random_keys[$i]];
-								}
-							} else {
-								$shop_reviews[] = $all_shop_reviews[$random_keys];
-							}
-						}
-					} else {
-						if( 0 < $max_shop_reviews ) {
-							$args_s['order'] = $order;
-							$args_s['number'] = $max_shop_reviews;
-							$shop_reviews = get_comments( $args_s );
-						}
+					if ( 0 < $max_shop_reviews ) {
+						$args_s['order'] = $order;
+						$args_s['number'] = $max_shop_reviews;
+						$shop_reviews = get_comments( $args_s );
 					}
 
-					if( is_array( $reviews ) && is_array( $shop_reviews ) ) {
+					if ( is_array( $reviews ) && is_array( $shop_reviews ) ) {
 						$reviews = array_merge( $reviews, $shop_reviews );
 						CR_Reviews_Slider::$sort_order_by = $order_by;
 						CR_Reviews_Slider::$sort_order = $order;
@@ -228,6 +232,7 @@ if ( ! class_exists( 'CR_Reviews_Slider' ) ) {
 				}
 			}
 			remove_filter( 'comments_clauses', array( $this, 'min_chars_comments_clauses' ) );
+			remove_filter( 'comments_clauses', array( $this, 'random_order_comments_clauses' ), 10 );
 
 			// WPML compatibility
 			if( has_filter( 'wpml_current_language' ) && ! function_exists( 'pll_current_language' ) ) {
@@ -278,7 +283,7 @@ if ( ! class_exists( 'CR_Reviews_Slider' ) ) {
 			$card_style = "border-color:" . $attributes['color_brdr'] . ";";
 			$card_style .= "background-color:" . $attributes['color_bcrd'] . ";";
 			$product_style = "background-color:" . $attributes['color_pr_bcrd'] . ";";
-			$stars_style = "color:" . $attributes['color_stars'] . ";";
+			$stars_style = $attributes['color_stars'];
 			$max_chars = $attributes['max_chars'];
 			$responsive_slides_to_show = $attributes['slides_to_show'] > 1 ? 2 : 1;
 
@@ -353,97 +358,92 @@ if ( ! class_exists( 'CR_Reviews_Slider' ) ) {
 		}
 
 		public function render_reviews_slider_shortcode( $attributes ) {
-			$shortcode_enabled = get_option( 'ivole_reviews_shortcode', 'no' );
-			if( $shortcode_enabled === 'no' ) {
-				return;
-			} else {
-				// Convert shortcode attributes
-				$attributes = shortcode_atts( array(
-					'slides_to_show' => 3,
-					'count' => 5,
-					'show_products' => true,
-					'product_links' => true,
-					'sort_by' => 'date',
-					'sort' => 'DESC',
-					'categories' => array(),
-					'products' => 'current',
-					'color_ex_brdr' => '#ebebeb',
-					'color_brdr' => '#ebebeb',
-					'color_ex_bcrd' => '',
-					'color_bcrd' => '#fbfbfb',
-					'color_pr_bcrd' => '#f2f2f2',
-					'color_stars' => '#6bba70',
-					'shop_reviews' => 'false',
-					'count_shop_reviews' => 1,
-					'inactive_products' => false,
-					'autoplay' => false,
-					'avatars' => 'initials',
-					'max_chars' => 0,
-					'product_tags' => array(),
-					'tags' => array(),
-					'min_chars' => 0,
-					'show_dots' => true,
-				), $attributes, 'cusrev_reviews_slider' );
+			// Convert shortcode attributes
+			$attributes = shortcode_atts( array(
+				'slides_to_show' => 3,
+				'count' => 5,
+				'show_products' => true,
+				'product_links' => true,
+				'sort_by' => 'date',
+				'sort' => 'DESC',
+				'categories' => array(),
+				'products' => 'current',
+				'color_ex_brdr' => '#ebebeb',
+				'color_brdr' => '#ebebeb',
+				'color_ex_bcrd' => '',
+				'color_bcrd' => '#fbfbfb',
+				'color_pr_bcrd' => '#f2f2f2',
+				'color_stars' => '#FFBC00',
+				'shop_reviews' => 'false',
+				'count_shop_reviews' => 1,
+				'inactive_products' => false,
+				'autoplay' => false,
+				'avatars' => 'initials',
+				'max_chars' => 0,
+				'product_tags' => array(),
+				'tags' => array(),
+				'min_chars' => 0,
+				'show_dots' => true,
+			), $attributes, 'cusrev_reviews_slider' );
 
-				$attributes['slides_to_shows'] = absint( $attributes['slides_to_show'] ) >= absint( $attributes['count'] ) ? absint( $attributes['count'] ) : absint( $attributes['slides_to_show'] );
-				$attributes['count'] = absint( $attributes['count'] );
-				$attributes['show_products'] = ( $attributes['show_products'] !== 'false' && boolval( $attributes['count'] ) );
-				$attributes['product_links'] = ( $attributes['product_links'] !== 'false' );
-				$attributes['shop_reviews'] = ( $attributes['shop_reviews'] !== 'false' && boolval( $attributes['count_shop_reviews'] ) );
-				$attributes['count_shop_reviews'] = absint( $attributes['count_shop_reviews'] );
-				$attributes['inactive_products'] = ( $attributes['inactive_products'] === 'true' );
-				$attributes['autoplay'] = ( $attributes['autoplay'] === 'true' );
-				$attributes['max_chars'] = absint( $attributes['max_chars'] );
-				$attributes['min_chars'] = intval( $attributes['min_chars'] );
-				$attributes['show_dots'] = ( $attributes['show_dots'] !== 'false' );
-				if( $attributes['min_chars'] < 0 ) {
-					$attributes['min_chars'] = 0;
-				}
+			$attributes['slides_to_shows'] = absint( $attributes['slides_to_show'] ) >= absint( $attributes['count'] ) ? absint( $attributes['count'] ) : absint( $attributes['slides_to_show'] );
+			$attributes['count'] = absint( $attributes['count'] );
+			$attributes['show_products'] = ( $attributes['show_products'] !== 'false' && boolval( $attributes['count'] ) );
+			$attributes['product_links'] = ( $attributes['product_links'] !== 'false' );
+			$attributes['shop_reviews'] = ( $attributes['shop_reviews'] !== 'false' && boolval( $attributes['count_shop_reviews'] ) );
+			$attributes['count_shop_reviews'] = absint( $attributes['count_shop_reviews'] );
+			$attributes['inactive_products'] = ( $attributes['inactive_products'] === 'true' );
+			$attributes['autoplay'] = ( $attributes['autoplay'] === 'true' );
+			$attributes['max_chars'] = absint( $attributes['max_chars'] );
+			$attributes['min_chars'] = intval( $attributes['min_chars'] );
+			$attributes['show_dots'] = ( $attributes['show_dots'] !== 'false' );
+			if( $attributes['min_chars'] < 0 ) {
+				$attributes['min_chars'] = 0;
+			}
 
-				if ( ! is_array( $attributes['categories'] ) ) {
-					$attributes['categories'] = array_filter( array_map( 'trim', explode( ',', $attributes['categories'] ) ) );
-				}
+			if ( ! is_array( $attributes['categories'] ) ) {
+				$attributes['categories'] = array_filter( array_map( 'trim', explode( ',', $attributes['categories'] ) ) );
+			}
 
-				if (
-					is_string( $attributes['products'] ) &&
-					'current' === trim( strtolower( $attributes['products'] ) )
-				) {
-					if ( is_product() ) {
-						$product = wc_get_product();
-						if ( is_object( $product ) ) {
-							$id = $product->get_id();
-							$attributes['products'] = array( $id );
-						} else {
-							$attributes['products'] = array();
-						}
+			if (
+				is_string( $attributes['products'] ) &&
+				'current' === trim( strtolower( $attributes['products'] ) )
+			) {
+				if ( is_product() ) {
+					$product = wc_get_product();
+					if ( is_object( $product ) ) {
+						$id = $product->get_id();
+						$attributes['products'] = array( $id );
 					} else {
 						$attributes['products'] = array();
 					}
-				} elseif ( ! is_array( $attributes['products'] ) ) {
-					$products = str_replace( ' ', '', $attributes['products'] );
-					$products = explode( ',', $products );
-					$products = array_filter( $products, 'is_numeric' );
-					$products = array_map( 'intval', $products );
-
-					$attributes['products'] = $products;
 				} else {
 					$attributes['products'] = array();
 				}
+			} elseif ( ! is_array( $attributes['products'] ) ) {
+				$products = str_replace( ' ', '', $attributes['products'] );
+				$products = explode( ',', $products );
+				$products = array_filter( $products, 'is_numeric' );
+				$products = array_map( 'intval', $products );
 
-				if( $attributes['slides_to_shows'] <= 0 ) {
-					$attributes['slides_to_shows'] = 1;
-				}
-
-				if( ! empty( $attributes['product_tags'] ) ) {
-					$attributes['product_tags'] = array_filter( array_map( 'trim', explode( ',', $attributes['product_tags'] ) ) );
-				}
-
-				if ( ! empty( $attributes['tags'] ) ) {
-					$attributes['tags'] = array_filter( array_map( 'trim', explode( ',', $attributes['tags'] ) ) );
-				}
-
-				return $this->render_reviews_slider( $attributes );
+				$attributes['products'] = $products;
+			} else {
+				$attributes['products'] = array();
 			}
+
+			if( $attributes['slides_to_shows'] <= 0 ) {
+				$attributes['slides_to_shows'] = 1;
+			}
+
+			if( ! empty( $attributes['product_tags'] ) ) {
+				$attributes['product_tags'] = array_filter( array_map( 'trim', explode( ',', $attributes['product_tags'] ) ) );
+			}
+
+			if ( ! empty( $attributes['tags'] ) ) {
+				$attributes['tags'] = array_filter( array_map( 'trim', explode( ',', $attributes['tags'] ) ) );
+			}
+
+			return $this->render_reviews_slider( $attributes );
 		}
 
 		public function register_slider_script() {
@@ -451,7 +451,7 @@ if ( ! class_exists( 'CR_Reviews_Slider' ) ) {
 				'cr-reviews-slider',
 				plugins_url( 'js/slick.min.js', dirname( dirname( __FILE__ ) ) ),
 				array( 'jquery' ),
-				'3.119',
+				Ivole::CR_VERSION,
 				true
 			);
 		}
@@ -500,9 +500,15 @@ if ( ! class_exists( 'CR_Reviews_Slider' ) ) {
 
 		public function min_chars_comments_clauses( $clauses ) {
 			global $wpdb;
-
 			$clauses['where'] .= " AND CHAR_LENGTH({$wpdb->comments}.comment_content) >= " . $this->min_chars;
+			return $clauses;
+		}
 
+		public function random_order_comments_clauses( $clauses, $comment_query ) {
+			global $wpdb;
+			if ( ! empty( $comment_query->query_vars['orderby'] ) && 'RAND' === $comment_query->query_vars['orderby'] ) {
+				$clauses['orderby'] = 'RAND()';
+			}
 			return $clauses;
 		}
 

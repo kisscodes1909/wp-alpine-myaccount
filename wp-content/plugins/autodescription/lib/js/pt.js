@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -42,7 +42,7 @@ window.tsfPT = function () {
 	 *
 	 * @since 4.0.0
 	 * @access public
-	 * @type {(Object<string,*>)|boolean|null} l10n Localized strings
+	 * @type {(Object<string,*>)|Boolean|null} l10n Localized strings
 	 */
 	const l10n = tsfPTL10n;
 
@@ -51,7 +51,7 @@ window.tsfPT = function () {
 	 * @access private
 	 * @type {{makePrimary: string,primary: string,name: string}|{}}
 	 */
-	const supportedTaxonomies = l10n?.taxonomies || {};
+	const supportedTaxonomies = l10n.taxonomies;
 
 	/**
 	 * @since 5.1.0
@@ -71,13 +71,17 @@ window.tsfPT = function () {
 	 * @param {String} taxonomySlug The taxonomy slug.
 	 */
 	function dispatchUpdateEvent( id, taxonomySlug ) {
+
 		document.dispatchEvent(
 			new CustomEvent(
 				'tsf-updated-primary-term',
 				{
-					detail: { id, taxonomy: taxonomySlug },
-				}
-			)
+					detail: {
+						id,
+						taxonomy: taxonomySlug,
+					},
+				},
+			),
 		);
 	}
 
@@ -85,16 +89,17 @@ window.tsfPT = function () {
 	/**
 	 * @since 5.1.0
 	 * @access private
+	 *
 	 * @param {String} taxonomySlug
 	 * @returns {{
  	 *     get:                   () => integer,
 	 *     set:                   ( id: string|integer, fallback: string|integer ) => integer,
 	 *     revalidate:            ( selectedTerms: integer[] ) => integer,
 	 *     registerPostField:     () => void,
-	 *     isPostFieldRegistered: () => boolean,
+	 *     isPostFieldRegistered: () => Boolean,
 	 * }}
 	 */
-	function _primaryTerm( taxonomySlug ) {
+	function _primaryTermSelector( taxonomySlug ) {
 
 		const _primaryTermField = () => document.getElementById( `autodescription[_primary_term_${taxonomySlug}]` );
 
@@ -119,15 +124,17 @@ window.tsfPT = function () {
 			// TODO create a new dataholder for TSF instead?
 			const wrap = document.getElementById( `${taxonomySlug}div` );
 
-			if ( ! wrap ) {
-				_registeredFields.set( taxonomySlug, false );
-			} else {
+			if ( wrap ) {
 				wrap.insertAdjacentHTML(
 					'beforeend',
-					wp.template( 'tsf-primary-term-selector' )( { taxonomy: supportedTaxonomies[ taxonomySlug ] } )
+					wp.template( 'tsf-primary-term-selector' )(
+						{ taxonomy: supportedTaxonomies[ taxonomySlug ] },
+					),
 				);
 
 				_registeredFields.set( taxonomySlug, true );
+			} else {
+				_registeredFields.set( taxonomySlug, false );
 			}
 		}
 		const isPostFieldRegistered = () => !! _registeredFields.get( taxonomySlug );
@@ -150,11 +157,13 @@ window.tsfPT = function () {
 	 * }}
 	 */
 	function _termCheckboxes( taxonomySlug ) {
+
 		const getWrap = () => document.getElementById( `${taxonomySlug}checklist` );
 
 		const getInputs = () => [ ...getWrap().querySelectorAll( 'input[type=checkbox]' ) ]
 			.sort( ( a, b ) => a.value - b.value );
 
+		// Classic Editor has duplicated inputs in some cases (All + Most Used).
 		const getAllInputs = () => document.getElementById( `taxonomy-${taxonomySlug}` )
 			.querySelectorAll( '.categorychecklist input[type=checkbox]' );
 
@@ -163,11 +172,14 @@ window.tsfPT = function () {
 		const getInputsCheckedValues = () => getInputsChecked().map( el => +el.value );
 
 		const subscribe = callback => {
-			const tick = () => callback( getInputsCheckedValues() );
+
+			const tick = () => callback();
 
 			const registerListeners = () => {
 				getAllInputs().forEach(
-					el => { el.addEventListener( 'change', tick ) },
+					el => {
+						el.addEventListener( 'change', tick );
+					},
 				);
 			}
 
@@ -209,7 +221,7 @@ window.tsfPT = function () {
 
 		const initPrimaryTermSelector = taxonomySlug => {
 
-			const primaryTerm    = _primaryTerm( taxonomySlug );
+			const primaryTerm    = _primaryTermSelector( taxonomySlug );
 			const termCheckboxes = _termCheckboxes( taxonomySlug );
 
 			const selectorWrapId = `tsf-primary-term-${taxonomySlug}`,
@@ -295,9 +307,9 @@ window.tsfPT = function () {
 			} );
 		}
 
-		for ( let taxonomySlug in supportedTaxonomies ) {
+		for ( const taxonomySlug in supportedTaxonomies ) {
 			if ( _termCheckboxes( taxonomySlug ).getWrap() ) {
-				const primaryTerm = _primaryTerm( taxonomySlug );
+				const primaryTerm = _primaryTermSelector( taxonomySlug );
 				primaryTerm.registerPostField();
 
 				if ( primaryTerm.isPostFieldRegistered() )

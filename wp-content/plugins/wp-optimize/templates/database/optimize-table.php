@@ -17,7 +17,7 @@ if (!defined('WPO_VERSION')) die('No direct access allowed');
 			foreach ($optimization_results as $optimization_result) {
 				if (!empty($optimization_result->output)) {
 					foreach ($optimization_result->output as $line) {
-						echo $line."<br>";
+						echo wp_kses_post($line)."<br>";
 					}
 				}
 			}
@@ -25,7 +25,7 @@ if (!defined('WPO_VERSION')) die('No direct access allowed');
 		}
 	?>
 
-	<?php WP_Optimize()->include_template('database/status-box-contents.php', false, array('optimize_db' => false)); ?>
+	<?php WP_Optimize()->include_template('database/status-box-contents.php', false, $status_data); ?>
 	<?php
 		$message = __('Warning: This operation is permanent.', 'wp-optimize');
 		$message .= ' ';
@@ -47,7 +47,7 @@ if (!defined('WPO_VERSION')) die('No direct access allowed');
 
 		<?php
 		if ($load_data) {
-			WP_Optimize()->include_template('database/optimizations-table.php', false, array('does_server_allows_table_optimization' => $does_server_allows_table_optimization));
+			WP_Optimize()->include_template('database/optimizations-table.php', false, $optimizations_table_data);
 		} else {
 		?>
 			<div class="wp-optimize-optimizations-table-placeholder">

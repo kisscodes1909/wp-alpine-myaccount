@@ -3,6 +3,8 @@
  */
 jQuery(document).ready(function () {
 
+    jQuery(".accordion-section .site-title").text("Woocommerce Emails");
+
     document.body.classList.add('wt-decorator-customizer');
     jQuery(".social-repeater-general-control-remove-field:first").hide();
     jQuery('.wp-picker-default').hide();
@@ -34,11 +36,19 @@ jQuery(document).ready(function () {
 
     // Compatability with Webtoffee Quote plugin
     content_inside_tab.forEach((item, index) => {
-        var content_inside_tab_li = item.id;
-        if(email_type == 'wtwraq_new_quote_request_email' || email_type == 'wtwraq_quote_accepted_email' ||email_type == 'wtwraq_quote_declined_email' ||email_type == 'wtwraq_quote_request_submitted_email' ||email_type == 'wtwraq_quote_received_email' ||email_type == 'wtwraq_quote_expired_email' ||email_type == 'wtwraq_quote_expiry_reminder_email' ||email_type == 'wtwraq_quote_reminder_email' )
-        {
-            if (content_inside_tab_li.indexOf('rp_decorator_items_table') !== -1) 
-            { 
+        const content_inside_tab_li = item.id;
+        const validEmailTypes = [
+            'wtwraq_new_quote_request_email',
+            'wtwraq_quote_accepted_email',
+            'wtwraq_quote_declined_email',
+            'wtwraq_quote_request_submitted_email',
+            'wtwraq_quote_received_email',
+            'wtwraq_quote_expired_email',
+            'wtwraq_quote_expiry_reminder_email',
+            'wtwraq_quote_reminder_email'
+        ];
+        if (validEmailTypes.includes(email_type)) {
+            if (content_inside_tab_li.indexOf('rp_decorator_items_table') !== -1 || content_inside_tab_li.indexOf('rp_decorator_address_table') !== -1)  { 
                 jQuery('#' + content_inside_tab_li + ' h3').css('display','none');
             }
         } 
@@ -58,7 +68,7 @@ jQuery(document).ready(function () {
     });
 
     content_tab.forEach((item, index) => {
-        var content_li = item.id;
+        const content_li = item.id;
         if (content_li != 'customize-control-shortcodes') {
             if (email_type == 'wt_smart_coupon') {
                 if (content_li.indexOf('wt_smart_coupon_settings') > -1 || content_li.indexOf('wt_smart_coupon_subtitle') > -1 || content_li.indexOf('wt_smart_coupon_body') > -1)
@@ -84,8 +94,7 @@ jQuery(document).ready(function () {
                 }
 
             } else {
-                if (content_li.indexOf(email_type) > -1)
-                {
+                if (content_li.indexOf( 'customize-control-woocommerce_' + email_type ) > -1 || content_li.indexOf( 'customize-control-rp_decorator_' + email_type ) > -1 ) {
                     jQuery('#' + content_li).show();
                 } else {
                     jQuery('#' + content_li).hide();
@@ -99,7 +108,7 @@ jQuery(document).ready(function () {
         }
     });
     
-    jQuery("button").click(function() {
+    jQuery("button").on('click', function() {
         
        if (this.id.indexOf('_wt_reset') > -1)
         {
@@ -142,25 +151,9 @@ window.addEventListener('resize', function(event){
    let address_content_tab = document.getElementById("sub-accordion-section-rp_decorator_address_table").querySelectorAll('li');
 
     address_content_tab.forEach((item, index) => {
-        var content_li = item.id;
-            if (content_li.indexOf('address_subtitle') > -1){
-                if (content_li.indexOf(email_type) > -1)
-                {
-                    jQuery('#' + content_li).show();
-                } else {
-                    jQuery('#' + content_li).hide();
-                }
-            }
-    });
-
-    let img_content_tab = document.getElementById("sub-accordion-section-rp_decorator_header_image").querySelectorAll('li');
-
-    img_content_tab.forEach((item, index) => {
-        var content_li = item.id;
-        if (content_li.indexOf('image_link_btn_switch') > -1)
-        {
-            if (content_li.indexOf(email_type) > -1)
-            {
+        const content_li = item.id;
+        if (content_li.indexOf('address_subtitle') > -1){
+            if (content_li.indexOf( 'customize-control-rp_decorator_' + email_type ) > -1 ) {
                 jQuery('#' + content_li).show();
             } else {
                 jQuery('#' + content_li).hide();
@@ -168,7 +161,9 @@ window.addEventListener('resize', function(event){
         }
     });
 
-    jQuery('#_customize-input-social_links_enable').change(function () {
+    wbteHandleImgLinkBtn( email_type )
+
+    jQuery('#_customize-input-social_links_enable').on('change', function () {
         let social_content_tab = document.getElementById("sub-accordion-section-rp_decorator_social_links").querySelectorAll('li');
         var social_links_enable = jQuery('#_customize-input-social_links_enable').val();
         social_content_tab.forEach((item, index) => {
@@ -209,12 +204,12 @@ window.addEventListener('resize', function(event){
             status_arr = response.data;
             jQuery('#save').prop('disabled', false);
             jQuery('#save').val();
-            jQuery('#wt_btn_settings').bind('click', function () {
+            jQuery('#wt_btn_settings').on('click', function () {
                 if (jQuery('.wt_send_mail_box').is(':visible')) {
                     jQuery(".wt_send_mail_box").hide();
                 }
                 var iframe = jQuery('iframe').contents();
-                iframe.find("body").click(function () {
+                iframe.find("body").on('click', function () {
                     jQuery("#wt_button_actions").hide();
                 });
 
@@ -278,24 +273,24 @@ window.addEventListener('resize', function(event){
         }
     });
 
-    jQuery(".wt-decorator-customizer input").change(function(){
+    jQuery(".wt-decorator-customizer input").on('change', function(){
         if(jQuery(this).attr('id') !=='wt_apply_to_all_template'){
             i = i+1;
         }
     });
-     jQuery(".save").click(function(){
+     jQuery(".save").on('click', function(){
       i = 0;
     });
     
-    jQuery(".wt-decorator-customizer button").click(function(){
+    jQuery(".wt-decorator-customizer button").on('click', function(){
       i = i+1;
     });
     
-    jQuery(".wt-decorator-customizer select").click(function(){
+    jQuery(".wt-decorator-customizer select").on('click', function(){
       i = i+1;
     });
 
-    jQuery('#wt_btn_draft').click(function () {
+    jQuery('#wt_btn_draft').on('click', function () {
         jQuery('#customize-selected-changeset-status-control-input-' + btn_id + '-draft').trigger('click');
         jQuery('#wt_button_actions').hide();
         jQuery('#wt_btn_draft').hide();
@@ -307,7 +302,7 @@ window.addEventListener('resize', function(event){
         jQuery('#wt_btn_settings').css({'background': '#298ADC'});
         jQuery('#save').trigger('click');
     });
-    jQuery('#wt_btn_publish').click(function () {
+    jQuery('#wt_btn_publish').on('click', function () {
         jQuery('#customize-selected-changeset-status-control-input-' + btn_id + '-publish').trigger('click');
         jQuery('#wt_button_actions').hide();
         jQuery('#wt_btn_draft').show();
@@ -319,7 +314,7 @@ window.addEventListener('resize', function(event){
         jQuery('#wt_btn_settings').css({'background': '#2271b1'});
         jQuery('#save').trigger('click');
     });
-    jQuery('#wt_btn_schedule').click(function () {
+    jQuery('#wt_btn_schedule').on('click', function () {
         var save_btn_text = jQuery('#save').val();
         jQuery('#wt_schedule_box').show();
         jQuery('#customize-selected-changeset-status-control-input-' + btn_id + '-future').trigger('click');
@@ -327,7 +322,7 @@ window.addEventListener('resize', function(event){
         jQuery("div.date-time-fields.includes-time").appendTo("#wt_dc_dropdown_test");
         jQuery('#wt_button_actions').hide();
         var iframe = jQuery('iframe').contents();
-        iframe.find("body").click(function () {
+        iframe.find("body").on('click', function () {
             var cutom_id = jQuery("input[name^='customize-selected-changeset-status-control-input']").attr('id');
             var result = cutom_id.replace("customize-selected-changeset-status-control-input-", '');
             btn_id = result.split('-')[0];
@@ -381,7 +376,7 @@ window.addEventListener('resize', function(event){
     });
 
 
-    jQuery('#save').click(function () {
+    jQuery('#save').on('click', function () {
         document.getElementById("save").disabled = false;
         var email_type = jQuery('#_customize-input-rp_decorator_email_type').val();
         var save_btn_text =   wp.customize.state('selectedChangesetStatus').get();
@@ -466,7 +461,7 @@ window.addEventListener('resize', function(event){
     var country = document.getElementById("_customize-input-rp_decorator_email_type");
     country.options[country.options.selectedIndex].selected = true;
 
-    jQuery('#_customize-input-rp_decorator_email_type').change(function () {
+    jQuery('#_customize-input-rp_decorator_email_type').on('change', function () {
         jQuery("body").css("overflow", "hidden");
         jQuery( window ).off( 'beforeunload' );
         if(i>2){
@@ -563,20 +558,7 @@ window.addEventListener('resize', function(event){
 
         });
 
-        let img_content_tab = document.getElementById("sub-accordion-section-rp_decorator_header_image").querySelectorAll('li');
-
-        img_content_tab.forEach((item, index) => {
-            var content_li = item.id;
-            if (content_li.indexOf('image_link_btn_switch') > -1)
-            {
-                if (content_li.indexOf(email_type) > -1)
-                {
-                    jQuery('#' + content_li).show();
-                } else {
-                    jQuery('#' + content_li).hide();
-                }
-            }
-        });
+        wbteHandleImgLinkBtn( email_type )
 
     });
 
@@ -604,7 +586,7 @@ window.addEventListener('resize', function(event){
     jQuery('#customize-header-actions ').append('<div class="wt_band_section"><label>' + rp_decorator.labels.wt_plugin_name + '</label><br><img src=' + rp_decorator.labels.wt_logo + '></div>');
 
     // Handle reset button click
-    jQuery('#wt_header_right_div #rp_decorator_reset').click(function (e) {
+    jQuery('#wt_header_right_div #rp_decorator_reset').on('click', function (e) {
 
         // Prevent form submit
         e.preventDefault();
@@ -655,7 +637,7 @@ window.addEventListener('resize', function(event){
         }
 
         var iframe = jQuery('iframe').contents();
-        iframe.find("body").click(function () {
+        iframe.find("body").on('click', function () {
             jQuery(".wt_send_mail_box").hide();
         });
 
@@ -682,7 +664,7 @@ window.addEventListener('resize', function(event){
         jQuery("div.date-time-fields.includes-time").appendTo("#wt_dc_dropdown_test");
         jQuery('#wt_button_actions').hide();
         var iframe = jQuery('iframe').contents();
-        iframe.find("body").click(function () {
+        iframe.find("body").on('click', function () {
             jQuery(".wt_schedule_box").hide();
         });
     });
@@ -691,7 +673,7 @@ window.addEventListener('resize', function(event){
         jQuery("#wt_scheduled_data").hide();
     });
 
-    jQuery(document).click(function (e) {
+    jQuery(document).on('click', function (e) {
         if (jQuery(e.target).parents(".wt_send_mail_box").length === 0)
         {
             if (jQuery('.wt_send_mail_box').is(':visible') && (e.target.className !== "button btn_send_mail_down")) {
@@ -726,7 +708,7 @@ window.addEventListener('resize', function(event){
     });
 
     // Handle send email button click
-    jQuery('#wt_send_test_email_btn').click(function (e) {
+    jQuery('#wt_send_test_email_btn').on('click', function (e) {
 
         // Prevent form submit
         e.preventDefault();
@@ -736,7 +718,7 @@ window.addEventListener('resize', function(event){
         if (recipients == '') {
             jQuery(".wt_send_mail_box").show();
             var iframe = jQuery('iframe').contents();
-            iframe.find("body").click(function () {
+            iframe.find("body").on('click', function () {
                 jQuery(".wt_send_mail_box").hide();
             });
             return false;
@@ -759,7 +741,7 @@ window.addEventListener('resize', function(event){
             jQuery('.wt_send_mail_box').hide();
             jQuery('#wt_send_test_email_btn').removeClass('btn_busy');
             jQuery('#wt_send_test_email_btn').css({'background': '#ffffff', });
-            if (result != 0) {
+            if (result.success) {
                 alert(rp_decorator.labels.sent);
             } else {
                 alert(rp_decorator.labels.failed);
@@ -769,7 +751,7 @@ window.addEventListener('resize', function(event){
     
     
      // Handle send email button click
-    jQuery('.wt-prebult-template-button').click(function (e) {
+    jQuery('.wt-prebult-template-button').on('click', function (e) {
         e.preventDefault();
         var template =jQuery(this).siblings('input').val();
         var email_type = jQuery('#_customize-input-rp_decorator_email_type').val();
@@ -793,6 +775,21 @@ window.addEventListener('resize', function(event){
             } 
         });
     });
+
+    function wbteHandleImgLinkBtn( email_type ){
+        const img_content_tab = document.getElementById("sub-accordion-section-rp_decorator_header_image").querySelectorAll('li');
+
+        img_content_tab.forEach((item, index) => {
+            const content_li = item.id;
+            if ( content_li.indexOf('image_link_btn_switch') > -1 ) {
+                if (content_li.indexOf( 'customize-control-wt_decorator_' + email_type ) > -1) {
+                    jQuery('#' + content_li).show();
+                } else {
+                    jQuery('#' + content_li).hide();
+                }
+            }
+        });
+    }
 });
 
 

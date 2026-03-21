@@ -2,7 +2,9 @@
 <?php
 $lazyload_options = $options->get_option('lazyload', array(
 	'images' => false,
+	'backgrounds' => false,
 	'iframes' => false,
+	'youtube_preview' => false,
 	'skip_classes' => '',
 ));
 
@@ -25,7 +27,13 @@ $read_more_link = 'https://developers.google.com/web/fundamentals/performance/la
 		</p>
 		<ul>
 			<li><label><input type="checkbox" name="lazyload[images]" <?php checked($lazyload_options['images']); ?> disabled /><?php esc_html_e('Images', 'wp-optimize'); ?></label></li>
+			<li><label><input type="checkbox" name="lazyload[backgrounds]" <?php checked($lazyload_options['backgrounds']); ?> disabled /><?php esc_html_e('Background images', 'wp-optimize'); ?></label></li>
 			<li><label><input type="checkbox" name="lazyload[iframes]" <?php checked($lazyload_options['iframes']); ?> disabled /><?php esc_html_e('Iframes and Videos', 'wp-optimize'); ?></label></li>
+			<li>
+				<label> <input type="checkbox" name="lazyload[youtube_preview]" <?php checked($lazyload_options['youtube_preview']); ?> disabled /><?php esc_html_e('Replace YouTube iframe with thumbnail image', 'wp-optimize'); ?>
+				</label>
+				<span tabindex="0" data-tooltip="<?php esc_attr_e('Improves page loading time when YouTube videos are present on the page.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span> </span>
+			</li>
 		</ul>
 
 		<p>
@@ -42,7 +50,7 @@ $read_more_link = 'https://developers.google.com/web/fundamentals/performance/la
 		</p>
 
 		<div class="wpo-unused-image-sizes__premium-mask">
-			<a class="wpo-unused-images__premium-link" href="<?php echo esc_url($wp_optimize->premium_version_link); ?>" target="_blank"><?php esc_html_e('Enable Lazy-loading with WP-Optimize Premium.', 'wp-optimize'); ?></a>
+			<a class="wpo-unused-images__premium-link" href="<?php echo esc_url($wp_optimize->premium_version_link);?>&utm_content=enable-lazy-loading" target="_blank"><?php esc_html_e('Enable Lazy-loading with WP-Optimize Premium.', 'wp-optimize'); ?></a>
 		</div>
 	</div>
 </div>

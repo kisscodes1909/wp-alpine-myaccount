@@ -44,21 +44,21 @@ if (!class_exists('RP_Decorator_Customizer')) {
          */
         public function __construct() {
             
-            if(isset($_REQUEST['kt-woomail-preview']) && ($_REQUEST['kt-woomail-preview'] === '1') ){
+            if(isset($_REQUEST['kt-woomail-preview']) && ($_REQUEST['kt-woomail-preview'] === '1') ){ //phpcs:ignore WordPress.Security.NonceVerification.Recommended
                 return ;
             }   
             
              // pre built template 
             $old_style_preview = get_option('wt_decorator_old_custom_styles','');
-            if(!empty($old_style_preview) && isset($old_style_preview['prebuilt_template_preview_loop'])&& isset($_GET['pre_built_template'])&& !empty($_GET['pre_built_template'])){
+            if(!empty($old_style_preview) && isset($old_style_preview['prebuilt_template_preview_loop'])&& isset($_GET['pre_built_template'])&& !empty($_GET['pre_built_template'])){ //phpcs:ignore WordPress.Security.NonceVerification.Recommended
                 unset($old_style_preview['prebuilt_template_preview_loop']);
                 update_option('wt_decorator_old_custom_styles', $old_style_preview);
             }else{
-                if(!empty($old_style_preview) && isset($old_style_preview['prebuilt_template_preview'])&& isset($_GET['pre_built_template'])&& !empty($_GET['pre_built_template'])){
+                if(!empty($old_style_preview) && isset($old_style_preview['prebuilt_template_preview'])&& isset($_GET['pre_built_template'])&& !empty($_GET['pre_built_template'])){ //phpcs:ignore WordPress.Security.NonceVerification.Recommended
                     unset($old_style_preview['prebuilt_template_preview']);
                     update_option('wt_decorator_old_custom_styles', $old_style_preview);
-                } elseif (!empty($old_style_preview) && !isset($old_style_preview['prebuilt_template_preview'])&& isset($_GET['pre_built_template'])&& !empty($_GET['pre_built_template'])) {
-                    if(!isset($_POST['customized'])){
+                } elseif (!empty($old_style_preview) && !isset($old_style_preview['prebuilt_template_preview'])&& isset($_GET['pre_built_template'])&& !empty($_GET['pre_built_template'])) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                    if(!isset($_POST['customized'])){ //phpcs:ignore WordPress.Security.NonceVerification.Missing
                         foreach ($old_style_preview as $key => $value) {
                             if($key == 'data'){
                                 update_option('wt_decorator_custom_styles', $value);
@@ -110,9 +110,6 @@ if (!class_exists('RP_Decorator_Customizer')) {
 
             // Add user capability
             add_filter('user_has_cap', array($this, 'add_customize_capability'), 99);
-
-            // Change site name
-            add_filter('option_blogname', array($this, 'change_site_name'), 99);
 
             // Remove unrelated components
             add_filter('customize_loaded_components', array($this, 'remove_unrelated_components'), 99, 2);
@@ -168,16 +165,6 @@ if (!class_exists('RP_Decorator_Customizer')) {
             return RP_Decorator_Customizer::$customizer_url;
         }
 
-        /**
-         * Change site name
-         *
-         * @access public
-         * @param string $name
-         * @return string
-         */
-        public function change_site_name($name) {
-            return __('WooCommerce Emails', 'decorator-woocommerce-email-customizer');
-        }
 
         /**
          * Remove unrelated components
@@ -285,10 +272,12 @@ if (!class_exists('RP_Decorator_Customizer')) {
                 'nonce'     => wp_create_nonce( 'wt_rp_admin_nonce' ),
                 'customizer_url' => RP_Decorator_Customizer::get_customizer_url(),
                 'labels' => array(
-                    'reset' => sprintf(__('%sReset', 'decorator-woocommerce-email-customizer'),'&nbsp;&nbsp;'),
+                    // translators: spacing before test
+                    'reset' => sprintf(__('%s Reset', 'decorator-woocommerce-email-customizer'),'&nbsp;&nbsp;'),
                     'send_mail' => __('Send test', 'decorator-woocommerce-email-customizer'),
                     'reset_confirmation' => __('Are you sure you want to reset all changes made to your WooCommerce emails?', 'decorator-woocommerce-email-customizer'),
-                    'description' => __('<p>Use native WordPress Customizer to make WooCommerce emails match your brand.</p>', 'decorator-woocommerce-email-customizer') . '<p>' . sprintf(__('<a href="%s">Decorator</a> plugin by <a href="%s">WebToffee</a>.', 'decorator-woocommerce-email-customizer'), 'https://wordpress.org/plugins/decorator-woocommerce-email-customizer', 'https://www.webtoffee.com') . '</p>',
+                    // translators: 1: p tag opening 2: p tag closing, opening p and a tag 3: a tag closing 4: a tag opening 5: a and p tag closing
+                    'description' => sprintf( __( '%1$s Use native WordPress Customizer to make WooCommerce emails match your brand. %2$s Decorator %3$s plugin by %4$s WebToffee %5$s.', 'decorator-woocommerce-email-customizer' ), '<p>', '</p><p><a href="'. esc_url( 'https://wordpress.org/plugins/decorator-woocommerce-email-customizer' ) .'" target="_blank">', '</a>', '<a href="'. esc_url( 'https://www.webtoffee.com' ) .'" target="_blank">', '</a></p>' ),
                     'wt_logo' => RP_DECORATOR_PLUGIN_URL . '/assets/images/webtoffee-logo_small.svg',
                     'wt_plugin_name' => 'Decorator by',
                     'sent' => __('Email Sent!', 'decorator-woocommerce-email-customizer'),
@@ -628,16 +617,16 @@ if (!class_exists('RP_Decorator_Customizer')) {
          */
         public static function opt($key, $selector = null, $property = null) {
             $wt_custom_preview = '';
-            if (isset($_POST['customized']) && !empty($_POST['customized'])) {
-                $data = json_decode(wp_unslash($_POST['customized']), true);
+            if (isset($_POST['customized']) && !empty($_POST['customized'])) { //phpcs:ignore WordPress.Security.NonceVerification.Missing
+                $data = json_decode(wc_clean( wp_unslash( $_POST['customized'] ) ), true); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- Already sanitized.
                 if (isset($data['rp_decorator[preview_order_id]']) && $data['rp_decorator[preview_order_id]']) {
                     $wt_custom_preview = isset($data['rp_decorator[preview_order_id]']) ? $data['rp_decorator[preview_order_id]'] : '';
-                    if (!isset($_SESSION)) {
+                    if (!isset($_SESSION)) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
                         session_start();
                     }
                     $_SESSION["preview_order_id"] = $wt_custom_preview;
                 } elseif (!isset($_SESSION["preview_order_id"]) && !empty($_SESSION["preview_order_id"])) {
-                    $wt_custom_preview = $_SESSION["preview_order_id"];
+                    $wt_custom_preview = absint($_SESSION["preview_order_id"]);
                 }
             }
             $wt_custom_style = self::$wt_template_type;
@@ -727,8 +716,8 @@ if (!class_exists('RP_Decorator_Customizer')) {
             $wt_custom_preview = '';
             $last_template = get_option('wt_decorator_last_selected_template') && array_key_exists(get_option('wt_decorator_last_selected_template'), RP_Decorator_Preview::get_email_types()) ? get_option('wt_decorator_last_selected_template') : 'new_order';
 
-            if ((isset($_POST['customized']) && !empty($_POST['customized']))) {
-                $data = json_decode(wp_unslash($_POST['customized']), true);
+            if ((isset($_POST['customized']) && !empty($_POST['customized']))) { //phpcs:ignore WordPress.Security.NonceVerification.Missing
+                $data = json_decode(wc_clean( wp_unslash( $_POST['customized'] ) ), true); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- Already sanitized.
                 if (isset($data['rp_decorator[email_type]'])) {
                     $wt_custom_style = isset($data['rp_decorator[email_type]']) ? $data['rp_decorator[email_type]'] : '';
                     update_option('wt_decorator_last_selected_template', $wt_custom_style);
@@ -751,7 +740,7 @@ if (!class_exists('RP_Decorator_Customizer')) {
          */
         public static function get_stored_value($key, $default = '', $wt_custom_style = 'new_order', $wt_custom_preview = '') {
             
-            if(isset($_REQUEST['kt-woomail-preview']) && ($_REQUEST['kt-woomail-preview'] === '1') ){
+            if(isset($_REQUEST['kt-woomail-preview']) && ($_REQUEST['kt-woomail-preview'] === '1') ){ //phpcs:ignore WordPress.Security.NonceVerification.Recommended
                 return $default;
             }
 
@@ -768,9 +757,9 @@ if (!class_exists('RP_Decorator_Customizer')) {
             }
             $drafted_values = get_option('wt_decorator_custom_styles_in_draft', array());
             $scheduled_values = get_option('wt_decorator_custom_styles_scheduled', array());
-            if (isset($drafted_values[$wt_custom_style]) && !empty($drafted_values[$wt_custom_style]) && (isset($_REQUEST['rp-decorator-preview']) && $_REQUEST['rp-decorator-preview'] == '1' || isset($_REQUEST['action']) && $_REQUEST['action'] == 'wt_send_test_email')) {
+            if (isset($drafted_values[$wt_custom_style]) && !empty($drafted_values[$wt_custom_style]) && (isset($_REQUEST['rp-decorator-preview']) && $_REQUEST['rp-decorator-preview'] == '1' || isset($_REQUEST['action']) && $_REQUEST['action'] == 'wt_send_test_email')) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
                 $stored = $drafted_values[$wt_custom_style];
-            } elseif (isset($scheduled_values[$wt_custom_style]) && !empty($scheduled_values[$wt_custom_style]) && (isset($_REQUEST['rp-decorator-preview']) && $_REQUEST['rp-decorator-preview'] == '1')) {
+            } elseif (isset($scheduled_values[$wt_custom_style]) && !empty($scheduled_values[$wt_custom_style]) && (isset($_REQUEST['rp-decorator-preview']) && $_REQUEST['rp-decorator-preview'] == '1')) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
                 $stored = $scheduled_values[$wt_custom_style];
             }
             if (isset($wt_custom_preview) && !empty($wt_custom_preview)) {
@@ -977,6 +966,7 @@ if (!class_exists('RP_Decorator_Customizer')) {
                     'footer_top_bottom_padding' => 'px',
                     'footer_left_right_padding' => 'px !important',
                     'footer_font_size' => 'px',
+                    'footer_link_color' => ' !important',
                     'h1_font_size' => 'px',
                     'h2_font_size' => 'px',
                     'h3_font_size' => 'px',
@@ -993,12 +983,14 @@ if (!class_exists('RP_Decorator_Customizer')) {
                     'items_table_border_width' => 'px',
                     'items_table_separator_width' => 'px',
                     'items_table_padding' => 'px',
+                    'link_color' => ' !important',
                     'subtitle_font_size' => 'px !important',
                     'address_box_border_width' => 'px !important',
                     'address_box_padding_left_right' => 'px !important',
                     'address_box_padding_top_bottom' => 'px !important',
                     'button_border_width' => 'px !important',
                     'button_border_radius' => 'px !important',
+                    'button_border_color' => ' !important',
                     'button_left_right_padding' => 'px !important',
                     'button_top_bottom_padding' => 'px !important',
                     'button_size' => 'px !important',
@@ -1032,12 +1024,10 @@ if (!class_exists('RP_Decorator_Customizer')) {
          * @return void
          */
         public function ajax_reset() {
+            check_ajax_referer( 'wt_rp_admin_nonce', '_wpnonce' );
+
             // Check request
             if (empty($_REQUEST['wp_customize']) || $_REQUEST['wp_customize'] !== 'on' || empty($_REQUEST['action']) || $_REQUEST['action'] !== 'rp_decorator_reset') {
-                exit;
-            }
-
-            if( ! wp_verify_nonce((isset($_REQUEST['_wpnonce']) ? sanitize_text_field($_REQUEST['_wpnonce']) : ''), 'wt_rp_admin_nonce') ) {
                 exit;
             }
 
@@ -1045,7 +1035,7 @@ if (!class_exists('RP_Decorator_Customizer')) {
             if (!RP_Decorator::is_admin()) {
                 exit;
             }
-            $email_type = isset($_REQUEST['email_type']) && !empty($_REQUEST['email_type']) ? $_REQUEST['email_type'] : '';
+            $email_type = isset($_REQUEST['email_type']) && !empty($_REQUEST['email_type']) ? sanitize_text_field( wp_unslash( $_REQUEST['email_type'] ) ) : '';
             // Reset to default values
             RP_Decorator_Customizer::reset($email_type);
 
@@ -1060,14 +1050,13 @@ if (!class_exists('RP_Decorator_Customizer')) {
          */
 
         public function wt_decorator_button_text() {
+            check_ajax_referer( 'wt_rp_admin_nonce', '_wpnonce' );
+
             // Check request
             if (empty($_REQUEST['action']) || $_REQUEST['action'] !== 'rp_decorator_button_text') {
                 exit;
             }
 
-            if( ! wp_verify_nonce((isset($_REQUEST['_wpnonce']) ? sanitize_text_field($_REQUEST['_wpnonce']) : ''), 'wt_rp_admin_nonce') ) {
-                exit;
-            }
             // Check if user is allowed to reset values
             if (!RP_Decorator::is_admin()) {
                 exit;
@@ -1089,15 +1078,13 @@ if (!class_exists('RP_Decorator_Customizer')) {
          */
 
         public function wt_decorator_set_as_default() {
+            check_ajax_referer( 'wt_rp_admin_nonce', '_wpnonce' );
+
             // Check request
             if (empty($_REQUEST['action']) || $_REQUEST['action'] !== 'rp_decorator_set_as_default') {
                 exit;
             }
             @delete_option('wt_decorator_old_custom_styles');
-
-            if( ! wp_verify_nonce((isset($_REQUEST['_wpnonce']) ? sanitize_text_field($_REQUEST['_wpnonce']) : ''), 'wt_rp_admin_nonce') ) {
-                exit;
-            }
 
             // Check if user is allowed to reset values
             if (!RP_Decorator::is_admin()) {
@@ -1116,8 +1103,8 @@ if (!class_exists('RP_Decorator_Customizer')) {
                 }
             }
             $status['scheduled_data'] = $wt_scheduled_data;
-            $wt_default_temp_arr['save_btn_text'] = isset($_POST['save_btn_text']) && !empty($_POST['save_btn_text']) ? $_POST['save_btn_text'] : 'Publish';
-            $wt_default_temp_arr['email_type'] = isset($_POST['email_type']) && !empty($_POST['email_type']) ? $_POST['email_type'] : 'new_order';
+            $wt_default_temp_arr['save_btn_text'] = isset( $_POST['save_btn_text'] ) && ! empty( $_POST['save_btn_text'] ) ? sanitize_text_field( wp_unslash( $_POST['save_btn_text'] ) ) : __('Publish', 'decorator-woocommerce-email-customizer');
+            $wt_default_temp_arr['email_type'] = isset( $_POST['email_type'] ) && ! empty( $_POST['email_type'] ) ? sanitize_text_field( wp_unslash( $_POST['email_type'] ) ) : 'new_order';
             if (isset($_POST['template_default_value']) && $_POST['template_default_value'] == 'on') {
                 update_option('wt_decorator_default_template_value', $wt_default_temp_arr);
             } else {
@@ -1135,12 +1122,10 @@ if (!class_exists('RP_Decorator_Customizer')) {
          */
         
         public function wt_decorator_delete_autosave_post() {
+            check_ajax_referer( 'wt_rp_admin_nonce', '_wpnonce' );
+
             // Check request
             if (empty($_REQUEST['action']) || $_REQUEST['action'] !== 'rp_decorator_delete_autosave_post') {
-                exit;
-            }
-
-            if( ! wp_verify_nonce((isset($_REQUEST['_wpnonce']) ? sanitize_text_field($_REQUEST['_wpnonce']) : ''), 'wt_rp_admin_nonce') ) {
                 exit;
             }
 
@@ -1149,7 +1134,7 @@ if (!class_exists('RP_Decorator_Customizer')) {
                 exit;
             }
             RP_Decorator_WC::remove_decorator_draft();
-            $wt_custom_style = wc_clean($_REQUEST['current_email_type']);
+            $wt_custom_style = isset( $_REQUEST['current_email_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['current_email_type'] ) ) : ''; 
             update_option('wt_decorator_last_selected_template', $wt_custom_style);
             // Get all stored values
             $stored_values = (array) get_option('wt_decorator_custom_styles', array());
@@ -1209,7 +1194,7 @@ if (!class_exists('RP_Decorator_Customizer')) {
                 update_option('wt_decorator_custom_styles_scheduled', $wt_custom_data_scheduled);
             }
             update_option('rp_decorator', array());
-            $drafted_template = $wpdb->get_results('SELECT id,post_content FROM ' . $wpdb->prefix . "posts WHERE post_type = 'customize_changeset'", ARRAY_A);
+            $drafted_template = $wpdb->get_results('SELECT id,post_content FROM ' . $wpdb->prefix . "posts WHERE post_type = 'customize_changeset'", ARRAY_A); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
             foreach ($drafted_template as $key => $drafted_template_data) {
                 $template_post_id = $drafted_template_data['id'];
                 $drafted_content = $drafted_template_data['post_content'];
@@ -1282,36 +1267,34 @@ if (!class_exists('RP_Decorator_Customizer')) {
         }
 
         /**
-         * send test mail
-         *
-         * @access public
-         * @return mail
+         * Send test mail
          */
         
         public function wt_ajax_send_user_email() {
-            // Check request
-            if (empty($_REQUEST['wp_customize']) || $_REQUEST['wp_customize'] !== 'on' || empty($_REQUEST['action']) || $_REQUEST['action'] !== 'wt_send_test_email' || empty($_REQUEST['recipients'])) {
-                exit;
-            }
+            check_ajax_referer('wt_rp_admin_nonce', '_wpnonce');
 
-            if( ! wp_verify_nonce((isset($_REQUEST['_wpnonce']) ? sanitize_text_field($_REQUEST['_wpnonce']) : ''), 'wt_rp_admin_nonce') ) {
-                exit;
+            // Check request.
+            if (empty($_REQUEST['wp_customize']) || $_REQUEST['wp_customize'] !== 'on' || empty($_REQUEST['action']) || $_REQUEST['action'] !== 'wt_send_test_email' || empty($_REQUEST['recipients'])) {
+                wp_send_json_error();
             }
 
             // Check if user is allowed to reset values
             if (!RP_Decorator::is_admin()) {
-                exit;
+                wp_send_json_error();
             }
 
-            $recipients = wc_clean($_REQUEST['recipients']);
-            $email_type = wc_clean($_REQUEST['email_type']);
-            $preview_order_id = wc_clean($_REQUEST['preview_order_id']);
+            $recipients = isset( $_REQUEST['recipients'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['recipients'] ) ) : '';
+            $email_type = isset( $_REQUEST['email_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['email_type'] ) ) : '';
+            $preview_order_id = isset( $_REQUEST['preview_order_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['preview_order_id'] ) ) : '';
+            
             update_option('wt_test_mail_recipients', $recipients);
             $recipients = explode(",", $recipients);
+            ob_start();
             foreach ($recipients as $key => $recipient) {
-                $content = RP_Decorator_Preview::print_preview_email(true, trim($recipient), $email_type, $preview_order_id);
-                echo $content;
+                RP_Decorator_Preview::print_preview_email(true, trim($recipient), $email_type, $preview_order_id);
             }
+            ob_end_clean();
+            wp_send_json_success();
         }
 
          /**
@@ -1322,12 +1305,10 @@ if (!class_exists('RP_Decorator_Customizer')) {
          */
         
         public function wt_apply_prebult_template() {
+            check_ajax_referer( 'wt_rp_admin_nonce', '_wpnonce' );
+
             // Check request
             if (empty($_REQUEST['wp_customize']) || $_REQUEST['wp_customize'] !== 'on' || empty($_REQUEST['action']) || $_REQUEST['action'] !== 'wt_apply_prebult_template' || empty($_REQUEST['template'])) {
-                exit;
-            }
-
-            if( ! wp_verify_nonce((isset($_REQUEST['_wpnonce']) ? sanitize_text_field($_REQUEST['_wpnonce']) : ''), 'wt_rp_admin_nonce') ) {
                 exit;
             }
 
@@ -1338,8 +1319,9 @@ if (!class_exists('RP_Decorator_Customizer')) {
             $wt_decorator_custom_styles = get_option('wt_decorator_custom_styles');
             $old_data = array();
             $old_data['data']= $wt_decorator_custom_styles;
-            $template = wc_clean($_REQUEST['template']);
-            $wt_email_type = wc_clean($_REQUEST['email_type']);
+            $template = sanitize_text_field( wp_unslash( $_REQUEST['template'] ) );
+            $wt_email_type = isset( $_REQUEST['email_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['email_type'] ) ) : '';
+
             $old_data['prebuilt_template_preview'] = 'enable';
             if($template == 'light_blue'){
 
@@ -1393,25 +1375,25 @@ if (!class_exists('RP_Decorator_Customizer')) {
                                 'preview_order_id' => 'mockup',
                                 'h2_color'=>'#73aa1c',
                                 'custom_css' => '#wt_order_items_table > div > table > tfoot > tr > th{
-                                                              text-align: right !important;
+                                                              text-align: right;
                                                             }
 
                                                     #wt_order_items_table > div > table,
                                                     #wt_order_items_table > div > table  td,
                                                     #wt_order_items_table > div > table  th
                                                     {
-                                                        border: none !important;
+                                                        border: none;
                                                     }
                                                     #wt_order_items_table > div > table > tbody > tr >td {
-                                                             border-bottom: 1px solid #eeeeee !important;
+                                                             border-bottom: 1px solid #eeeeee;
                                                             }
 
                                                     #wt_order_items_table > div > table > tbody > tr:first-child td {
-                                                        border-top: 1px solid #eee !important;
+                                                        border-top: 1px solid #eee;
                                                     }
 
                                                     #wt_billing_address, #wt_shipping_address {
-                                                    color: black !important;
+                                                    color: black;
                                                     margin-left: 10px !important;
                                                     }
 
@@ -1485,10 +1467,10 @@ if (!class_exists('RP_Decorator_Customizer')) {
                                                                 }
 
                                                                 #wt_order_items_table > div > table, #wt_order_items_table > div > table  td, #wt_order_items_table > div > table  th{
-                                                                            border: none !important;
+                                                                            border: none;
                                                                 }
                                                                #wt_order_items_table > div > table  td, #wt_order_items_table > div > table  th{
-                                                                            border-top: 1px solid #eeeeee !important; 
+                                                                            border-top: 1px solid #eeeeee;
                                                                 }
                                                                 .address{
                                                                             border: none !important;
@@ -1499,7 +1481,7 @@ if (!class_exists('RP_Decorator_Customizer')) {
                                                                            padding-bottom: 15px !important;
                                                                 }
                                                                 #wt_billing_address, #wt_shipping_address {
-                                                                            color: black !important;
+                                                                            color: black;
                                                                             margin-left: 10px !important;
                                                                 }
 
@@ -1571,18 +1553,18 @@ if (!class_exists('RP_Decorator_Customizer')) {
                                                                             text-align: center !important;
                                                             }
                                                             #wt_order_items_table > div > table, #wt_order_items_table > div > table  td, #wt_order_items_table > div > table  th{
-                                                                            border: none !important;
+                                                                            border: none;
                                                             }
                                                             #wt_order_items_table > div > table  td, #wt_order_items_table > div > table  th{
-                                                                            border-left: 1px solid #eeeeee !important; 
-                                                                             border-top: 1px solid #eeeeee !important; 
+                                                                            border-left: 1px solid #eeeeee;
+                                                                             border-top: 1px solid #eeeeee;
                                                             }
                                                             #wt_order_items_table > div > table > tfoot > tr:last-child td,#wt_order_items_table > div > table > tfoot > tr:last-child th {
-                                                                           border-bottom: 1px solid #eeeeee !important; 
+                                                                           border-bottom: 1px solid #eeeeee;
                                                             }
 
                                                             #wt_order_items_table > div > table  td:first-child, #wt_order_items_table > div > table  th:first-child{
-                                                                            border-left: none !important;  
+                                                                            border-left: none;
                                                             }
 
                                                             #wt_billing_address,.address,#wt_shipping_address{
@@ -1614,8 +1596,10 @@ if (!class_exists('RP_Decorator_Customizer')) {
            if(empty($new_value) && !is_array($new_value)){
               $new_value= array(); 
            }
-           $new_value[$wt_email_type] = $data;
-
+            if (isset($wt_email_type) && !empty($wt_email_type)) {
+                $new_value[$wt_email_type] = $data;
+            }
+            
            $old_template_value = get_option('wt_decorator_old_custom_styles');
            if(empty($old_template_value)){
             add_option('wt_decorator_old_custom_styles', $old_data);
@@ -1639,20 +1623,16 @@ if (!class_exists('RP_Decorator_Customizer')) {
 
         }
         
-           /**
+        /**
+         * To reset the slider value.
          * wt_ajax_wt_send_reset_slider
-         *
-         * @access public
-         * @return mail
          */
         
         public function wt_ajax_wt_send_reset_slider() {
+            check_ajax_referer( 'wt_rp_admin_nonce', '_wpnonce' );
+
             // Check request
             if (empty($_REQUEST['wp_customize']) || $_REQUEST['wp_customize'] !== 'on' || empty($_REQUEST['action']) || $_REQUEST['action'] !== 'wt_send_reset_slider' ) {
-                exit;
-            }
-
-            if( ! wp_verify_nonce((isset($_REQUEST['_wpnonce']) ? sanitize_text_field($_REQUEST['_wpnonce']) : ''), 'wt_rp_admin_nonce') ) {
                 exit;
             }
 
@@ -1660,9 +1640,9 @@ if (!class_exists('RP_Decorator_Customizer')) {
             if (!RP_Decorator::is_admin()) {
                 exit;
             }
-            $selector = wc_clean($_REQUEST['selector']);
+            $selector = isset( $_REQUEST['selector'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['selector'] ) ) : '';
             $deafault =    RP_Decorator_Settings::get_default_value($selector);
-            return wp_send_json_success($deafault);
+            wp_send_json_success($deafault);
         }
         
         /**

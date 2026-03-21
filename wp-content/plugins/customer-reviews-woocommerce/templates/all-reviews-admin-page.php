@@ -111,7 +111,9 @@
 		}
 		?>
 
-		<?php CR_Reviews_Media_Download::maybe_auto_download_media(); ?>
+		<?php
+			CR_Reviews_Media_Download::maybe_auto_download_media();
+		?>
 
 		<div
 			id="cr_reviews_top_charts"

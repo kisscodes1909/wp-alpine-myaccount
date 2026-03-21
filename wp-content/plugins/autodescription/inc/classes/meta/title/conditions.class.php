@@ -8,12 +8,13 @@ namespace The_SEO_Framework\Meta\Title;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\{
+use function The_SEO_Framework\{
+	get_query_type_from_args,
 	memo,
 	normalize_generation_args,
 };
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Data,
 	Helper\Query,
 	Meta,
@@ -21,7 +22,7 @@ use \The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -59,7 +60,7 @@ class Conditions {
 		if ( isset( $args ) ) {
 			normalize_generation_args( $args );
 
-			if ( empty( $args['id'] ) || $args['tax'] || $args['pta'] || $args['uid'] )
+			if ( 'single' !== get_query_type_from_args( $args ) )
 				return false;
 
 			$id = $args['id'];
@@ -123,24 +124,36 @@ class Conditions {
 			if ( isset( $args ) ) {
 				normalize_generation_args( $args );
 
-				if ( $args['tax'] ) {
-					$use = static::use_term_branding( $args['id'] );
-				} elseif ( $args['pta'] ) {
-					$use = static::use_pta_branding( $args['pta'] );
-				} elseif ( empty( $args['uid'] ) && Query::is_real_front_page_by_id( $args['id'] ) ) {
-					$use = static::use_front_page_tagline();
-				} else {
-					$use = static::use_post_branding( $args['id'] );
+				switch ( get_query_type_from_args( $args ) ) {
+					case 'single':
+						if ( Query::is_static_front_page( $args['id'] ) ) {
+							$use = self::use_front_page_tagline();
+						} else {
+							$use = self::use_post_branding( $args['id'] );
+						}
+						break;
+					case 'term':
+						$use = self::use_term_branding( $args['id'] );
+						break;
+					case 'homeblog':
+						$use = self::use_front_page_tagline();
+						break;
+					case 'pta':
+						$use = self::use_pta_branding( $args['pta'] );
+						break;
+					case 'user':
+						// Option coming soon. https://github.com/sybrew/the-seo-framework/issues/515
+						$use = ! Data\Plugin::get_option( 'title_rem_additions' );
 				}
 			} else {
 				if ( Query::is_real_front_page() ) {
-					$use = static::use_front_page_tagline();
+					$use = self::use_front_page_tagline();
 				} elseif ( Query::is_singular() ) {
-					$use = static::use_post_branding();
+					$use = self::use_post_branding();
 				} elseif ( Query::is_editable_term() ) {
-					$use = static::use_term_branding();
+					$use = self::use_term_branding();
 				} elseif ( \is_post_type_archive() ) {
-					$use = static::use_pta_branding();
+					$use = self::use_pta_branding();
 				} else {
 					$use = ! Data\Plugin::get_option( 'title_rem_additions' );
 				}

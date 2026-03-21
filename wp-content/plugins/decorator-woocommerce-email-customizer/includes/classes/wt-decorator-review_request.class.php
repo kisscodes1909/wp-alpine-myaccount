@@ -20,7 +20,7 @@ class Wt_Decorator_Review_Request
     private $deactivation_hook="wt_decorator_deactivate"; /* hook for deactivation, to delete activated date */
     private $days_to_show_banner=10; /* when did the banner to show */
     private $remind_days=15; /* remind interval in days */
-    private $webtoffee_logo_url=RP_DECORATOR_PLUGIN_URL.'/assets/images/webtoffee-logo_small.png';
+    private $webtoffee_logo_url = '';
 
     
     private $start_date=0; /* banner to show count start date. plugin installed date, remind me later added date */
@@ -28,10 +28,6 @@ class Wt_Decorator_Review_Request
     private $banner_state_option_name=''; /* WP option name to save banner state */
     private $start_date_option_name=''; /* WP option name to save start date */
     private $banner_css_class=''; /* CSS class name for Banner HTML element. */
-    private $banner_message=''; /* Banner message. */
-    private $later_btn_text=''; /* Remind me later button text */
-    private $never_btn_text=''; /* Never review button text. */
-    private $review_btn_text=''; /* Review now button text. */
     private $ajax_action_name=''; /* Name of ajax action to save banner state. */
     private $allowed_action_type_arr=array(
         'later', /* remind me later */
@@ -48,20 +44,23 @@ class Wt_Decorator_Review_Request
         add_action($this->activation_hook, array($this, 'on_activate'));
         add_action($this->deactivation_hook, array($this, 'on_deactivate'));
 
-        if($this->check_condition()) /* checks the banner is active now */
-        {
-            $this->banner_message=sprintf(__("Hi there! We at %sWebToffee%s would like to thank you for using our plugin. We would really appreciate if you could take a moment to drop a quick review that will inspire us to keep going.", 'decorator-woocommerce-email-customizer'), '<b>', '</b>');
-
-            /* button texts */
-            $this->later_btn_text=__("Remind me later", 'decorator-woocommerce-email-customizer');
-            $this->never_btn_text=__("Not interested", 'decorator-woocommerce-email-customizer');
-            $this->review_btn_text=__("Review now", 'decorator-woocommerce-email-customizer');
-
-            add_action('admin_notices', array($this, 'show_banner')); /* show banner */
-            add_action('admin_print_footer_scripts', array($this, 'add_banner_scripts')); /* add banner scripts */
-            add_action('wp_ajax_'.$this->ajax_action_name, array($this, 'process_user_action')); /* process banner user action */
-        }
+        add_action( 'admin_init', array( $this, 'init' ) );
     }
+
+    /**
+	 * Initialize on admin
+     * 
+     * @since 2.0.4 Moved from __construct to init to avoid issues with translating text before init.
+	 */
+	public function init() {
+		if ( $this->check_condition() ) { // Checks if the banner is active now.
+
+			// Add hooks for banner display and interaction.
+			add_action( 'admin_notices', array( $this, 'show_banner' ) );
+			add_action( 'admin_print_footer_scripts', array( $this, 'add_banner_scripts' ) );
+			add_action( 'wp_ajax_' . $this->ajax_action_name, array( $this, 'process_user_action' ) );
+		}
+	}
 
     /**
     *   Set config vars
@@ -76,6 +75,7 @@ class Wt_Decorator_Review_Request
         $this->start_date=absint(get_option($this->start_date_option_name));
         $banner_state=absint(get_option($this->banner_state_option_name));
         $this->current_banner_state=($banner_state==0 ? $this->current_banner_state : $banner_state);       
+        $this->webtoffee_logo_url = RP_DECORATOR_PLUGIN_URL.'/assets/images/webtoffee-logo_small.png';
     }
 
     /**
@@ -122,16 +122,22 @@ class Wt_Decorator_Review_Request
     {
         $this->update_banner_state(1); /* update banner active state */
         ?>
-        <div class="<?php echo $this->banner_css_class;?> notice-info notice is-dismissible">
+        <div class="<?php echo esc_attr( $this->banner_css_class );?> notice-info notice is-dismissible">
             
-            <h3 style="margin: 10px 0;"><?php esc_html_e($this->plugin_title, 'decorator-woocommerce-email-customizer'); ?></h3>
+            <h3 style="margin: 10px 0;"><?php echo esc_html( $this->plugin_title ); ?></h3>
             <p>
-                <?php echo $this->banner_message; ?>                
+                <?php 
+                printf(
+				/* translators: 1: Opening bold tag, 2: Closing bold tag */
+				    esc_html__( 'Hi there! We at %1$s WebToffee %2$s would like to thank you for using our plugin. We would really appreciate if you could take a moment to drop a quick review that will inspire us to keep going.', 'decorator-woocommerce-email-customizer' ),
+				'<b>',
+				    '</b>'
+                ); ?>                
             </p>
             <p>
-                <a class="button button-secondary" style="color:#333; border-color:#ccc; background:#efefef;" data-type="later"><?php echo $this->later_btn_text; ?></a>
-                <a class="button button-secondary" style="color:#333; border-color:#ccc; background:#efefef;" data-type="never"><?php echo $this->never_btn_text; ?></a>
-                <a class="button button-primary" data-type="review"><?php echo $this->review_btn_text; ?></a>
+                <a class="button button-secondary" style="color:#333; border-color:#ccc; background:#efefef;" data-type="later"><?php esc_html_e( 'Remind me later', 'decorator-woocommerce-email-customizer' ); ?></a>
+                <a class="button button-secondary" style="color:#333; border-color:#ccc; background:#efefef;" data-type="never"><?php esc_html_e( 'Not interested', 'decorator-woocommerce-email-customizer' ); ?></a>
+                <a class="button button-primary" data-type="review"><?php esc_html_e( 'Review now', 'decorator-woocommerce-email-customizer' ); ?></a>
             </p>
             <?php
             if($this->webtoffee_logo_url!="") {
@@ -154,7 +160,7 @@ class Wt_Decorator_Review_Request
         check_ajax_referer($this->plugin_prefix);
         if(isset($_POST['wt_review_action_type']))
         {
-            $action_type=sanitize_text_field($_POST['wt_review_action_type']);
+            $action_type = sanitize_text_field( wp_unslash( $_POST['wt_review_action_type'] ) );
             
             /* current action is in allowed action list */
             if(in_array($action_type, $this->allowed_action_type_arr))
@@ -192,35 +198,35 @@ class Wt_Decorator_Review_Request
 
                 /* prepare data object */
                 var data_obj={
-                    _wpnonce: '<?php echo $nonce;?>',
-                    action: '<?php echo $this->ajax_action_name;?>',
+                    _wpnonce: '<?php echo esc_js( $nonce );?>',
+                    action: '<?php echo esc_js( $this->ajax_action_name );?>',
                     wt_review_action_type: ''
                 };
 
-                $(document).on('click', '.<?php echo $this->banner_css_class;?> a.button', function(e)
+                $(document).on('click', '.<?php echo esc_js( $this->banner_css_class );?> a.button', function(e)
                 {
                     e.preventDefault();
                     var elm=$(this);
                     var btn_type=elm.attr('data-type');
                     if(btn_type=='review')
                     {
-                        window.open('<?php echo $this->review_url;?>');
+                        window.open('<?php echo esc_js( $this->review_url );?>');
                     }
-                    elm.parents('.<?php echo $this->banner_css_class;?>').hide();
+                    elm.parents('.<?php echo esc_js( $this->banner_css_class );?>').hide();
 
                     data_obj['wt_review_action_type']=btn_type;
                     $.ajax({
-                        url:'<?php echo $ajax_url;?>',
+                        url:'<?php echo esc_js( $ajax_url );?>',
                         data:data_obj,
                         type: 'POST'
                     });
 
-                }).on('click', '.<?php echo $this->banner_css_class;?> .notice-dismiss', function(e)
+                }).on('click', '.<?php echo esc_js( $this->banner_css_class );?> .notice-dismiss', function(e)
                 {
                     e.preventDefault();
                     data_obj['wt_review_action_type']='closed';
                     $.ajax({
-                        url:'<?php echo $ajax_url;?>',
+                        url:'<?php echo esc_js( $ajax_url );?>',
                         data:data_obj,
                         type: 'POST',
                     });

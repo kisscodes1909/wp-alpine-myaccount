@@ -8,9 +8,9 @@ namespace The_SEO_Framework\Meta\Schema\Entities;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\normalize_generation_args;
+use function The_SEO_Framework\normalize_generation_args;
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Meta,
 	Data,
 	Helper\Query,
@@ -19,7 +19,7 @@ use \The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -104,7 +104,7 @@ final class Author extends Reference {
 
 		if ( empty( $author_id ) ) return null;
 
-		$user_data = \get_userdata( $author_id );
+		$user_data = Data\User::get_userdata( $author_id );
 		$user_meta = Data\Plugin\User::get_meta( $author_id );
 
 		$entity = [

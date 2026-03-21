@@ -8,11 +8,11 @@ namespace The_SEO_Framework\Front\Meta\Generator;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\Meta;
+use The_SEO_Framework\Meta;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -50,26 +50,6 @@ final class Description {
 	public static function generate_description() {
 
 		$description = Meta\Description::get_description();
-
-		if ( \has_filter( 'the_seo_framework_description_output' ) ) {
-			/**
-			 * @since 2.3.0
-			 * @since 2.7.0 Added output within filter.
-			 * @since 5.0.0 Deprecated.
-			 * @deprecated
-			 * @param string $description The generated description.
-			 * @param int    $id          The page or term ID.
-			 */
-			$description = (string) \apply_filters_deprecated(
-				'the_seo_framework_description_output',
-				[
-					$description,
-					\The_SEO_Framework\Helper\Query::get_the_real_id(),
-				],
-				'5.0.0 of The SEO Framework',
-				'the_seo_framework_meta_render_data',
-			);
-		}
 
 		if ( \strlen( $description ) )
 			yield 'description' => [

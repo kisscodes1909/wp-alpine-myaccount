@@ -4,6 +4,7 @@
  *
  * @var bool $disabled
  */
+if ( ! defined( 'ABSPATH' ) ) exit;
 ?>
 <p class="printful-submit">
 	<input name="save" class="button-primary woocommerce-save-button

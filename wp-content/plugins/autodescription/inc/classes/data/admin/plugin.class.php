@@ -8,8 +8,8 @@ namespace The_SEO_Framework\Data\Admin;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\{
-	Admin, // Yes, it ios legal to share class and namespace.
+use The_SEO_Framework\{
+	Admin, // Yes, it is legal to share class and namespace.
 	Data,
 	Helper\Query,
 	Helper\Format\Arrays,
@@ -18,7 +18,7 @@ use \The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -39,7 +39,7 @@ use \The_SEO_Framework\{
  * @since 5.0.0
  * @access private
  */
-class Plugin {
+final class Plugin {
 
 	/**
 	 * Register the database settings for saving and sanitizing via standard WordPress hooks.
@@ -84,9 +84,9 @@ class Plugin {
 		\check_admin_referer( \THE_SEO_FRAMEWORK_SITE_OPTIONS . '-options', '_wpnonce' );
 
 		if ( ! empty( $_POST[ \THE_SEO_FRAMEWORK_SITE_OPTIONS ]['tsf-settings-reset'] ) ) {
-			static::process_settings_reset();
+			self::process_settings_reset();
 		} else {
-			static::process_settings_submission();
+			self::process_settings_submission();
 		}
 	}
 
@@ -140,7 +140,7 @@ class Plugin {
 		/* // phpcs:ignore -- Nothing to set backward compat for, still in place because API is enforced.
 		\add_filter(
 			'pre_update_option_' . \THE_SEO_FRAMEWORK_SITE_OPTIONS,
-			[ static::class, 'set_backward_compatibility' ],
+			[ self::class, 'set_backward_compatibility' ],
 		);
 		*/
 
@@ -158,12 +158,12 @@ class Plugin {
 		// This is benign.
 		\add_action(
 			'update_option_' . \THE_SEO_FRAMEWORK_SITE_OPTIONS,
-			[ static::class, 'set_option_updated_notice' ],
+			[ self::class, 'set_option_updated_notice' ],
 		);
 
 		\add_action(
 			'update_option_' . \THE_SEO_FRAMEWORK_SITE_OPTIONS,
-			[ static::class, 'update_db_version' ],
+			[ self::class, 'update_db_version' ],
 			12,
 		);
 

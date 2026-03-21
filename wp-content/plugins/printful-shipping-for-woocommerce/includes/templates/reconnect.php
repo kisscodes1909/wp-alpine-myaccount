@@ -4,6 +4,7 @@
  *
  * @var string $reconnect_url
  */
+if ( ! defined( 'ABSPATH' ) ) exit;
 ?>
 
 <div class="printful-setting-group">

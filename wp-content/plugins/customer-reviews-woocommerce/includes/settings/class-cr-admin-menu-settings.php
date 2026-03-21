@@ -28,7 +28,7 @@ if ( ! class_exists( 'CR_Settings_Admin_Menu' ) ):
 				$this->current_tab = $_GET['tab'];
 			}
 
-			$this->download_api = 'https://api.cusrev.com/v1/production/wp-download/';
+			$this->download_api = 'https://api.cusrev.com/v2/wp-download/';
 
 			add_action( 'admin_init', array( $this, 'save_settings' ) );
 			add_action( 'admin_menu', array( $this, 'register_settings_menu' ), 11 );
@@ -66,7 +66,7 @@ if ( ! class_exists( 'CR_Settings_Admin_Menu' ) ):
 				'cr-reviews',
 				__( 'Settings', 'customer-reviews-woocommerce' ),
 				__( 'Settings', 'customer-reviews-woocommerce' ),
-				'manage_options',
+				apply_filters( 'cr_settings_permissions', 'manage_options' ),
 				$this->menu_slug,
 				array( $this, 'display_settings_admin_page' )
 			);
@@ -158,7 +158,10 @@ if ( ! class_exists( 'CR_Settings_Admin_Menu' ) ):
 						'dns_copied' => __( 'DNS record copied', 'customer-reviews-woocommerce' ),
 						'dns_enabled' => __( 'Enabled', 'customer-reviews-woocommerce' ),
 						'dns_disabled' => __( 'Disabled', 'customer-reviews-woocommerce' ),
-						'dns_pending' => __( 'Pending', 'customer-reviews-woocommerce' )
+						'dns_pending' => __( 'Pending', 'customer-reviews-woocommerce' ),
+						'view_email_template' => __( 'View template', 'customer-reviews-woocommerce' ),
+						'hide_email_template' => __( 'Hide template', 'customer-reviews-woocommerce' ),
+						'email_template_delete' => __( 'Are you sure you want to delete this template file?', 'customer-reviews-woocommerce' )
 					)
 				);
 				wp_enqueue_script( 'cr-admin-settings' );
@@ -217,13 +220,13 @@ if ( ! class_exists( 'CR_Settings_Admin_Menu' ) ):
 					}
 					do_action( 'wpml_switch_language', $current_lang );
 				}
-				$ph = 'categories';
-				$label = 'Category';
+				$ph = __( 'Choose categories...', 'customer-reviews-woocommerce' );
+				$label = __( 'Category', 'customer-reviews-woocommerce' );
 			} elseif ($value['id'] == 'ivole_enabled_roles' || $value['id'] == 'ivole_coupon_enabled_roles') {
 				global $wp_roles;
 				$all_options = $wp_roles->get_names();
-				$ph = 'user roles';
-				$label = 'Role';
+				$ph = __( 'Choose user roles...', 'customer-reviews-woocommerce' );
+				$label = __( 'Role', 'customer-reviews-woocommerce' );
 			}
 
 			$selections = (array) WC_Admin_Settings::get_option( $value['id'] );
@@ -234,7 +237,7 @@ if ( ! class_exists( 'CR_Settings_Admin_Menu' ) ):
 					<?php echo $tooltip_html; ?>
 				</th>
 				<td class="forminp">
-					<select multiple="multiple" name="<?php echo esc_attr( $value['id'] ); ?>[]" style="min-width:350px;"  data-placeholder="<?php esc_attr_e( 'Choose '.$ph.'&hellip;', 'customer-reviews-woocommerce' ); ?>" aria-label="<?php esc_attr_e( $label, 'customer-reviews-woocommerce' ) ?>" class="wc-enhanced-select">
+					<select multiple="multiple" name="<?php echo esc_attr( $value['id'] ); ?>[]" style="min-width:350px;"  data-placeholder="<?php echo esc_attr( $ph ); ?>" aria-label="<?php echo esc_attr( $label ); ?>" class="wc-enhanced-select">
 						<option value="" selected="selected"></option>
 						<?php
 						if ( ! empty( $all_options ) ) {
@@ -533,7 +536,7 @@ if ( ! class_exists( 'CR_Settings_Admin_Menu' ) ):
 
 						switch( $_POST['type'] ) {
 							case 'review_reminder':
-								$e = new Ivole_Email();
+								$e = new Ivole_Email( 0, 1 );
 								$result = $e->trigger2( null, $email, false );
 								break;
 							case 'qna_reply':
@@ -541,6 +544,7 @@ if ( ! class_exists( 'CR_Settings_Admin_Menu' ) ):
 								$result = $qe->send_test( $email );
 								break;
 							default:
+								$result = apply_filters( 'cr_settings_send_test', null, $_POST['type'], $email );
 								break;
 						}
 
@@ -729,24 +733,26 @@ if ( ! class_exists( 'CR_Settings_Admin_Menu' ) ):
 			);
 
 			$license_key = trim( get_option( 'ivole_license_key', '' ) );
-			$download_res = wp_remote_get(
-				$this->download_api . $license_key,
-				array(
-					'timeout' => 10,
-					'headers' => array(
-						'Accept' => 'application/json'
+			if ( $license_key ) {
+				$download_res = wp_remote_get(
+					$this->download_api . $license_key,
+					array(
+						'timeout' => 10,
+						'headers' => array(
+							'Accept' => 'application/json'
+						)
 					)
-				)
-			);
+				);
 
-			if(
-				! is_wp_error( $download_res )
-				&& 200 === wp_remote_retrieve_response_code( $download_res )
-				&& ! empty( wp_remote_retrieve_body( $download_res ) )
-			) {
-				$download_res = json_decode( wp_remote_retrieve_body( $download_res ) );
-				if( 'ok' === $download_res->status ) {
-					$res['url'] = $download_res->downloadUrl;
+				if(
+					! is_wp_error( $download_res )
+					&& 200 === wp_remote_retrieve_response_code( $download_res )
+					&& ! empty( wp_remote_retrieve_body( $download_res ) )
+				) {
+					$download_res = json_decode( wp_remote_retrieve_body( $download_res ) );
+					if( 'ok' === $download_res->status ) {
+						$res['url'] = $download_res->downloadUrl;
+					}
 				}
 			}
 
@@ -754,9 +760,9 @@ if ( ! class_exists( 'CR_Settings_Admin_Menu' ) ):
 		}
 
 		public function display_features_banner( $current_tab ) {
-			if( 'review_reminder' === $current_tab ) {
-				if( ! $this->is_pro_addon_activated() ) {
-					if( $this->is_banner_hidden( 'review_reminder' ) ) {
+			if ( 'review_reminder' === $current_tab ) {
+				if ( ! $this->is_pro_addon_activated() ) {
+					if ( $this->is_banner_hidden( 'review_reminder' ) ) {
 						return;
 					}
 					?>
@@ -790,15 +796,58 @@ if ( ! class_exists( 'CR_Settings_Admin_Menu' ) ):
 						</div>
 					<?php
 				}
-			} elseif( 'emails' === $current_tab ) {
-				if( isset( $_GET['section'] ) ) {
+			} elseif ( 'forms' === $current_tab ) {
+				if ( ! $this->is_pro_addon_activated() ) {
+					if ( $this->is_banner_hidden( 'forms' ) ) {
+						return;
+					}
+					?>
+						<div class="cr-features-banner">
+								<div class="cr-features-bnr-col1">
+									<img src="<?php echo plugins_url( 'img/reminders-banner.svg', dirname( dirname( __FILE__ ) ) ) ; ?>">
+								</div>
+								<div class="cr-features-bnr-col2">
+									<div class="cr-features-bnr-title">Get more with a Pro version</div>
+									<div class="cr-features-bnr-subtitle">Install a Pro add-on to get advanced customization options and dedicated email support</div>
+									<div class="cr-features-bnr-sec">On-site review forms</div>
+									<div class="cr-features-bnr-uls">
+										<ul class="cr-features-bnr-ul">
+											<li>Add unlimited rating criteria and questions to on-site review forms</li>
+										</ul>
+									</div>
+									<div class="cr-features-bnr-sec">Aggregated review forms</div>
+									<div class="cr-features-bnr-uls">
+										<ul class="cr-features-bnr-ul">
+											<li>Add single, multiple-choice and comment questions</li>
+											<li>Add shop logo to aggregated review forms</li>
+											<li>Customize labels and colors on aggregated forms</li>
+											<li>Limit products on review forms for large orders</li>
+										</ul>
+										<ul class="cr-features-bnr-ul">
+											<li>Set default display name format</li>
+											<li>Customize anonymous display names</li>
+											<li>Show or hide product prices</li>
+											<li>Customize label of the "Submit" button</li>
+										</ul>
+									</div>
+									<div class="cr-features-bnr-other">And other powerful features...</div>
+									<div class="cr-features-bnr-buttons">
+										<a class="button cr-features-bnr-pricing" href="https://www.cusrev.com/business/pricing.html?utm_source=wp_plugin&utm_medium=forms" target="_blank" rel="noopener noreferrer">See pricing<img src="<?php esc_attr_e( untrailingslashit( plugin_dir_url( dirname( dirname( __FILE__ ) ) ) ) . '/img/external-link-2.svg' ); ?>"></a>
+										<a class="cr-features-bnr-hide" href="#" data-banner="forms">Hide this message</a>
+									</div>
+								</div>
+						</div>
+					<?php
+				}
+			} elseif ( 'emails' === $current_tab ) {
+				if ( isset( $_GET['section'] ) ) {
 					$section = $_GET['section'];
-					if(
+					if (
 						'review_reminder' === $section ||
 						'review_discount' === $section
 					) {
-						if( ! $this->is_pro_addon_activated() ) {
-							if( $this->is_banner_hidden( 'emails_' . $section ) ) {
+						if ( ! $this->is_pro_addon_activated() ) {
+							if ( $this->is_banner_hidden( 'emails_' . $section ) ) {
 								return;
 							}
 							?>
@@ -860,8 +909,8 @@ if ( ! class_exists( 'CR_Settings_Admin_Menu' ) ):
 
 		private function is_banner_hidden( $banner ) {
 			$hidden_banners = get_option( 'ivole_hidden_banners', array() );
-			if( $hidden_banners && is_array( $hidden_banners ) ) {
-				if( isset( $hidden_banners[$banner] ) && 1 === $hidden_banners[$banner] ) {
+			if ( $hidden_banners && is_array( $hidden_banners ) ) {
+				if ( isset( $hidden_banners[$banner] ) && 1 === $hidden_banners[$banner] ) {
 					return true;
 				}
 			}

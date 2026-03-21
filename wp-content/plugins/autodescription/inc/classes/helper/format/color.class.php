@@ -10,7 +10,7 @@ namespace The_SEO_Framework\Helper\Format;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -65,10 +65,10 @@ class Color {
 				// rgb[..] == rrggbb[..].
 				\strlen( $hex ) >= 6 ? $hex : "$hex[0]$hex[0]$hex[1]$hex[1]$hex[2]$hex[2]",
 				2,
-			)
+			),
 		);
 
-		$get_relative_luminance = static function ( $v ) {
+		$get_relative_luminance = function ( $v ) {
 			// Convert hex to 0~1 float.
 			$v /= 0xFF;
 

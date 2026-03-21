@@ -6,18 +6,18 @@
 
 namespace The_SEO_Framework;
 
-\defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) or die;
+( \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) ) or die;
 
-use \The_SEO_Framework\Admin\Settings\Layout\{
+use The_SEO_Framework\Admin\Settings\Layout\{
 	HTML,
 	Input,
 };
 
-// phpcs:disable, WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
+// phpcs:disable WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2016 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2016 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -105,7 +105,7 @@ switch ( $instance ) : // Quite useless, but prepared for expansion.
 				'<p><label for=%s><strong>%s</strong> %s</label></p>',
 				\esc_attr( Input::get_field_id( $setting['setting'] ) ),
 				\esc_html( $setting['label'] ),
-				$setting['info'], // phpcs:ignore, WordPress.Security.EscapeOutput.OutputNotEscaped -- should be escaped in list.
+				$setting['info'], // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- should be escaped in list.
 			);
 			printf(
 				'<p><input type=text name=%s class="large-text ltr" id=%s placeholder="%s" value="%s"></p>',

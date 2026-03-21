@@ -33,14 +33,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<?php
 							echo esc_html( $author );
 							if( $country_code ) {
-								echo '<img src="' . plugin_dir_url( dirname( __FILE__ ) ) . 'img/flags/' . $country_code . '.svg" class="ivole-grid-country-icon" width="20" height="15" alt="' . $country_code . '">';
+								echo '<img src="' . CR_Utils::cr_get_plugin_dir_url() . 'img/flags/' .
+								rawurlencode( strtolower( $country_code ) ) .
+								'.svg" class="ivole-grid-country-icon" width="20" height="15" alt="' .
+								esc_attr( strtoupper( $country_code ) ) .
+								'">';
 							}
 							?>
 						</div>
 						<?php
-						if( 'yes' === get_option( 'woocommerce_review_rating_verification_label' ) && wc_review_is_from_verified_owner( $review->comment_ID ) ) {
+						if ( CR_Reviews::cr_review_is_from_verified_owner( $review ) ) {
 							echo '<div class="reviewer-verified">';
-							echo '<img class="cr-reviewer-verified" src="' . plugin_dir_url( dirname( __FILE__ ) ) . 'img/verified.svg' . '" alt="' . $verified_text . '" width="22" height="22" loading="lazy" />';
+							echo '<img class="cr-reviewer-verified" src="' . CR_Utils::cr_get_plugin_dir_url() . 'img/verified.svg' . '" alt="' . $verified_text . '" width="22" height="22" loading="lazy" />';
 							echo $verified_text;
 							echo '</div>';
 						} else {
@@ -53,12 +57,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</div>
 				<div class="rating-row">
 					<div class="rating">
-						<div class="crstar-rating" style="<?php echo esc_attr( $stars_style ); ?>"><span style="width:<?php echo ($rating / 5) * 100; ?>%;"></span></div>
+						<div class="crstar-rating-svg" role="img" aria-label="<?php echo esc_attr( sprintf( __( 'Rated %s out of 5', 'woocommerce' ), $rating ) ); ?>"><?php echo CR_Reviews::get_star_rating_svg( $rating, 0, $stars_style ); ?></div>
 					</div>
 					<div class="rating-label">
 						<?php echo $rating . '/5'; ?>
 					</div>
 				</div>
+				<?php
+					if ( 0 === intval( $review->comment_parent ) ) {
+						$rev_title = get_comment_meta( $review->comment_ID, 'cr_rev_title', true );
+						if ( $rev_title ) {
+							echo '<div class="cr-comment-head-text">' . esc_html( $rev_title ) . '</div>';
+						}
+					}
+				?>
 				<?php
 					do_action( 'cr_slider_before_review_text', $review );
 				?>
@@ -66,6 +78,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<div class="review-content">
 						<div class="review-text">
 						<?php
+						// compatibility with WPML / WCML plugins to translate reviews
+						if ( class_exists( 'WCML\Reviews\Translations\FrontEndHooks' ) ) {
+							if ( method_exists( 'WCML\Reviews\Translations\FrontEndHooks', 'translateReview' ) ) {
+								( new WCML\Reviews\Translations\FrontEndHooks() )->translateReview( $review );
+							}
+						}
 						$clear_content = wp_strip_all_tags( $review->comment_content );
 						if( $max_chars && mb_strlen( $clear_content ) > $max_chars ) {
 							$less_content = wp_kses_post( mb_substr( $clear_content, 0, $max_chars ) );
@@ -113,7 +131,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					if( 'publish' === $product->get_status() ):
 						?>
 						<div class="review-product" style="<?php echo esc_attr( $product_style ); ?>">
-							<div class="product-thumbnail">
+							<div class="cr-product-thumbnail">
 								<?php echo $product->get_image( 'woocommerce_gallery_thumbnail' ); ?>
 							</div>
 							<div class="product-title">

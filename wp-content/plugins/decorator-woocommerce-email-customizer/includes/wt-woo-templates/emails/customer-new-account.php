@@ -49,8 +49,8 @@ if (empty($wt_custom_style)) {
 }
 $button_check    = get_option( 'rp_decorator_customer_new_account_btn_switch' );//RP_Decorator_Customizer::opt( 'customer_new_account_btn_switch' );
 $account_section = true;//RP_Decorator_Customizer::opt( 'customer_new_account_account_section' );
-if(isset($_POST['customized']) && !empty($_POST['customized'])){   
-    $data = json_decode(wp_unslash($_POST['customized']), true);
+if(isset($_POST['customized']) && !empty($_POST['customized'])){ // phpcs:ignore WordPress.Security.NonceVerification.Missing
+    $data = json_decode(wc_clean( wp_unslash( $_POST['customized'] ) ), true); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- Already sanitized.
     if(array_key_exists('rp_decorator_customer_new_account_btn_switch' , $data)){
         if($button_check != $data['rp_decorator_customer_new_account_btn_switch'] ){            
             $button_check = $data['rp_decorator_customer_new_account_btn_switch'];
@@ -62,10 +62,15 @@ do_action( 'wt_decorator_email_body_content_text', $email ); ?>
 
 <?php if ( 'yes' === get_option( 'woocommerce_registration_generate_password' ) && $password_generated ) : ?>
 
-	<?php if ($set_password_url) { /** $set_password_url was introduced in WooCommerce 6.0 */ ?>
+	<?php if ( isset( $set_password_url ) && $set_password_url ) { /** $set_password_url was introduced in WooCommerce 6.0 */ ?>
 		<p><a href="<?php echo esc_attr( $set_password_url ); ?>"><?php printf( esc_html__( 'Click here to set your new password.', 'decorator-woocommerce-email-customizer' ) ); ?></a></p>
 	<?php } else { ?>
-		<p><?php printf( __( 'Your password has been automatically generated: %s', 'decorator-woocommerce-email-customizer' ), '<strong>' . esc_html( $user_pass ) . '</strong>' ); ?></p>
+		<p>
+            <?php 
+            // translators: 1: password
+            printf( esc_html__( 'Your password has been automatically generated: %s', 'decorator-woocommerce-email-customizer' ), '<strong>' . esc_html( $user_pass ) . '</strong>' ); 
+            ?>
+        </p>
 	<?php } ?>
 
 <?php
@@ -76,7 +81,12 @@ if ( true == $account_section ) {
 		echo '<p class="btn-container"><a href="' . esc_url( wc_get_page_permalink( 'myaccount' ) ) . '" class="wt_template_button">' . esc_html__( 'View Account', 'decorator-woocommerce-email-customizer' ) . '</a></p>';
 	} else {
 	?>
-	<p><?php printf( __( 'You can access your account area to view your orders and change your password here: %s.', 'decorator-woocommerce-email-customizer' ), make_clickable( esc_url( wc_get_page_permalink( 'myaccount' ) ) ) ); ?></p>
+	<p>
+        <?php 
+        // translators: 1: my account link
+        printf( esc_html__( 'You can access your account area to view your orders and change your password here: %s.', 'decorator-woocommerce-email-customizer' ),  '<a href="' . esc_url( wc_get_page_permalink( 'myaccount' ) ) . '">' . esc_url( wc_get_page_permalink( 'myaccount' ) ) . '</a>' ); 
+        ?>
+    </p>
 	<?php
 	}
 }

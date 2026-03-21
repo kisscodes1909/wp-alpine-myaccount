@@ -18,11 +18,7 @@ class WP_Optimize_Heartbeat {
 		
 		// Change heartbeat API frequency to 15 seconds to improve UI experience
 		// only for the pages that we enable in `$pages_enabled`
-		if (isset($_GET['page'])) {
-			$query_page = sanitize_text_field(wp_unslash($_GET['page'])); // phpcs:ignore WordPress.Security.NonceVerification -- not processing form data
-		} else {
-			$query_page = $pagenow;
-		}
+		$query_page = isset($_GET['page']) ? sanitize_text_field(wp_unslash($_GET['page'])) : $pagenow; // phpcs:ignore WordPress.Security.NonceVerification -- not processing form data
 		
 		if (in_array($query_page, $pages_enabled)) {
 			add_filter('heartbeat_settings', array($this, 'set_heartbeat_time_interval'), PHP_INT_MAX);
@@ -65,7 +61,7 @@ class WP_Optimize_Heartbeat {
 	 * @param array $response Heartbeat response data to pass back to front end.
 	 * @param array $data     Data received from the front end (unslashed).
 	 *
-	 * @return array
+	 * @return array|void
 	 */
 	public function receive_heartbeat($response, $data) {
 		$commands = new Updraft_Smush_Manager_Commands(Updraft_Smush_Manager::instance());
@@ -82,7 +78,7 @@ class WP_Optimize_Heartbeat {
 				}
 			} else {
 				$command_name = key($command);
-				if ('updraft_smush_ajax' == $command_name) {
+				if ('updraft_smush_ajax' === $command_name) {
 					$command_data = current($command);
 					
 					$command_data_param = null;

@@ -1,4 +1,9 @@
 <?php
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
   $wf_admin_img_path=WT_SEQUENCIAL_ORDNUMBER_URL . 'admin/images/';
   $seq_order_logo_url=WT_SEQUENCIAL_ORDNUMBER_URL.'assets/images/logo_seq.png';
 ?>
@@ -235,29 +240,29 @@ if (Wtso_Bfcm_Twenty_Twenty_Four::is_bfcm_season()) { ?>
 
     <div class="wt-seqpro-name">
       <img src="<?php echo esc_url($seq_order_logo_url); ?>" alt="featured img" width="36" height="36">
-      <h4 class="wt-product-name"><?php echo __('Sequential Order Number for WooCommerce Pro','wt-woocommerce-sequential-order-numbers'); ?></h4>
+      <h4 class="wt-product-name"><?php echo esc_html__('Sequential Order Number for WooCommerce Pro','wt-woocommerce-sequential-order-numbers'); ?></h4>
     </div>
     <div class="wt-seqpro-mainfeatures">
       <ul>
-        <li class="money-back"><?php echo __('30 Day Money Back Guarantee','wt-woocommerce-sequential-order-numbers'); ?></li>
-        <li class="support"><?php echo __('Fast and Superior Support','wt-woocommerce-sequential-order-numbers'); ?></li>
+        <li class="money-back"><?php echo esc_html__('30 Day Money Back Guarantee','wt-woocommerce-sequential-order-numbers'); ?></li>
+        <li class="support"><?php echo esc_html__('Fast and Superior Support','wt-woocommerce-sequential-order-numbers'); ?></li>
       </ul>
     </div>
   </div>
   <div class="wt-seqpro-features">
     <ul class="wt-seqpro-newfeat">
-      <li><?php echo __('Custom series for orders from a specific date/ID.','wt-woocommerce-sequential-order-numbers'); ?></li>
+      <li><?php echo esc_html__('Custom series for orders from a specific date/ID.','wt-woocommerce-sequential-order-numbers'); ?></li>
     </ul>
     <ul class="wt-seqpro-allfeat">
-      <li><?php echo __('Auto reset sequence per month/year etc.','wt-woocommerce-sequential-order-numbers'); ?></li>
-      <li><?php echo __('Add custom suffix for order numbers','wt-woocommerce-sequential-order-numbers'); ?></li>
-      <li><?php echo __('Date suffix in order numbers.','wt-woocommerce-sequential-order-numbers'); ?></li>
-      <li><?php echo __('Custom sequence for free orders.','wt-woocommerce-sequential-order-numbers'); ?></li>
-      <li><?php echo __('Increment sequence in custom series.','wt-woocommerce-sequential-order-numbers'); ?></li>
-      <li><?php echo __('More order number templates.','wt-woocommerce-sequential-order-numbers'); ?></li>
+      <li><?php echo esc_html__('Auto reset sequence per month/year etc.','wt-woocommerce-sequential-order-numbers'); ?></li>
+      <li><?php echo esc_html__('Add custom suffix for order numbers','wt-woocommerce-sequential-order-numbers'); ?></li>
+      <li><?php echo esc_html__('Date suffix in order numbers.','wt-woocommerce-sequential-order-numbers'); ?></li>
+      <li><?php echo esc_html__('Custom sequence for free orders.','wt-woocommerce-sequential-order-numbers'); ?></li>
+      <li><?php echo esc_html__('Increment sequence in custom series.','wt-woocommerce-sequential-order-numbers'); ?></li>
+      <li><?php echo esc_html__('More order number templates.','wt-woocommerce-sequential-order-numbers'); ?></li>
     </ul>
     <div class="wt-seqpro-btn-wrapper">
-        <a href="https://www.webtoffee.com/product/woocommerce-sequential-order-numbers/?utm_source=free_plugin_sidebar&utm_medium=sequential_free&utm_campaign=Sequential_Order_Numbers&utm_content=<?php echo esc_attr(WT_SEQUENCIAL_ORDNUMBER_VERSION);?>" class="wt-seqpro-blue-btn" target="_blank"><?php echo __('UPGRADE TO PREMIUM','wt-woocommerce-sequential-order-numbers'); ?></a>
+        <a href="https://www.webtoffee.com/product/woocommerce-sequential-order-numbers/?utm_source=free_plugin_sidebar&utm_medium=sequential_free&utm_campaign=Sequential_Order_Numbers&utm_content=<?php echo esc_attr(WT_SEQUENCIAL_ORDNUMBER_VERSION);?>" class="wt-seqpro-blue-btn" target="_blank"><?php echo esc_html__('UPGRADE TO PREMIUM','wt-woocommerce-sequential-order-numbers'); ?></a>
       </div>
   </div>
 </div>

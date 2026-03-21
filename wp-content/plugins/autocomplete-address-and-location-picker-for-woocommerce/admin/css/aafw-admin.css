@@ -29,11 +29,11 @@
     left: 0px;
 }
 
-.aafw_star_button {
+.aafw_locker_button {
     margin-right: 5px;
 }
 
-.aafw_star_button svg {
+.aafw_locker_button svg {
     top: 3px;
     position: relative;
 }
@@ -91,6 +91,36 @@
     background-color: #218838 !important;
     border-color: #1e7e34 !important;
     color: #fff !important;
+}
+
+.aafw_more_details {
+    display: inline-block !important;
+    font-weight: 400 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    vertical-align: middle !important;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid #ffc107 !important;
+    padding: .375rem .75rem !important;
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+    border-radius: .25rem !important;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    color: #856404 !important;
+    background-color: #fff !important;
+    border-color: #ffc107 !important;
+    text-decoration: none !important;
+    margin-top: 10px !important;
+    margin-bottom: 6px !important;
+}
+
+.aafw_more_details:hover {
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+    color: #000 !important;
 }
 
 .aafw_admin_bar {

@@ -494,9 +494,15 @@
 			jQuery.post(cr_ajax_object.ajax_url, grid_data, function(response) {
 				$spinner.hide();
 				$reviews = jQuery(response.html).find(".cr-review-card");
-				if($reviews.length){
+				let showMoreBtn = jQuery(response.html).find(".cr-show-more-button");
+				if ( $reviews.length ) {
 					$this.parents(".cr-reviews-grid").find(".cr-reviews-grid-inner").colcade("append", $reviews);
-					$this.show();
+					if ( showMoreBtn.length ) {
+						$this.text( showMoreBtn.text() );
+						$this.show();
+					} else {
+						$this.hide();
+					}
 				} else {
 					$this.hide();
 				}
@@ -605,93 +611,55 @@
 			parent.find(".cr-slider-read-more").css("display", "inline");
 			jQuery(this).parents(".cr-reviews-slider").slickk('setPosition');
 		} );
-		jQuery('#cr_qna.cr-qna-block .cr-qna-search-block button.cr-qna-ask-button').on( 'click', function (e) {
+		jQuery( '.cr-reviews-grid' ).on( 'click', '.cr-grid-read-more a', function (e) {
 			e.preventDefault();
-			jQuery( this ).closest( '.cr-qna-block' ).find( '.cr-qna-new-q-overlay .cr-qna-new-q-form' ).addClass( 'cr-q-modal' );
-			jQuery( this ).closest( '.cr-qna-block' ).find( '.cr-qna-new-q-overlay .cr-qna-new-q-form.cr-qna-new-a-form' ).removeClass( 'cr-q-modal' );
-			jQuery( this ).closest( '.cr-qna-block' ).find( '.cr-qna-new-q-overlay').addClass( 'cr-q-modal' );
-			jQuery( 'body' ).addClass( 'cr-noscroll' );
-		} );
-		jQuery("#cr_qna.cr-qna-block .cr-qna-list-block .cr-qna-list-block-inner").on( "click", ".cr-qna-ans-button", function (e) {
-			e.preventDefault();
-			let parent = jQuery(this).parents(".cr-qna-list-q-cont");
-			let question = parent.find("span.cr-qna-list-question").text();
-			if( question.length ) {
-				jQuery( "#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-qna-new-a-form .cr-qna-new-q-form-input .cr-qna-new-q-form-text").text(question);
+			let parent = jQuery(this).parents(".review-content");
+			if ( 0 === parent.length ) {
+				parent = jQuery(this).parents(".cr-grid-reply-content");
 			}
-			let question_id = jQuery(this).attr( "data-question" );
-			if( question_id.length ) {
-				jQuery( "#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form .cr-qna-new-q-form-input .cr-qna-new-q-form-s-b").attr( "data-question", question_id );
-			}
-			let post_id = jQuery(this).attr( "data-post" );
-			if( post_id.length ) {
-				jQuery( "#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form .cr-qna-new-q-form-input .cr-qna-new-q-form-s-b").attr( "data-post", post_id );
-			}
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form').removeClass( "cr-q-modal" );
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-qna-new-a-form').addClass( "cr-q-modal" );
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay').addClass( "cr-q-modal" );
-			jQuery("body").addClass("cr-noscroll");
+			parent.find(".cr-grid-read-more").hide();
+			parent.find(".cr-grid-details").css("display", "inline");
 		} );
-		jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay').on( "click", function (e) {
+		jQuery( '.cr-reviews-grid' ).on( 'click', '.cr-grid-read-less a', function (e) {
 			e.preventDefault();
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form .cr-qna-new-q-form-ok').css( 'display', 'none' );
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form .cr-qna-new-q-form-error').css( 'display', 'none' );
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form .cr-qna-new-q-form-input').css( 'display', 'block' );
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form').removeClass( 'cr-q-modal' );
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay').removeClass( 'cr-q-modal' );
-			jQuery("body").removeClass("cr-noscroll");
-		} );
-		jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form .cr-qna-new-q-form-close').on( "click", function (e) {
-			e.preventDefault();
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form .cr-qna-new-q-form-ok').css( 'display', 'none' );
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form .cr-qna-new-q-form-error').css( 'display', 'none' );
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form .cr-qna-new-q-form-input').css( 'display', 'block' );
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form').removeClass( 'cr-q-modal' );
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay').removeClass( 'cr-q-modal' );
-			jQuery("body").removeClass("cr-noscroll");
-		} );
-		jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form').on( "click", function (e) {
-			e.stopPropagation();
-		} );
-		jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form .cr-qna-new-q-form-q, #cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form .cr-qna-new-q-form-name, #cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form .cr-qna-new-q-form-email').on( "input", function (e) {
-			jQuery(this).addClass( 'cr-qna-new-q-form-notinit' );
-			crValidateQna( jQuery( this ) );
-		} );
-		jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form .cr-qna-new-q-form-input .cr-qna-new-q-form-s-b').on( "click", function (e) {
-			if( crValidateQnaHelper( jQuery( this ) ) ) {
-				var cr_cptcha = jQuery(this).attr("data-crcptcha");
-				if( cr_cptcha && cr_cptcha.length > 0 ) {
-					grecaptcha.ready(function() {
-						grecaptcha.execute(cr_cptcha, {action: 'submit'}).then(function(token) {
-							crNewQna(token)
-						});
-					});
-				} else {
-					crNewQna('');
-				}
+			let parent = jQuery(this).parents(".review-content");
+			if ( 0 === parent.length ) {
+				parent = jQuery(this).parents(".cr-grid-reply-content");
 			}
+			parent.find(".cr-grid-details").hide();
+			parent.find(".cr-grid-read-more").css("display", "inline");
 		} );
-		jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form .cr-qna-new-q-form-ok .cr-qna-new-q-form-s-b').on( "click", function (e) {
+		jQuery('.cr-qna-block .cr-qna-search-block .cr-qna-ask-button').on( 'click', function (e) {
 			e.preventDefault();
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form .cr-qna-new-q-form-ok').css( 'display', 'none' );
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form .cr-qna-new-q-form-error').css( 'display', 'none' );
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form .cr-qna-new-q-form-input').css( 'display', 'block' );
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form').removeClass( 'cr-q-modal' );
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay').removeClass( 'cr-q-modal' );
-			jQuery("body").removeClass("cr-noscroll");
+			jQuery( this ).closest( '.cr-qna-block' ).addClass( 'cr-qna-new-q-form-open' );
+		} );
+		jQuery(".cr-qna-block .cr-qna-list-block").on( "click", ".cr-qna-ans-button", function (e) {
+			e.preventDefault();
+
+			let nameField = jQuery( this ).closest( '.cr-qna-block' ).find( ".cr-qna-new-q-form .cr-review-form-name" );
+			let nameValue = nameField.find( ".cr-review-form-txt" ).data("defval");
+			jQuery( this ).closest( '.cr-qna-list-q-b' ).find( ".cr-qna-list-inl-answ .cr-review-form-name .cr-review-form-txt" ).val( nameValue );
+
+			let emailField = jQuery( this ).closest( '.cr-qna-block' ).find( ".cr-qna-new-q-form .cr-review-form-email" );
+			let emailValue = emailField.find( ".cr-review-form-txt" ).data("defval");
+			jQuery( this ).closest( '.cr-qna-list-q-b' ).find( ".cr-qna-list-inl-answ .cr-review-form-email .cr-review-form-txt" ).val( emailValue );
+
+			jQuery( this ).closest( '.cr-qna-list-q-b' ).addClass( 'cr-qna-ans-form-open' );
 		} );
 		//show more questions and answers
-		jQuery("#cr_qna.cr-qna-block #cr-show-more-q-id").on( "click", function(t) {
+		jQuery(".cr-qna-block").on( "click", ".cr-show-more-que", function(t) {
 			t.preventDefault();
 			let qna_block = jQuery(this).parents(".cr-qna-block").eq(0);
 			let cr_product_id = jQuery(this).attr("data-product");
 			let cr_page = jQuery(this).attr("data-page");
 			let cr_attributes = qna_block.data("attributes");
 			let cr_search = qna_block.find(".cr-ajax-qna-search input").val();
+			let cr_permalink = jQuery(this).attr("data-permalink");
 			let cr_data = {
 				"action": "cr_show_more_qna",
 				"productID": cr_product_id,
 				"page": cr_page,
+				"permalink": cr_permalink,
 				"search": cr_search,
 				"cr_attributes": cr_attributes
 			};
@@ -699,46 +667,46 @@
 			jQuery(this).hide();
 			qna_block.find("#cr-show-more-q-spinner").show();
 			jQuery.post(cr_ajax_object.ajax_url, cr_data, function(response) {
-				jQuery("#cr_qna.cr-qna-block #cr-show-more-q-spinner").hide();
+				jQuery(".cr-qna-block #cr-show-more-q-spinner").hide();
 				if(response.page >= 0){
-					jQuery("#cr_qna.cr-qna-block .cr-qna-list-block .cr-qna-list-block-inner").append(response.html);
-					jQuery("#cr_qna.cr-qna-block #cr-show-more-q-id").attr("data-page",response.page);
+					jQuery(".cr-qna-block .cr-qna-list-block .cr-qna-list-block-inner").append(response.html);
+					jQuery(".cr-qna-block #cr-show-more-q-id").attr("data-page",response.page);
 					if(!response.last_page){
-						jQuery("#cr_qna.cr-qna-block #cr-show-more-q-id").show();
+						jQuery(".cr-qna-block #cr-show-more-q-id").show();
 					}
 				}
 				if(response.html === "" && response.page === 0){
-					jQuery("#cr_qna.cr-qna-block .cr-search-no-qna").show();
+					jQuery(".cr-qna-block .cr-search-no-qna").show();
 				}
 			}, "json");
 		} );
 		//search questions and answers
-		jQuery("#cr_qna.cr-qna-block .cr-ajax-qna-search input").on("keyup", cr_keyup_delay(function(e) {
+		jQuery(".cr-qna-block .cr-ajax-qna-search input").on("keyup", cr_keyup_delay(function(e) {
 			// do nothing if it's an arrow key
 			var code = (e.keyCode || e.which);
 			if(code == 37 || code == 38 || code == 39 || code == 40) {
 				return;
 			}
-			jQuery("#cr_qna.cr-qna-block #cr-show-more-q-id").attr("data-page", -1);
-			jQuery("#cr_qna.cr-qna-block .cr-qna-list-block .cr-qna-list-block-inner").empty();
-			jQuery("#cr_qna.cr-qna-block #cr-show-more-q-id").trigger("click");
+			jQuery(".cr-qna-block #cr-show-more-q-id").attr("data-page", -1);
+			jQuery(".cr-qna-block .cr-qna-list-block .cr-qna-list-block-inner").empty();
+			jQuery(".cr-qna-block #cr-show-more-q-id").trigger("click");
 		}, 500));
-		jQuery("#cr_qna.cr-qna-block .cr-ajax-qna-search input").on("keyup", function(e){
+		jQuery(".cr-qna-block .cr-ajax-qna-search input").on("keyup", function(e){
 			//show clear icon
 			if(jQuery(this).val() !== "") {
-				jQuery("#cr_qna.cr-qna-block .cr-ajax-qna-search .cr-clear-input").css("display", "inline-block");
+				jQuery(".cr-qna-block .cr-ajax-qna-search .cr-clear-input").css("display", "inline-block");
 			} else {
-				if(jQuery(this).val() === "") jQuery("#cr_qna.cr-qna-block .cr-ajax-qna-search .cr-clear-input").hide();
+				if(jQuery(this).val() === "") jQuery(".cr-qna-block .cr-ajax-qna-search .cr-clear-input").hide();
 			}
 		}).on("change", function(){
-			if(jQuery(this).val() === "") jQuery("#cr_qna.cr-qna-block .cr-ajax-qna-search .cr-clear-input").hide();
+			if(jQuery(this).val() === "") jQuery(".cr-qna-block .cr-ajax-qna-search .cr-clear-input").hide();
 		});
-		jQuery("#cr_qna.cr-qna-block .cr-ajax-qna-search .cr-clear-input").on("click", function () {
+		jQuery(".cr-qna-block .cr-ajax-qna-search .cr-clear-input").on("click", function () {
 			jQuery(this).prev("input").val("");
-			jQuery("#cr_qna.cr-qna-block .cr-ajax-qna-search .cr-clear-input").hide();
-			jQuery("#cr_qna.cr-qna-block #cr-show-more-q-id").attr("data-page", -1);
-			jQuery("#cr_qna.cr-qna-block .cr-qna-list-block .cr-qna-list-block-inner").empty();
-			jQuery("#cr_qna.cr-qna-block #cr-show-more-q-id").trigger("click");
+			jQuery(".cr-qna-block .cr-ajax-qna-search .cr-clear-input").hide();
+			jQuery(".cr-qna-block #cr-show-more-q-id").attr("data-page", -1);
+			jQuery(".cr-qna-block .cr-qna-list-block .cr-qna-list-block-inner").empty();
+			jQuery(".cr-qna-block #cr-show-more-q-id").trigger("click");
 		});
 		//show QnA tab
 		jQuery("body").on("click", "a.cr-qna-link", function () {
@@ -903,7 +871,8 @@
 		});
 
 		// update star rating on an add-a-review form hover
-		jQuery( ".cr-review-form-rating .cr-review-form-rating-inner" ).hover(
+		jQuery( ".cr-review-form-rating .cr-review-form-rating-inner" ).on(
+			"mouseenter",
 			function() {
 				let rating = parseInt( jQuery( this ).data( "rating" ) );
 				let ratingActv = parseInt( jQuery( this ).closest( ".cr-review-form-rating-cont" ).find( ".cr-review-form-rating-actv" ).data( "rating" ) );
@@ -920,7 +889,9 @@
 					}
 				}
 				jQuery( this ).closest( ".cr-review-form-rating-cont" ).find( ".cr-review-form-rating-nbr" ).text( rating + "/5" );
-			},
+			}
+		).on(
+			"mouseleave",
 			function() {
 				let ratingActv = parseInt( jQuery( this ).closest( ".cr-review-form-rating-cont" ).find( ".cr-review-form-rating-actv" ).data( "rating" ) );
 				if( isNaN( ratingActv ) ) {
@@ -969,6 +940,8 @@
 			jQuery( this ).closest( ".cr-all-reviews-shortcode" ).removeClass( "cr-all-reviews-new-review" );
 			jQuery( this ).closest( ".cr-review-form-wrap" ).removeClass( "cr-review-form-res" );
 			cr_reset_review_form( jQuery( this ) );
+			// reload the page
+			window.location.reload();
 		} );
 		jQuery( ".cr-review-form-wrap" ).on( "click", ".cr-review-form-error", function( e ) {
 			jQuery( this ).closest( ".cr-review-form-wrap" ).removeClass( "cr-review-form-res" );
@@ -984,6 +957,11 @@
 			jQuery(this).closest(".cr-reviews-ajax-reviews").find(".cr-ajax-reviews-review-form").hide();
 			jQuery( this ).closest( ".cr-review-form-wrap" ).removeClass( "cr-review-form-res" );
 			cr_reset_review_form( jQuery( this ) );
+			// reload the page
+			if ( window.location.hash !== '#reviews' ) {
+				window.location.href = window.location.pathname + '#reviews';
+			}
+			window.location.reload();
 		} );
 		jQuery( ".cr-reviews-grid .cr-nav-left svg, .cr-reviews-grid .cr-nav-right svg, .cr-reviews-grid .cr-review-form-cancel" ).on( "click", function( e ) {
 			jQuery( this ).closest( ".cr-reviews-grid" ).removeClass( "cr-reviews-grid-new-review" );
@@ -994,6 +972,35 @@
 			jQuery( this ).closest( ".cr-reviews-grid" ).removeClass( "cr-reviews-grid-new-review" );
 			jQuery( this ).closest( ".cr-review-form-wrap" ).removeClass( "cr-review-form-res" );
 			cr_reset_review_form( jQuery( this ) );
+			// reload the page
+			window.location.reload();
+		} );
+		// close the qna form
+		jQuery( ".cr-qna-block" ).on( "click", ".cr-qna-new-q-form .cr-nav-left svg, .cr-qna-new-q-form .cr-nav-right svg, .cr-qna-new-q-form .cr-review-form-cancel", function( e ) {
+			jQuery( this ).closest( ".cr-qna-block" ).removeClass( "cr-qna-new-q-form-open" );
+			jQuery( this ).closest( ".cr-qna-new-q-form" ).removeClass( "cr-review-form-res" );
+			cr_reset_qna_form( jQuery( this ) );
+		} );
+		jQuery( ".cr-qna-block" ).on( "click", ".cr-qna-new-q-form .cr-review-form-success", function( e ) {
+			jQuery( this ).closest( ".cr-qna-block" ).removeClass( "cr-qna-new-q-form-open" );
+			jQuery( this ).closest( ".cr-qna-new-q-form" ).removeClass( "cr-review-form-res" );
+			cr_reset_qna_form( jQuery( this ) );
+		} );
+		jQuery( ".cr-qna-block" ).on( "click", ".cr-qna-new-q-form .cr-review-form-error", function( e ) {
+			jQuery( this ).closest( ".cr-qna-new-q-form" ).removeClass( "cr-review-form-res" );
+		} );
+		jQuery( ".cr-qna-block" ).on( "click", ".cr-qna-list-inl-answ .cr-nav-left svg, .cr-qna-list-inl-answ .cr-nav-right svg, .cr-qna-list-inl-answ .cr-review-form-cancel", function( e ) {
+			jQuery( this ).closest( ".cr-qna-list-q-b" ).removeClass( "cr-qna-ans-form-open" );
+			jQuery( this ).closest( ".cr-qna-list-inl-answ" ).removeClass( "cr-review-form-res" );
+			cr_reset_ans_form( jQuery( this ) );
+		} );
+		jQuery( ".cr-qna-block" ).on( "click", ".cr-qna-list-inl-answ .cr-review-form-success", function( e ) {
+			jQuery( this ).closest( ".cr-qna-list-q-b" ).removeClass( "cr-qna-ans-form-open" );
+			jQuery( this ).closest( ".cr-qna-list-inl-answ" ).removeClass( "cr-review-form-res" );
+			cr_reset_ans_form( jQuery( this ) );
+		} );
+		jQuery( ".cr-qna-block" ).on( "click", ".cr-qna-list-inl-answ .cr-review-form-error", function( e ) {
+			jQuery( this ).closest( ".cr-qna-list-inl-answ" ).removeClass( "cr-review-form-res" );
 		} );
 
 		// submit the review form
@@ -1053,6 +1060,12 @@
 						data: cr_data,
 						context: jQuery( this ),
 						success: function( response ) {
+							if ( ! Object.hasOwn( response, 'button' ) ) {
+								response.button = 'OK';
+							}
+							if ( ! Object.hasOwn( response, 'description' ) ) {
+								response.description = 'An unexpected error that could be caused by a third-party plugin';
+							}
 							this.closest( ".cr-review-form-wrap" ).removeClass( "cr-review-form-submitting" );
 							this.closest( ".cr-review-form-wrap" ).addClass( "cr-review-form-res" );
 							this.closest( ".cr-review-form-wrap" ).find( ".cr-review-form-result span" ).html( response.description );
@@ -1066,6 +1079,122 @@
 						dataType: "json"
 					}
 				);
+			};
+		} );
+
+		// submit a new question
+		jQuery( ".cr-qna-block .cr-qna-new-q-form" ).on( "click", ".cr-review-form-submit", function( e ) {
+			jQuery( this ).closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-comment" ).removeClass( "cr-review-form-error" );
+			jQuery( this ).closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-name" ).removeClass( "cr-review-form-error" );
+			jQuery( this ).closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-email" ).removeClass( "cr-review-form-error" );
+			jQuery( this ).closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-terms" ).removeClass( "cr-review-form-error" );
+			if( cr_validate_qna( jQuery( this ) ) ) {
+				// submit the form if the validation is successful
+				let cr_data = {
+					"action": "cr_new_qna",
+					"crNonce": jQuery( this ).closest( ".cr-qna-block" ).data( "nonce" ),
+					"currentPostID": jQuery( this ).closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-item-id" ).val(),
+					"text": jQuery( this ).closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-comment-txt" ).val().trim(),
+					"name": jQuery( this ).closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-name .cr-review-form-txt" ).val().trim(),
+					"email": jQuery( this ).closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-email .cr-review-form-txt" ).val().trim()
+				};
+				jQuery( this ).closest( ".cr-qna-new-q-form" ).addClass( "cr-review-form-submitting" );
+				jQuery( this ).closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-continue" ).removeClass( "cr-review-form-success" );
+				jQuery( this ).closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-continue" ).removeClass( "cr-review-form-error" );
+				//
+				const postQuestion = ( token, data, ref ) => {
+					data.cptcha = token;
+					jQuery.post(
+						{
+							url: cr_ajax_object.ajax_url,
+							data: data,
+							context: jQuery( ref ),
+							success: function( response ) {
+								this.closest( ".cr-qna-new-q-form" ).removeClass( "cr-review-form-submitting" );
+								this.closest( ".cr-qna-new-q-form" ).addClass( "cr-review-form-res" );
+								this.closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-result span" ).html( response.description );
+								this.closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-continue" ).html( response.button );
+								if( 0 === response.code ) {
+									this.closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-continue" ).addClass( "cr-review-form-success" );
+								} else {
+									this.closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-continue" ).addClass( "cr-review-form-error" );
+								}
+							},
+							dataType: "json"
+						}
+					);
+				};
+				//
+				let cr_cptcha = jQuery(this).attr("data-crcptcha");
+				var rf = this;
+				if ( cr_cptcha && cr_cptcha.length > 0 ) {
+					grecaptcha.ready(function() {
+						grecaptcha.execute( cr_cptcha, {action: 'submit'} ).then( function(token) {
+							postQuestion( token, cr_data, rf )
+						} );
+					} );
+				} else {
+					postQuestion( '', cr_data, rf );
+				}
+			};
+		} );
+
+		// submit a new answer
+		jQuery( ".cr-qna-block" ).on( "click", ".cr-qna-list-inl-answ .cr-review-form-submit", function( e ) {
+			jQuery( this ).closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-comment" ).removeClass( "cr-review-form-error" );
+			jQuery( this ).closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-name" ).removeClass( "cr-review-form-error" );
+			jQuery( this ).closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-email" ).removeClass( "cr-review-form-error" );
+			jQuery( this ).closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-terms" ).removeClass( "cr-review-form-error" );
+			if( cr_validate_ans( jQuery( this ) ) ) {
+				// submit the form if the validation is successful
+				let cr_data = {
+					"action": "cr_new_qna",
+					"crNonce": jQuery( this ).closest( ".cr-qna-block" ).data( "nonce" ),
+					"currentPostID": jQuery( this ).closest( ".cr-qna-block" ).find( ".cr-review-form-item-id" ).val(),
+					"questionID": jQuery( this ).closest( ".cr-qna-list-q-b" ).data( "question" ),
+					"productID": jQuery( this ).closest( ".cr-qna-list-q-b" ).data( "post" ),
+					"text": jQuery( this ).closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-comment-txt" ).val().trim(),
+					"name": jQuery( this ).closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-name .cr-review-form-txt" ).val().trim(),
+					"email": jQuery( this ).closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-email .cr-review-form-txt" ).val().trim()
+				};
+				jQuery( this ).closest( ".cr-qna-list-inl-answ" ).addClass( "cr-review-form-submitting" );
+				jQuery( this ).closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-continue" ).removeClass( "cr-review-form-success" );
+				jQuery( this ).closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-continue" ).removeClass( "cr-review-form-error" );
+				//
+				const postQuestion = ( token, data, ref ) => {
+					data.cptcha = token;
+					jQuery.post(
+						{
+							url: cr_ajax_object.ajax_url,
+							data: data,
+							context: jQuery( ref ),
+							success: function( response ) {
+								this.closest( ".cr-qna-list-inl-answ" ).removeClass( "cr-review-form-submitting" );
+								this.closest( ".cr-qna-list-inl-answ" ).addClass( "cr-review-form-res" );
+								this.closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-result span" ).html( response.description );
+								this.closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-continue" ).html( response.button );
+								if( 0 === response.code ) {
+									this.closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-continue" ).addClass( "cr-review-form-success" );
+								} else {
+									this.closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-continue" ).addClass( "cr-review-form-error" );
+								}
+							},
+							dataType: "json"
+						}
+					);
+				};
+				//
+				let cr_cptcha = jQuery(this).attr("data-crcptcha");
+				var rf = this;
+				if ( cr_cptcha && cr_cptcha.length > 0 && grecaptcha ) {
+					grecaptcha.ready(function() {
+						grecaptcha.execute( cr_cptcha, {action: 'submit'} ).then( function(token) {
+							postQuestion( token, cr_data, rf )
+						} );
+					} );
+				} else {
+					postQuestion( '', cr_data, rf );
+				}
 			};
 		} );
 
@@ -1309,6 +1438,12 @@
 
 	} );
 
+	const crValidateEmail = (email) => {
+		return email.match(
+			/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+		);
+	};
+
 	function initVoteClick(sel1, sel2, action) {
 		jQuery(sel1).on("click", sel2, function(e) {
 			e.preventDefault();
@@ -1344,84 +1479,6 @@
 				}, "json");
 			}
 		});
-	}
-
-	function crValidateQnaHelper( refElement ) {
-		let ret = true;
-		let modal = refElement.closest( '.cr-qna-block' ).find( '.cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal' );
-		if( modal.find( '.cr-qna-new-q-form-q' ).val().trim().length <= 0 ) {
-			modal.find( '.cr-qna-new-q-form-q' ).addClass( 'cr-qna-new-q-form-invalid' );
-			ret = false;
-		} else {
-			modal.find( '.cr-qna-new-q-form-q' ).removeClass( 'cr-qna-new-q-form-invalid' );
-		}
-		if( modal.find( '.cr-qna-new-q-form-name' ).val().trim().length <= 0 ) {
-			modal.find( '.cr-qna-new-q-form-name' ).addClass( 'cr-qna-new-q-form-invalid' );
-			ret = false;
-		} else {
-			modal.find( '.cr-qna-new-q-form-name' ).removeClass( 'cr-qna-new-q-form-invalid' );
-		}
-		if( ! crValidateEmail( modal.find( '.cr-qna-new-q-form-email' ).val().trim() ) ) {
-			modal.find( '.cr-qna-new-q-form-email' ).addClass( 'cr-qna-new-q-form-invalid' );
-			ret = false;
-		} else {
-			modal.find( '.cr-qna-new-q-form-email' ).removeClass( 'cr-qna-new-q-form-invalid' );
-		}
-		return ret;
-	}
-
-	function crValidateQna( refElement ) {
-		if( crValidateQnaHelper( refElement ) ) {
-			refElement.closest( '.cr-qna-block' ).find( '.cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-s button.cr-qna-new-q-form-s-b' ).addClass( 'cr-q-active' );
-		} else {
-			refElement.closest( '.cr-qna-block' ).find( '.cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-s button.cr-qna-new-q-form-s-b' ).removeClass( 'cr-q-active' );
-		}
-	}
-
-	function crValidateEmail(email) {
-		var re = /\S+@\S+\.\S+/;
-		return re.test(email);
-	}
-
-	function crNewQna(token) {
-		var cr_nonce = jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-input .cr-qna-new-q-form-s-b').attr("data-nonce");
-		var cr_post_id = jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-input .cr-qna-new-q-form-s-b').attr("data-post");
-		var cr_current_post_id = jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-input .cr-qna-new-q-form-s-b').attr("data-product");
-		var cr_text = jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-q').val().trim();
-		var cr_name = jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-name').val().trim();
-		var cr_email = jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-email').val().trim();
-		var cr_question_id = jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-input .cr-qna-new-q-form-s-b').attr("data-question");
-		var cr_data = {
-			"action": "cr_new_qna",
-			"productID": cr_post_id,
-			"currentPostID": cr_current_post_id,
-			"questionID": cr_question_id,
-			"text": cr_text,
-			"name": cr_name,
-			"email": cr_email,
-			"security": cr_nonce,
-			"cptcha": token
-		};
-		jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-input .cr-qna-new-q-form-s-b').css( 'display', 'none' );
-		jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-input .cr-qna-new-q-form-s-p').css( 'display', 'inline-block' );
-		jQuery.post(cr_ajax_object.ajax_url, cr_data, function(response) {
-			if( 0 === response.code ) {
-				jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-error').css( 'display', 'none' );
-				jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-input').css( 'display', 'none' );
-				jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-ok').css( 'display', 'block' );
-			} else {
-				if( response.description && response.description.length > 0 ) {
-					jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-error p.cr-qna-new-q-form-text span.cr-qna-new-q-form-text-additional').text( response.description );
-				}
-				jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-ok').css( 'display', 'none' );
-				jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-input').css( 'display', 'none' );
-				jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-error').css( 'display', 'block' );
-			}
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-q').val('');
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-q, #cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form .cr-qna-new-q-form-name, #cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form .cr-qna-new-q-form-email').removeClass( 'cr-qna-new-q-form-notinit' );
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-input .cr-qna-new-q-form-s-b').css( 'display', 'inline-block' );
-			jQuery('#cr_qna.cr-qna-block .cr-qna-new-q-overlay .cr-qna-new-q-form.cr-q-modal .cr-qna-new-q-form-input .cr-qna-new-q-form-s-p').css( 'display', 'none' );
-		}, "json");
 	}
 
 	function cr_keyup_delay(fn, ms) {
@@ -1562,12 +1619,6 @@
 	}
 
 	function cr_validate_review_form( submitBtn ) {
-		const validateEmail = (email) => {
-			return email.match(
-				/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-			);
-		};
-
 		let validationResult = true;
 
 		submitBtn.closest( ".cr-review-form-wrap" ).find( ".cr-review-form-rating-cont.cr-review-form-rating-req" ).each( function( index ) {
@@ -1584,7 +1635,7 @@
 			submitBtn.closest( ".cr-review-form-wrap" ).find( ".cr-review-form-name" ).addClass( "cr-review-form-error" );
 			validationResult = false;
 		}
-		if( ! validateEmail( submitBtn.closest( ".cr-review-form-wrap" ).find( ".cr-review-form-email .cr-review-form-txt" ).val().trim() ) ) {
+		if( ! crValidateEmail( submitBtn.closest( ".cr-review-form-wrap" ).find( ".cr-review-form-email .cr-review-form-txt" ).val().trim() ) ) {
 			submitBtn.closest( ".cr-review-form-wrap" ).find( ".cr-review-form-email" ).addClass( "cr-review-form-error" );
 			validationResult = false;
 		}
@@ -1647,6 +1698,52 @@
 		return validationResult;
 	}
 
+	function cr_validate_qna( submitBtn ) {
+		let validationResult = true;
+		if( 1 > submitBtn.closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-comment-txt" ).val().trim().length ) {
+			submitBtn.closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-comment" ).addClass( "cr-review-form-error" );
+			validationResult = false;
+		}
+		if( 1 > submitBtn.closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-name .cr-review-form-txt" ).val().trim().length ) {
+			submitBtn.closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-name" ).addClass( "cr-review-form-error" );
+			validationResult = false;
+		}
+		if( ! crValidateEmail( submitBtn.closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-email .cr-review-form-txt" ).val().trim() ) ) {
+			submitBtn.closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-email" ).addClass( "cr-review-form-error" );
+			validationResult = false;
+		}
+		if ( 0 < submitBtn.closest( ".cr-qna-new-q-form" ).find( '.cr-review-form-terms' ).length ) {
+			if ( ! submitBtn.closest( ".cr-qna-new-q-form" ).find( '.cr-review-form-terms .cr-review-form-checkbox' ).is(':checked') ) {
+				submitBtn.closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-terms" ).addClass( "cr-review-form-error" );
+				validationResult = false;
+			}
+		}
+		return validationResult;
+	}
+
+	function cr_validate_ans( submitBtn ) {
+		let validationResult = true;
+		if( 1 > submitBtn.closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-comment-txt" ).val().trim().length ) {
+			submitBtn.closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-comment" ).addClass( "cr-review-form-error" );
+			validationResult = false;
+		}
+		if( 1 > submitBtn.closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-name .cr-review-form-txt" ).val().trim().length ) {
+			submitBtn.closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-name" ).addClass( "cr-review-form-error" );
+			validationResult = false;
+		}
+		if( ! crValidateEmail( submitBtn.closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-email .cr-review-form-txt" ).val().trim() ) ) {
+			submitBtn.closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-email" ).addClass( "cr-review-form-error" );
+			validationResult = false;
+		}
+		if ( 0 < submitBtn.closest( ".cr-qna-list-inl-answ" ).find( '.cr-review-form-terms' ).length ) {
+			if ( ! submitBtn.closest( ".cr-qna-list-inl-answ" ).find( '.cr-review-form-terms .cr-review-form-checkbox' ).is(':checked') ) {
+				submitBtn.closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-terms" ).addClass( "cr-review-form-error" );
+				validationResult = false;
+			}
+		}
+		return validationResult;
+	}
+
 	function cr_reset_review_form( refElement ) {
 		// reset the rating bar
 		refElement.closest( ".cr-review-form-wrap" ).find( ".cr-review-form-rating-cont .cr-review-form-rating-inner" ).removeClass( "cr-review-form-rating-actv" );
@@ -1672,6 +1769,11 @@
 		refElement.closest( ".cr-review-form-wrap" ).find( ".cr-onsite-questions .cr-onsite-question input[type = 'text']" ).val('');
 		refElement.closest( ".cr-review-form-wrap" ).find( ".cr-onsite-questions .cr-onsite-question input[type = 'number']" ).val('');
 
+		// reset the key custom questions
+		refElement.closest( ".cr-review-form-wrap" ).find( ".cr-onsite-key-question" ).removeClass( "cr-review-form-error" );
+		refElement.closest( ".cr-review-form-wrap" ).find( ".cr-onsite-key-question input[type = 'text']" ).val('');
+		refElement.closest( ".cr-review-form-wrap" ).find( ".cr-onsite-key-question input[type = 'number']" ).val('');
+
 		// reset the media files
 		refElement.closest( ".cr-review-form-wrap" ).find( ".cr-form-item-media .cr-upload-images-containers" ).remove();
 		refElement.closest( ".cr-review-form-wrap" ).find( ".cr-form-item-media .cr-form-item-media-preview" ).removeClass( "cr-form-visible" );
@@ -1683,6 +1785,46 @@
 
 		// reset recaptcha
 		refElement.closest( ".cr-review-form-wrap" ).find( ".cr-review-form-captcha" ).removeClass( "cr-review-form-error" );
+	}
+
+	function cr_reset_qna_form( refElement ) {
+		// reset the comment field
+		refElement.closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-comment-txt" ).val('');
+		refElement.closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-comment" ).removeClass( "cr-review-form-error" );
+
+		// reset the name field
+		const nameField = refElement.closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-name" );
+		nameField.find( ".cr-review-form-txt" ).val(nameField.find( ".cr-review-form-txt" ).data('defval'));
+		nameField.removeClass( "cr-review-form-error" );
+
+		// reset the email field
+		const emailField = refElement.closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-email" );
+		emailField.find( ".cr-review-form-txt" ).val(emailField.find( ".cr-review-form-txt" ).data('defval'));
+		emailField.removeClass( "cr-review-form-error" );
+
+		// reset the terms and conditions checkbox
+		refElement.closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-terms .cr-review-form-checkbox" ).prop( 'checked', false );
+		refElement.closest( ".cr-qna-new-q-form" ).find( ".cr-review-form-terms" ).removeClass( "cr-review-form-error" );
+	}
+
+	function cr_reset_ans_form( refElement ) {
+		// reset the comment field
+		refElement.closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-comment-txt" ).val("");
+		refElement.closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-comment" ).removeClass( "cr-review-form-error" );
+
+		// reset the name field
+		const nameField = refElement.closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-name" );
+		nameField.find( ".cr-review-form-txt" ).val("");
+		nameField.removeClass( "cr-review-form-error" );
+
+		// reset the email field
+		const emailField = refElement.closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-email" );
+		emailField.find( ".cr-review-form-txt" ).val("");
+		emailField.removeClass( "cr-review-form-error" );
+
+		// reset the terms and conditions checkbox
+		refElement.closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-terms .cr-review-form-checkbox" ).prop( 'checked', false );
+		refElement.closest( ".cr-qna-list-inl-answ" ).find( ".cr-review-form-terms" ).removeClass( "cr-review-form-error" );
 	}
 
 	function crDebounce(callback, wait) {
@@ -1763,8 +1905,8 @@
 
 })();
 
-function crResizeAllGridItems() {
-	jQuery(".cr-reviews-grid-inner").each( function() {
+function crResizeAllGridItemsUtil(grids) {
+	jQuery(grids).each( function() {
 		if(800 > jQuery(this).width()) {
 			jQuery(this).find(".cr-reviews-grid-col3").addClass("cr-reviews-grid-col-none");
 		}
@@ -1776,6 +1918,22 @@ function crResizeAllGridItems() {
 			items: ".cr-review-card"
 		} );
 	} );
+}
+
+function crResizeAllGridItems() {
+	if (
+		typeof Colcade !== "undefined" &&
+		typeof Colcade.makeJQueryPlugin !== "undefined" &&
+		typeof Colcade.makeJQueryPlugin === "function"
+	) {
+		if (
+			! typeof jQuery.fn.colcade === "function" ||
+			typeof jQuery.fn.colcade === "undefined"
+		) {
+			Colcade.makeJQueryPlugin();
+		}
+	}
+	crResizeAllGridItemsUtil( jQuery(".cr-reviews-grid-inner") );
 }
 
 function crResizeTrustBadges() {

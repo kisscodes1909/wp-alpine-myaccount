@@ -20,7 +20,7 @@ class WPO_Cache_Config {
 	/**
 	 * Instance of this class
 	 *
-	 * @var mixed
+	 * @var WPO_Cache_Config | null
 	 */
 	public static $instance;
 
@@ -45,24 +45,24 @@ class WPO_Cache_Config {
 	public function get() {
 
 		if (is_multisite()) {
-			$config = get_site_option('wpo_cache_config', $this->get_defaults());
+			$config = get_site_option('wpo_cache_config', $this->defaults);
 		} else {
-			$config = get_option('wpo_cache_config', $this->get_defaults());
+			$config = get_option('wpo_cache_config', $this->defaults);
 		}
 
-		return wp_parse_args($config, $this->get_defaults());
+		return wp_parse_args($config, $this->defaults);
 	}
 
 	/**
 	 * Get a specific configuration option
 	 *
 	 * @param string  $option_key The option identifier
-	 * @param boolean $default    Default value if the option doesn't exist (Default to false)
+	 * @param mixed $default    Default value if the option doesn't exist (Default to false)
 	 * @return mixed
 	 */
 	public function get_option($option_key, $default = false) {
 		$options = $this->get();
-		return apply_filters("wpo_option_key_{$option_key}", (isset($options[$option_key]) ? $options[$option_key] : $default));
+		return apply_filters("wpo_option_key_{$option_key}", ($options[$option_key] ?? $default));
 	}
 
 	/**
@@ -74,10 +74,17 @@ class WPO_Cache_Config {
 	 * @return true|WP_Error                        - returns true on success or WP_Error if the config cannot be written to disk
 	 */
 	public function update($config, $skip_disk_if_not_yet_present = false) {
-		$config = wp_parse_args($config, $this->get_defaults());
+		$config = wp_parse_args($config, $this->defaults);
 
 		$config['page_cache_length_value'] = intval($config['page_cache_length_value']);
 		$config['page_cache_length'] = $this->calculate_page_cache_length($config['page_cache_length_value'], $config['page_cache_length_unit']);
+		
+		$fields_to_trim = array('cache_exception_conditional_tags', 'cache_exception_urls', 'cache_ignore_query_variables', 'cache_exception_cookies', 'cache_exception_browser_agents');
+		foreach ($fields_to_trim as $field) {
+			if (!empty($config[$field]) && is_array($config[$field])) {
+				$config[$field] = array_map('trim', $config[$field]);
+			}
+		}
 
 		/**
 		 * Filters the cookies used to set cache file names
@@ -163,7 +170,7 @@ class WPO_Cache_Config {
 
 		$config_file = $this->get_config_file_path();
 
-		$this->config = wp_parse_args($config, $this->get_defaults());
+		$this->config = wp_parse_args($config, $this->defaults);
 
 		// from 3.0.17 we use more secure way to store cache config files.
 		$advanced_cache_version = WPO_Page_Cache::instance()->get_advanced_cache_version();
@@ -172,17 +179,26 @@ class WPO_Cache_Config {
 		// we write the cache config in a new format.
 		if (($advanced_cache_version && (version_compare($advanced_cache_version, '3.0.17', '>='))) || !$advanced_cache_version) {
 			// Apply the encoding required for placing within PHP single quotes - https://www.php.net/manual/en/language.types.string.php#language.types.string.syntax.single
-			$json_encoded_string = str_replace(array('\\', "'"), array('\\\\', '\\\''), json_encode($this->config));
+			$json_encoded_string = str_replace(array('\\', "'"), array('\\\\', '\\\''), wp_json_encode($this->config));
 
 			$config_content = '<?php' . "\n"
 				. 'if (!defined(\'ABSPATH\')) die(\'No direct access allowed\');' . "\n\n"
 				. '$GLOBALS[\'wpo_cache_config\'] = json_decode(\'' . $json_encoded_string . '\', true);' . "\n";
 		} else {
-			$config_content = json_encode($this->config);
+			$config_content = wp_json_encode($this->config);
 		}
 
-		if ((!$only_if_present || file_exists($config_file)) && (!is_writable(WPO_CACHE_CONFIG_DIR) || !file_put_contents($config_file, $config_content))) {
-			return new WP_Error('write_cache_config', sprintf(__('The cache configuration file could not be saved to the disk; please check the file/folder permissions of %s .', 'wp-optimize'), $config_file));
+		if ((!$only_if_present || file_exists($config_file)) && (!wp_is_writable(WPO_CACHE_CONFIG_DIR) || !file_put_contents($config_file, $config_content))) {
+			// If translations are already loaded, use the translated string
+			if (is_textdomain_loaded('wp-optimize')) {
+				/* translators: %s is the path to the cache config file */
+				$message = sprintf(__('The cache configuration file could not be saved to the disk; please check the file/folder permissions of %s .', 'wp-optimize'), $config_file);
+			} else {
+				// Fallback to plain English string to avoid triggering premature translation loading
+				$message = sprintf('The cache configuration file could not be saved to the disk; please check the file/folder permissions of %s .', $config_file);
+			}
+
+			return new WP_Error('write_cache_config', $message);
 		}
 
 		return true;
@@ -205,30 +221,36 @@ class WPO_Cache_Config {
 	public function get_defaults() {
 		
 		$defaults = array(
-			'enable_page_caching'						=> false,
-			'page_cache_length_value'					=> 24,
-			'page_cache_length_unit'					=> 'hours',
-			'page_cache_length'							=> 86400,
-			'cache_exception_conditional_tags'			=> array(),
-			'cache_exception_urls'						=> array(),
-			'cache_exception_cookies'					=> array(),
-			'cache_exception_browser_agents'			=> array(),
-			'enable_sitemap_preload'					=> false,
-			'enable_schedule_preload'					=> false,
-			'preload_schedule_type'						=> '',
-			'enable_mobile_caching'						=> false,
-			'enable_user_caching'						=> false,
-			'site_url'									=> network_home_url('/'),
-			'enable_cache_per_country'					=> false,
-			'enable_cache_aelia_currency'				=> false,
-			'permalink_structure'						=> get_option('permalink_structure'),
-			'uploads'									=> wp_normalize_path(wp_upload_dir()['basedir']),
-			'gmt_offset'								=> get_option('gmt_offset'),
-			'timezone_string'                           => get_option('timezone_string'),
-			'date_format'                               => get_option('date_format'),
-			'time_format'                               => get_option('time_format'),
-			'use_webp_images'						    => false,
-			'auto_preload_purged_contents'				=> true
+			'enable_page_caching'              => false,
+			'page_cache_length_value'          => 24,
+			'page_cache_length_unit'           => 'hours',
+			'page_cache_length'                => 86400,
+			'cache_exception_conditional_tags' => array(),
+			'cache_specific_urls_only'        => false,
+			'cache_include_urls'               => array(),
+			'cache_exception_urls'             => array(),
+			'cache_ignore_query_variables' 	   => array(),
+			'cache_exception_cookies'          => array(),
+			'cache_exception_browser_agents'   => array(),
+			'enable_sitemap_preload'           => false,
+			'enable_schedule_preload'          => false,
+			'preload_schedule_type'            => '',
+			'enable_mobile_caching'            => false,
+			'enable_user_caching'              => false,
+			'site_url'                         => network_home_url('/'),
+			'enable_cache_per_country'         => false,
+			'enable_cache_aelia_currency'      => false,
+			'permalink_structure'              => get_option('permalink_structure'),
+			'uploads'                          => wp_normalize_path(wp_upload_dir()['basedir']),
+			'gmt_offset'                       => get_option('gmt_offset'),
+			'timezone_string'                  => get_option('timezone_string'),
+			'date_format'                      => get_option('date_format'),
+			'time_format'                      => get_option('time_format'),
+			'use_webp_images'                  => false,
+			'show_avatars'                     => 0,
+			'host_gravatars_locally'           => 0,
+			'auto_preload_purged_contents'     => true,
+			'enable_rest_caching'              => false,
 		);
 
 		return apply_filters('wpo_cache_defaults', $defaults);
@@ -240,9 +262,9 @@ class WPO_Cache_Config {
 	 * @return string
 	 */
 	public function get_cache_config_filename() {
-		$url = parse_url(network_site_url());
+		$url = wp_parse_url(network_site_url());
 
-		if (isset($url['port']) && '' != $url['port'] && 80 != $url['port']) {
+		if (isset($url['port']) && '' !== (string) $url['port'] && 80 !== $url['port']) {
 			return 'config-'.strtolower($url['host']).'-port'.$url['port'].'.php';
 		} else {
 			return 'config-'.strtolower($url['host']).'.php';

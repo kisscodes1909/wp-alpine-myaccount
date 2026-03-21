@@ -97,7 +97,7 @@ class BulkDocument {
 
 		// temporarily apply filters that need to be removed again after the pdf is generated
 		$pdf_filters = apply_filters( 'wpo_wcpdf_pdf_filters', array(), $this );
-		$this->add_filters( $pdf_filters );
+		\wpo_ips_add_filters( $pdf_filters );
 
 		$html = $this->get_html();
 		$pdf_settings = array(
@@ -111,7 +111,7 @@ class BulkDocument {
 		do_action( 'wpo_wcpdf_after_pdf', $this->get_type(), $this );
 
 		// remove temporary filters
-		$this->remove_filters( $pdf_filters );
+		\wpo_ips_remove_filters( $pdf_filters );
 
 		return $pdf;
 	}
@@ -119,7 +119,7 @@ class BulkDocument {
 	public function get_html() {
 		// temporarily apply filters that need to be removed again after the html is generated
 		$html_filters = apply_filters( 'wpo_wcpdf_html_filters', array(), $this );
-		$this->add_filters( $html_filters );
+		\wpo_ips_add_filters( $html_filters );
 
 		do_action( 'wpo_wcpdf_before_html', $this->get_type(), $this );
 
@@ -138,10 +138,15 @@ class BulkDocument {
 		$this->wrapper_document = wcpdf_get_document( $this->get_type(), null );
 		$html = $this->wrapper_document->wrap_html_content( $this->merge_documents( $html_content ) );
 
+		// clean up special characters
+		if ( apply_filters( 'wpo_wcpdf_convert_encoding', function_exists( 'htmlspecialchars_decode' ) ) ) {
+			$html = htmlspecialchars_decode( wcpdf_convert_encoding( $html ), ENT_QUOTES );
+		}
+
 		do_action( 'wpo_wcpdf_after_html', $this->get_type(), $this );
 
 		// remove temporary filters
-		$this->remove_filters( $html_filters );
+		\wpo_ips_remove_filters( $html_filters );
 
 		return $html;
 	}
@@ -157,12 +162,12 @@ class BulkDocument {
 	public function output_pdf( $output_mode = 'download' ) {
 		$pdf = $this->get_pdf();
 		wcpdf_pdf_headers( $this->get_filename(), $output_mode, $pdf );
-		echo $pdf;
+		echo $pdf; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		die();
 	}
 
 	public function output_html() {
-		echo $this->get_html();
+		echo $this->get_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		die();
 	}
 
@@ -179,26 +184,18 @@ class BulkDocument {
 	}
 
 	protected function add_filters( $filters ) {
-		foreach ( $filters as $filter ) {
-			$filter = $this->normalize_filter_args( $filter );
-			add_filter( $filter['hook_name'], $filter['callback'], $filter['priority'], $filter['accepted_args'] );
-		}
+		\wcpdf_deprecated_function( __FUNCTION__, '5.0.0', 'wpo_ips_add_filters' );
+		return wpo_ips_add_filters( $filters );
 	}
 
 	protected function remove_filters( $filters ) {
-		foreach ( $filters as $filter ) {
-			$filter = $this->normalize_filter_args( $filter );
-			remove_filter( $filter['hook_name'], $filter['callback'], $filter['priority'] );
-		}
+		\wcpdf_deprecated_function( __FUNCTION__, '5.0.0', 'wpo_ips_remove_filters' );
+		return wpo_ips_remove_filters( $filters );
 	}
 
 	protected function normalize_filter_args( $filter ) {
-		$filter = array_values( $filter );
-		$hook_name = $filter[0];
-		$callback = $filter[1];
-		$priority = isset( $filter[2] ) ? $filter[2] : 10;
-		$accepted_args = isset( $filter[3] ) ? $filter[3] : 1;
-		return compact( 'hook_name', 'callback', 'priority', 'accepted_args' );
+		\wcpdf_deprecated_function( __FUNCTION__, '5.0.0', 'wpo_ips_normalize_filter_args' );
+		return wpo_ips_normalize_filter_args( $filter );
 	}
 
 }

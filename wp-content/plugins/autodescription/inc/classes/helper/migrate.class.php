@@ -8,11 +8,11 @@ namespace The_SEO_Framework\Helper;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\umemo;
+use function The_SEO_Framework\umemo;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -33,7 +33,7 @@ use function \The_SEO_Framework\umemo;
  * @since 5.0.0
  * @access private
  */
-class Migrate {
+final class Migrate {
 
 	/**
 	 * Determines whether the text has recognizable transformative syntax.
@@ -53,7 +53,8 @@ class Migrate {
 	public static function text_has_unprocessed_syntax( $text ) {
 
 		foreach ( [ 'yoast_seo', 'rank_math', 'seopress' ] as $type )
-			if ( static::{"text_has_{$type}_syntax"}( $text ) ) return true;
+			if ( self::{"text_has_{$type}_syntax"}( $text ) )
+				return true;
 
 		return false;
 	}

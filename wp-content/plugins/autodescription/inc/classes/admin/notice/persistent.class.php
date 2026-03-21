@@ -8,7 +8,7 @@ namespace The_SEO_Framework\Admin\Notice;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Data,
 	Helper\Query,
 	Helper\Template,
@@ -16,7 +16,7 @@ use \The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -134,7 +134,7 @@ class Persistent {
 		--$count;
 
 		if ( ! $count ) {
-			static::clear_notice( $key );
+			self::clear_notice( $key );
 		} else {
 
 			$notices = Data\Plugin::get_site_cache( 'persistent_notices' );
@@ -144,7 +144,7 @@ class Persistent {
 				Data\Plugin::update_site_cache( 'persistent_notices', $notices );
 			} else {
 				// Notice didn't conform. Remove it.
-				static::clear_notice( $key );
+				self::clear_notice( $key );
 			}
 		}
 	}
@@ -222,13 +222,13 @@ class Persistent {
 			) continue;
 
 			if ( -1 !== $cond['timeout'] && $cond['timeout'] < time() ) {
-				static::clear_notice( $key );
+				self::clear_notice( $key );
 				continue;
 			}
 
 			Template::output_view( 'notice/persistent', $notice['message'], $key, $notice['args'] );
 
-			static::count_down_notice( $key, $cond['count'] );
+			self::count_down_notice( $key, $cond['count'] );
 		}
 	}
 
@@ -241,7 +241,7 @@ class Persistent {
 	 */
 	public static function _dismiss_notice() {
 
-		// phpcs:ignore, WordPress.Security.NonceVerification.Missing -- We require the POST data to find locally stored nonces.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- We require the POST data to find locally stored nonces.
 		$key = \sanitize_key( $_POST['tsf-notice-submit'] ?? '' );
 
 		if ( ! $key ) return;
@@ -254,11 +254,11 @@ class Persistent {
 		if (
 			   empty( $_POST['tsf_notice_nonce'] )
 			|| ! \current_user_can( $notices[ $key ]['conditions']['capability'] )
-			|| ! \wp_verify_nonce( $_POST['tsf_notice_nonce'], static::_get_dismiss_nonce_action( $key ) )
+			|| ! \wp_verify_nonce( $_POST['tsf_notice_nonce'], self::_get_dismiss_nonce_action( $key ) )
 		) {
 			\wp_die( -1, 403 );
 		}
 
-		static::clear_notice( $key );
+		self::clear_notice( $key );
 	}
 }

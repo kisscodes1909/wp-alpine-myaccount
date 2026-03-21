@@ -8,7 +8,7 @@ namespace The_SEO_Framework\Admin\Script;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Admin,
 	Data,
 	Data\Filter\Sanitize,
@@ -19,7 +19,7 @@ use \The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2021 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2021 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -59,7 +59,7 @@ final class AJAX {
 
 		Helper\Headers::clean_response_header();
 
-		// phpcs:ignore, WordPress.Security.NonceVerification.Missing -- We require the POST data to find locally stored nonces.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- We require the POST data to find locally stored nonces.
 		$key = $_POST['tsf_dismiss_key'] ?? '';
 
 		if ( ! $key )
@@ -98,7 +98,7 @@ final class AJAX {
 
 		Helper\Headers::clean_response_header();
 
-		// phpcs:disable, WordPress.Security.NonceVerification -- check_ajax_capability_referer() does this.
+		// phpcs:disable WordPress.Security.NonceVerification -- check_ajax_capability_referer() does this.
 		Utils::check_ajax_capability_referer( 'edit_posts' );
 
 		/**
@@ -119,7 +119,7 @@ final class AJAX {
 		Data\Plugin\User::update_single_meta_item( Query::get_current_user_id(), 'counter_type', $value );
 
 		\wp_send_json_success();
-		// phpcs:enable, WordPress.Security.NonceVerification
+		// phpcs:enable WordPress.Security.NonceVerification
 	}
 
 	/**
@@ -150,7 +150,7 @@ final class AJAX {
 
 		Helper\Headers::clean_response_header();
 
-		// phpcs:disable, WordPress.Security.NonceVerification -- check_ajax_capability_referer does this.
+		// phpcs:disable WordPress.Security.NonceVerification -- check_ajax_capability_referer does this.
 		Utils::check_ajax_capability_referer( 'upload_files' );
 
 		if ( ! isset( $_POST['id'], $_POST['context'], $_POST['cropDetails'] ) )
@@ -191,22 +191,21 @@ final class AJAX {
 				$cropped_basename = \wp_basename( $cropped );
 				$url              = str_replace( $parent_basename, $cropped_basename, $parent_url );
 
-				// phpcs:ignore, WordPress.PHP.NoSilencedErrors -- See https://core.trac.wordpress.org/ticket/42480
+				// phpcs:ignore WordPress.PHP.NoSilencedErrors -- See https://core.trac.wordpress.org/ticket/42480
 				$size       = \function_exists( 'wp_getimagesize' ) ? \wp_getimagesize( $cropped ) : @getimagesize( $cropped );
 				$image_type = $size ? $size['mime'] : 'image/jpeg';
 
 				// Get the original image's post to pre-populate the cropped image.
 				$original_attachment  = \get_post( $attachment_id );
 				$sanitized_post_title = \sanitize_file_name( $original_attachment->post_title );
-				$use_original_title   = (
-					\strlen( trim( $original_attachment->post_title ) ) &&
-					/**
-					 * Check if the original image has a title other than the "filename" default,
-					 * meaning the image had a title when originally uploaded or its title was edited.
-					 */
-					( $parent_basename !== $sanitized_post_title ) &&
-					( pathinfo( $parent_basename, \PATHINFO_FILENAME ) !== $sanitized_post_title )
-				);
+				/**
+				 * Check if the original image has a title other than the "filename" default,
+				 * meaning the image had a title when originally uploaded or its title was edited.
+				 */
+				$use_original_title = \strlen( trim( $original_attachment->post_title ) )
+					&& ( $parent_basename !== $sanitized_post_title )
+					&& ( pathinfo( $parent_basename, \PATHINFO_FILENAME ) !== $sanitized_post_title );
+
 				$use_original_description = \strlen( trim( $original_attachment->post_content ) );
 
 				$attachment = [
@@ -252,7 +251,7 @@ final class AJAX {
 
 		\wp_send_json_success( \wp_prepare_attachment_for_js( $attachment_id ) );
 
-		// phpcs:enable, WordPress.Security.NonceVerification
+		// phpcs:enable WordPress.Security.NonceVerification
 	}
 
 	/**
@@ -269,7 +268,7 @@ final class AJAX {
 
 		Helper\Headers::clean_response_header();
 
-		// phpcs:disable, WordPress.Security.NonceVerification -- check_ajax_capability_referer() does this.
+		// phpcs:disable WordPress.Security.NonceVerification -- check_ajax_capability_referer() does this.
 		$post_id = \absint( $_POST['post_id'] ?? 0 );
 
 		Utils::check_ajax_capability_referer( 'edit_post', $post_id );
@@ -349,7 +348,7 @@ final class AJAX {
 			'data'      => $data,
 			'processed' => $get,
 		] );
-		// phpcs:enable, WordPress.Security.NonceVerification
+		// phpcs:enable WordPress.Security.NonceVerification
 	}
 
 	/**
@@ -368,7 +367,7 @@ final class AJAX {
 
 		Helper\Headers::clean_response_header();
 
-		// phpcs:disable, WordPress.Security.NonceVerification -- check_ajax_capability_referer() does this.
+		// phpcs:disable WordPress.Security.NonceVerification -- check_ajax_capability_referer() does this.
 		Utils::check_ajax_capability_referer( 'edit_posts' );
 
 		if ( ! isset( $_POST['term_id'], $_POST['taxonomy'] ) )
@@ -390,7 +389,7 @@ final class AJAX {
 		}
 
 		\wp_send_json_success( $parent_term_slugs );
-		// phpcs:enable, WordPress.Security.NonceVerification
+		// phpcs:enable WordPress.Security.NonceVerification
 	}
 
 	/**
@@ -411,7 +410,7 @@ final class AJAX {
 
 		Helper\Headers::clean_response_header();
 
-		// phpcs:disable, WordPress.Security.NonceVerification -- check_ajax_capability_referer() does this.
+		// phpcs:disable WordPress.Security.NonceVerification -- check_ajax_capability_referer() does this.
 		Utils::check_ajax_capability_referer( 'edit_posts' );
 
 		if ( ! isset( $_POST['post_id'] ) )
@@ -443,7 +442,7 @@ final class AJAX {
 		}
 
 		\wp_send_json_success( $parent_post_slugs );
-		// phpcs:enable, WordPress.Security.NonceVerification
+		// phpcs:enable WordPress.Security.NonceVerification
 	}
 
 	/**
@@ -461,7 +460,7 @@ final class AJAX {
 
 		Helper\Headers::clean_response_header();
 
-		// phpcs:disable, WordPress.Security.NonceVerification -- check_ajax_capability_referer() does this.
+		// phpcs:disable WordPress.Security.NonceVerification -- check_ajax_capability_referer() does this.
 		Utils::check_ajax_capability_referer( 'edit_posts' );
 
 		if ( ! isset( $_POST['author_id'] ) )
@@ -472,13 +471,13 @@ final class AJAX {
 		if ( ! $author_id )
 			\wp_send_json_error( 'invalid_object_id' );
 
-		$author_slugs   = [];
-		$author_slugs[] = [
-			'id'   => $author_id,
-			'slug' => Data\User::get_userdata( $author_id, 'user_nicename' ),
-		];
-
-		\wp_send_json_success( $author_slugs );
-		// phpcs:enable, WordPress.Security.NonceVerification
+		// Send a sequential array of "slugs" for consistency with other slug fetchers.
+		\wp_send_json_success( [
+			[
+				'id'   => $author_id,
+				'slug' => Data\User::get_userdata( $author_id, 'user_nicename' ),
+			],
+		] );
+		// phpcs:enable WordPress.Security.NonceVerification
 	}
 }

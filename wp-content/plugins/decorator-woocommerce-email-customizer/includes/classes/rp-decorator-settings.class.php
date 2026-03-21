@@ -4,6 +4,7 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+use Automattic\WooCommerce\Utilities\FeaturesUtil;
 
 /**
  * Customizer Settings
@@ -685,7 +686,6 @@ if (!class_exists('RP_Decorator_Settings')) {
                     ),
                     'heading_text_shadow' => array(
                         'title' => __('Text shadow', 'decorator-woocommerce-email-customizer'),
-                        'section' => 'heading',
                         'section' => 'heading',
                         'control_type' => 'color',
                         'default' => self::get_default_value('heading_text_shadow'),
@@ -2009,6 +2009,7 @@ if (!class_exists('RP_Decorator_Settings')) {
                             '#body_content_inner .btn-container' => array('text-align'),
                             '#body_content_inner .wt_template_button button' => array('text-align'),
                             '.wtwraq_quote_actions_div' => array('text-align'),
+                            '.wbte_decorator_button_container' => array('text-align'),
 
                         ),
                     ),
@@ -2464,82 +2465,125 @@ if (!class_exists('RP_Decorator_Settings')) {
                     'social_links_left_padding' => '10',
                     'social_links_right_padding' => '0',
                     'woocommerce_waitlist_mailout_body' => __('Hi There,', 'decorator-woocommerce-email-customizer'),
-                    'woocommerce_waitlist_mailout_heading' => sprintf(__('%s is now back in stock at %s', 'decorator-woocommerce-email-customizer'),'{product_title}','{site_title}'),
+                    // translators: 1: product title 2: site title
+                    'woocommerce_waitlist_mailout_heading' => sprintf(__('%1$s is now back in stock at %2$s', 'decorator-woocommerce-email-customizer'),'{product_title}','{site_title}'),
                     'woocommerce_waitlist_mailout_subject' => __('A product you are waiting for is back in stock', 'decorator-woocommerce-email-customizer'),
                     'new_renewal_order_heading' => __('New customer order', 'decorator-woocommerce-email-customizer'),
-                    'new_renewal_order_subject' => sprintf(__('[%s] New customer order (%s) - %s', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_number}','{order_date}'),
+                    // translators: 1: site title 2: order number 3: order date
+                    'new_renewal_order_subject' => sprintf(__('[%1$s] New customer order (%2$s) - %3$s', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_number}','{order_date}'),
+                    // translators: 1: customer full name
                     'new_renewal_order_body' => sprintf(__('You have received a subscription renewal order from %s. Their order is as follows:', 'decorator-woocommerce-email-customizer'),'{customer_full_name}'),
                     'activated_subscription_heading' => __('Subscription Activated', 'decorator-woocommerce-email-customizer'),
-                    'activated_subscription_subject' => sprintf(__('[%s] Subscription Activated (%s)', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_number}'),
+                    // translators: 1: site title 2: order number
+                    'activated_subscription_subject' => sprintf(__('[%1$s] Subscription Activated (%2$s)', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_number}'),
+                    // translators: 1: site title
                     'activated_subscription_body' => sprintf(__('Hi there. Your subscription with (%s) has been activated. Your order details are shown below for your reference:', 'decorator-woocommerce-email-customizer'),'{site_title}'),              
                     'reactivated_subscription_heading' => __('Subscription Reactivated order', 'decorator-woocommerce-email-customizer'),
-                    'reactivated_subscription_subject' => sprintf(__('[%s] Subscription Reactivated order (%s) - %s', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_number}','{order_date}'),
+                    // translators: 1: site title 2: order number 3: order date
+                    'reactivated_subscription_subject' => sprintf(__('[%1$s] Subscription Reactivated order (%2$s) - %3$s', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_number}','{order_date}'),
+                    // translators: 1: customer full name
                     'reactivated_subscription_body' => sprintf(__('A subscription belonging to %s has been reactivated from their account page. Subscription details are follows:', 'decorator-woocommerce-email-customizer'),'{customer_full_name}'),              
                     'subscription_intimation_heading' => __('Subscription renewal intimation', 'decorator-woocommerce-email-customizer'),
+                    // translators: 1: site title
                     'subscription_intimation_subject' => sprintf(__('%s Subscription renewal intimation', 'decorator-woocommerce-email-customizer'),'{site_title}'),
-                    'subscription_intimation_body' => sprintf(__('Hi there,%s Your subscription with %s will be renewed on <b>%s</b>. Subscription details are as follows:', 'decorator-woocommerce-email-customizer'),'<br>','{site_title}','{subscription_next_payment_date}'),
+                    // translators: 1: break tag 2: site title 3: subscription next payment date
+                    'subscription_intimation_body' => sprintf(__('Hi there,%1$s Your subscription with %2$s will be renewed on <b>%3$s</b>. Subscription details are as follows:', 'decorator-woocommerce-email-customizer'),'<br>','{site_title}','{subscription_next_payment_date}'),
                     'subscription_expiry_intimation_heading' => __('Subscription expiry reminder', 'decorator-woocommerce-email-customizer'),
                     'subscription_expiry_intimation_subject' => __('Subscription expiry reminder', 'decorator-woocommerce-email-customizer'),
-                    'subscription_expiry_intimation_body' => sprintf(__('Hi there,%s Your subscription with %s will expire on <b>%s</b>. Subscription details are as follows:', 'decorator-woocommerce-email-customizer'),'<br>','{site_title}','{subscription_end_date}'),
+                    // translators: 1: break tag 2: site title 3: subscription end date
+                    'subscription_expiry_intimation_body' => sprintf(__('Hi there, %1$s Your subscription with %2$s will expire on <b>%3$s</b>. Subscription details are as follows:', 'decorator-woocommerce-email-customizer'),'<br>','{site_title}','{subscription_end_date}'),
                     'customer_processing_renewal_order_heading' => __('Thank you for your order', 'decorator-woocommerce-email-customizer'),
-                    'customer_processing_renewal_order_subject' => sprintf(__('Your %s order receipt from %s', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_date}'),
+                    // translators: 1: site title 2: order date
+                    'customer_processing_renewal_order_subject' => sprintf(__('Your %1$s order receipt from %2$s', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_date}'),
                     'customer_processing_renewal_order_body' => __('Your subscription renewal order has been received and is now being processed. Your order details are shown below for your reference:', 'decorator-woocommerce-email-customizer'),
                     'customer_completed_renewal_order_heading' => __('Your order is complete', 'decorator-woocommerce-email-customizer'),
-                    'customer_completed_renewal_order_subject' =>sprintf(__('Your %s order from %s is complete', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_date}'),
+                    // translators: 1: site title 2: order date
+                    'customer_completed_renewal_order_subject' =>sprintf(__('Your %1$s order from %2$s is complete', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_date}'),
+                    // translators: 1: site title
                     'customer_completed_renewal_order_body' => sprintf(__('Hi there. Your subscription renewal order with %s has been completed. Your order details are shown below for your reference:', 'decorator-woocommerce-email-customizer'),'{site_title}'),
                     'customer_completed_switch_order_heading' => __('Your order is complete', 'decorator-woocommerce-email-customizer'),
-                    'customer_completed_switch_order_subject' => sprintf(__('Your %s order from %s is complete', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_date}'),
+                    // translators: 1: site title 2: order date
+                    'customer_completed_switch_order_subject' => sprintf(__('Your %1$s order from %2$s is complete', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_date}'),
+                    // translators: 1: site title
                     'customer_completed_switch_order_body' => sprintf(__('Hi there. You have successfully changed your subscription items on %s. Your new order and subscription details are shown below for your reference:', 'decorator-woocommerce-email-customizer'),'{site_title}'),
+                    // translators: 1: order number
                     'customer_renewal_invoice_heading' => sprintf(__('Invoice for order %s', 'decorator-woocommerce-email-customizer'),'{order_number}'),
+                    // translators: 1: order number
                     'customer_renewal_invoice_subject' => sprintf(__('Invoice for order %s', 'decorator-woocommerce-email-customizer'),'{order_number}'),
                     'customer_renewal_invoice_btn_switch' => false,
-                    'customer_renewal_invoice_body_failed' =>sprintf(__('The automatic payment to renew your subscription with %s has failed. To reactivate the subscription, please login and pay for the renewal from your account page: %s', 'decorator-woocommerce-email-customizer'),'{site_title}','{invoice_pay_link}'),
-                    'customer_renewal_invoice_body_pending' => sprintf(__('An invoice has been created for you to renew your subscription with %s. To pay for this invoice please use the following link: %s', 'decorator-woocommerce-email-customizer'),'{site_title}','{invoice_pay_link}'),
+                    // translators: 1: site title 2: invoice pay link
+                    'customer_renewal_invoice_body_failed' =>sprintf(__('The automatic payment to renew your subscription with %1$s has failed. To reactivate the subscription, please login and pay for the renewal from your account page: %2$s', 'decorator-woocommerce-email-customizer'),'{site_title}','{invoice_pay_link}'),
+                    // translators: 1: site title 2: invoice pay link
+                    'customer_renewal_invoice_body_pending' => sprintf(__('An invoice has been created for you to renew your subscription with %1$s. To pay for this invoice please use the following link: %2$s', 'decorator-woocommerce-email-customizer'),'{site_title}','{invoice_pay_link}'),
                     'cancelled_subscription_heading' => __('Subscription Cancelled', 'decorator-woocommerce-email-customizer'),
+                    // translators: 1: site title
                     'cancelled_subscription_subject' => sprintf(__('[%s] Subscription Cancelled', 'decorator-woocommerce-email-customizer'),'{site_title}'),
+                    // translators: 1: customer full name
                     'cancelled_subscription_body' => sprintf(__('A subscription belonging to %s has been cancelled. Their subscription\'s details are as follows:', 'decorator-woocommerce-email-customizer'),'{customer_full_name}'),
+                    // translators: 1: quote id
                     'wtwraq_new_quote_request_email_heading' => sprintf(__('New quote request: #%s', 'decorator-woocommerce-email-customizer'),'{quote_id}'),
-                    'wtwraq_new_quote_request_email_subject' => sprintf(__('[%s]: New quote request #%s','decorator-woocommerce-email-customizer' ), '{blogname}', '{quote_id}'),
+                    // translators: 1: site title 2: quote id
+                    'wtwraq_new_quote_request_email_subject' => sprintf(__('[%1$s]: New quote request #%2$s','decorator-woocommerce-email-customizer' ), '{blogname}', '{quote_id}'),
+                    // translators: 1: customer full name
                     'wtwraq_new_quote_request_email_body' => sprintf(__('You have received the following quote request from %s:', 'decorator-woocommerce-email-customizer'),'{customer_full_name}'),
+                    // translators: 1: quote id
                     'wtwraq_quote_accepted_email_heading' => sprintf(__('Quote accepted #%s', 'decorator-woocommerce-email-customizer'),'{quote_id}'),
-                    'wtwraq_quote_accepted_email_subject' => sprintf(__('[%s] Accepted quote request (%s) - %s', 'decorator-woocommerce-email-customizer'),'{site_title}','{quote_id}','{quote_accepted_date}'),
+                    // translators: 1: site title 2: quote id 3: quote accepted date
+                    'wtwraq_quote_accepted_email_subject' => sprintf(__('[%1$s] Accepted quote request (%2$s) - %3$s', 'decorator-woocommerce-email-customizer'),'{site_title}','{quote_id}','{quote_accepted_date}'),
                     'wtwraq_quote_accepted_email_body' => __('The following quote has been accepted:', 'decorator-woocommerce-email-customizer'),   
+                    // translators: 1: quote id
                     'wtwraq_quote_declined_email_heading' => sprintf(__('Quote rejected # %s', 'decorator-woocommerce-email-customizer'),'{quote_id}'),
-                    'wtwraq_quote_declined_email_subject' => sprintf(__('[%s] Rejected quote request (%s) - %s', 'decorator-woocommerce-email-customizer'),'{site_title}','{quote_id}','{quote_send_date}'),
+                    // translators: 1: site title 2: quote id 3: quote send date
+                    'wtwraq_quote_declined_email_subject' => sprintf(__('[%1$s] Rejected quote request (%2$s) - %3$s', 'decorator-woocommerce-email-customizer'),'{site_title}','{quote_id}','{quote_send_date}'),
                     'wtwraq_quote_declined_email_body' => __('The following quote has been rejected:', 'decorator-woocommerce-email-customizer'),
-                    'wtwraq_quote_request_submitted_email_heading' => __('Your request has been received', 'decorator-woocommerce-email-customizer','{quote_id}'),
+                    'wtwraq_quote_request_submitted_email_heading' => __('Your request has been received', 'decorator-woocommerce-email-customizer'),
+                    // translators: 1: site title
                     'wtwraq_quote_request_submitted_email_subject' => sprintf(__('You have received a quote from %s', 'decorator-woocommerce-email-customizer'),'{site_title}'),
-                    'wtwraq_quote_request_submitted_email_body' => sprintf(__('Hi %s ,%s %s Just to let you know - we have received your quote request #%s, and it is now being reviewed:', 'decorator-woocommerce-email-customizer'),'{customer_full_name}', '<br>','<br>','{quote_id}'),
-                    'wtwraq_quote_received_email_heading' => __('Your quote is ready', 'decorator-woocommerce-email-customizer','{quote_id}'),
-                    'wtwraq_quote_received_email_subject' => sprintf(__('[%s] New quote request (%s) - %s', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_number}','{order_date}'),
-                    'wtwraq_quote_received_email_body' => sprintf(__('Hi %s , %s %s We have reviewed your request #%s, and here is our quote:', 'decorator-woocommerce-email-customizer'),'{customer_full_name}','<br>','<br>','{quote_id}'),
+                    // translators: 1: customer full name 2: break tag 3: break tag 4: quote id
+                    'wtwraq_quote_request_submitted_email_body' => sprintf(__('Hi %1$s ,%2$s %3$s Just to let you know - we have received your quote request #%4$s, and it is now being reviewed:', 'decorator-woocommerce-email-customizer'),'{customer_full_name}', '<br>','<br>','{quote_id}'),
+                    'wtwraq_quote_received_email_heading' => __('Your quote is ready', 'decorator-woocommerce-email-customizer'),
+                    // translators: 1: site title 2: order number 3: order date
+                    'wtwraq_quote_received_email_subject' => sprintf(__('[%1$s] New quote request (%2$s) - %3$s', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_number}','{order_date}'),
+                    // translators: 1: customer full name 2: break tag 3: break tag 4: quote id
+                    'wtwraq_quote_received_email_body' => sprintf(__('Hi %1$s , %2$s %3$s We have reviewed your request #%4$s, and here is our quote:', 'decorator-woocommerce-email-customizer'),'{customer_full_name}','<br>','<br>','{quote_id}'),
                     'wtwraq_quote_expired_email_heading' => __('Your quote has been expired', 'decorator-woocommerce-email-customizer'),
                     'wtwraq_quote_expired_email_subject' => __('Your quote has been expired', 'decorator-woocommerce-email-customizer'),
-                    'wtwraq_quote_expired_email_body' => sprintf(__('Hi %s , %s %s Your quote #%s has been expired. Here are the quote details:', 'decorator-woocommerce-email-customizer'),'{customer_full_name}','<br>','<br>','{quote_id}'),
+                    // translators: 1: customer full name 2: break tag 3: break tag 4: quote id
+                    'wtwraq_quote_expired_email_body' => sprintf(__('Hi %1$s , %2$s %3$s Your quote #%4$s has been expired. Here are the quote details:', 'decorator-woocommerce-email-customizer'),'{customer_full_name}','<br>','<br>','{quote_id}'),
                     'wtwraq_quote_expiry_reminder_email_heading' => __('Your quote is about to expire', 'decorator-woocommerce-email-customizer'),
                     'wtwraq_quote_expiry_reminder_email_subject' => __('Hurry! Your quote is about to expire', 'decorator-woocommerce-email-customizer'),
-                    'wtwraq_quote_expiry_reminder_email_body' => sprintf(__('Hi %s , %s %s Your quote #%s will expire on %s, and our offer will no longer be available. Here are the quote details:', 'decorator-woocommerce-email-customizer'),'{customer_full_name}','<br>','<br>','{quote_id}','{quote_expiry_date}'),
-                    'wtwraq_quote_reminder_email_heading' => __('Reminder!', 'decorator-woocommerce-email-customizer','{quote_id}'),
-                    'wtwraq_quote_reminder_email_subject' => sprintf(__('You have a pending quote', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_number}','{order_date}'),
-                    'wtwraq_quote_reminder_email_body' => sprintf(__('Hi %s , %s %s You have a pending quote #%s on %s. Do not forgot it! Our proposal is as follows:', 'decorator-woocommerce-email-customizer'),'{customer_full_name}','<br>','<br>','{quote_id}','{site_title}'),
+                    // translators: 1: customer full name 2: break tag 3: break tag 4: quote id 5: quote expiry date
+                    'wtwraq_quote_expiry_reminder_email_body' => sprintf(__('Hi %1$s , %2$s %3$s Your quote #%4$s will expire on %5$s, and our offer will no longer be available. Here are the quote details:', 'decorator-woocommerce-email-customizer'),'{customer_full_name}','<br>','<br>','{quote_id}','{quote_expiry_date}'),
+                    'wtwraq_quote_reminder_email_heading' => __('Reminder!', 'decorator-woocommerce-email-customizer'),
+                    'wtwraq_quote_reminder_email_subject' => __( 'You have a pending quote', 'decorator-woocommerce-email-customizer' ),
+                    // translators: 1: customer full name 2: break tag 3: break tag 4: quote id 5: site title
+                    'wtwraq_quote_reminder_email_body' => sprintf(__('Hi %1$s , %2$s %3$s You have a pending quote #%4$s on %5$s. Do not forgot it! Our proposal is as follows:', 'decorator-woocommerce-email-customizer'),'{customer_full_name}','<br>','<br>','{quote_id}','{site_title}'),
                     'expired_subscription_heading' => __('Subscription Expired', 'decorator-woocommerce-email-customizer'),
+                    // translators: 1: site title
                     'expired_subscription_subject' => sprintf(__('[%s] Subscription Expired', 'decorator-woocommerce-email-customizer'),'{site_title}'),
+                    // translators: 1: customer full name
                     'expired_subscription_body' =>  sprintf(__('A subscription belonging to %s has been expired. Subscription details are follows:', 'decorator-woocommerce-email-customizer'),'{customer_full_name}'),
+                    // translators: 1: order number
                     'customer_payment_retry_heading' => sprintf(__('Automatic payment failed for order %s', 'decorator-woocommerce-email-customizer'),'{order_number}'),
-                    'customer_payment_retry_subject' => sprintf(__('Automatic payment failed for %s, we will retry %s', 'decorator-woocommerce-email-customizer'),'{order_number}','{retry_time}'),
+                    // translators: 1: order number 2: retry time
+                    'customer_payment_retry_subject' => sprintf(__('Automatic payment failed for %1$s, we will retry %2$s', 'decorator-woocommerce-email-customizer'),'{order_number}','{retry_time}'),
                     'customer_payment_retry_body' => '',
                     'customer_payment_retry_override' => false,
                     'customer_payment_retry_btn_switch' => false,
                     'admin_payment_retry_heading' => __('Automatic renewal payment failed', 'decorator-woocommerce-email-customizer'),
-                    'admin_payment_retry_subject' => sprintf(__('[%s] Automatic payment failed for %s, retry scheduled to run %s', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_number}','{retry_time}'),
+                    // translators: 1: site title 2: order number 3: retry time
+                    'admin_payment_retry_subject' => sprintf(__('[%1$s] Automatic payment failed for %2$s, retry scheduled to run %3$s', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_number}','{retry_time}'),
                     'admin_payment_retry_body' => '',
                     'admin_payment_retry_override' => false,
                     'billing_address_subtitle' => __('Billing address', 'decorator-woocommerce-email-customizer'),
                     'shipping_address_subtitle' => __('Shipping address', 'decorator-woocommerce-email-customizer'),
                     'new_order_heading' => __('New order', 'decorator-woocommerce-email-customizer'),
                     'cancelled_order_heading' => __('Cancelled order', 'decorator-woocommerce-email-customizer'),
+                    // translators: 1: order number
+                    'customer_cancelled_order_heading' => sprintf(__('Order Cancelled: %s', 'decorator-woocommerce-email-customizer'),'{order_number}'),
                     'customer_processing_order_heading' => __('Thank you for your order', 'decorator-woocommerce-email-customizer'),
                     'new_order_additional_content' => __('Congratulations on the sale!', 'decorator-woocommerce-email-customizer'),
+                    // translators: 1: site address
                     'customer_processing_order_additional_content' => sprintf(__('Thanks for using %s!', 'decorator-woocommerce-email-customizer'),'{site_address}'),
                     'customer_completed_order_additional_content' => __('Thanks for shopping with us.', 'decorator-woocommerce-email-customizer'),
                     'customer_refunded_order_additional_content' => __('We hope to see you again soon.', 'decorator-woocommerce-email-customizer'),
@@ -2547,91 +2591,132 @@ if (!class_exists('RP_Decorator_Settings')) {
                     'customer_new_account_additional_content' => __('We look forward to seeing you soon.', 'decorator-woocommerce-email-customizer'),
                     'customer_reset_password_additional_content' => __('Thanks for reading.', 'decorator-woocommerce-email-customizer'),
                     'customer_completed_order_heading' => __('Your order is complete', 'decorator-woocommerce-email-customizer'),
+                    // translators: 1: order number
                     'customer_refunded_order_heading_full' => sprintf(__('Order %s details', 'decorator-woocommerce-email-customizer'),'{order_number}'),
                     'customer_refunded_order_heading_partial' => __('Your order has been partially refunded', 'decorator-woocommerce-email-customizer'),
                     'customer_on_hold_order_heading' => __('Thank you for your order', 'decorator-woocommerce-email-customizer'),
+                    // translators: 1: order number
                     'customer_invoice_heading' => sprintf(__('Invoice for order %s', 'decorator-woocommerce-email-customizer'),'{order_number}'),
                     'customer_invoice_heading_paid' => __('Your order details', 'decorator-woocommerce-email-customizer'),
                     'failed_order_heading' => __('Failed order', 'decorator-woocommerce-email-customizer'),
+                    'customer_failed_order_heading' => __('Sorry, your order was unsuccessful', 'decorator-woocommerce-email-customizer'),
+                    // translators: 1: site title
                     'customer_new_account_heading' => sprintf(__('Welcome to %s', 'decorator-woocommerce-email-customizer'),'{site_title}'),
                     'customer_note_heading' => __('A note has been added to your order', 'decorator-woocommerce-email-customizer'),
                     'customer_reset_password_heading' => __('Password reset instructions', 'decorator-woocommerce-email-customizer'),
                     'customer_reset_password_btn_switch' => false,
                     'body_text_enable_switch' => true,
-                    'new_order_subject' => sprintf(__('[%s] New order (%s) - %s', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_number}','{order_date}'),
-                    'cancelled_order_subject' => sprintf(__('[%s] Cancelled order (%s)', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_number}'),
-                    'customer_processing_order_subject' => sprintf(__('Your %s order receipt from %s', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_date}'),
-                    'customer_completed_order_subject' => sprintf(__('Your %s order from %s is complete', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_date}'),
-                    'customer_refunded_order_subject_full' => sprintf(__('Your %s order from %s has been refunded', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_date}'),
-                    'customer_refunded_order_subject_partial' => sprintf(__('Your %s order from %s has been partially refunded', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_date}'),
-                    'customer_on_hold_order_subject' => sprintf(__('Your %s order receipt from %s', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_date}'),
+                    // translators: 1: site title 2: order number 3: order date
+                    'new_order_subject' => sprintf(__('[%1$s] New order (%2$s) - %3$s', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_number}','{order_date}'),
+                    // translators: 1: site title 2: order number
+                    'cancelled_order_subject' => sprintf(__('[%1$s] Cancelled order (%2$s)', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_number}'),
+                    // translators: 1: site title 2: order number
+                    'customer_cancelled_order_subject' => sprintf(__('[%1$s]: Your order #%2$s has been cancelled', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_number}'),
+                    // translators: 1: site title 2: order date
+                    'customer_processing_order_subject' => sprintf(__('Your %1$s order receipt from %2$s', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_date}'),
+                    // translators: 1: site title 2: order date
+                    'customer_completed_order_subject' => sprintf(__('Your %1$s order from %2$s is complete', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_date}'),
+                    // translators: 1: site title 2: order date
+                    'customer_refunded_order_subject_full' => sprintf(__('Your %1$s order from %2$s has been refunded', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_date}'),
+                    // translators: 1: site title 2: order date
+                    'customer_refunded_order_subject_partial' => sprintf(__('Your %1$s order from %2$s has been partially refunded', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_date}'),
+                    // translators: 1: site title 2: order date
+                    'customer_on_hold_order_subject' => sprintf(__('Your %1$s order receipt from %2$s', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_date}'),
+                    // translators: 1: order number
                     'customer_invoice_subject' => sprintf(__('Invoice for order %s', 'decorator-woocommerce-email-customizer'),'{order_number}'),
-                    'customer_invoice_subject_paid' => sprintf(__('Your %s order from %s', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_date}'),
-                    'failed_order_subject' => sprintf(__('[%s] Failed order (%s)', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_number}'),
+                    // translators: 1: site title 2: order date
+                    'customer_invoice_subject_paid' => sprintf(__('Your %1$s order from %2$s', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_date}'),
+                    // translators: 1: site title 2: order number
+                    'failed_order_subject' => sprintf(__('[%1$s] Failed order (%2$s)', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_number}'),
+                    // translators: 1: site title
+                    'customer_failed_order_subject' => sprintf(__('Your order at %s was unsuccessful', 'decorator-woocommerce-email-customizer'),'{site_title}'),
+                    // translators: 1: site title
                     'customer_new_account_subject' => sprintf(__('Your account on %s', 'decorator-woocommerce-email-customizer'),'{site_title}'),
-                    'customer_note_subject' => sprintf(__('Note added to your %s order from %s', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_date}'),
+                    // translators: 1: site title 2: order date
+                    'customer_note_subject' => sprintf(__('Note added to your %1$s order from %2$s', 'decorator-woocommerce-email-customizer'),'{site_title}','{order_date}'),
+                    // translators: 1: site title
                     'customer_reset_password_subject' => sprintf(__('Password reset for %s', 'decorator-woocommerce-email-customizer'),'{site_title}'),
+                    // translators: 1: customer full name
                     'new_order_body' => sprintf(__('You’ve received the following order from %s:', 'decorator-woocommerce-email-customizer'),'{customer_full_name}'),
-                    'cancelled_order_body' => sprintf(__('Notification to let you know &mdash; order %s belonging to %s has been cancelled:', 'decorator-woocommerce-email-customizer'),'#{order_number}','{customer_full_name}'),
-                    'customer_processing_order_body' => sprintf(__('Hi %s,
+                    // translators: 1: order number 2: customer full name
+                    'cancelled_order_body' => sprintf(__('Notification to let you know &mdash; order %1$s belonging to %2$s has been cancelled:', 'decorator-woocommerce-email-customizer'),'#{order_number}','{customer_full_name}'),
+                    // translators: 1: order number
+                    'customer_cancelled_order_body' => sprintf(__('We’re sorry to let you know that your order #%s has been cancelled.', 'decorator-woocommerce-email-customizer'),'{order_number}'),
+                    // translators: 1: customer first name 2: order number
+                    'customer_processing_order_body' => sprintf(__('Hi %1$s,
                         
-Just to let you know &mdash; we\'ve received your order %s, and it is now being processed:', 'decorator-woocommerce-email-customizer'),'{customer_first_name}','#{order_number}'),
+Just to let you know &mdash; we\'ve received your order %2$s, and it is now being processed:', 'decorator-woocommerce-email-customizer'),'{customer_first_name}','#{order_number}'),
+                    // translators: 1: customer first name
                     'customer_completed_order_body' => sprintf(__('Hi %s,
                         
 We have finished processing your order.', 'decorator-woocommerce-email-customizer'),'{customer_first_name}'),
                     'customer_refunded_order_switch' => true,
-                    'customer_refunded_order_body_full' => sprintf(__('Hi %s,
+                    // translators: 1: customer first name 2: site title
+                    'customer_refunded_order_body_full' => sprintf(__('Hi %1$s,
                         
-Your order on %s has been refunded. There are more details below for your reference:', 'decorator-woocommerce-email-customizer'),'{customer_first_name}','{site_title}'),
-                    'customer_refunded_order_body_partial' => sprintf(__('Hi %s,
+Your order on %2$s has been refunded. There are more details below for your reference:', 'decorator-woocommerce-email-customizer'),'{customer_first_name}','{site_title}'),
+                    // translators: 1: customer first name 2: site title
+                    'customer_refunded_order_body_partial' => sprintf(__('Hi %1$s,
                         
-Your order on %s has been partially refunded. There are more details below for your reference:', 'decorator-woocommerce-email-customizer'),'{customer_first_name}','{site_title}'),
+Your order on %2$s has been partially refunded. There are more details below for your reference:', 'decorator-woocommerce-email-customizer'),'{customer_first_name}','{site_title}'),
+                    // translators: 1: customer first name
                     'customer_on_hold_order_body' =>  sprintf(__('Hi %s,
                         
 Thanks for your order. It’s on-hold until we confirm that payment has been received. In the meantime, here’s a reminder of what you ordered:', 'decorator-woocommerce-email-customizer'),'{customer_first_name}'),
                     'customer_invoice_switch' => true,
                     'customer_invoice_btn_switch' => false,
-                    'customer_invoice_body' => sprintf(__('Hi %s,
+                    // translators: 1: customer first name 2: site title 3: invoice pay link
+                    'customer_invoice_body' => sprintf(__('Hi %1$s,
                         
-An order has been created for you on %s. Your invoice is below, with a link to make payment when you’re ready: %s ', 'decorator-woocommerce-email-customizer'),'{customer_first_name}','{site_title}','{invoice_pay_link}'),
-                    'customer_invoice_body_paid' => sprintf(__('Hi %s,
+An order has been created for you on %2$s. Your invoice is below, with a link to make payment when you’re ready: %3$s ', 'decorator-woocommerce-email-customizer'),'{customer_first_name}','{site_title}','{invoice_pay_link}'),
+                    // translators: 1: customer first name 2: site title
+                    'customer_invoice_body_paid' => sprintf(__('Hi %1$s,
                         
-An order has been created for you on %s. Your invoice is below:', 'decorator-woocommerce-email-customizer'),'{customer_first_name}','{site_title}'),
-                    'expired_subscription_body' => sprintf(__('A subscription belonging to %s has expired. Their subscription\'s details are as follows:', 'decorator-woocommerce-email-customizer'),'{customer_full_name}'),
+An order has been created for you on %2$s. Your invoice is below:', 'decorator-woocommerce-email-customizer'),'{customer_first_name}','{site_title}'),
                     'order_items_image' => 'normal',
                     'order_items_image_size' => '50x50',
                     'order_items_sku' => 'normal',
-                    'failed_order_body' => sprintf(__('Payment for order %s from %s has failed. The order was as follows:', 'decorator-woocommerce-email-customizer'),'#{order_number}','{customer_full_name}'),
+                    // translators: 1: order number 2: customer full name
+                    'failed_order_body' => sprintf(__('Payment for order %1$s from %2$s has failed. The order was as follows:', 'decorator-woocommerce-email-customizer'),'#{order_number}','{customer_full_name}'),
+                    // translators: 1: customer first name 2: break tag 3: break tag 4: site title 5: break tag
+                    'customer_failed_order_body' => sprintf(__('Hi %1$s, %2$s Unfortunately, we couldn\'t complete your order due to an issue with your payment method.%3$s If you\'d like to continue with your purchase, please return to %4$s and try a different method of payment. %5$s Your order details are as follows: ', 'decorator-woocommerce-email-customizer'),'{customer_first_name}','<br><br>','<br><br>', '{site_title}','<br><br>'),
                     'customer_new_account_btn_switch' => false,
                     'customer_new_account_account_section' => true,
-                    'customer_new_account_body' => sprintf(__('Hi %s,
+                    // translators: 1: customer first name 2: site title 3: customer username
+                    'customer_new_account_body' => sprintf(__('Hi %1$s,
                         
-Thanks for creating an account on %s. Your username is %s', 'decorator-woocommerce-email-customizer'),'{customer_first_name}','{site_title}','{customer_username}'),
+Thanks for creating an account on %2$s. Your username is %3$s', 'decorator-woocommerce-email-customizer'),'{customer_first_name}','{site_title}','{customer_username}'),
+                    // translators: 1: customer first name
                     'customer_note_body' => sprintf(__('Hi %s,
                         
 The following note has been added to your order:', 'decorator-woocommerce-email-customizer'),'{customer_first_name}'),
-                    'customer_reset_password_body' => sprintf(__('Hi %s,
+                    // translators: 1: customer first name 2: site title 3: customer username
+                    'customer_reset_password_body' => sprintf(__('Hi %1$s,
                             
-                            Someone has requested a new password for the following account on %s:
+                            Someone has requested a new password for the following account on %2$s:
 
-                                                                                        Username: %s
+                                                                                        Username: %3$s
 
                                                                                         If you didn\'t make this request, just ignore this email. If you\'d like to proceed:', 'decorator-woocommerce-email-customizer'
                     ),'{customer_first_name}','{site_title}','{customer_username}'),
-                    'wt_smart_coupon_abandonment_coupon_email_body' => __(
-                            'Hi there,
-                                
-                                                                                        Did you forget something? You\'ve left behind some products in your cart. Grab them before they go out of stock at an additional discount of ${coupon_amount}. Hurry up!!
+                    'wt_smart_coupon_abandonment_coupon_email_body' => __( 'Hi {customer_first_name},
 
-                                                                                        If this was a mistake, just ignore this email and nothing will happen.
+We noticed you left some amazing items in your cart! They\'re still available—but not forever. Stock is running low, and we don\'t want you to miss out!
 
-                                                                                        To reset your password, visit the following address:', 'decorator-woocommerce-email-customizer'
+Grab them before they sell out!', 'decorator-woocommerce-email-customizer'
+                    ),
+                    'Wbte_Smart_Coupon_Abandonment_Reminder_Email_body' => __( 'Hi {customer_first_name},
+
+We noticed you left some amazing items in your cart! They\'re still available—but not forever. Stock is running low, and we don\'t want you to miss out!
+
+Grab them before they sell out!', 'decorator-woocommerce-email-customizer'
                     ),
                     'wt_smart_coupon_gift_body' => __(
                             'Hi there,
 
 Congratulations! You\'ve got a coupon! To redeem your discount, use following coupon code during checkout.', 'decorator-woocommerce-email-customizer'
                     ),
+                    // translators: 1: blog url
                     'wt_smart_coupon_signup_coupon_email_body' => sprintf(__(
                             'Hi there,
 
@@ -2639,6 +2724,7 @@ Thanks for signing up with us.! We would like to welcome you to our %s with a gi
 
 Use the following coupon code during your next purchase to avail the discount.', 'decorator-woocommerce-email-customizer'
                     ),'{blog_url}'),
+                    // translators: 1: coupon code
                     'wt_smart_coupon_body' => sprintf(__(
                             'Hi there,
 
@@ -2648,28 +2734,46 @@ You\'ve got a coupon!', 'decorator-woocommerce-email-customizer'
                     ),'{coupon_code}'),
                     'wt_smart_coupon_heading' => __('You\'ve got a coupon!', 'decorator-woocommerce-email-customizer'),
                     'wt_smart_coupon_signup_coupon_email_heading' => __('Welcome aboard! You\'ve got a gift!', 'decorator-woocommerce-email-customizer'),
+                    // translators: 1: site title
                     'customer_new_account_activation_heading' => sprintf(__('Account activation %s', 'decorator-woocommerce-email-customizer'),'{site_title}'),
                     'customer_paid_for_order_heading' => __('Payment received', 'decorator-woocommerce-email-customizer'),
                     'customer_revocation_heading' => __('Your revocation', 'decorator-woocommerce-email-customizer'),
                     'customer_revocation_body' => __('By sending you this email we confirm receiving your withdrawal. Please review your data. ', 'decorator-woocommerce-email-customizer'),
-                    'suspended_subscription_subject' => sprintf(__('[%s] Subscription Suspended', 'decorator-woocommerce-email-customizer'),'{site_title}'),
+                    // translators: 1: site title
+                    'suspended_subscription_subject' => sprintf(__('[%1$s] Subscription Suspended', 'decorator-woocommerce-email-customizer'),'{site_title}'),
+                    // translators: 1: customer full name
                     'suspended_subscription_body' => sprintf(__('A subscription belonging to %s has been suspended by the user. Their subscription\'s details are as follows: ', 'decorator-woocommerce-email-customizer'),'{customer_full_name}'),
                     'suspended_subscription_heading' => __('Subscription Suspended', 'decorator-woocommerce-email-customizer'),
                     'wt_smart_coupon_abandonment_coupon_email_heading' => __('Your favourites are runnung out of stock!', 'decorator-woocommerce-email-customizer'),
                     'wt_smart_coupon_gift_heading' => __('You\'ve got a gift!', 'decorator-woocommerce-email-customizer'),
-                    'expired_subscription_heading' => __('Subscription Expired', 'decorator-woocommerce-email-customizer'),
+                    // translators: 1: membership plan
                     'WC_Memberships_User_Membership_Ended_Email_heading' => sprintf(__('Renew your %s', 'decorator-woocommerce-email-customizer'),'{membership_plan}'),
+                    // translators: 1: site title
                     'WC_Memberships_User_Membership_Ended_Email_subject' => sprintf(__('Your %s membership has expired', 'decorator-woocommerce-email-customizer'),'{site_title}'),
+                    // translators: 1: membership plan
                     'WC_Memberships_User_Membership_Activated_Email_heading' => sprintf(__('You can now access %s', 'decorator-woocommerce-email-customizer'),'{membership_plan}'),
+                    // translators: 1: site title
                     'WC_Memberships_User_Membership_Activated_Email_subject' => sprintf(__('Your %s membership is now active!', 'decorator-woocommerce-email-customizer'),'{site_title}'),
+                    // translators: 1: membership plan
                     'WC_Memberships_User_Membership_Ending_Soon_Email_heading' => sprintf(__('An update about your %s', 'decorator-woocommerce-email-customizer'),'{membership_plan}'),
+                    // translators: 1: site title
                     'WC_Memberships_User_Membership_Ending_Soon_Email_subject' => sprintf(__('Your %s membership ends soon!', 'decorator-woocommerce-email-customizer'),'{site_title}'),
+                    // translators: 1: membership plan
                     'WC_Memberships_User_Membership_Note_Email_heading' => __('A note has been added about your membership', 'decorator-woocommerce-email-customizer'),
+                    // translators: 1: site title
                     'WC_Memberships_User_Membership_Note_Email_subject' => sprintf(__('Note added to your %s membership', 'decorator-woocommerce-email-customizer'),'{site_title}'),
+                    // translators: 1: membership plan
                     'WC_Memberships_User_Membership_Renewal_Reminder_Email_heading' => sprintf(__('You can renew your %s', 'decorator-woocommerce-email-customizer'),'{membership_plan}'),
+                    // translators: 1: site title
                     'WC_Memberships_User_Membership_Renewal_Reminder_Email_subject' => sprintf(__('Renew your %s membership!', 'decorator-woocommerce-email-customizer'),'{site_title}'),
                     'customer_delivered_order_heading' => __('Thanks for shopping with us', 'decorator-woocommerce-email-customizer'),
                 );
+                $email_improvements_enabled = class_exists( FeaturesUtil::class ) ? FeaturesUtil::feature_is_enabled( 'email_improvements' ) : false;
+                if($email_improvements_enabled){
+                    // translators: 1: order number
+                    self::$default_values['customer_cancelled_order_body'] = sprintf(__('We’re getting in touch to let you know that your order #%s has been cancelled.', 'decorator-woocommerce-email-customizer'),'{order_number}' );
+                }
+                
             }
 
             // Return default values
@@ -2793,7 +2897,7 @@ You\'ve got a coupon!', 'decorator-woocommerce-email-customizer'
          * @return array
          */
         public static function get_font_families() {
-            return array(
+            $font_families = array(
                 'arial' => __('Arial', 'decorator-woocommerce-email-customizer'),
                 'arial_black' => __('Arial black', 'decorator-woocommerce-email-customizer'),
                 'courier' => __('Courier new', 'decorator-woocommerce-email-customizer'),
@@ -2806,6 +2910,7 @@ You\'ve got a coupon!', 'decorator-woocommerce-email-customizer'
                 'times' => __('Times new roman', 'decorator-woocommerce-email-customizer'),
                 'verdana' => __('Verdana', 'decorator-woocommerce-email-customizer'),
             );
+            return apply_filters('wbte_dec_custom_font_addition',$font_families);
         }
 
         /**

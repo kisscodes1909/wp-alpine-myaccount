@@ -8,16 +8,16 @@ namespace The_SEO_Framework\Data\Plugin;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\is_headless;
+use function The_SEO_Framework\is_headless;
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Helper\Query,
 	Traits\Property_Refresher,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -39,6 +39,8 @@ use \The_SEO_Framework\{
  * @since 5.1.0 Added the Property_Refresher trait.
  * @access protected
  *         Use tsf()->data()->plugin()->user() instead.
+ *
+ * @NOTE: All static:: calls within this class are intentional due to Property_Refresher trait.
  */
 class User {
 	use Property_Refresher;
@@ -245,8 +247,7 @@ class User {
 	public static function update_single_meta_item( $user_id, $item, $value ) {
 
 		// Make sure the user exists before we go through another hoop of fetching all data.
-		$user    = \get_userdata( $user_id );
-		$user_id = $user->ID ?? null;
+		$user_id = \get_userdata( $user_id )->ID ?? null;
 
 		if ( empty( $user_id ) ) return;
 
@@ -269,8 +270,7 @@ class User {
 	 */
 	public static function save_meta( $user_id, $data ) {
 
-		$user    = \get_userdata( $user_id );
-		$user_id = $user->ID ?? null;
+		$user_id = \get_userdata( $user_id )->ID ?? null;
 
 		if ( empty( $user_id ) ) return;
 
@@ -286,7 +286,7 @@ class User {
 				static::get_default_meta( $user_id ),
 				$data,
 			),
-			$user->ID,
+			$user_id,
 		);
 
 		unset( static::$meta_memo[ $user_id ] );

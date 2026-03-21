@@ -15,7 +15,6 @@ class CR_Email_Coupon {
 	public $to;
 	public $heading;
 	public $subject;
-	public $template_html;
 	public $from;
 	public $from_name;
 	public $bcc;
@@ -31,7 +30,6 @@ class CR_Email_Coupon {
 		$this->id               = 'ivole_review_coupon';
 		$this->heading          = strval( get_option( 'ivole_email_heading_coupon', __( 'Thank You for Leaving a Review', 'customer-reviews-woocommerce' ) ) );
 		$this->subject          = strval( get_option( 'ivole_email_subject_coupon', '[{site_title}] ' . __( 'Discount Coupon for You', 'customer-reviews-woocommerce' ) ) );
-		$this->template_html    = Ivole_Email::plugin_path() . '/templates/email_coupon.php';
 		$this->from							= get_option( 'ivole_email_from', '' );
 		$this->from_name				= get_option( 'ivole_email_from_name', Ivole_Email::get_blogname() );
 		$this->replyto					= get_option( 'ivole_coupon_email_replyto', get_option( 'admin_email' ) );
@@ -208,8 +206,19 @@ class CR_Email_Coupon {
 		}
 		//error_log( $result );
 		$result = json_decode( $result );
-		if( isset( $result->status ) && $result->status === 'OK' ) {
+		if ( isset( $result->status ) && $result->status === 'OK' ) {
 			return 0;
+		} elseif (
+			'Error' === $result->status &&
+			0 === strcmp( 'A review reminder could not be sent because the shop does not exist.', $result->details )
+		) {
+			return array(
+				101,
+				__(
+					'Error: a review reminder could not be sent using CusRev mailer. Please re-save options on the CusRev.com tab at the plugin\'s settings page.',
+					'customer-reviews-woocommerce'
+				)
+			);
 		} else {
 			return 1;
 		}
@@ -291,12 +300,66 @@ class CR_Email_Coupon {
 	}
 
 	public function get_content() {
-		ob_start();
-		//$email_heading = $this->heading;
-		$def_body = Ivole_Email::$default_body_coupon;
-		$lang = $this->language;
-		include( $this->template_html );
-		return ob_get_clean();
+		$content = '';
+		if (
+			function_exists( 'qtranxf_useCurrentLanguageIfNotFoundUseDefaultLanguage' )
+		) {
+			// qTranslate integration
+			$content = qtranxf_useCurrentLanguageIfNotFoundUseDefaultLanguage(
+				wpautop(
+					wp_kses_post(
+						get_option(
+							'ivole_email_body_coupon',
+							Ivole_Email::$default_body_coupon
+						)
+					)
+				)
+			);
+		} else {
+			// WPML integration
+			if (
+				has_filter( 'wpml_translate_single_string' ) &&
+				! function_exists( 'pll_current_language' )
+			) {
+				$wpml_current_language = strtolower( $this->language );
+				$content = wpautop(
+					wp_kses_post(
+						apply_filters(
+							'wpml_translate_single_string',
+							get_option(
+								'ivole_email_body_coupon',
+								Ivole_Email::$default_body_coupon
+							),
+							'ivole',
+							'ivole_email_body_coupon',
+							$wpml_current_language
+						)
+					)
+				);
+			} elseif (
+				function_exists( 'pll_current_language' )
+			) {
+				$polylang_current_language = strtolower( $this->language );
+				$content = wpautop(
+					wp_kses_post(
+						pll_translate_string(
+							get_option( 'ivole_email_body_coupon', Ivole_Email::$default_body_coupon ),
+							$polylang_current_language
+						)
+					)
+				);
+			} else {
+				$content = wpautop(
+					wp_kses_post(
+						get_option(
+							'ivole_email_body_coupon',
+							Ivole_Email::$default_body_coupon
+						)
+					)
+				);
+			}
+		}
+		return $content;
 	}
 
 	public function replace_variables( $input ) {
@@ -399,6 +462,104 @@ class CR_Email_Coupon {
 					$coupon_code
 				)
 			);
+		}
+	}
+
+	public function maybe_send_coupon( $rvw_id, $media_count, $scenario, $customer_email, $customer_user, $customer_name ) {
+		$coupon = CR_Discount_Tiers::get_coupon( $media_count, $scenario );
+		if ( $coupon['is_enabled'] ) {
+			$roles_are_ok = true;
+			if ( 'roles' === $coupon['cr_coupon_enable_for_role'] && $customer_user ) {
+				$roles = $customer_user->roles;
+				$enabled_roles = is_array( $coupon['cr_coupon_enabled_roles'] ) ? $coupon['cr_coupon_enabled_roles'] : array();
+				$intersection = array_intersect( $enabled_roles, $roles );
+				if ( count( $intersection ) < 1 ) {
+					//the customer does not have roles for which discount coupons are enabled
+					$roles_are_ok = false;
+				}
+			}
+			if ( $roles_are_ok ) {
+				if ( 'static' === $coupon['cr_coupon_type'] ) {
+					$coupon_id = $coupon['cr_existing_coupon'];
+				} else {
+					$coupon_id = $this->generate_coupon( $customer_email, 0, $coupon );
+					// compatibility with W3 Total Cache plugin
+					// clear DB cache to read properties of the coupon
+					if( function_exists( 'w3tc_dbcache_flush' ) ) {
+						w3tc_dbcache_flush();
+					}
+				}
+				if (
+					0 < $coupon_id &&
+					'shop_coupon' === get_post_type( $coupon_id ) &&
+					'publish' === get_post_status( $coupon_id )
+				) {
+					$coupon_code = get_post_field( 'post_title', $coupon_id );
+					$discount_type = get_post_meta( $coupon_id, 'discount_type', true );
+					$discount_amount = get_post_meta( $coupon_id, 'coupon_amount', true );
+					$discount_string = "";
+					if (
+						'percent' === $discount_type &&
+						0 < $discount_amount
+					) {
+						$discount_string = $discount_amount . '%';
+					} elseif(
+						0 < $discount_amount
+					) {
+						$discount_string = trim(
+							strip_tags(
+								CR_Email_Func::cr_price(
+									$discount_amount,
+									array(
+										'currency' => get_option( 'woocommerce_currency' )
+									)
+								)
+							)
+						);
+					}
+
+					$cus_name = trim( $customer_name );
+					$cus_last_name = ( strpos($cus_name, ' ' ) === false ) ? '' : preg_replace( '#.*\s([\w-]*)$#', '$1', $cus_name );
+					$cus_first_name = trim( preg_replace( '#'.preg_quote( $cus_last_name, '#' ).'#', '', $cus_name ) );
+
+					if ( 'wa' === $coupon['channel'] ) {
+						$wa = new CR_Wtsap( 0 );
+						$coupon_res = $wa->send_coupon(
+							$cus_first_name,
+							$cus_last_name,
+							$cus_name,
+							$coupon_code,
+							$discount_string,
+							$customer_email,
+							0,		// a dummy order id
+							'', 	// a dummy order date
+							'', 	// a dummy order currency
+							null, // a dummy order object
+							$discount_type,
+							$discount_amount
+						);
+					} else {
+						$coupon_res = $this->trigger_coupon(
+							$cus_first_name,
+							$cus_last_name,
+							$cus_name,
+							$coupon_code,
+							$discount_string,
+							$customer_email,
+							0,		// a dummy order id
+							'', 	// a dummy order date
+							'', 	// a dummy order currency
+							null, // a dummy order object
+							$discount_type,
+							$discount_amount
+						);
+					}
+
+					if ( 0 === $coupon_res[0] ) {
+						update_comment_meta( $rvw_id, 'cr_coupon_code', $coupon_code );
+					}
+				}
+			}
 		}
 	}
 

@@ -27,9 +27,9 @@ do_action( 'woocommerce_email_header', $email_heading, $email );
 
 do_action( 'wt_decorator_email_body_content', $order, $sent_to_admin, $plain_text, $email ); ?>
 
-<blockquote><?php echo wpautop( wptexturize( $customer_note ) ) ?></blockquote>
+<blockquote><?php echo wp_kses_post( wpautop( wptexturize( $customer_note ) ) ) ?></blockquote>
 
-<p><?php _e( 'For your reference, your order details are shown below.', 'decorator-woocommerce-email-customizer' ); ?></p>
+<p><?php esc_html_e( 'For your reference, your order details are shown below.', 'decorator-woocommerce-email-customizer' ); ?></p>
 
 <?php
 

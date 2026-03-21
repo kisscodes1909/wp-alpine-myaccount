@@ -8,11 +8,11 @@ namespace The_SEO_Framework\Data;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\memo;
+use function The_SEO_Framework\memo;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -50,7 +50,7 @@ class Term {
 	 */
 	public static function get_latest_term_id( $taxonomy = 'category' ) {
 
-		// phpcs:ignore, WordPress.CodeAnalysis.AssignmentInCondition -- I know.
+		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
 		if ( null !== $memo = memo( null, $taxonomy ) ) return $memo;
 
 		$cats = \get_terms( [
@@ -79,9 +79,9 @@ class Term {
 	public static function is_term_populated( $term_id, $taxonomy ) {
 		return memo( null, $term_id, $taxonomy )
 			?? memo(
-				// phpcs:ignore, PEAR.Functions.FunctionCallSignature.Indent -- legibility
+				// phpcs:ignore PEAR.Functions.FunctionCallSignature.Indent -- legibility
 				   ! empty( \get_term( $term_id, $taxonomy )->count )
-				|| array_filter( // Filter count => 0 -- if all are 0, we get an empty array, boolean false.
+				|| array_filter( // Filter count => 0 -- if all are 0, we get an empty array, Boolean false.
 					array_column(
 						\get_terms( [
 							'taxonomy'   => $taxonomy,
@@ -102,6 +102,7 @@ class Term {
 	 * Returns the term ancestors.
 	 *
 	 * @since 5.1.0
+	 * @since 5.1.3 No longer uses memoization to cache results.
 	 *
 	 * @param int    $term_id      The term ID.
 	 * @param string $taxonomy     The taxonomy.
@@ -110,12 +111,9 @@ class Term {
 	 */
 	public static function get_term_parents( $term_id, $taxonomy, $include_self = false ) {
 
-		// phpcs:ignore, WordPress.CodeAnalysis.AssignmentInCondition -- I know.
-		if ( null !== $memo = memo( null, $term_id, $include_self ) ) return $memo;
-
 		// Term ID may be 0 when no terms are present.
 		if ( ! $term_id )
-			return memo( [], $term_id, $include_self );
+			return [];
 
 		// This method is inefficient, but it applies filters we must invoke for compatibility with other plugins.
 		$ancestors = \get_ancestors( $term_id, $taxonomy, 'taxonomy' );
@@ -126,18 +124,17 @@ class Term {
 		$parents = [];
 
 		foreach ( array_reverse( $ancestors ) as $_term_id ) {
-			$parents[ $_term_id ] = \get_term( $_term_id, $taxonomy );
+			$parent = \get_term( $_term_id, $taxonomy );
 
-			if ( \is_wp_error( $parents[ $_term_id ] ) ) {
-				/**
-				 * Corner case: If the parent term disappeared, the link is broken.
-				 * Then, WordPress assumes its ancestor term as its parent via the while loop.
-				 * WordPress's get_ancestors() function already checks for this, but may fail ungracefully when caches are out of sync.
-				 */
-				unset( $parents[ $_term_id ] );
-			}
+			/**
+			 * Corner case: If the parent term disappeared, the link is broken.
+			 * Then, WordPress assumes its ancestor term as its parent via the while loop.
+			 * WordPress's get_ancestors() function already checks for this, but may fail ungracefully when caches are out of sync.
+			 */
+			if ( $parent && ! \is_wp_error( $parent ) )
+				$parents[ $_term_id ] = $parent;
 		}
 
-		return memo( $parents, $term_id, $include_self );
+		return $parents;
 	}
 }

@@ -18,10 +18,10 @@ if ( class_exists( 'WP_Customize_Control' ) && ! class_exists( 'WP_Customize_Wtl
 			?>
 
 			<div style="padding-bottom: 20px;">
-				<span style="color:#0e9cd1"><strong>NEW!</strong></span>
+				<span style="color:#0e9cd1"><strong><?php esc_html_e( 'NEW!', 'decorator-woocommerce-email-customizer' ); ?></strong></span>
                         </div>
 			<span class="customize-control-title">
-				<?php _e( 'Load Template', 'decorator-woocommerce-email-customizer' ); ?>
+				<?php esc_html_e( 'Load Template', 'decorator-woocommerce-email-customizer' ); ?>
 			</span>
 			<div>
 				<?php foreach ( $this->choices as $value => $label ) : ?>                                 

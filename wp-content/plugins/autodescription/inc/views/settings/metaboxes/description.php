@@ -6,18 +6,18 @@
 
 namespace The_SEO_Framework;
 
-\defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) or die;
+( \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) ) or die;
 
-use \The_SEO_Framework\Admin\Settings\Layout\{
+use The_SEO_Framework\Admin\Settings\Layout\{
 	HTML,
 	Input,
 };
 
-// phpcs:disable, WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
+// phpcs:disable WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2016 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2016 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -38,7 +38,7 @@ use \The_SEO_Framework\Admin\Settings\Layout\{
 switch ( $instance ) : // Quite useless, but prepared for expansion.
 	case 'main':
 		HTML::description(
-			\__( 'The meta description suggests text to be used under the title on search engine results pages.', 'autodescription' )
+			\__( 'The meta description suggests text to be used under the title on search engine results pages.', 'autodescription' ),
 		);
 
 		?>
@@ -60,7 +60,7 @@ switch ( $instance ) : // Quite useless, but prepared for expansion.
 			true,
 		);
 		HTML::description(
-			\__( "Open Graph requires descriptions. So, it's best to leave description generation enabled.", 'autodescription' )
+			\__( "Open Graph requires descriptions. So, it's best to leave description generation enabled.", 'autodescription' ),
 		);
 
 		?>
@@ -69,7 +69,7 @@ switch ( $instance ) : // Quite useless, but prepared for expansion.
 		HTML::header_title( \__( 'Advanced Generation Settings', 'autodescription' ) );
 
 		HTML::description(
-			\__( 'The HTML content of your pages can be used to generate descriptions. The generator processes this HTML in passing layers to understand the layout. If the HTML is complex, not all layers may be processed, and you might find spaces missing between sentences. Increasing the maximum number of passes reduces the chance of this happening, but at the cost of performance.', 'autodescription' )
+			\__( 'The HTML content of your pages can be used to generate descriptions. The generator processes this HTML in passing layers to understand the layout. If the HTML is complex, not all layers may be processed, and you might find spaces missing between sentences. Increasing the maximum number of passes reduces the chance of this happening, but at the cost of performance.', 'autodescription' ),
 		);
 
 		/**
@@ -116,7 +116,7 @@ switch ( $instance ) : // Quite useless, but prepared for expansion.
 			\sprintf(
 				'<a href="%s" target=_blank rel="noreferrer noopener">%s</a>',
 				'https://kb.theseoframework.com/?p=65#html-passes',
-				\esc_html__( 'Learn how this works.', 'autodescription' )
+				\esc_html__( 'Learn how this works.', 'autodescription' ),
 			)
 		);
 endswitch;

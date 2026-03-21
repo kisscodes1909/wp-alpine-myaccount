@@ -8,9 +8,9 @@ namespace The_SEO_Framework\Data\Plugin;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\is_headless;
+use function The_SEO_Framework\is_headless;
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Helper\Query,
 	Helper\Taxonomy,
 	Traits\Property_Refresher,
@@ -18,7 +18,7 @@ use \The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -40,6 +40,8 @@ use \The_SEO_Framework\{
  * @since 5.1.0 Added the Property_Refresher trait.
  * @access protected
  *         Use tsf()->data()->plugin()->term() instead.
+ *
+ * @NOTE: All static:: calls within this class are intentional due to Property_Refresher trait.
  */
 class Term {
 	use Property_Refresher;
@@ -124,7 +126,7 @@ class Term {
 		/**
 		 * @since 4.0.5
 		 * @since 4.1.4 1. Now considers headlessness.
-		 *              2. Now returns a 3rd parameter: boolean $headless.
+		 *              2. Now returns a 3rd parameter: Boolean $headless.
 		 * @note Do not delete/unset/add indexes! It'll cause errors.
 		 * @param array $meta        The current term meta.
 		 * @param int   $term_id     The term ID.

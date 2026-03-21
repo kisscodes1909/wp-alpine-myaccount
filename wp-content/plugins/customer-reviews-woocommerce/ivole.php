@@ -3,14 +3,14 @@
 Plugin Name: Customer Reviews for WooCommerce
 Description: Customer Reviews for WooCommerce plugin helps you get more customer reviews for your shop by sending automated reminders and coupons.
 Plugin URI: https://wordpress.org/plugins/customer-reviews-woocommerce/
-Version: 5.64.1
+Version: 5.102.0
 Author: CusRev
 Author URI: https://www.cusrev.com/business/
 Text Domain: customer-reviews-woocommerce
 Domain Path: /languages
 Requires at least: 4.5
 WC requires at least: 3.6
-WC tested up to: 9.4
+WC tested up to: 10.5
 License: GPLv3
 
 Customer Reviews for WooCommerce is free software: you can redistribute it and/or modify
@@ -74,10 +74,6 @@ if (
 
 	function cr_plugins_loaded() {
 		$cr_qtranslate = new CR_QTranslate();
-		if( is_admin() || wp_doing_cron() ) {
-			CR_Reviews_Importer::init_background_importer();
-			CR_Reviews_Exporter::init_background_exporter();
-		}
 	}
 
 	function cr_woocommerce_init() {
@@ -115,15 +111,9 @@ if (
 
 add_shortcode( 'cusrev_reviews', 'ivole_reviews_shortcode' );
 
-function ivole_reviews_shortcode( $atts, $content )
-{
-	$shortcode_enabled = get_option( 'ivole_reviews_shortcode', 'no' );
-	if( $shortcode_enabled === 'no' ) {
-		return;
-	} else {
-		extract( shortcode_atts( array( 'comment_file' => '/comments.php' ), $atts ) );
-		$content = ivole_return_comment_form( $comment_file );
-	}
+function ivole_reviews_shortcode( $atts, $content ) {
+	extract( shortcode_atts( array( 'comment_file' => '/comments.php' ), $atts ) );
+	$content = ivole_return_comment_form( $comment_file );
 	return $content;
 }
 
@@ -268,6 +258,14 @@ function ivole_set_duplicate_site_url_lock() {
 	update_option( 'ivole_ignore_duplicate_siteurl_notice', '' );
 }
 
+// activation activities
+register_activation_hook( __FILE__, 'cr_activate_the_plugin' );
+function cr_activate_the_plugin() {
+	// create a custom table for storing logs about review reminders
+	$reminders_log = new CR_Reminders_Log();
+	$reminders_log->check_create_table();
+}
+
 // deactivation clean-up
 register_deactivation_hook( __FILE__, 'cr_deactivate_the_plugin' );
 function cr_deactivate_the_plugin() {
@@ -280,6 +278,4 @@ function cr_deactivate_the_plugin() {
 	$feed_reviews = new CR_Google_Shopping_Feed();
 	$feed_reviews->deactivate();
 	update_option( 'ivole_google_generate_xml_feed', 'no' );
-	// deactivate the live mode for verified reviews
-	update_option( 'ivole_verified_live_mode', 'no' );
 }

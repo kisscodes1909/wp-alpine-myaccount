@@ -8,7 +8,7 @@ namespace The_SEO_Framework\Meta\Image;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Data,
 	Helper\Query,
 	Helper\Format,
@@ -16,7 +16,7 @@ use \The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -153,7 +153,7 @@ final class Generator {
 				],
 			);
 
-			// TODO can we somehow limit this search to static::MAX_CONTENT_IMAGES?
+			// TODO can we somehow limit this search to self::MAX_CONTENT_IMAGES?
 			// -> We could, via preg_match() and strip content, but the function overhead won't help.
 			preg_match_all(
 				'/<img\b[^>]+?\bsrc=(["\'])?([^"\'>\s]+)\1?[^>]*?>/mi',
@@ -174,7 +174,7 @@ final class Generator {
 				'id'  => 0,
 			];
 
-			if ( ++$yielded_images > static::MAX_CONTENT_IMAGES ) break;
+			if ( ++$yielded_images > self::MAX_CONTENT_IMAGES ) break;
 		}
 	}
 
@@ -227,7 +227,7 @@ final class Generator {
 
 		$image = \get_theme_mod(
 			'header_image_data',
-			\get_theme_support( 'custom-header', 'default-image' )
+			\get_theme_support( 'custom-header', 'default-image' ),
 		);
 
 		if ( \is_string( $image ) && $image ) {

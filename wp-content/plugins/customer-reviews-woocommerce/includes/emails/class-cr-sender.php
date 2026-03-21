@@ -8,18 +8,23 @@ if ( ! class_exists( 'CR_Sender' ) ) :
 
 	class CR_Sender {
 		public function __construct() {
-			$order_status = get_option( 'ivole_order_status', 'completed' );
-			$order_status = 'wc-' === substr( $order_status, 0, 3 ) ? substr( $order_status, 3 ) : $order_status;
 			// Triggers for completed orders
-			add_action( 'woocommerce_order_status_' . $order_status, array( $this, 'sender_trigger' ), 20, 1 );
-			add_action( 'ivole_send_reminder', array( $this, 'sender_action' ), 10, 2 );
+			add_action( 'woocommerce_order_status_changed', array( $this, 'sender_trigger' ), 20, 4 );
 			// Trigger for refunded orders
 			add_action( 'woocommerce_order_status_refunded', array( $this, 'refund_trigger' ), 20, 1 );
 			// Trigger for cancelled orders
 			add_action( 'woocommerce_order_status_cancelled', array( $this, 'cancellation_trigger' ), 20, 1 );
+			//
+			add_action( 'ivole_send_reminder', array( $this, 'sender_action' ), 10, 2 );
 		}
 
-		public function sender_trigger( $order_id ) {
+		public function sender_trigger( $order_id, $old_status, $new_status, $order ) {
+			// check if the order transitioned to a status relevant for scheduling a review reminder
+			$order_status = get_option( 'ivole_order_status', 'completed' );
+			$order_status = 'wc-' === substr( $order_status, 0, 3 ) ? substr( $order_status, 3 ) : $order_status;
+			if ( $order_status !== $new_status ) {
+				return;
+			}
 			// check if reminders are enabled
 			$reminders_enabled = get_option( 'ivole_enable', 'no' );
 			if( $reminders_enabled === 'no' ) {
@@ -88,9 +93,15 @@ if ( ! class_exists( 'CR_Sender' ) ) :
 				} else {
 					// skip sending because EU customer but no consent was received
 					if (
-						'yes' !== $consent &&
-						self::is_eu_customer( $order ) &&
-						'yes' === get_option( 'ivole_verified_reviews', 'no' )
+						(
+							'yes' !== $consent &&
+							'yes' === get_option( 'ivole_customer_consent', 'no' )
+						) ||
+						(
+							'yes' !== $consent &&
+							self::is_eu_customer( $order ) &&
+							'yes' === get_option( 'ivole_verified_reviews', 'no' )
+						)
 					) {
 						$order->add_order_note( __( 'CR: a review reminder was not scheduled because the customer did not provide their consent.', 'customer-reviews-woocommerce' ) );
 						return;
@@ -160,7 +171,7 @@ if ( ! class_exists( 'CR_Sender' ) ) :
 					if ( ! wp_next_scheduled( 'ivole_send_reminder', array( $order_id ) ) ) {
 						$delay = $delay_channel[0]['delay'];
 						$timestamp = apply_filters( 'cr_reminder_delay', time() + $delay * DAY_IN_SECONDS, $order_id, $delay );
-						if( false === wp_schedule_single_event( $timestamp, 'ivole_send_reminder', array( $order_id ) ) ) {
+						if ( false === wp_schedule_single_event( $timestamp, 'ivole_send_reminder', array( $order_id ) ) ) {
 							$order->add_order_note( __( 'CR: a review reminder could not be scheduled.', 'customer-reviews-woocommerce' ) );
 						} else {
 							$count = $order->get_meta( '_ivole_review_reminder', true );
@@ -191,16 +202,19 @@ if ( ! class_exists( 'CR_Sender' ) ) :
 				$w = new CR_Wtsap( $order_id );
 				$result = $w->send_message( $order_id, $schedule );
 			} else {
-				$e = new Ivole_Email( $order_id );
+				$e = new Ivole_Email( $order_id, $sequence );
 				$result = $e->trigger2( $order_id, null, $schedule );
-				// logging
-				$log = new CR_Reminders_Log();
-				$l_result = $log->add(
-					$order_id,
-					apply_filters( 'cr_reminders_table_type_log', 'a', $sequence ),
-					'email',
-					$result
-				);
+				// logging for reminders except when sent via CR Cron
+				// if sent via CR Cron, then loggin in CusRev dashboard
+				if ( ! $schedule ) {
+					$log = new CR_Reminders_Log();
+					$l_result = $log->add(
+						$order_id,
+						apply_filters( 'cr_reminders_table_type_log', 'a', $sequence ),
+						'email',
+						$result
+					);
+				}
 				// end of logging
 			}
 

@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -39,7 +39,7 @@ window.tsfPost = function () {
 	 *
 	 * @since 4.0.0
 	 * @access public
-	 * @type {(Object<string,*>)|boolean|null} l10n Localized strings
+	 * @type {(Object<string,*>)|Boolean|null} l10n Localized strings
 	 */
 	const l10n = tsfPostL10n;
 
@@ -436,10 +436,11 @@ window.tsfPost = function () {
 			);
 
 			if ( Object.values( writeTerm ).includes( true ) ) {
-				// We're not debouncing this because the event is difficult to trigger in quick succession.
 				const updateParentTermSlugsViaPrimary = tsfUtils.debounce(
 					async event => {
+
 						const taxonomy = event.detail.taxonomy;
+
 						if ( writeTerm[ taxonomy ] ) {
 							termSlugs[ taxonomy ] = await tsfTermSlugs.get( event.detail.id, taxonomy );
 							queueUpdateCanonical();
@@ -588,7 +589,7 @@ window.tsfPost = function () {
 				if ( _defaultIndexOption )
 					_defaultIndexOption.innerHTML = noindexSelect.dataset.defaultI18n.replace(
 						'%s',
-						tsf.escapeString( tsf.decodeEntities( indexDefaultValue ) )
+						tsf.escapeString( tsf.decodeEntities( indexDefaultValue ) ),
 					);
 
 				updateCanonicalPlaceholder();
@@ -741,7 +742,7 @@ window.tsfPost = function () {
 
 			document.addEventListener(
 				'tsf-updated-block-editor-title',
-				event => updateDefaultTitle( event.detail.value )
+				event => updateDefaultTitle( event.detail.value ),
 			);
 		}
 

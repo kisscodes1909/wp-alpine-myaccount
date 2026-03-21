@@ -12,13 +12,14 @@ if ( class_exists( 'WP_Customize_Control' ) && ! class_exists( 'WP_Customize_Sho
 
 		public function render_content() {
 			?>
-                        <div style="    border: 1px solid #e1e1e1;padding: 0px 7px 12px;">
-			<label>
-				<h3><?php echo esc_html( $this->label ); ?></h3>
-				<?php if ( ! empty( $this->description ) ) : ?>
-				<span><?php echo $this->description; ?></span>
-				<?php endif; ?>
-                        </label></div>
+            <div style="border: 1px solid #e1e1e1;padding: 0px 7px 12px;">
+				<label>
+					<h3><?php echo esc_html( $this->label ); ?></h3>
+					<?php if ( ! empty( $this->description ) ) : ?>
+					<span><?php echo esc_html( $this->description ); ?></span>
+					<?php endif; ?>
+                </label>
+			</div>
 			<?php
 		}
 	}

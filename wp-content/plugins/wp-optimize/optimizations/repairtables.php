@@ -28,7 +28,7 @@ class WP_Optimization_repairtables extends WP_Optimization {
 	 */
 	public function optimize() {
 		// check if single table name posted or optimize all tables.
-		if (isset($this->data['optimization_table']) && '' != $this->data['optimization_table']) {
+		if (isset($this->data['optimization_table']) && '' !== $this->data['optimization_table']) {
 			$table = $this->optimizer->get_table($this->data['optimization_table']);
 
 			$result = (false === $table) ? false : $this->repair_table($table);
@@ -60,7 +60,7 @@ class WP_Optimization_repairtables extends WP_Optimization {
 			$repaired = $corrupted = 0;
 
 			foreach ($tables as $table) {
-				if (false == $table->is_needing_repair) continue;
+				if (!$table->is_needing_repair) continue;
 
 				if ($this->repair_table($table)) {
 					$repaired++;
@@ -69,10 +69,12 @@ class WP_Optimization_repairtables extends WP_Optimization {
 				}
 			}
 
-			$this->register_output(sprintf(_n('%s table repaired', '%s tables repaired', $repaired), $repaired));
+			// translators: %s is number of tables repaired.
+			$this->register_output(sprintf(_n('%s table repaired', '%s tables repaired', $repaired, 'wp-optimize'), $repaired));
 
 			if ($corrupted > 0) {
-				$this->register_output(sprintf(_n('Repairing %s table was unsuccessful', 'Repairing %s tables were unsuccessful', $corrupted), $corrupted));
+				// translators: %s is number of tables
+				$this->register_output(sprintf(_n('Repairing %s table was unsuccessful', 'Repairing %s tables were unsuccessful', $corrupted, 'wp-optimize'), $corrupted));
 			}
 		}
 	}
@@ -89,15 +91,15 @@ class WP_Optimization_repairtables extends WP_Optimization {
 
 		$success = false;
 
-		if (false == $table_obj->is_needing_repair) return true;
+		if (!$table_obj->is_needing_repair) return true;
 
 		$this->logger->info('REPAIR TABLE `'.$table_obj->Name. '`');
 
-		$results = $wpdb->get_results('REPAIR TABLE `'.$table_obj->Name . '`');
+		$results = $wpdb->get_results('REPAIR TABLE `'. esc_sql($table_obj->Name) . '`');
 
 		if (!empty($results)) {
 			foreach ($results as $row) {
-				if ('status' == strtolower($row->Msg_type) && 'ok' == strtolower($row->Msg_text)) {
+				if ('status' === strtolower($row->Msg_type) && 'ok' === strtolower($row->Msg_text)) {
 					$success = true;
 				}
 
@@ -114,6 +116,8 @@ class WP_Optimization_repairtables extends WP_Optimization {
 	/**
 	 * Returns count of corrupted tables and update corrupted-tables-count value in options used to show
 	 * information for user in sidebar about corrupted tables count.
+	 *
+	 * @return int
 	 */
 	public function get_corrupted_tables_count() {
 		$tablesinfo = $this->optimizer->get_tables();
@@ -141,10 +145,11 @@ class WP_Optimization_repairtables extends WP_Optimization {
 
 		$corrupted_tables = $this->get_corrupted_tables_count();
 
-		if (0 == $corrupted_tables) {
+		if (0 === $corrupted_tables) {
 			$this->register_output(__('No corrupted tables found', 'wp-optimize'));
 		} else {
-			$this->register_output(sprintf(_n('%s corrupted table found', '%s corrupted tables found', $corrupted_tables), $corrupted_tables));
+			// translators: %s is number of corrupted tables
+			$this->register_output(sprintf(_n('%s corrupted table found', '%s corrupted tables found', $corrupted_tables, 'wp-optimize'), $corrupted_tables));
 		}
 	}
 

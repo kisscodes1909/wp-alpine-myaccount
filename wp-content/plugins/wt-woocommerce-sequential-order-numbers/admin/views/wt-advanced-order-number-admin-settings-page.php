@@ -1,66 +1,99 @@
 <?php 
-$date_frmt_tooltip= __('Click to select the date format','wt-woocommerce-sequential-order-numbers');?>
+$date_frmt_tooltip= esc_html__('Click to select the date format','wt-woocommerce-sequential-order-numbers');?>
 <div class="wt_seq_num_frmt_hlp wt_seq_num_popup">
 	<div class="wt_seq_num_popup_hd">
-		<span style="line-height:40px;" class="dashicons dashicons-calendar-alt"></span> <?php _e('Date formats','wt-woocommerce-sequential-order-numbers');?>
+		<span style="line-height:40px;" class="dashicons dashicons-calendar-alt"></span> <?php esc_html_e('Date formats','wt-woocommerce-sequential-order-numbers');?>
 		<div class="wt_seq_num_popup_close">X</div>
 	</div>
 	<div class="wt_seq_num_popup_body">
 		
 		<p style="text-align:left; margin-bottom:10px; margin-top: -10px;">
-			<?php _e('Pick one or more date formats from predefined formats listed below:','wt-woocommerce-sequential-order-numbers');?>
+			<?php esc_html_e('Pick one or more date formats from predefined formats listed below:','wt-woocommerce-sequential-order-numbers');?>
 		</p>
 		<table class="wp-list-table widefat striped">
 			<thead>
 				<tr>
-					<th><?php _e('Format','wt-woocommerce-sequential-order-numbers');?></th><th><?php _e('Output','wt-woocommerce-sequential-order-numbers');?></th>
+					<th><?php esc_html_e('Format','wt-woocommerce-sequential-order-numbers');?></th><th><?php esc_html_e('Output','wt-woocommerce-sequential-order-numbers');?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td><a class="wt_seq_num_frmt_append_btn" title="<?php echo $date_frmt_tooltip; ?>">[F]</a></td>
-					<td><?php echo date('F'); ?></td>
+					<td><a class="wt_seq_num_frmt_append_btn" title="<?php echo esc_attr($date_frmt_tooltip); ?>">[F]</a></td>
+					<td><?php
+					 // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+					 echo esc_html(date('F')); 
+					 ?></td>
 				</tr>
 				<tr>
-					<td><a class="wt_seq_num_frmt_append_btn" title="<?php echo $date_frmt_tooltip; ?>">[dS]</a></td>
-					<td><?php echo date('dS'); ?></td>
+					<td><a class="wt_seq_num_frmt_append_btn" title="<?php echo esc_attr($date_frmt_tooltip); ?>">[dS]</a></td>
+					<td><?php
+					 // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+					 echo esc_html(date('dS')); 
+					 ?></td>
 				</tr>
 				<tr>
-					<td><a class="wt_seq_num_frmt_append_btn" title="<?php echo $date_frmt_tooltip; ?>">[M]</a></td>
-					<td><?php echo date('M'); ?></td>
+					<td><a class="wt_seq_num_frmt_append_btn" title="<?php echo esc_attr($date_frmt_tooltip); ?>">[M]</a></td>
+					<td><?php
+					 // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+					 echo esc_html(date('M')); 
+					 ?></td>
 				</tr>
 				<tr>
-					<td><a class="wt_seq_num_frmt_append_btn" title="<?php echo $date_frmt_tooltip; ?>">[m]</a></td>
-					<td><?php echo date('m'); ?></td>
+					<td><a class="wt_seq_num_frmt_append_btn" title="<?php echo esc_attr($date_frmt_tooltip); ?>">[m]</a></td>
+					<td><?php
+					 // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+					 echo esc_html(date('m')); 
+					 ?></td>
 				</tr>
 				<tr>
-					<td><a class="wt_seq_num_frmt_append_btn" title="<?php echo $date_frmt_tooltip; ?>">[d]</a></td>
-					<td><?php echo date('d'); ?></td>
+					<td><a class="wt_seq_num_frmt_append_btn" title="<?php echo esc_attr($date_frmt_tooltip); ?>">[d]</a></td>
+					<td><?php
+					 // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+					 echo esc_html(date('d')); 
+					 ?></td>
 				</tr>
 				<tr>
-					<td><a class="wt_seq_num_frmt_append_btn" title="<?php echo $date_frmt_tooltip; ?>">[D]</a></td>
-					<td><?php echo date('D'); ?></td>
+					<td><a class="wt_seq_num_frmt_append_btn" title="<?php echo esc_attr($date_frmt_tooltip); ?>">[D]</a></td>
+					<td><?php
+					 // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+					 echo esc_html(date('D')); 
+					 ?></td>
 				</tr>
 				<tr>
-					<td><a class="wt_seq_num_frmt_append_btn" title="<?php echo $date_frmt_tooltip; ?>">[y]</a></td>
-					<td><?php echo date('y'); ?></td>
+					<td><a class="wt_seq_num_frmt_append_btn" title="<?php echo esc_attr($date_frmt_tooltip); ?>">[y]</a></td>
+					<td><?php
+					 // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+					 echo esc_html(date('y')); 
+					 ?></td>
 				</tr>
 				<tr>
-					<td><a class="wt_seq_num_frmt_append_btn" title="<?php echo $date_frmt_tooltip; ?>">[Y]</a></td>
-					<td><?php echo date('Y'); ?></td>
+					<td><a class="wt_seq_num_frmt_append_btn" title="<?php echo esc_attr($date_frmt_tooltip); ?>">[Y]</a></td>
+					<td><?php
+					 // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+					 echo esc_html(date('Y')); 
+					 ?></td>
 				</tr>
 				<tr>
-					<td><a class="wt_seq_num_frmt_append_btn" title="<?php echo $date_frmt_tooltip; ?>">[d/m/y]</a></td>
-					<td><?php echo date('d/m/y'); ?></td>
+					<td><a class="wt_seq_num_frmt_append_btn" title="<?php echo esc_attr($date_frmt_tooltip); ?>">[d/m/y]</a></td>
+					<td><?php
+					 // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+					 echo esc_html(date('d/m/y')); 
+					 ?></td>
 				</tr>
 				<tr>
-					<td><a class="wt_seq_num_frmt_append_btn" title="<?php echo $date_frmt_tooltip; ?>">[d-m-Y]</a></td>
-					<td><?php echo date('d-m-Y'); ?></td>
+					<td><a class="wt_seq_num_frmt_append_btn" title="<?php echo esc_attr($date_frmt_tooltip); ?>">[d-m-Y]</a></td>
+					<td><?php
+					 // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+					 echo esc_html(date('d-m-Y')); 
+					 ?></td>
 				</tr>
 			</tbody>
 		</table>
 		<p style="text-align:left; margin-bottom:2px;">
-			<?php _e('For e.g, Input [y]/[m]/[d] to get the order date format as ','wt-woocommerce-sequential-order-numbers');echo date('y/m/d');?>
+			<?php esc_html_e('For e.g, Input [y]/[m]/[d] to get the order date format as ','wt-woocommerce-sequential-order-numbers');
+			 // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+			echo esc_html(date('y/m/d'));
+			?>
 		</p>
 	</div>
 </div>

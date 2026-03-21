@@ -1,11 +1,16 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 class Printful_Size_Guide {
 	/**
 	 * Bump this everytime you make changes to size guide CSS file
 	 */
 	const CSS_VERSION = '1';
+
+    const PF_ALLOWED_IMAGE_HOSTS = [
+        'files.cdn.printful.com',
+    ];
 
 	public static function init() {
 		$sizeGuide = new self();
@@ -164,7 +169,22 @@ class Printful_Size_Guide {
 			return null;
 		}
 
-		require_once ABSPATH . 'wp-admin/includes/file.php';
+        if ( ! wp_http_validate_url( $url ) ) {
+            return new WP_Error( 'invalid_url', 'Invalid image URL' );
+        }
+
+        $parts = wp_parse_url( $url );
+        if ( empty( $parts['host'] ) ) {
+            return new WP_Error( 'invalid_url', 'Invalid image URL' );
+        }
+
+        $host = strtolower( $parts['host'] );
+
+        if ( ! in_array( $host, self::PF_ALLOWED_IMAGE_HOSTS, true ) ) {
+            return new WP_Error( 'invalid_url', 'Invalid image URL' );
+        }
+
+        require_once ABSPATH . 'wp-admin/includes/file.php';
 
 		// Download size guide img to temp file
 		$temp_file_name = download_url( $url, 20 );

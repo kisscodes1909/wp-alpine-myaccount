@@ -8,13 +8,13 @@ namespace The_SEO_Framework\Helper\Format;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\umemo;
+use function The_SEO_Framework\umemo;
 
-use \The_SEO_Framework\Data;
+use The_SEO_Framework\Data;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -54,12 +54,12 @@ class Time {
 			return '';
 
 		if ( is_numeric( $time ) )
-			return gmdate( static::get_preferred_format(), (int) $time );
+			return gmdate( self::get_preferred_format(), (int) $time );
 
 		// Try to create from date; on success, format it. This way we won't produce errors.
 		$value = $time ? date_create_from_format( 'Y-m-d H:i:s', $time ) : '';
 
-		return $value ? date_format( $value, static::get_preferred_format() ) : '';
+		return $value ? date_format( $value, self::get_preferred_format() ) : '';
 	}
 
 	/**
@@ -76,8 +76,8 @@ class Time {
 		return umemo( __METHOD__ )
 			?? umemo(
 				__METHOD__,
-				static::get_format(
-					(bool) Data\Plugin::get_option( 'timestamps_format' )
+				self::get_format(
+					(bool) Data\Plugin::get_option( 'timestamps_format' ),
 				),
 			);
 	}

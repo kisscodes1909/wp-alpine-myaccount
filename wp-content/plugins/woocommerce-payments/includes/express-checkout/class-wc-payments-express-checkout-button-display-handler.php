@@ -82,11 +82,14 @@ class WC_Payments_Express_Checkout_Button_Display_Handler {
 		$this->express_checkout_button_handler->init();
 
 		$is_woopay_enabled          = WC_Payments_Features::is_woopay_enabled();
-		$is_payment_request_enabled = 'yes' === $this->gateway->get_option( 'payment_request' );
+		$is_payment_request_enabled = $this->gateway->is_payment_request_enabled();
+		$is_amazon_pay_enabled      = $this->express_checkout_helper->can_use_amazon_pay();
 
-		if ( $is_woopay_enabled || $is_payment_request_enabled ) {
+		if ( $is_woopay_enabled ) {
 			add_action( 'wc_ajax_wcpay_add_to_cart', [ $this->express_checkout_ajax_handler, 'ajax_add_to_cart' ] );
+		}
 
+		if ( $is_woopay_enabled || $is_payment_request_enabled || $is_amazon_pay_enabled ) {
 			add_action( 'woocommerce_after_add_to_cart_form', [ $this, 'display_express_checkout_buttons' ], 1 );
 			add_action( 'woocommerce_proceed_to_checkout', [ $this, 'display_express_checkout_buttons' ], 21 );
 			add_action( 'woocommerce_checkout_before_customer_details', [ $this, 'display_express_checkout_buttons' ], 1 );
@@ -123,7 +126,7 @@ class WC_Payments_Express_Checkout_Button_Display_Handler {
 		$should_show_woopay                  = $this->platform_checkout_button_handler->should_show_woopay_button();
 		$should_show_express_checkout_button = $this->express_checkout_helper->should_show_express_checkout_button();
 
-		// When Payment Request button is enabled, we need the separator markup on the page, but hidden in case the browser doesn't have any payment request methods to display.
+		// When Express Checkout button is enabled, we need the separator markup on the page, but hidden in case the browser doesn't have any express payment methods to display.
 		// More details: https://github.com/Automattic/woocommerce-payments/pull/5399#discussion_r1073633776.
 		$separator_starts_hidden = ! $should_show_woopay;
 		if ( $should_show_woopay || $should_show_express_checkout_button ) {
@@ -141,11 +144,10 @@ class WC_Payments_Express_Checkout_Button_Display_Handler {
 			} else {
 				$this->add_order_attribution_inputs();
 			}
-
+			$this->display_express_checkout_separator_if_necessary( $separator_starts_hidden );
 			?>
 			</div >
 			<?php
-			$this->display_express_checkout_separator_if_necessary( $separator_starts_hidden );
 		}
 	}
 

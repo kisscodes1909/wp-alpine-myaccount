@@ -8,7 +8,7 @@ namespace The_SEO_Framework\Data\Filter;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Helper,
 	Helper\Format\Strings,
 	Meta,
@@ -16,7 +16,7 @@ use \The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -36,22 +36,22 @@ use \The_SEO_Framework\{
  *
  * @since 5.0.0
  * @access protected
- *         Use tsf()->filter()->sanitize() instead.
+ *         Use tsf()->sanitize() instead.
  */
 class Sanitize {
 
 	/**
-	 * Sanitizes input to a boolean integer, i.e. 0, 1,
+	 * Sanitizes input to a Boolean integer, i.e. 0, 1,
 	 *
-	 * Uses double casting. First, we cast to boolean, then to int.
+	 * Uses double casting. First, we cast to Boolean, then to int.
 	 *
 	 * @since 2.2.2
 	 * @since 2.8.0 Method is now public.
 	 * @since 5.0.0 1. Moved from `\The_SEO_Framework\Load`.
 	 *              2. Renamed from `s_one_zero`.
 	 *
-	 * @param mixed $value The value to cast to a boolean integer.
-	 * @return int A boolean as a string (1 or 0)
+	 * @param mixed $value The value to cast to a Boolean integer.
+	 * @return int A Boolean as a string (1 or 0)
 	 */
 	public static function boolean_integer( $value ) {
 		return (int) (bool) $value;
@@ -123,30 +123,41 @@ class Sanitize {
 
 	/**
 	 * Sanitizes metadata content.
+	 *
+	 * It doesn't escape HTML. In fact, it can introduce HTML.
+	 * You MUST escape the output if needed.
+	 * This class is called Sanitize, not Escape.
+	 *
 	 * Returns single-line, trimmed text without duplicated spaces, nbsp, or tabs.
-	 * Also converts back-solidi to their respective HTML entities for non-destructive handling.
+	 * Then converts lone hyphens and back-solidi to their respective HTML entities
+	 * for non-destructive handling in wptexturize().
 	 * Also adds a capital P, dangit.
-	 * Finally, it texturizes the content.
+	 * Then it texturizes the content via said wptexturize().
+	 * Finally, it converts the hyphen and backslash entities back to their literal characters.
 	 *
 	 * @since 5.0.0
+	 * @since 5.1.3 Now decodes HTML entities at the end of its process.
 	 *
 	 * @param string $text The text.
 	 * @return string One line sanitized text.
 	 */
 	public static function metadata_content( $text ) {
 
-		if ( ! \is_scalar( $text ) || ! \strlen( $text ) ) return '';
+		if ( ! \is_scalar( $text ) || ! \strlen( $text ) )
+			return '';
 
-		return \wptexturize(
-			\capital_P_dangit(
-				static::backward_solidus_to_entity(
-					static::lone_hyphen_to_entity(
-						static::remove_repeated_spacing(
-							trim(
-								static::tab_to_space(
-									static::newline_to_space(
-										static::nbsp_to_space(
-											(string) $text,
+		return html_entity_decode(
+			\wptexturize(
+				\capital_P_dangit(
+					self::backward_solidus_to_entity(
+						self::lone_hyphen_to_entity(
+							self::remove_repeated_spacing(
+								trim(
+									self::tab_to_space(
+										self::newline_to_space(
+											self::nbsp_to_space(
+												(string) $text,
+											),
 										),
 									),
 								),
@@ -155,6 +166,7 @@ class Sanitize {
 					),
 				),
 			),
+			\ENT_HTML5 | \ENT_QUOTES | \ENT_SUBSTITUTE,
 		);
 	}
 
@@ -170,7 +182,7 @@ class Sanitize {
 	public static function normalize_metadata_content_for_strcmp( $text ) {
 		// Why not blog_charset? Because blog_charset is there only to onboard non-UTF-8 to UTF-8.
 		return html_entity_decode(
-			static::metadata_content( $text ),
+			self::metadata_content( $text ),
 			\ENT_QUOTES | \ENT_SUBSTITUTE | \ENT_HTML5,
 			'UTF-8',
 		);
@@ -400,7 +412,7 @@ class Sanitize {
 		// This is over 350x faster than a polyfill for `array_is_list()`.
 		if ( isset( $details[0] ) && array_values( $details ) === $details ) {
 			foreach ( $details as $deets )
-				$sanitized_details[] = static::image_details( $deets ); // phpcs:ignore, VariableAnalysis.CodeAnalysis
+				$sanitized_details[] = self::image_details( $deets );
 
 			return $sanitized_details ?? [];
 		}
@@ -532,7 +544,7 @@ class Sanitize {
 		$handle = preg_replace(
 			'/[^a-z\d_]/i',
 			'',
-			trim( Meta\URI\Utils::get_relative_part_from_url( $handle ), ' /@' )
+			trim( Meta\URI\Utils::get_relative_part_from_url( $handle ), ' /@' ),
 		);
 		$length = \strlen( $handle );
 

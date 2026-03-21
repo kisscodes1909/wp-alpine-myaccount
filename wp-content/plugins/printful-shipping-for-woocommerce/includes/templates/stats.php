@@ -1,3 +1,7 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) exit;
+?>
+
 <div class="printful-stats">
 	<div class="printful-stats-item">
 		<h4><?php echo esc_html(get_woocommerce_currency_symbol($stats['currency'])) . ' ' . esc_html($stats['orders_today']['total']); ?></h4>

@@ -4,6 +4,7 @@
  *
  * @var string $connect_url
  */
+if ( ! defined( 'ABSPATH' ) ) exit;
 ?>
 
 <div class="printful-connect">

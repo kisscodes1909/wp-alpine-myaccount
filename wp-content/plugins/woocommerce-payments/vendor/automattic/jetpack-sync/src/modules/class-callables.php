@@ -13,6 +13,10 @@ use Automattic\Jetpack\Sync\Defaults;
 use Automattic\Jetpack\Sync\Functions;
 use Automattic\Jetpack\Sync\Settings;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit( 0 );
+}
+
 /**
  * Class to handle sync for callables.
  */
@@ -291,17 +295,23 @@ class Callables extends Module {
 	 * @access public
 	 *
 	 * @param array $config Full sync configuration for this sync module.
-	 * @param int   $send_until The timestamp until the current request can send.
 	 * @param array $status This Module Full Sync Status.
+	 * @param int   $send_until The timestamp until the current request can send.
+	 * @param int   $started The timestamp when the full sync started.
 	 *
 	 * @return array This Module Full Sync Status.
 	 */
-	public function send_full_sync_actions( $config, $send_until, $status ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	public function send_full_sync_actions( $config, $status, $send_until, $started ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		// we call this instead of do_action when sending immediately.
-		$this->send_action( 'jetpack_full_sync_callables', array( true ) );
+		$result = $this->send_action( 'jetpack_full_sync_callables', array( true ) );
 
-		// The number of actions enqueued, and next module state (true == done).
-		return array( 'finished' => true );
+		if ( is_wp_error( $result ) ) {
+			$status['error'] = true;
+			return $status;
+		}
+		$status['finished'] = true;
+		$status['sent']     = $status['total'];
+		return $status;
 	}
 
 	/**
@@ -310,7 +320,7 @@ class Callables extends Module {
 	 * @access public
 	 *
 	 * @param array $config Full sync configuration for this sync module.
-	 * @return array Number of items yet to be enqueued.
+	 * @return int Number of items yet to be enqueued.
 	 */
 	public function estimate_full_sync_actions( $config ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		return 1;
@@ -379,12 +389,15 @@ class Callables extends Module {
 
 		$plugins_action_links = array();
 		// Is the transient lock in place?
-		$plugins_lock = get_transient( 'jetpack_plugin_api_action_links_refresh', false );
+		$plugins_lock = get_transient( 'jetpack_plugin_api_action_links_refresh' );
 		if ( ! empty( $plugins_lock ) && ( isset( $current_screeen->id ) && 'plugins' !== $current_screeen->id ) ) {
 			return;
 		}
-		$plugins = array_keys( Functions::get_plugins() );
-		foreach ( $plugins as $plugin_file ) {
+		$plugins = Functions::get_plugins();
+		if ( ! is_array( $plugins ) ) {
+			return;
+		}
+		foreach ( $plugins as $plugin_file => $plugin_data ) {
 			/**
 			 *  Plugins often like to unset things but things break if they are not able to.
 			 */
@@ -396,13 +409,13 @@ class Callables extends Module {
 				'edit'       => '',
 			);
 			/** This filter is documented in src/wp-admin/includes/class-wp-plugins-list-table.php */
-			$action_links = apply_filters( 'plugin_action_links', $action_links, $plugin_file, null, 'all' );
+			$action_links = apply_filters( 'plugin_action_links', $action_links, $plugin_file, $plugin_data, 'all' );
 			// Verify $action_links is still an array.
 			if ( ! is_array( $action_links ) ) {
 				$action_links = array();
 			}
 			/** This filter is documented in src/wp-admin/includes/class-wp-plugins-list-table.php */
-			$action_links = apply_filters( "plugin_action_links_{$plugin_file}", $action_links, $plugin_file, null, 'all' );
+			$action_links = apply_filters( "plugin_action_links_{$plugin_file}", $action_links, $plugin_file, $plugin_data, 'all' );
 			// Verify $action_links is still an array to resolve warnings from filters not returning an array.
 			if ( is_array( $action_links ) ) {
 				$action_links = array_filter( $action_links );

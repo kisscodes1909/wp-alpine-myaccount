@@ -8,13 +8,13 @@ namespace The_SEO_Framework\Data;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\is_headless;
+use function The_SEO_Framework\is_headless;
 
-use \The_SEO_Framework\Traits\Property_Refresher;
+use The_SEO_Framework\Traits\Property_Refresher;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -35,6 +35,8 @@ use \The_SEO_Framework\Traits\Property_Refresher;
  * @since 5.0.0
  * @access protected
  *         Use tsf()->data()->plugin() instead.
+ *
+ * @NOTE: All static:: calls within this class are intentional due to Property_Refresher trait.
  */
 class Plugin {
 	use Property_Refresher;
@@ -83,7 +85,7 @@ class Plugin {
 	 */
 	public static function get_option( ...$key ) {
 
-		$option = static::$options_memo ?? static::get_options();
+		$option = self::$options_memo ?? self::get_options();
 
 		foreach ( $key as $k )
 			$option = $option[ $k ] ?? null;
@@ -100,8 +102,8 @@ class Plugin {
 	 */
 	public static function get_options() {
 
-		if ( isset( static::$options_memo ) )
-			return static::$options_memo;
+		if ( isset( self::$options_memo ) )
+			return self::$options_memo;
 
 		static::register_automated_refresh( 'options_memo' );
 
@@ -110,13 +112,13 @@ class Plugin {
 		/**
 		 * @since 2.0.0
 		 * @since 4.1.4 1. Now considers headlessness.
-		 *              2. Now returns a 3rd parameter: boolean $headless.
+		 *              2. Now returns a 3rd parameter: Boolean $headless.
 		 *
 		 * @param array  $settings The settings
 		 * @param string $setting  The settings name.
 		 * @param bool   $headless Whether the options are headless.
 		 */
-		return static::$options_memo = \apply_filters(
+		return self::$options_memo = \apply_filters(
 			'the_seo_framework_get_options',
 			$is_headless
 				? Plugin\Setup::get_default_options()

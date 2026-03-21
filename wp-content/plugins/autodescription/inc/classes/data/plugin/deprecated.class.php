@@ -8,11 +8,11 @@ namespace The_SEO_Framework\Data\Plugin;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\Data;
+use The_SEO_Framework\Data;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -52,7 +52,7 @@ final class Deprecated {
 	 */
 	public static function get_deprecated_option( ...$key ) {
 
-		$map = static::$deprecation_map ??= static::get_deprecation_map();
+		$map = self::$deprecation_map ??= self::get_deprecation_map();
 
 		foreach ( $key as $k )
 			$map = $map[ $k ] ?? null;
@@ -78,6 +78,6 @@ final class Deprecated {
 	 * @return array A list of deprecated options and their replacement indexes.
 	 */
 	public static function get_deprecation_map() {
-		return static::$deprecation_map ??= [];
+		return self::$deprecation_map ??= [];
 	}
 }

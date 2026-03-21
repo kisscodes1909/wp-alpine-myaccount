@@ -287,7 +287,6 @@ class UpdatePluginManagers
         $settings['shop_version'] = SENDINBLUE_WORDPRESS_SHOP_VERSION;
         $settings['plugin_version'] = SENDINBLUE_WC_PLUGIN_VERSION;
         $settings['language'] = current(explode("_", get_locale()));
-        $settings['callback'] = get_site_url() . '/index.php?pagename=sendinblue-callback';
 
         $key = $this
             ->api_manager
@@ -322,7 +321,9 @@ class UpdatePluginManagers
 
         (get_option(SENDINBLUE_ECOMMERCE_CALLED_TIME, null) !== null) ? update_option(SENDINBLUE_ECOMMERCE_CALLED_TIME, time()) : add_option(SENDINBLUE_ECOMMERCE_CALLED_TIME, time());
 
-        if (empty($settings[SendinblueClient::IS_ECOMMERCE_ENABLED])) {
+        //this will stop the calls as IS_ECOMMERCE_ENABLED is never being set,
+        //thus we keep getting incessent calls on MS BE
+        if (empty($settings[SendinblueClient::IS_PRODUCT_SYNC_ENABLED])) {
             $response = $this->client_manager->enableEcommerce();
             if (!empty($response) && $response['code'] == 201) {
                 update_option(SENDINBLUE_WC_ECOMMERCE_REQ, true);
@@ -349,8 +350,14 @@ class UpdatePluginManagers
             'plugin_version' => SENDINBLUE_WC_PLUGIN_VERSION,
             'shop_version' => SENDINBLUE_WORDPRESS_SHOP_VERSION
         );
+
+        if (class_exists( 'Automattic\WooCommerce\Blocks\Domain\Services\CheckoutFields' ) && 
+            (\Automattic\WooCommerce\Blocks\Utils\CartCheckoutUtils::is_checkout_block_default())
+        ) {
+            $data['settings']['is_checkout_block_default'] = true;
+        }
+
         $this->client_manager->eventsSync(SendinblueClient::PLUGIN_UPDATED, $data);
         (get_option(SENDINBLUE_WC_VERSION_SENT, null) !== null) ? update_option(SENDINBLUE_WC_VERSION_SENT, SENDINBLUE_WC_PLUGIN_VERSION) : add_option(SENDINBLUE_WC_VERSION_SENT, SENDINBLUE_WC_PLUGIN_VERSION);
     }
 }
-

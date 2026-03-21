@@ -3,9 +3,9 @@ Contributors: TigrouMeow
 Tags: clean, media, files, images, library
 Donate link: https://www.patreon.com/meowapps
 Requires at least: 6.0
-Tested up to: 6.7
+Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 6.8.3
+Stable tag: 7.0.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,6 +20,8 @@ Use it alongside [Database Cleaner](https://wordpress.org/plugins/database-clean
 Media Cleaner is like a ninja assassin for your Media Library - it'll stealthily take out all the unnecessary media and broken entries that are cluttering up the place. Just make sure you have a **solid backup plan** in place before you let this bad boy loose. 
 
 To learn more about compatibility, features, and the Pro version, check out the [tutorial](https://meowapps.com/media-cleaner/tutorial/) on the [official website](https://meowapps.com/media-cleaner/).
+
+[youtube https://www.youtube.com/watch?v=qmDSgWZWnSw]
 
 === COMPATIBILITY ===
 
@@ -47,10 +49,155 @@ This plugin is compatible with all media types, including retina and WebP versio
 
 == Changelog ==
 
+= 7.0.5 (2026/03/09) =
+* Fix: Ensure plugin checks run after all required options are initialized.
+* Add: Introduce LayerSlider compatibility and update Enfold theme integration.
+* Update: Improve origin handling so the plugin can work with sources that don't use numeric IDs.
+* Add: Include more direct documentation links in error popups.
+* Add: Provide ACF-specific filters for URLs and IDs to give developers more precise control over field handling.
+
+= 7.0.4 (2026/02/25) =
+* Fix: Improve how issue names are displayed.
+* Add: Allow selecting specific thumbnail sizes (to avoid the unnecessary ones).
+* Fix: Ensure media scans always use ID-based URL references (improving compatibility with WPML).
+* Update: Improve compatibility with multisite and network site.
+* Update: Apply better default settings on fresh installs.
+* 🎵 Discuss with others about Media Cleaner on [the Discord](https://discord.gg/bHDGh38).
+* 🌴 Keep us motivated with [a little review here](https://wordpress.org/support/plugin/media-cleaner/reviews/). Thank you!
+* 🥰 If you want to help us, check our [Patreon](https://www.patreon.com/meowapps). Thank you!
+
+= 7.0.3 (2026/01/27) =
+* Add: Added full support for newer versions of the Oxygen builder.
+* Fix: Updated the Divi integration so URLs with direct UR patterns are no longer incorrectly marked as safe.
+* Update: Extended Divi 5 support by recognizing mp4 and webm keys for background videos and the new "linkUrl" key in Divi blocks.
+* Update: Improved Elementor compatibility by having the parser also check page settings for relevant data.
+* Update: Made excluded directories easier to customize by turning them into a configurable setting that developers can filter.
+
+= 7.0.2 (2026/01/05) =
+* Fix: Prevent warnings and errors caused by empty HTML output and broken shortcodes.
+* Add: Support FooGallery album shortcodes for better gallery integration.
+* Add: Display icons for reference tags including SAFE, CACHE, OG_THUMB, and GEN_THUMB.
+* Update: Improve FooGallery handling by supporting non-HTML shortcode output and flagging cached media items.
+* Update: Remove the transient cache for post types and include the post ID in reference data.
+* Fix: Correct the JetEngine parser to ensure dynamic content is detected and rendered properly.
+
+= 7.0.1 (2025/12/16) =
+* Add: Introduced scan resume support for both Thumbnails and Duplicates scans.
+* Fix: Prevented an error in the Metabox parser caused by treating text values like lists.
+* Fix: Ensured the “Repair x Entries” notice only appears while repair mode is active.
+* Add: Added a new “Optimize Thumbnails” feature.
+* Add: Added support for Toolset.
+
+= 7.0.0 (2025/12/03) =
+* Fix: Prevent the plugin from loading on pages where it is not needed.
+* Add: CSV export option for scan results to make it easier to review.
+* Add: Support for pagination in FooGalleries so all gallery items are properly scanned.
+* Add: Recursive scanning for ACF Blocks to ensure nested blocks are fully detected.
+* Add: FooGallery parser support for block shortcodes.
+* 🎵 Discuss with others about Media Cleaner on [the Discord](https://discord.gg/bHDGh38).
+* 🌴 Keep us motivated with [a little review here](https://wordpress.org/support/plugin/media-cleaner/reviews/). Thank you!
+* 🥰 If you want to help us, check our [Patreon](https://www.patreon.com/meowapps). Thank you!
+
+= 6.9.8 (2025/11/13) =
+* Update: Enhanced UI and UX.
+* Fix: Fixed the Smart Slider 3 parser to load correctly and function as expected.
+* Add: Parsed "href" and "src" attributes in Enfold HTML to accurately extract URLs.
+* Refactor: Enhanced caching to store IDs and URLs in the DB.
+* Add: Support for the "value" attribute in Divi 5 blocks to facilitate ID extraction.
+* Update: Refined Divi parser to support both Divi 4 and Divi 5 simultaneously.
+* Fix: Hotfix for handling null values with substr, avoiding deprecated functions.
+* Fix: Fixed the Scan confirmation prompt to show only once.
+* Fix: Restricted scope of the "substr" function to prevent deprecation issues.
+* Update: Optimized database checks and CLI commands for faster performance.
+
+= 6.9.7 (2025/09/30) =
+* Add: Timeout mechanism to avoid a stalled scan.
+* Add: New Duplicates scan type (beta).
+* Update: Confirmation before restarting a scan to prevent accidental restarts.
+* Update: Better support for Kadence Theme.
+* Add: "Deleted At" column and filters.
+* Update: Optimized the WooCommerce parser for better performance.
+* Fix: Remove a few minor bugs.
+
+= 6.9.5 (2025/08/27) =
+* Add: A clear message guiding users on how to disable the pop-up.
+
+= 6.9.4 (2025/08/16) =
+* Fix: Added check for WP_Error in ACF after database calls to improve stability.
+* Fix: Resuming process now properly continues from step 3.
+* Add: Support for Meow Gallery.
+* Add: Warning modal; Sorry guys, but it looks like we need to warn you better about the risks.
+* Update: Header included for Filesystem + Content-Type for better handling.
+* Comments: Clarified handling of WebP images for improved compatibility.
+
+= 6.9.3 (2025/07/23) =
+* Add: Enhanced the resume functionality.  
+* Fix: Hotfix for errorCounts modal display to ensure proper visibility.  
+* Update: Show incompatible plugins message only in the free version for clarity.  
+* Update: Improved memory management by replacing in-memory references with direct processing and transients.  
+* Update: Refreshed common libraries for better performance and stability.
+
+= 6.9.2 (2025/07/01) =
+* Add: Added support for Fluent Forms.
+* Fix: Fixed NekoTable display issues.
+* Update: Streamlined Divi parser for better image URL extraction and improved filesystem handling.
+* Update: Enhanced thumbnail URL extraction and added new function to retrieve attachment sizes.
+
+= 6.9.1 (2025/06/29) =
+* Add: Support for Kadence Blocks.
+* Add: Support for Salient Theme Elements.
+* Add: Support for Houzez Theme.
+* Add: Support for WooCommerce variation galleries.
+* Update: Improved Enfold parser with better handling of nested shortcodes and enhanced ID/URL extraction.
+
+= 6.9.0 (2025/05/11) =
+* Update: Removed unused code for live content checks in CLI commands to improve plugin performance and maintainability.
+
+= 6.8.9 (2025/05/04) =
+* Fix: Ensure the "Disable Shortcode Analysis" setting is now respected in all content parsers.
+* Add: Support for ACF 'file' fields now includes returning the file URL when using ID references.
+
+= 6.8.8 (2025/05/01) =
+* Add: Introduced SAFE support for URLs from srcset in WooCommerce galleries.
+* Add: Added a function to extract thumbnail URLs from srcset for better detection.
+* Fix: Prevented warning messages when URLs are empty.
+* Fix: Corrected countdown end event behavior.
+* Update: Enhanced the W3 parser with array_to_ids_or_urls and added recursive support.
+* Add: Added a parser for W3 Total Cache to handle media attachments.
+* Add: Introduced a force trash option for cases when trash isn’t emptied automatically.
+* Update: Temporarily disabled live content scanning to prevent issues.
+* Fix: Corrected a typo in iframe handling comments.
+* Update: Improved shortcode scanning by retrieving all common attributes for IDs and URLs.
+* Fix: Prevented recursion in ACF field scanning with flexible content.
+* Update: Reworked the ACF Parser to fully support flexible content structures.
+* Update: Added an index on mediaId in the references table to optimize step 4 performance.
+
+= 6.8.7 (2025/03/12) =
+* Update: Improved type handling and updated the Divi parser for better compatibility.
+* Fix: Added a recursion limit to ACF field scanning functions to prevent infinite loops.
+
+= 6.8.6 (2025/02/17) =
+* Add: Added a SAFE tag to Foo Gallery full sizes to mark certain media as in use.
+* Update: Moved SAFE tag logic from JavaScript to PHP for better efficiency.
+* Fix: Corrected featured image thumbnails and improved SAFE tag detection.
+* Update: Improved UI by replacing the timer component with a countdown version.
+* Update: Added an error modal with auto-retry functionality for better user experience.
+* Update: Reworked compatibility for Avada builder.
+
+= 6.8.5 (2024/12/25) =
+* Fix: HTML needs to be well-decoded before being sent to DOMDocument.
+* Fix: Avoid an issue related to logos.
+* Info: Merry Christmas and Happy New Year! 🎄🎉
+
+= 6.8.4 (2024/12/06) =
+* Add: Support for Spectra.
+* Add: Support for Tutor LMS.
+* Add: Support for Foo Gallery.
+* Info: We are working hard on Media Cleaner. If you want to share some love, write a simple and nice review [here](https://wordpress.org/support/plugin/media-cleaner/reviews/?rate=5#new-post). Thank you so much! 💖
+
 = 6.8.3 (2024/11/27) =
 * Fix: MetaBox parser was not working properly.
 * Fix: The free version of Media Cleaner was not properly displaying the incompatible plugins.
-* Info: We are working hard on Media Cleaner. If you want to share some love, write a simple and nice review [here](https://wordpress.org/support/plugin/media-cleaner/reviews/?rate=5#new-post). Thank you so much! 💖
 
 = 6.8.2 (2024/11/14) =
 * Update: Enhanced the UI in many little ways.

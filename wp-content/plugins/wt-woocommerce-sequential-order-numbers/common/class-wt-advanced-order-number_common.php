@@ -198,8 +198,8 @@ class Wt_Advanced_Order_Number_Common
 
     public static function meta_key_exists_in_wc_order_meta($order_id,$meta_key){
         global $wpdb;
-        $table_name = $wpdb->prefix.'wc_orders_meta';
-        $search = $wpdb->get_row($wpdb->prepare("SELECT `id` from $table_name WHERE `meta_key` IN (%s) AND `order_id` = %d",array($meta_key,$order_id)));
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+        $search = $wpdb->get_row($wpdb->prepare("SELECT `id` from {$wpdb->prefix}wc_orders_meta WHERE `meta_key` IN (%s) AND `order_id` = %d",array($meta_key,$order_id)));
         if(!$search){
             return false;
         }else{
@@ -210,26 +210,29 @@ class Wt_Advanced_Order_Number_Common
     public static function add_meta_to_wc_order_table($order,$meta_key,$value){
         global $wpdb;
         $table_name = $wpdb->prefix.'wc_orders_meta';
-        if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") === $table_name){
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+        if($wpdb->get_var("SHOW TABLES LIKE {$wpdb->prefix}wc_orders_meta") === $table_name){
             $order_id = self::get_order_id($order);
             if(self::meta_key_exists_in_wc_order_meta($order_id,$meta_key)){
-                $update_data        = array('meta_value' => $value);
+                $update_data        = array('meta_value' => $value); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
                 $update_data_type   = array( '%s' );
                 $update_where       = array(
                     'order_id'  => $order_id,
-                    'meta_key'  => $meta_key
+                    'meta_key'  => $meta_key // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
                 );
                 $update_where_type  = array('%d','%s');
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
                 $wpdb->update($table_name,$update_data,$update_where,$update_data_type,$update_where_type);
             }else{
                 $insert_data = array(
                     'order_id'      =>  $order_id,
-                    'meta_key'      =>  $meta_key,
-                    'meta_value'    =>  $value
+                    'meta_key'      =>  $meta_key, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+                    'meta_value'    =>  $value // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
                 );
                 $insert_data_type = array(
                     '%d','%s','%s'
                 );
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
                 $wpdb->insert($table_name,$insert_data,$insert_data_type);
             }
         }

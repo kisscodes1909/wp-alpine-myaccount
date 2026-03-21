@@ -25,7 +25,6 @@ class CC_Payment_Method extends UPE_Payment_Method {
 	public function __construct( $token_service ) {
 		parent::__construct( $token_service );
 		$this->stripe_id   = self::PAYMENT_METHOD_STRIPE_ID;
-		$this->title       = __( 'Credit card / debit card', 'woocommerce-payments' );
 		$this->is_reusable = true;
 		$this->currencies  = [];// All currencies are supported.
 		$this->icon_url    = plugins_url( 'assets/images/payment-methods/generic-card.svg', WCPAY_PLUGIN_FILE );
@@ -38,9 +37,9 @@ class CC_Payment_Method extends UPE_Payment_Method {
 	 * @param array|false $payment_details Payment details.
 	 * @return string
 	 */
-	public function get_title( string $account_country = null, $payment_details = false ) {
+	public function get_title( ?string $account_country = null, $payment_details = false ) {
 		if ( ! $payment_details ) {
-			return $this->title;
+			return __( 'Card', 'woocommerce-payments' );
 		}
 
 		$details       = $payment_details[ $this->stripe_id ];
@@ -79,5 +78,48 @@ class CC_Payment_Method extends UPE_Payment_Method {
 			__( 'Use test card <number>%s</number> or refer to our <a>testing guide</a>.', 'woocommerce-payments' ),
 			$test_card_number
 		);
+	}
+
+	/**
+	 * Returns payment method description for the settings page.
+	 *
+	 * @param string|null $account_country Country of merchants account.
+	 *
+	 * @return string
+	 */
+	public function get_description( ?string $account_country = null ) {
+		return __(
+			'Let your customers pay with major credit and debit cards without leaving your store.',
+			'woocommerce-payments'
+		);
+	}
+
+	/**
+	 * Returns payment method settings label.
+	 *
+	 * @param string $account_country Country of merchants account.
+	 * @return string
+	 */
+	public function get_settings_label( string $account_country ) {
+		return __( 'Credit / Debit Cards', 'woocommerce-payments' );
+	}
+
+	/**
+	 * Returns payment method settings icon.
+	 *
+	 * @param string|null $account_country Country of merchants account.
+	 * @return string
+	 */
+	public function get_settings_icon_url( ?string $account_country = null ) {
+		return plugins_url( 'assets/images/payment-methods/generic-card-black.svg', WCPAY_PLUGIN_FILE );
+	}
+
+	/**
+	 * Returns boolean dependent on whether payment method allows manual capture.
+	 *
+	 * @return bool
+	 */
+	public function allows_manual_capture() {
+		return true;
 	}
 }

@@ -8,12 +8,13 @@ namespace The_SEO_Framework\Meta;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\{
+use function The_SEO_Framework\{
 	coalesce_strlen,
+	get_query_type_from_args,
 	normalize_generation_args,
 };
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Data,
 	Data\Filter\Sanitize,
 	Helper\Query,
@@ -21,7 +22,7 @@ use \The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -67,30 +68,8 @@ class Twitter {
 	 * @return string The Twitter Card type.
 	 */
 	public static function get_card_type( $args = null ) {
-
-		$card = static::get_custom_card_type( $args )
-			 ?: static::get_generated_card_type( $args );
-
-		if ( \has_filter( 'the_seo_framework_twittercard_output' ) ) {
-			/**
-			 * @since 2.3.0
-			 * @since 2.7.0 Added output within filter.
-			 * @since 5.0.0 Deprecated.
-			 * @deprecated
-			 * @param string $card The generated Twitter card type.
-			 * @param int    $id   The current page or term ID.
-			 */
-			$card = (string) \apply_filters_deprecated(
-				'the_seo_framework_twittercard_output',
-				[
-					$card,
-					Query::get_the_real_id(),
-				],
-				'5.0.0',
-			);
-		}
-
-		return $card;
+		return self::get_custom_card_type( $args )
+			?: self::get_generated_card_type( $args );
 	}
 
 	/**
@@ -107,19 +86,23 @@ class Twitter {
 		if ( isset( $args ) ) {
 			normalize_generation_args( $args );
 
-			if ( $args['tax'] ) {
-				$card = Data\Plugin\Term::get_meta_item( 'tw_card_type', $args['id'] );
-			} elseif ( $args['pta'] ) {
-				$card = Data\Plugin\PTA::get_meta_item( 'tw_card_type', $args['pta'] );
-			} elseif ( empty( $args['uid'] ) && Query::is_real_front_page_by_id( $args['id'] ) ) {
-				if ( $args['id'] ) {
-					$card = Data\Plugin::get_option( 'homepage_twitter_card_type' )
-						 ?: Data\Plugin\Post::get_meta_item( '_tsf_twitter_card_type', $args['id'] );
-				} else {
+			switch ( get_query_type_from_args( $args ) ) {
+				case 'single':
+					if ( Query::is_static_front_page( $args['id'] ) ) {
+						$card = Data\Plugin::get_option( 'homepage_twitter_card_type' )
+							?: Data\Plugin\Post::get_meta_item( '_tsf_twitter_card_type', $args['id'] );
+					} else {
+						$card = Data\Plugin\Post::get_meta_item( '_tsf_twitter_card_type', $args['id'] );
+					}
+					break;
+				case 'term':
+					$card = Data\Plugin\Term::get_meta_item( 'tw_card_type', $args['id'] );
+					break;
+				case 'homeblog':
 					$card = Data\Plugin::get_option( 'homepage_twitter_card_type' );
-				}
-			} elseif ( $args['id'] ) {
-				$card = Data\Plugin\Post::get_meta_item( '_tsf_twitter_card_type', $args['id'] );
+					break;
+				case 'pta':
+					$card = Data\Plugin\PTA::get_meta_item( 'tw_card_type', $args['pta'] );
 			}
 		} else {
 			if ( Query::is_real_front_page() ) {
@@ -138,7 +121,7 @@ class Twitter {
 			}
 		}
 
-		if ( ! empty( $card ) && \in_array( $card, static::get_supported_cards(), true ) )
+		if ( ! empty( $card ) && \in_array( $card, self::get_supported_cards(), true ) )
 			return $card;
 
 		return '';
@@ -154,11 +137,11 @@ class Twitter {
 	 *                         Leave null to autodetermine query.
 	 * @return string The default Twitter Card type for the current request.
 	 */
-	public static function get_generated_card_type( $args = null ) { // phpcs:ignore, VariableAnalysis -- see description note
+	public static function get_generated_card_type( $args = null ) { // phpcs:ignore Generic.CodeAnalysis, VariableAnalysis.CodeAnalysis -- see doc note
 
 		$card = Data\Plugin::get_option( 'twitter_card' );
 
-		$supported_cards = static::get_supported_cards();
+		$supported_cards = self::get_supported_cards();
 		// Forward compatibility
 		if ( ! \in_array( $card, $supported_cards, true ) )
 			$card = reset( $supported_cards );
@@ -222,8 +205,8 @@ class Twitter {
 	 * @return string Twitter Title.
 	 */
 	public static function get_title( $args = null ) {
-		return coalesce_strlen( static::get_custom_title( $args ) )
-			?? static::get_generated_title( $args );
+		return coalesce_strlen( self::get_custom_title( $args ) )
+			?? self::get_generated_title( $args );
 	}
 
 	/**
@@ -238,8 +221,8 @@ class Twitter {
 	 */
 	public static function get_custom_title( $args = null ) {
 		return isset( $args )
-			? static::get_custom_title_from_args( $args )
-			: static::get_custom_title_from_query();
+			? self::get_custom_title_from_args( $args )
+			: self::get_custom_title_from_query();
 	}
 
 	/**
@@ -273,7 +256,7 @@ class Twitter {
 			return Sanitize::metadata_content( $title );
 
 		// At least there was an attempt made to fetch a title when we reach this. Try harder.
-		return static::fallback_to_open_graph()
+		return self::fallback_to_open_graph()
 			? Open_Graph::get_custom_title_from_query()
 			: Title::get_custom_title( null, true );
 	}
@@ -291,19 +274,23 @@ class Twitter {
 
 		normalize_generation_args( $args );
 
-		if ( $args['tax'] ) {
-			$title = Data\Plugin\Term::get_meta_item( 'tw_title', $args['id'] );
-		} elseif ( $args['pta'] ) {
-			$title = Data\Plugin\PTA::get_meta_item( 'tw_title', $args['pta'] );
-		} elseif ( empty( $args['uid'] ) && Query::is_real_front_page_by_id( $args['id'] ) ) {
-			if ( $args['id'] ) {
-				$title = coalesce_strlen( Data\Plugin::get_option( 'homepage_twitter_title' ) )
-					  ?? Data\Plugin\Post::get_meta_item( '_twitter_title', $args['id'] );
-			} else {
+		switch ( get_query_type_from_args( $args ) ) {
+			case 'single':
+				if ( Query::is_static_front_page( $args['id'] ) ) {
+					$title = coalesce_strlen( Data\Plugin::get_option( 'homepage_twitter_title' ) )
+						  ?? Data\Plugin\Post::get_meta_item( '_twitter_title', $args['id'] );
+				} else {
+					$title = Data\Plugin\Post::get_meta_item( '_twitter_title', $args['id'] );
+				}
+				break;
+			case 'term':
+				$title = Data\Plugin\Term::get_meta_item( 'tw_title', $args['id'] );
+				break;
+			case 'homeblog':
 				$title = Data\Plugin::get_option( 'homepage_twitter_title' );
-			}
-		} elseif ( $args['id'] ) {
-			$title = Data\Plugin\Post::get_meta_item( '_twitter_title', $args['id'] );
+				break;
+			case 'pta':
+				$title = Data\Plugin\PTA::get_meta_item( 'tw_title', $args['pta'] );
 		}
 
 		if ( ! isset( $title ) ) return '';
@@ -312,7 +299,7 @@ class Twitter {
 			return Sanitize::metadata_content( $title );
 
 		// At least there was an attempt made to fetch a title when we reach this. Try harder.
-		return static::fallback_to_open_graph()
+		return self::fallback_to_open_graph()
 			? Open_Graph::get_custom_title_from_args( $args )
 			: Title::get_custom_title( $args, true );
 	}
@@ -342,8 +329,8 @@ class Twitter {
 	 * @return string The real Twitter description output.
 	 */
 	public static function get_description( $args = null ) {
-		return coalesce_strlen( static::get_custom_description( $args ) )
-			?? static::get_generated_description( $args );
+		return coalesce_strlen( self::get_custom_description( $args ) )
+			?? self::get_generated_description( $args );
 	}
 
 	/**
@@ -358,8 +345,8 @@ class Twitter {
 	 */
 	public static function get_custom_description( $args = null ) {
 		return isset( $args )
-			? static::get_custom_description_from_args( $args )
-			: static::get_custom_description_from_query();
+			? self::get_custom_description_from_args( $args )
+			: self::get_custom_description_from_query();
 	}
 
 	/**
@@ -387,12 +374,14 @@ class Twitter {
 			$desc = Data\Plugin\PTA::get_meta_item( 'tw_description' );
 		}
 
+		// Do not check empty(). See strlen below.
 		if ( ! isset( $desc ) ) return '';
+
 		if ( \strlen( $desc ) )
 			return Sanitize::metadata_content( $desc );
 
 		// At least there was an attempt made to fetch a title when we reach this. Try harder.
-		return static::fallback_to_open_graph()
+		return self::fallback_to_open_graph()
 			? Open_Graph::get_custom_description_from_query()
 			: Description::get_custom_description();
 	}
@@ -410,27 +399,33 @@ class Twitter {
 
 		normalize_generation_args( $args );
 
-		if ( $args['tax'] ) {
-			$desc = Data\Plugin\Term::get_meta_item( 'tw_description', $args['id'] );
-		} elseif ( $args['pta'] ) {
-			$desc = Data\Plugin\PTA::get_meta_item( 'tw_description', $args['pta'] );
-		} elseif ( empty( $args['uid'] ) && Query::is_real_front_page_by_id( $args['id'] ) ) {
-			if ( $args['id'] ) {
-				$desc = coalesce_strlen( Data\Plugin::get_option( 'homepage_twitter_description' ) )
-					 ?? Data\Plugin\Post::get_meta_item( '_twitter_description', $args['id'] );
-			} else {
+		switch ( get_query_type_from_args( $args ) ) {
+			case 'single':
+				if ( Query::is_static_front_page( $args['id'] ) ) {
+					$desc = coalesce_strlen( Data\Plugin::get_option( 'homepage_twitter_description' ) )
+						 ?? Data\Plugin\Post::get_meta_item( '_twitter_description', $args['id'] );
+				} else {
+					$desc = Data\Plugin\Post::get_meta_item( '_twitter_description', $args['id'] );
+				}
+				break;
+			case 'term':
+				$desc = Data\Plugin\Term::get_meta_item( 'tw_description', $args['id'] );
+				break;
+			case 'homeblog':
 				$desc = Data\Plugin::get_option( 'homepage_twitter_description' );
-			}
-		} elseif ( $args['id'] ) {
-			$desc = Data\Plugin\Post::get_meta_item( '_twitter_description', $args['id'] );
+				break;
+			case 'pta':
+				$desc = Data\Plugin\PTA::get_meta_item( 'tw_description', $args['pta'] );
 		}
 
+		// Do not check empty(). See strlen below.
 		if ( ! isset( $desc ) ) return '';
+
 		if ( \strlen( $desc ) )
 			return Sanitize::metadata_content( $desc );
 
 		// At least there was an attempt made to fetch a title when we reach this. Try harder.
-		return static::fallback_to_open_graph()
+		return self::fallback_to_open_graph()
 			? Open_Graph::get_custom_description_from_args( $args )
 			: Title::get_custom_description( $args );
 	}

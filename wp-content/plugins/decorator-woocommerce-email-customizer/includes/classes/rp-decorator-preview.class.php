@@ -20,6 +20,8 @@ if (!class_exists('RP_Decorator_Preview')) {
         public static $email_classes = array(
             'WC_Email_New_Order' => 'processing',
             'WC_Email_Cancelled_Order' => 'cancelled',
+            'WC_Email_Customer_Cancelled_Order' => 'cancelled',
+            'WC_Email_Customer_Failed_Order' => 'failed',
             'WC_Email_Failed_Order' => 'failed',
             'WC_Email_Customer_On_Hold_Order' => 'on-hold',
             'WC_Email_Customer_Processing_Order' => 'processing',
@@ -64,6 +66,9 @@ if (!class_exists('RP_Decorator_Preview')) {
             self::$wt_supported_email_class_names = self::wt_supported_email_classes();
             self::$wt_supported_email_order_status = self::wt_supported_email_type_status();
             add_action('admin_menu', array($this, 'admin_menu'));
+
+            /* Add style correction for Woocommerce email preview */
+            add_action( 'admin_footer', array($this,'wt_dec_style_for_woocommerce_email'), 10, 1 );
         }
 
         /**
@@ -79,7 +84,7 @@ if (!class_exists('RP_Decorator_Preview')) {
          * Admin Screen output
          */
         public function output() {
-            wp_redirect(RP_Decorator_Customizer::get_customizer_url());
+            wp_redirect(RP_Decorator_Customizer::get_customizer_url()); //phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect
         }
 
         /**
@@ -116,10 +121,10 @@ if (!class_exists('RP_Decorator_Preview')) {
             $content = self::get_preview_email($send_email, $email_addresses, $email_type, $order_id);
 
             if (false == $content) {
-                echo __('An error occurred trying to load this email type. Make sure this email type is enabled or please try another type.', 'decorator-woocommerce-email-customizer');
+                esc_html_e('An error occurred trying to load this email type. Make sure this email type is enabled or please try another type.', 'decorator-woocommerce-email-customizer');
             } elseif (!empty($content)) {
                 // Print email content
-                echo $content;
+                echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 // Print live preview scripts in footer
                 add_action('wp_footer', array('RP_Decorator_Preview', 'print_live_preview_scripts'), 99);
             }
@@ -169,7 +174,7 @@ if (!class_exists('RP_Decorator_Preview')) {
                         'billing_country' => 'GB',
                         'billing_email' => 'sherlock@holmes.co.uk',
                         'billing_phone' => '02079304832',
-                        'date_created' => date('Y-m-d H:i:s'),
+                        'date_created' => gmdate('Y-m-d H:i:s'),
                         'total' => 24.90,
                     ));
 
@@ -219,11 +224,13 @@ if (!class_exists('RP_Decorator_Preview')) {
          * @return void
          */
         public static function print_live_preview_scripts() {
+            $font_families = (class_exists('RP_Decorator_Settings') && property_exists('RP_Decorator_Settings', 'font_family_mapping')) ? RP_Decorator_Settings::$font_family_mapping : array();
+            $font_families = apply_filters('wbte_dec_add_custom_fonts',$font_families);
             // Open container
             $scripts = '<script type="text/javascript">jQuery(document).ready(function() {';
 
             // Font family mapping
-            $scripts .= 'var font_family_mapping = ' . json_encode(RP_Decorator_Settings::$font_family_mapping) . ';';
+            $scripts .= 'var font_family_mapping = ' . json_encode($font_families) . ';';
 
             // Function to handle special cases
             $scripts .= "function prepare(value, key, selector, property) {
@@ -443,7 +450,7 @@ if (!class_exists('RP_Decorator_Preview')) {
             }
 
             // Close container and return
-            echo $scripts . '});</script>';
+            echo $scripts . '});</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         }
 
         /**
@@ -471,13 +478,15 @@ if (!class_exists('RP_Decorator_Preview')) {
             if (is_null(self::$email_types)) {
                 $types = array(
                     'new_order' => __('New order', 'decorator-woocommerce-email-customizer'),
-                    'cancelled_order' => __('Cancelled order', 'decorator-woocommerce-email-customizer'),
+                    'cancelled_order' => __('Admin Cancelled order', 'decorator-woocommerce-email-customizer'),
+                    'customer_cancelled_order' => __('Customer Cancelled order', 'decorator-woocommerce-email-customizer'),
                     'customer_processing_order' => __('Customer processing order', 'decorator-woocommerce-email-customizer'),
                     'customer_completed_order' => __('Customer completed order', 'decorator-woocommerce-email-customizer'),
                     'customer_refunded_order' => __('Customer refunded order', 'decorator-woocommerce-email-customizer'),
                     'customer_on_hold_order' => __('Customer on hold order', 'decorator-woocommerce-email-customizer'),
                     'customer_invoice' => __('Customer invoice', 'decorator-woocommerce-email-customizer'),
-                    'failed_order' => __('Failed order', 'decorator-woocommerce-email-customizer'),
+                    'customer_failed_order' => __('Customer Failed order', 'decorator-woocommerce-email-customizer'),
+                    'failed_order' => __('Admin Failed order', 'decorator-woocommerce-email-customizer'),
                     'customer_new_account' => __('Customer new account', 'decorator-woocommerce-email-customizer'),
                     'customer_note' => __('Customer note', 'decorator-woocommerce-email-customizer'),
                     'customer_reset_password' => __('Customer reset password', 'decorator-woocommerce-email-customizer'),
@@ -486,6 +495,7 @@ if (!class_exists('RP_Decorator_Preview')) {
                         $types = array_merge( $types, array(
                                 'wt_smart_coupon_gift'                 => __( 'Smart coupon gift', 'decorator-woocommerce-email-customizer' ),
                                 'wt_smart_coupon_abandonment_coupon_email' => __( 'Smart coupon abandonment coupon email', 'decorator-woocommerce-email-customizer' ),
+                                'Wbte_Smart_Coupon_Abandonment_Reminder_Email' => __( 'Smart coupon abandonment cart reminder email', 'decorator-woocommerce-email-customizer' ),
                                 'wt_smart_coupon_store_credit'  => __( 'Smart coupon store credit', 'decorator-woocommerce-email-customizer' ),
                                 'wt_smart_coupon_signup_coupon_email'   => __( 'Smart coupon signup coupon email', 'decorator-woocommerce-email-customizer' ),
                                 'wt_smart_coupon'          => __( 'Smart coupon', 'decorator-woocommerce-email-customizer' ),
@@ -605,12 +615,14 @@ if (!class_exists('RP_Decorator_Preview')) {
             $types = array(
                 'new_order' => __('New Order', 'decorator-woocommerce-email-customizer'),
                 'cancelled_order' => __('Cancelled Order', 'decorator-woocommerce-email-customizer'),
+                'customer_cancelled_order' => __('Customer Cancelled Order', 'decorator-woocommerce-email-customizer'),
                 'customer_processing_order' => __('Customer Processing Order', 'decorator-woocommerce-email-customizer'),
                 'customer_completed_order' => __('Customer Completed Order', 'decorator-woocommerce-email-customizer'),
                 'customer_refunded_order' => __('Customer Refunded Order', 'decorator-woocommerce-email-customizer'),
                 'customer_on_hold_order' => __('Customer On Hold Order', 'decorator-woocommerce-email-customizer'),
                 'customer_invoice' => __('Customer Invoice', 'decorator-woocommerce-email-customizer'),
                 'failed_order' => __('Failed Order', 'decorator-woocommerce-email-customizer'),
+                'customer_failed_order' => __('Customer Failed Order', 'decorator-woocommerce-email-customizer'),
                 'customer_new_account' => __('Customer New Account', 'decorator-woocommerce-email-customizer'),
                 'customer_note' => __('Customer Note', 'decorator-woocommerce-email-customizer'),
                 'customer_reset_password' => __('Customer Reset Password', 'decorator-woocommerce-email-customizer'),
@@ -649,6 +661,7 @@ if (!class_exists('RP_Decorator_Preview')) {
                 $types = array_merge($types, array(
                     'wt_smart_coupon_gift' => __('Smart Coupon Gift', 'decorator-woocommerce-email-customizer'),
                     'wt_smart_coupon_abandonment_coupon_email' => __('Smart Coupon Abandonment Coupon Email', 'decorator-woocommerce-email-customizer'),
+                    'Wbte_Smart_Coupon_Abandonment_Reminder_Email' => __( 'Smart Coupon Abandonment Cart Reminder Email', 'decorator-woocommerce-email-customizer' ),
                     'wt_smart_coupon_signup_coupon_email'   => __( 'Smart Coupon Signup Coupon Email', 'decorator-woocommerce-email-customizer' ),
                     'wt_smart_coupon'          => __( 'Smart Coupon', 'decorator-woocommerce-email-customizer' ),
                 ));
@@ -678,7 +691,7 @@ if (!class_exists('RP_Decorator_Preview')) {
          *
          */
         public static function get_preview_email($send_email = false, $email_addresses = null, $email_type = null, $order_id = null) {
-            error_reporting(E_ERROR | E_PARSE);
+            error_reporting(E_ERROR | E_PARSE); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting
             // Load WooCommerce emails.
             $wc_emails = WC_Emails::instance();
             $emails = $wc_emails->get_emails();
@@ -780,6 +793,7 @@ if (!class_exists('RP_Decorator_Preview')) {
                     case 'cancelled_order':
                     case 'customer_processing_order':
                     case 'customer_completed_order':
+                    case 'customer_cancelled_order':
                     case 'customer_on_hold_order':
                     case 'failed_renewal_authentication':
                     case 'failed_preorder_sca_authentication':
@@ -805,6 +819,9 @@ if (!class_exists('RP_Decorator_Preview')) {
                         $email->user_email = stripslashes($email->object->user_email);
                         $email->recipient = $email->user_email;
                         $email->password_generated = true;
+                        if ( version_compare( WC()->version, '6.0.0', '>=' ) ) {
+                            $email->set_password_url = 'https://example.com/lost-password';
+                        }
                         $email = self::wt_header_shortcode_replace($email);
                         break;
                     case 'customer_note':
@@ -1228,8 +1245,8 @@ if (!class_exists('RP_Decorator_Preview')) {
                 $wt_custom_style = RP_Decorator_Customizer::wt_get_current_template();
             }
             
-            if (isset($_POST['customized']) && !empty($_POST['customized'])) {
-                $enable_data = json_decode(wp_unslash($_POST['customized']), true);
+            if (isset($_POST['customized']) && !empty($_POST['customized'])) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+                $enable_data = json_decode(wc_clean( wp_unslash( $_POST['customized'] ) ), true); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- Already sanitized.
                 if (isset($enable_data['rp_decorator_'.$wt_custom_style.'_body_text_enable_switch']) ) {
                     $enable_value = !empty($enable_data['rp_decorator_'.$wt_custom_style.'_body_text_enable_switch']) ? $enable_data['rp_decorator_'.$wt_custom_style.'_body_text_enable_switch'] : '';
                     update_option( 'rp_decorator_'.$wt_custom_style.'_body_text_enable_switch', $enable_value);
@@ -1370,7 +1387,7 @@ if (!class_exists('RP_Decorator_Preview')) {
                 }
                 if ($stored) {
                     if (array_key_exists('email_type', $stored) || $current_temp !== 'new_order') {
-                        $key = $stored['email_type'] ? $stored['email_type'] : $current_temp;
+                        $key = ( isset ( $stored['email_type'] ) && ! empty( $stored['email_type'] ) ) ? $stored['email_type'] : $current_temp;
                         foreach ($stored as $st_key => $st_value) {
                             $wt_stored[$key][$st_key] = $st_value;
                         }
@@ -1443,7 +1460,7 @@ if (!class_exists('RP_Decorator_Preview')) {
         /**
          * wt_supported_email_classes
          * @access public
-         * @return arrray
+         * @return array
          * 
          * @since 1.2.5   Webtoffee Quote plugin and Webtoffee Subscription compatibility
          */
@@ -1451,17 +1468,20 @@ if (!class_exists('RP_Decorator_Preview')) {
             $classes = array(
                 'new_order' => 'WC_Email_New_Order',
                 'cancelled_order' => 'WC_Email_Cancelled_Order',
+                'customer_cancelled_order' => 'WC_Email_Customer_Cancelled_Order',
                 'customer_processing_order' => 'WC_Email_Customer_Processing_Order',
                 'customer_completed_order' => 'WC_Email_Customer_Completed_Order',
                 'customer_refunded_order' => 'WC_Email_Customer_Refunded_Order',
                 'customer_on_hold_order' => 'WC_Email_Customer_On_Hold_Order',
                 'customer_invoice' => 'WC_Email_Customer_Invoice',
+                'customer_failed_order' => 'WC_Email_Customer_Failed_Order',
                 'failed_order' => 'WC_Email_Failed_Order',
                 'customer_new_account' => 'WC_Email_Customer_New_Account',
                 'customer_note' => 'WC_Email_Customer_Note',
                 'customer_reset_password' => 'WC_Email_Customer_Reset_Password',
                 'wt_smart_coupon_gift' => 'WT_smart_Coupon_Gift',
                 'wt_smart_coupon_abandonment_coupon_email' => 'WT_smart_Coupon_Abandonment_Coupon_Email',
+                'Wbte_Smart_Coupon_Abandonment_Reminder_Email' => 'Wbte_Smart_Coupon_Abandonment_Reminder_Email',
                 'wt_smart_coupon_signup_coupon_email' => 'WT_smart_Coupon_Signup_Coupon_Email',
                 'wt_smart_coupon_store_credit' => 'WT_smart_Coupon_Store_Credit_Email',
                 'wt_smart_coupon' => 'WT_smart_Coupon_Email',
@@ -1606,6 +1626,36 @@ if (!class_exists('RP_Decorator_Preview')) {
             );
             $statuses = apply_filters('wt_decorator_wt_supported_email_type_status', $statuses);
             return $statuses;
+        }
+
+
+        /**
+         * Woocomerce email preview style corrections
+         * @return void
+         */
+        public function wt_dec_style_for_woocommerce_email(){
+            global $hook_suffix;
+            if('woocommerce_page_wc-settings' === $hook_suffix){
+                ?>
+                    <style>
+                        .wc-settings-email-preview-container-floating{
+                            position: unset !important;
+                            left: 0px !important;
+                        }
+                        label[for="woocommerce_email_header_image_width"], label[for="woocommerce_email_header_alignment"], label[for="woocommerce_email_font_family"] {
+                            display: none !important;
+                        }
+                       .woocommerce_email_header_alignment, #woocommerce_email_header_image_width, .wc-settings-email-color-palette-header, .wc-settings-email-color-palette-separator, #woocommerce_email_font_family { display: none; }
+                    </style>
+                    <script>
+                        jQuery(document).ready(function() {
+                            jQuery('#woocommerce_email_header_alignment').next('span').hide();
+                            jQuery('#woocommerce_email_font_family').next('span').hide();
+                            jQuery('.wc-settings-email-color-palette-header').next('.form-table').hide();
+                        });
+                    </script>
+                <?php
+            }
         }
 
     }

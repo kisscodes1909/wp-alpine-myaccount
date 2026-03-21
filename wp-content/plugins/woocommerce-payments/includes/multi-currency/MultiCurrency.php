@@ -17,6 +17,7 @@ use WCPay\MultiCurrency\Interfaces\MultiCurrencySettingsInterface;
 use WCPay\MultiCurrency\Logger;
 use WCPay\MultiCurrency\Notes\NoteMultiCurrencyAvailable;
 use WCPay\MultiCurrency\Utils;
+use WC_Payments_Features;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -29,6 +30,8 @@ class MultiCurrency {
 	const CURRENCY_META_KEY       = 'wcpay_currency';
 	const FILTER_PREFIX           = 'wcpay_multi_currency_';
 	const CUSTOMER_CURRENCIES_KEY = 'wcpay_multi_currency_stored_customer_currencies';
+	const RENDERING_MODE_SPEED    = 'speed';
+	const RENDERING_MODE_CACHE    = 'cache';
 
 	/**
 	 * The plugin's ID.
@@ -92,13 +95,6 @@ class MultiCurrency {
 	 * @var FrontendCurrencies
 	 */
 	protected $frontend_currencies;
-
-	/**
-	 * BackendCurrencies instance.
-	 *
-	 * @var BackendCurrencies
-	 */
-	protected $backend_currencies;
 
 	/**
 	 * StorefrontIntegration instance.
@@ -171,6 +167,13 @@ class MultiCurrency {
 	protected $tracking;
 
 	/**
+	 * AsyncPriceRenderer instance.
+	 *
+	 * @var AsyncPriceRenderer
+	 */
+	protected $async_renderer;
+
+	/**
 	 * Simulation variables array.
 	 *
 	 * @var array
@@ -188,7 +191,7 @@ class MultiCurrency {
 	 * @param MultiCurrencyCacheInterface        $cache                Cache instance.
 	 * @param Utils|null                         $utils                Optional Utils instance.
 	 */
-	public function __construct( MultiCurrencySettingsInterface $settings_service, MultiCurrencyApiClientInterface $payments_api_client, MultiCurrencyAccountInterface $payments_account, MultiCurrencyLocalizationInterface $localization_service, MultiCurrencyCacheInterface $cache, Utils $utils = null ) {
+	public function __construct( MultiCurrencySettingsInterface $settings_service, MultiCurrencyApiClientInterface $payments_api_client, MultiCurrencyAccountInterface $payments_account, MultiCurrencyLocalizationInterface $localization_service, MultiCurrencyCacheInterface $cache, ?Utils $utils = null ) {
 		$this->settings_service     = $settings_service;
 		$this->payments_api_client  = $payments_api_client;
 		$this->payments_account     = $payments_account;
@@ -199,6 +202,7 @@ class MultiCurrency {
 		$this->geolocation             = new Geolocation( $this->localization_service );
 		$this->compatibility           = new Compatibility( $this, $this->utils );
 		$this->currency_switcher_block = new CurrencySwitcherBlock( $this, $this->compatibility );
+		$this->async_renderer          = new AsyncPriceRenderer( $this );
 	}
 
 	/**
@@ -224,7 +228,6 @@ class MultiCurrency {
 			add_filter( 'woocommerce_get_settings_pages', [ $this, 'init_settings_pages' ] );
 			// Enqueue the scripts after the main WC_Payments_Admin does.
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ], 20 );
-			add_action( 'admin_head', [ $this, 'set_client_format_and_rounding_precision' ] );
 		}
 
 		add_action( 'init', [ $this, 'init' ] );
@@ -273,11 +276,6 @@ class MultiCurrency {
 	public function init() {
 		$store_currency_updated = $this->check_store_currency_for_change();
 
-		// If the store currency has been updated, clear the cache to make sure we fetch fresh rates from the server.
-		if ( $store_currency_updated ) {
-			$this->clear_cache();
-		}
-
 		$this->initialize_available_currencies();
 		$this->set_default_currency();
 		$this->initialize_enabled_currencies();
@@ -293,15 +291,27 @@ class MultiCurrency {
 
 		$this->frontend_prices     = new FrontendPrices( $this, $this->compatibility );
 		$this->frontend_currencies = new FrontendCurrencies( $this, $this->localization_service, $this->utils, $this->compatibility );
-		$this->backend_currencies  = new BackendCurrencies( $this, $this->localization_service );
 		$this->tracking            = new Tracking( $this );
 
-		// Init all of the hooks.
+		// Init all the hooks.
 		$admin_notices->init_hooks();
 		$user_settings->init_hooks();
-		$this->frontend_prices->init_hooks();
-		$this->frontend_currencies->init_hooks();
-		$this->backend_currencies->init_hooks();
+
+		// In cache-optimized mode without an active session, use async rendering.
+		// Otherwise, use standard server-side price conversion.
+		// A ?currency= URL param means a session will be created (at init priority 11),
+		// so we use server-side conversion to show the correct currency immediately.
+		$has_pending_currency_switch = isset( $_GET['currency'] ); // phpcs:ignore WordPress.Security.NonceVerification
+
+		if ( ! $has_pending_currency_switch ) {
+			$this->async_renderer->init_hooks();
+		}
+
+		if ( ! $this->is_cache_optimized_mode() || $this->has_active_session() || $has_pending_currency_switch ) {
+			$this->frontend_prices->init_hooks();
+			$this->frontend_currencies->init_hooks();
+		}
+
 		$this->tracking->init_hooks();
 
 		add_action( 'woocommerce_order_refunded', [ $this, 'add_order_meta_on_refund' ], 50, 2 );
@@ -418,26 +428,18 @@ class MultiCurrency {
 	}
 
 	/**
-	 * Wipes the cached currency data option, forcing to re-fetch the data from WPCOM.
-	 *
-	 * @return void
-	 */
-	public function clear_cache() {
-		Logger::debug( 'Clearing the cache to force new rates to be fetched from the server.' );
-		$this->cache->delete( MultiCurrencyCacheInterface::CURRENCIES_KEY );
-	}
-
-	/**
 	 * Gets and caches the data for the currency rates from the server.
-	 * Will be returned as an array with three keys, 'currencies' (the currencies), 'expires' (the expiry time)
-	 * and 'updated' (when this data was fetched from the API).
+	 * Will be returned as an array with two keys:
+	 * - 'currencies' (the currencies)
+	 * - 'updated' (when this data was fetched from the API).
 	 *
 	 * @return ?array
 	 */
 	public function get_cached_currencies() {
-		$cached_data = $this->cache->get( MultiCurrencyCacheInterface::CURRENCIES_KEY );
-		// If connection to server cannot be established, or if payment provider is not connected, or if the account is rejected, return expired data or null.
+		// If connection to server cannot be established, payment provider is not connected, or the account is rejected,
+		// return any data we have cached (expired or not) or null.
 		if ( ! $this->payments_api_client->is_server_connected() || ! $this->payments_account->is_provider_connected() || $this->payments_account->is_account_rejected() ) {
+			$cached_data = $this->cache->get( MultiCurrencyCacheInterface::CURRENCIES_KEY, true );
 			return $cached_data ?? null;
 		}
 
@@ -521,8 +523,22 @@ class MultiCurrency {
 		 * call the_widget, you need to have the name of the widget, so we get the instance and hash to use.
 		 */
 		ob_start();
+
+		$currency_switcher_widget = $this->get_currency_switcher_widget();
+
+		if ( ! is_object( $currency_switcher_widget ) ) {
+			Logger::notice(
+				sprintf(
+					'Invalid widget markup. Widget instance must be type object, %s given.',
+					gettype( $currency_switcher_widget )
+				)
+			);
+
+			return ob_get_clean();
+		}
+
 		the_widget(
-			spl_object_hash( $this->get_currency_switcher_widget() ),
+			spl_object_hash( $currency_switcher_widget ),
 			apply_filters( self::FILTER_PREFIX . 'theme_widget_instance', $instance ),
 			apply_filters( self::FILTER_PREFIX . 'theme_widget_args', $args )
 		);
@@ -737,6 +753,13 @@ class MultiCurrency {
 			return;
 		}
 
+		// In cache-optimized mode, skip session/cookie for geolocation auto-switch
+		// (persist_change = false). This keeps catalog pages cacheable.
+		// Explicit user switches (persist_change = true, e.g. ?currency=XXX) still set the session.
+		if ( $this->is_cache_optimized_mode() && ! $persist_change ) {
+			return;
+		}
+
 		// We discard the cache for the front-end.
 		$this->frontend_currencies->selected_currency_changed();
 
@@ -744,6 +767,10 @@ class MultiCurrency {
 		// so that the selected currency (set as query string parameter) can be correctly set.
 		if ( ! isset( WC()->session ) ) {
 			WC()->initialize_session();
+		}
+
+		if ( $this->get_stored_currency_code() !== $code && $persist_change ) {
+			$this->frontend_currencies->clear_url_price_params();
 		}
 
 		if ( 0 === $user_id && WC()->session ) {
@@ -785,6 +812,12 @@ class MultiCurrency {
 	public function update_selected_currency_by_geolocation() {
 		// We only want to automatically set the currency if the option is enabled and it shouldn't be disabled for any reason.
 		if ( ! $this->is_using_auto_currency_switching() || $this->compatibility->should_disable_currency_switching() ) {
+			return;
+		}
+
+		// In cache-optimized mode, currency switching is handled client-side
+		// via the REST API. Skip server-side geolocation and notice.
+		if ( $this->is_cache_optimized_mode() && ! $this->has_active_session() ) {
 			return;
 		}
 
@@ -835,13 +868,20 @@ class MultiCurrency {
 		$converted_price = ( (float) $price ) * $currency->get_rate();
 
 		if ( 'tax' === $type || 'coupon' === $type || 'exchange_rate' === $type ) {
-			return $converted_price;
+			// We must make sure the price is rounded properly before returning it, otherwise we
+			// may end up with inconsistent prices in the cart.
+			$num_decimals = absint(
+				$this->localization_service->get_currency_format(
+					$currency->get_code()
+				)['num_decimals']
+			);
+			return round( $converted_price, $num_decimals );
 		}
 
 		$charm_compatible_types = [ 'product', 'shipping' ];
 		$apply_charm_pricing    = $this->get_apply_charm_only_to_products()
-		? 'product' === $type
-		: in_array( $type, $charm_compatible_types, true );
+			? 'product' === $type
+			: in_array( $type, $charm_compatible_types, true );
 
 		return $this->get_adjusted_price( $converted_price, $apply_charm_pricing, $currency );
 	}
@@ -1039,6 +1079,88 @@ class MultiCurrency {
 	}
 
 	/**
+	 * Gets the rendering mode for multi-currency prices.
+	 *
+	 * @return string One of 'speed' or 'cache'.
+	 */
+	public function get_rendering_mode(): string {
+		return get_option( 'wcpay_multi_currency_rendering_mode', self::RENDERING_MODE_SPEED );
+	}
+
+	/**
+	 * Checks if the cache-optimized rendering mode is active.
+	 *
+	 * @return bool
+	 */
+	public function is_cache_optimized_mode(): bool {
+		return \WC_Payments_Features::is_mc_cache_optimized_enabled()
+			&& self::RENDERING_MODE_CACHE === $this->get_rendering_mode();
+	}
+
+	/**
+	 * Checks if there is an active WooCommerce session.
+	 *
+	 * @return bool
+	 */
+	public function has_active_session(): bool {
+		return isset( WC()->session ) && WC()->session->has_session();
+	}
+
+	/**
+	 * Gets the public configuration data for the async price renderer.
+	 *
+	 * @return array The public config data including currencies, rates, and formatting.
+	 */
+	public function get_public_config(): array {
+		$enabled_currencies = $this->get_enabled_currencies();
+		$default_currency   = $this->get_default_currency();
+
+		// Determine selected currency WITHOUT initializing a WC session.
+		// This keeps the response cacheable and avoids setting session cookies.
+		$selected_code = $default_currency->get_code();
+
+		if ( $this->has_active_session() ) {
+			// Session already exists (e.g. cart/checkout) — read from it safely.
+			$stored = WC()->session->get( self::CURRENCY_SESSION_KEY );
+			if ( $stored && isset( $enabled_currencies[ strtoupper( $stored ) ] ) ) {
+				$selected_code = strtoupper( $stored );
+			}
+		} elseif ( $this->is_using_auto_currency_switching() ) {
+			// Use geolocation to determine currency (does not create a session).
+			$geo_currency = $this->geolocation->get_currency_by_customer_location();
+			if ( $geo_currency && isset( $enabled_currencies[ $geo_currency ] ) ) {
+				$selected_code = $geo_currency;
+			}
+		}
+
+		$charm_only_products = $this->get_apply_charm_only_to_products();
+
+		$currencies_data = [];
+		foreach ( $enabled_currencies as $currency ) {
+			$format = $this->localization_service->get_currency_format( $currency->get_code() );
+
+			$currencies_data[ $currency->get_code() ] = [
+				'code'         => $currency->get_code(),
+				'symbol'       => get_woocommerce_currency_symbol( $currency->get_code() ),
+				'rate'         => $currency->get_rate(),
+				'decimals'     => absint( $format['num_decimals'] ),
+				'decimal_sep'  => $format['decimal_sep'],
+				'thousand_sep' => $format['thousand_sep'],
+				'symbol_pos'   => $format['currency_pos'],
+				'rounding'     => (float) $currency->get_rounding(),
+				'charm'        => (float) $currency->get_charm(),
+			];
+		}
+
+		return [
+			'default_currency'    => $default_currency->get_code(),
+			'selected_currency'   => $selected_code,
+			'charm_only_products' => (bool) $charm_only_products,
+			'currencies'          => $currencies_data,
+		];
+	}
+
+	/**
 	 * Gets the store settings.
 	 *
 	 * @return  array  The store settings.
@@ -1047,6 +1169,8 @@ class MultiCurrency {
 		return [
 			$this->id . '_enable_auto_currency'       => $this->is_using_auto_currency_switching(),
 			$this->id . '_enable_storefront_switcher' => $this->is_using_storefront_switcher(),
+			'wcpay_multi_currency_rendering_mode'     => $this->get_rendering_mode(),
+			'is_cache_optimized_feature_enabled'      => \WC_Payments_Features::is_mc_cache_optimized_enabled(),
 			'site_theme'                              => wp_get_theme()->get( 'Name' ),
 			'date_format'                             => esc_attr( get_option( 'date_format', 'F j, Y' ) ),
 			'time_format'                             => esc_attr( get_option( 'time_format', 'g:i a' ) ),
@@ -1065,44 +1189,24 @@ class MultiCurrency {
 		$updateable_options = [
 			'wcpay_multi_currency_enable_auto_currency',
 			'wcpay_multi_currency_enable_storefront_switcher',
+			'wcpay_multi_currency_rendering_mode',
 		];
 
 		foreach ( $updateable_options as $key ) {
-			if ( isset( $params[ $key ] ) ) {
-				update_option( $key, sanitize_text_field( $params[ $key ] ) );
+			if ( ! isset( $params[ $key ] ) ) {
+				continue;
 			}
+
+			$value = sanitize_text_field( $params[ $key ] );
+
+			// Validate rendering mode to only accept known values.
+			if ( 'wcpay_multi_currency_rendering_mode' === $key
+				&& ! in_array( $value, [ self::RENDERING_MODE_SPEED, self::RENDERING_MODE_CACHE ], true ) ) {
+				continue;
+			}
+
+			update_option( $key, $value );
 		}
-	}
-
-	/**
-	 * Apply client order currency format and reduces the rounding precision to 2.
-	 *
-	 * @return  void
-	 */
-	public function set_client_format_and_rounding_precision() {
-		$screen = get_current_screen();
-		if ( in_array( $screen->id, [ 'shop_order', 'woocommerce_page_wc-orders' ], true ) ) :
-			$order = wc_get_order();
-			if ( ! $order ) {
-				return;
-			}
-			$currency                     = $order->get_currency();
-			$currency_format_num_decimals = $this->backend_currencies->get_price_decimals( $currency );
-			$currency_format_decimal_sep  = $this->backend_currencies->get_price_decimal_separator( $currency );
-			$currency_format_thousand_sep = $this->backend_currencies->get_price_thousand_separator( $currency );
-			$currency_format              = str_replace( [ '%1$s', '%2$s', '&nbsp;' ], [ '%s', '%v', ' ' ], $this->backend_currencies->get_woocommerce_price_format( $currency ) );
-
-			$rounding_precision = wc_get_price_decimals() ?? wc_get_rounding_precision();
-			?>
-		<script>
-		woocommerce_admin_meta_boxes.currency_format_num_decimals = <?php echo (int) $currency_format_num_decimals; ?>;
-		woocommerce_admin_meta_boxes.currency_format_decimal_sep = '<?php echo esc_attr( $currency_format_decimal_sep ); ?>';
-		woocommerce_admin_meta_boxes.currency_format_thousand_sep = '<?php echo esc_attr( $currency_format_thousand_sep ); ?>';
-		woocommerce_admin_meta_boxes.currency_format = '<?php echo esc_attr( $currency_format ); ?>';
-		woocommerce_admin_meta_boxes.rounding_precision = <?php echo (int) $rounding_precision; ?>;
-		</script>
-			<?php
-		endif;
 	}
 
 	/**
@@ -1246,10 +1350,10 @@ class MultiCurrency {
 	public function is_multi_currency_settings_page(): bool {
 		global $current_screen, $current_tab;
 		return (
-			is_admin()
-			&& $current_tab && $current_screen
-			&& 'wcpay_multi_currency' === $current_tab
-			&& 'woocommerce_page_wc-settings' === $current_screen->base
+		is_admin()
+		&& $current_tab && $current_screen
+		&& 'wcpay_multi_currency' === $current_tab
+		&& 'woocommerce_page_wc-settings' === $current_screen->base
 		);
 	}
 
@@ -1271,7 +1375,7 @@ class MultiCurrency {
 		$query_union = [];
 
 		if ( class_exists( 'Automattic\WooCommerce\Utilities\OrderUtil' ) &&
-					\Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
+				\Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			foreach ( $currencies as $currency ) {
 				$query_union[] = $wpdb->prepare(
 					"SELECT %s AS currency_code, EXISTS(SELECT currency FROM {$wpdb->prefix}wc_orders WHERE currency=%s LIMIT 1) AS exists_in_orders",
@@ -1322,6 +1426,32 @@ class MultiCurrency {
 	}
 
 	/**
+	 * Adjusts the given amount for the currently selected currency.
+	 *
+	 * Applies charm pricing if specified, and adjusts the amount according to
+	 * the selected currency's conversion rate.
+	 *
+	 * @param  float $amount              The original amount to adjust.
+	 * @param  bool  $apply_charm_pricing Optional. Whether to apply charm pricing to the adjusted amount. Default true.
+	 * @return float                       The amount adjusted for the selected currency.
+	 */
+	public function adjust_amount_for_selected_currency( $amount, $apply_charm_pricing = true ) {
+		return $this->get_adjusted_price( $amount, $apply_charm_pricing, $this->get_selected_currency() );
+	}
+
+	/**
+	 * Returns the amount with the backend format.
+	 *
+	 * @param float $amount The amount to format.
+	 * @param array $args The arguments to pass to wc_price.
+	 *
+	 * @return string The formatted amount.
+	 */
+	public function get_backend_formatted_wc_price( float $amount, array $args = [] ): string {
+		return wc_price( $amount, $args );
+	}
+
+	/**
 	 * Gets the price after adjusting it with the rounding and charm settings.
 	 *
 	 * @param float    $price               The price to be adjusted.
@@ -1331,7 +1461,26 @@ class MultiCurrency {
 	 * @return float The adjusted price.
 	 */
 	protected function get_adjusted_price( $price, $apply_charm_pricing, $currency ): float {
-		$price = $this->ceil_price( $price, (float) $currency->get_rounding() );
+		$rounding = (float) $currency->get_rounding();
+
+		// If rounding is configured to be `0.00` we still need to round to the nearest lowest
+		// currency denomination.
+		// Otherwise we ceil the price to the configured rounding option.
+		// NOTE: We don't round if currency rounding is > 0.00 because in those cases we want to
+		// ceil the amount. For example: if $price = 1.251 and currency rounding = 0.25 we
+		// want that amount ceiled to 1.50. If we round( 1.251 ) to 1.25 before ceiling the
+		// price to the nearest 0.25 amount the final amount will be 1.25, which is incorrect.
+		if ( 0.00 === $rounding ) {
+			$num_decimals = absint(
+				$this->localization_service->get_currency_format(
+					$currency->get_code()
+				)['num_decimals']
+			);
+
+			$price = round( $price, $num_decimals );
+		} else {
+			$price = $this->ceil_price( $price, $rounding );
+		}
 
 		if ( $apply_charm_pricing ) {
 			$price += (float) $currency->get_charm();
@@ -1369,15 +1518,17 @@ class MultiCurrency {
 		$available_currencies = [];
 
 		$currencies = $this->get_account_available_currencies();
-		$cache_data = $this->get_cached_currencies();
+		if ( ! empty( $currencies ) ) {
+			$cache_data = $this->get_cached_currencies();
 
-		foreach ( $currencies as $currency_code ) {
-			$currency_rate = $cache_data['currencies'][ $currency_code ] ?? 1.0;
-			$update_time   = $cache_data['updated'] ?? null;
-			$new_currency  = new Currency( $this->localization_service, $currency_code, $currency_rate, $update_time );
+			foreach ( $currencies as $currency_code ) {
+				$currency_rate = $cache_data['currencies'][ $currency_code ] ?? 1.0;
+				$update_time   = $cache_data['updated'] ?? null;
+				$new_currency  = new Currency( $this->localization_service, $currency_code, $currency_rate, $update_time );
 
-			// Add this to our list of available currencies.
-			$available_currencies[ $new_currency->get_name() ] = $new_currency;
+				// Add this to our list of available currencies.
+				$available_currencies[ $new_currency->get_name() ] = $new_currency;
+			}
 		}
 
 		ksort( $available_currencies );
@@ -1594,7 +1745,7 @@ class MultiCurrency {
 	 * @return void
 	 */
 	private function register_admin_scripts() {
-		$this->register_script_with_dependencies( 'WCPAY_MULTI_CURRENCY_SETTINGS', 'dist/multi-currency', [ 'WCPAY_ADMIN_SETTINGS' ] );
+		$this->register_script_with_dependencies( 'WCPAY_MULTI_CURRENCY_SETTINGS', 'dist/multi-currency', [ 'WCPAY_ADMIN_SETTINGS', 'wp-components' ] );
 
 		wp_register_style(
 			'WCPAY_MULTI_CURRENCY_SETTINGS',

@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -39,7 +39,7 @@ window.tsfAys = function () {
 	 *
 	 * @since 4.0.0
 	 * @access public
-	 * @type {(Object<string,*>)|boolean|null} l10n Localized strings
+	 * @type {(Object<string,*>)|Boolean|null} l10n Localized strings
 	 */
 	const l10n = tsfAysL10n;
 
@@ -48,7 +48,7 @@ window.tsfAys = function () {
 	 *
 	 * @since 4.0.0
 	 * @access private
-	 * @type {boolean}
+	 * @type {Boolean}
 	 */
 	let _settingsChanged = false;
 
@@ -57,7 +57,7 @@ window.tsfAys = function () {
 	 *
 	 * @since 4.0.0
 	 * @access private
-	 * @type {boolean}
+	 * @type {Boolean}
 	 */
 	let _loadedListeners = false;
 
@@ -78,7 +78,7 @@ window.tsfAys = function () {
 	 * @deprecated
 	 * @access public
 	 *
-	 * @return {boolean}
+	 * @return {Boolean}
 	 */
 	function getChangedState() {
 		tsf.deprecatedFunc(
@@ -95,7 +95,7 @@ window.tsfAys = function () {
 	 * @since 4.1.0
 	 * @access public
 	 *
-	 * @return {boolean}
+	 * @return {Boolean}
 	 */
 	function areSettingsChanged() {
 		return _settingsChanged;

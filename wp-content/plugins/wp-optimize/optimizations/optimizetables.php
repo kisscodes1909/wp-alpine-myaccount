@@ -40,10 +40,10 @@ class WP_Optimization_optimizetables extends WP_Optimization {
 	 */
 	public function after_optimize() {
 		// check if force optimize sent.
-		$force = (isset($this->data['optimization_force']) && $this->data['optimization_force']) ? true : false;
+		$force = isset($this->data['optimization_force']) && $this->data['optimization_force'];
 
 		// check if single table name posted or optimize all tables.
-		if (isset($this->data['optimization_table']) && '' != $this->data['optimization_table']) {
+		if (isset($this->data['optimization_table']) && '' !== $this->data['optimization_table']) {
 			$table = $this->optimizer->get_table($this->data['optimization_table']);
 
 			if (false !== $table) {
@@ -82,6 +82,7 @@ class WP_Optimization_optimizetables extends WP_Optimization {
 				$this->register_meta('overhead_formatted', $wp_optimize->format_size($overhead_usage));
 			} else {
 				$this->register_meta('error', 1);
+				// translators: %s is a table name
 				$this->register_meta('message', sprintf(__('The table "%s" does not exist.', 'wp-optimize'), $this->data['optimization_table']));
 				return false;
 
@@ -104,14 +105,14 @@ class WP_Optimization_optimizetables extends WP_Optimization {
 	private function optimize_table($table_obj, $force = false) {
 
 		// if not forced and table is not optimizable then exit.
-		if (false == $force && (false == $table_obj->is_optimizable || false == $table_obj->is_type_supported)) return;
+		if (!$force && (!$table_obj->is_optimizable || !$table_obj->is_type_supported)) return;
 
 		if ($table_obj->is_type_supported) {
 			$this->logger->info('Optimizing: ' . $table_obj->Name);
 			$this->query('OPTIMIZE TABLE `' . $table_obj->Name . '`');
 
 			// For InnoDB Data_free doesn't contain free size.
-			if ('InnoDB' != $table_obj->Engine) {
+			if ('InnoDB' !== $table_obj->Engine) {
 				$this->optimizer->update_total_cleaned(strval($table_obj->Data_free));
 			}
 
@@ -131,7 +132,7 @@ class WP_Optimization_optimizetables extends WP_Optimization {
 	}
 
 	/**
-	 * Get information to be disbalyed onscreen before optimization.
+	 * Get information to be displayed onscreen before optimization.
 	 */
 	public function get_info() {
 		$table_information = $this->optimizer->get_table_information(get_current_blog_id());
@@ -154,32 +155,45 @@ class WP_Optimization_optimizetables extends WP_Optimization {
 
 		// Check if database is not optimizable.
 		if (false === $tablesstatus['is_optimizable']) {
-			if (isset($this->data['optimization_table']) && '' != $this->data['optimization_table']) {
+			if (isset($this->data['optimization_table']) && '' !== $this->data['optimization_table']) {
 				// This is used for grabbing information before optimizations.
 				$this->register_output(__('Total gain:', 'wp-optimize').' '.WP_Optimize()->format_size(($tablesstatus['total_gain'])));
 			}
 
 			if ($tablesstatus['inno_db_tables'] > 0) {
 				// Output message for how many InnoDB tables will not be optimized.
-				$this->register_output(sprintf(__('Tables using the InnoDB engine (%d) will not be optimized.'), $tablesstatus['inno_db_tables']));
+				// translators: %d is number of InnoDB tables
+				$this->register_output(sprintf(__('Tables using the InnoDB engine (%d) will not be optimized.', 'wp-optimize'), $tablesstatus['inno_db_tables']));
 
 				if ($tablesstatus['non_inno_db_tables'] > 0) {
+					// translators: %s is number of Non InnoDB tables
 					$this->register_output(sprintf(__('Other tables will be optimized (%s).', 'wp-optimize'), $tablesstatus['non_inno_db_tables']));
 				}
 
-				$faq_url = apply_filters('wpo_faq_url', 'https://getwpo.com/faqs/');
+				$faq_url = apply_filters('wpo_faq_url', 'https://teamupdraft.com/documentation/wp-optimize/topics/database-optimization/faqs/');
 				$force_db_option = $this->options->get_option('innodb-force-optimize', 'false');
 				$this->register_output('<input id="innodb_force_optimize" name="innodb-force-optimize" type="checkbox" value="true" '.checked($force_db_option, 'true').'><label for="innodb_force_optimize">'.__('Optimize InnoDB tables anyway.', 'wp-optimize').'</label><br><a href="'.$faq_url.'" target="_blank">'.__('Warning: you should read the FAQ on the risks of this operation first.', 'wp-optimize').'</a>');
 			}
 		} else {
+			// translators: %s is number of tables
 			$this->register_output(sprintf(__('Tables will be optimized (%s).', 'wp-optimize'), $tablesstatus['non_inno_db_tables'] + $tablesstatus['inno_db_tables']));
 		}
 	}
-
+	
+	/**
+	 * Return description
+	 *
+	 * @return string
+	 */
 	public function get_auto_option_description() {
 		return __('Optimize database tables', 'wp-optimize');
 	}
 	
+	/**
+	 * Return settings label
+	 *
+	 * @return string
+	 */
 	public function settings_label() {
 		return __('Optimize database tables', 'wp-optimize');
 	}

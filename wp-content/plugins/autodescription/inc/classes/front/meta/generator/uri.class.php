@@ -8,11 +8,11 @@ namespace The_SEO_Framework\Front\Meta\Generator;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\Meta;
+use The_SEO_Framework\Meta;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -71,43 +71,6 @@ final class URI {
 
 		[ $prev, $next ] = Meta\URI::get_paged_urls();
 
-		if ( \has_filter( 'the_seo_framework_paged_url_output_prev' ) ) {
-			/**
-			 * @since 2.6.0
-			 * @since 5.0.0 Deprecated
-			 * @deprecated
-			 * @param string $next The previous-page URL.
-			 * @param int    $id   The current post or term ID.
-			 */
-			$prev = (string) \apply_filters_deprecated(
-				'the_seo_framework_paged_url_output_prev',
-				[
-					$prev,
-					\The_SEO_Framework\Helper\Query::get_the_real_id(),
-				],
-				'5.0.0 of The SEO Framework',
-				'the_seo_framework_meta_render_data',
-			);
-		}
-		if ( \has_filter( 'the_seo_framework_paged_url_output_next' ) ) {
-			/**
-			 * @since 2.6.0
-			 * @since 5.0.0 Deprecated
-			 * @deprecated
-			 * @param string $next The next-page URL.
-			 * @param int    $id   The current post or term ID.
-			 */
-			$next = (string) \apply_filters_deprecated(
-				'the_seo_framework_paged_url_output_next',
-				[
-					$next,
-					\The_SEO_Framework\Helper\Query::get_the_real_id(),
-				],
-				'5.0.0 of The SEO Framework',
-				'the_seo_framework_meta_render_data',
-			);
-		}
-
 		if ( $prev )
 			yield 'prev' => [
 				'tag'        => 'link',
@@ -134,25 +97,6 @@ final class URI {
 	public static function generate_shortlink() {
 
 		$url = Meta\URI::get_shortlink_url();
-
-		if ( \has_filter( 'the_seo_framework_shortlink_output' ) ) {
-			/**
-			 * @since 2.6.0
-			 * @since 5.0.0 Deprecated
-			 * @deprecated
-			 * @param string $url The generated shortlink URL.
-			 * @param int    $id  The current post or term ID.
-			 */
-			$url = (string) \apply_filters_deprecated(
-				'the_seo_framework_shortlink_output',
-				[
-					$url,
-					\The_SEO_Framework\Helper\Query::get_the_real_id(),
-				],
-				'5.0.0 of The SEO Framework',
-				'the_seo_framework_meta_render_data',
-			);
-		}
 
 		if ( $url )
 			yield 'shortlink' => [

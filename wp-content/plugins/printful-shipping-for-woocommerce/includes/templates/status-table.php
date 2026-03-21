@@ -1,3 +1,7 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) exit;
+?>
+
 <?php if ( $checklist['overall_status'] ) {
 	?>
 	<div class="notice notice-success">

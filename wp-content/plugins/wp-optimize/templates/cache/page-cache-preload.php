@@ -36,7 +36,7 @@
 
 		foreach ($schedule_options as $opt_id => $opt_description) {
 			?>
-			<option value="<?php echo esc_attr($opt_id); ?>" <?php selected($wpo_cache_options['preload_schedule_type'], $opt_id); ?> <?php if ('wpo_use_cache_lifespan' == $opt_id && $wpo_cache_options['page_cache_length_value'] <= 0) disabled(true); ?>><?php echo esc_html($opt_description); ?></option>
+			<option value="<?php echo esc_attr($opt_id); ?>" <?php selected($wpo_cache_options['preload_schedule_type'], $opt_id); ?> <?php if ('wpo_use_cache_lifespan' === $opt_id && $wpo_cache_options['page_cache_length_value'] <= 0) disabled(true); ?>><?php echo esc_html($opt_description); ?></option>
 			<?php
 		}
 
@@ -48,6 +48,6 @@
 
 <input id="wp-optimize-save-cache-preload-settings" class="button button-primary" type="submit" name="wp-optimize-save-cache-preload-settings" value="<?php esc_attr_e('Save changes', 'wp-optimize');?>">
 
-<img class="wpo_spinner" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); ?>" alt="...">
+<img class="wpo_spinner" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="...">
 
 <span class="save-done dashicons dashicons-yes display-none"></span>

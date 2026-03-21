@@ -8,16 +8,16 @@ namespace The_SEO_Framework\Helper;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\{
+use function The_SEO_Framework\{
 	memo,
 	umemo,
 };
 
-use \The_SEO_Framework\Data;
+use The_SEO_Framework\Data;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -66,7 +66,7 @@ class Taxonomy {
 		} else {
 			// Then, test some() post types.
 			// Populate $disabled within loop, for the taxonomy might not have post types at all.
-			foreach ( static::get_post_types( $taxonomy ) as $type ) {
+			foreach ( self::get_post_types( $taxonomy ) as $type ) {
 				if ( Post_Type::is_supported( $type ) ) {
 					$disabled = false;
 					break;
@@ -112,9 +112,11 @@ class Taxonomy {
 		 */
 		return (bool) \apply_filters(
 			'the_seo_framework_supported_taxonomy',
-			$taxonomy
-				&& ! static::is_disabled( $taxonomy )
-				&& \in_array( $taxonomy, static::get_all_public(), true ),
+			(
+				   $taxonomy
+				&& ! self::is_disabled( $taxonomy )
+				&& \in_array( $taxonomy, self::get_all_public(), true )
+			),
 			$taxonomy,
 		);
 	}
@@ -130,8 +132,8 @@ class Taxonomy {
 	 */
 	public static function get_all_supported() {
 		return memo() ?? memo( array_values( array_filter(
-			static::get_all_public(),
-			[ static::class, 'is_supported' ],
+			self::get_all_public(),
+			[ self::class, 'is_supported' ],
 		) ) );
 	}
 
@@ -160,12 +162,12 @@ class Taxonomy {
 					'the_seo_framework_public_taxonomies',
 					array_filter(
 						array_unique( array_merge(
-							static::get_all_forced_supported(),
+							self::get_all_forced_supported(),
 							// array_values() because get_taxonomies() gives a sequential array.
 							array_values( \get_taxonomies( [
 								'public'   => true,
 								'_builtin' => false,
-							] ) )
+							] ) ),
 						) ),
 						'is_taxonomy_viewable',
 					)

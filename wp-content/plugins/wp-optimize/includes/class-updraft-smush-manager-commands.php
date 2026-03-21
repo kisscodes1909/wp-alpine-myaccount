@@ -50,6 +50,8 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 
 	/**
 	 * Returns a list of commands available for smush related operations
+	 *
+	 * @return array
 	 */
 	public static function get_allowed_ajax_commands() {
 
@@ -82,26 +84,34 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	/**
 	 * Process the compression of a single image
 	 *
-	 * @param mixed $data - sent in via AJAX
+	 * @param array $data - sent in via AJAX
 	 * @return WP_Error|array - information about the operation or WP_Error object on failure
 	 */
 	public function compress_single_image($data) {
 
-		$options = !empty($data['smush_options']) ? $data['smush_options'] : $this->task_manager->get_smush_options();
-		$image = isset($data['selected_image']) ? filter_var($data['selected_image']['attachment_id'], FILTER_SANITIZE_NUMBER_INT) : false;
-		$blog = isset($data['selected_image']) ? filter_var($data['selected_image']['blog_id'], FILTER_SANITIZE_NUMBER_INT) : false;
+		$options = empty($data['smush_options']) ? $this->task_manager->get_smush_options() : $data['smush_options'];
+		$image = isset($data['selected_image']['attachment_id']) ? absint($data['selected_image']['attachment_id']) : 0;
+		$blog = isset($data['selected_image']['blog_id']) ? absint($data['selected_image']['blog_id']) : 0;
 
-		// A subsite administrator can only compress their own image. If the blog ID isn't theirs, return an error.
-		if ($blog && is_multisite() && get_current_blog_id() != $blog && !current_user_can('manage_network_options')) {
+		if (0 === $image) {
+			return new WP_Error('invalid_image', __('Image ID is invalid', 'wp-optimize'));
+		}
+
+		if (0 === $blog && is_multisite()) {
+			return new WP_Error('invalid_blog', __('Blog ID is invalid', 'wp-optimize'));
+		}
+
+		// A sub site administrator can only compress their own image. If the blog ID isn't theirs, return an error.
+		if ($blog && is_multisite() && get_current_blog_id() !== $blog && !current_user_can('manage_network_options')) {
 			return new WP_Error('compression_not_permitted', __('The blog ID provided does not match the current blog.', 'wp-optimize'));
 		}
 
-		$server = sanitize_text_field($options['compression_server']);
+		$server = isset($options['compression_server']) ? sanitize_text_field($options['compression_server']) : $this->task_manager->get_default_webservice();
 
-		$lossy = filter_var($options['lossy_compression'], FILTER_VALIDATE_BOOLEAN) ? true : false;
-		$backup = filter_var($options['back_up_original'], FILTER_VALIDATE_BOOLEAN) ? true : false;
-		$exif = filter_var($options['preserve_exif'], FILTER_VALIDATE_BOOLEAN) ? true : false;
-		$quality = filter_var($options['image_quality'], FILTER_SANITIZE_NUMBER_INT);
+		$lossy = isset($options['lossy_compression']) ? filter_var($options['lossy_compression'], FILTER_VALIDATE_BOOLEAN) : false;
+		$backup = isset($options['back_up_original']) ? filter_var($options['back_up_original'], FILTER_VALIDATE_BOOLEAN) : true;
+		$exif = isset($options['preserve_exif']) ? filter_var($options['preserve_exif'], FILTER_VALIDATE_BOOLEAN) : false;
+		$quality = isset($options['image_quality']) ? absint($options['image_quality']) : 92;
 
 		$options = array(
 			'attachment_id' 	=> $image,
@@ -144,13 +154,13 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	/**
 	 * Restores a single image, if backup is available
 	 *
-	 * @param mixed $data - Sent in via AJAX
+	 * @param array $data - Sent in via AJAX
 	 * @return WP_Error|array - information about the operation or a WP_Error object on failure
 	 */
 	public function restore_single_image($data) {
 
-		$blog_id = isset($data['blog_id']) ? $data['blog_id'] : false;
-		$image_id   = isset($data['selected_image']) ? $data['selected_image'] : false;
+		$blog_id = isset($data['blog_id']) ? absint($data['blog_id']) : 0;
+		$image_id   = isset($data['selected_image']) ? absint($data['selected_image']) : 0;
 
 		$success = $this->task_manager->restore_single_image($image_id, $blog_id);
 
@@ -174,11 +184,11 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	/**
 	 * Process the compression of multiple images
 	 *
-	 * @param mixed $data - Sent in via AJAX
+	 * @param array $data - Sent in via AJAX
 	 * @return array
 	 */
 	public function process_bulk_smush($data = array()) {
-		$images = isset($data['selected_images']) ? $data['selected_images'] : array();
+		$images = isset($data['selected_images']) && is_array($data['selected_images']) ? $this->sanitize_images($data['selected_images']) : array();
 		
 		$this->images = $images;
 
@@ -197,7 +207,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	 * @return void
 	 */
 	public function process_bulk_smush_shutdown() {
-		WP_Optimize()->close_browser_connection(json_encode($this->final_response));
+		WP_Optimize()->close_browser_connection(wp_json_encode($this->final_response));
 
 		$this->task_manager->process_bulk_smush($this->images);
 		exit;
@@ -206,18 +216,21 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	/**
 	 * Returns useful information for the UI and closes the connection
 	 *
-	 * @param mixed $data - Sent in via AJAX
+	 * @param array $data - Sent in via AJAX
 	 *
 	 * @return array - Information for the UI
 	 */
 	public function get_ui_update($data) {
+		$use_cache = isset($data['use_cache']) ? sanitize_text_field($data['use_cache']) : 'true';
+		$image_list = isset($data['image_list']) && is_array($data['image_list']) ? $this->sanitize_images($data['image_list']) : false;
+
 		$ui_update = array();
 		$ui_update['status'] = true;
 		$ui_update['is_multisite'] = is_multisite() ? 1 : 0;
 		$pending_tasks = $this->task_manager->get_pending_tasks();
 		
 		$ui_update['pending_tasks'] = is_array($pending_tasks) ? count($this->task_manager->get_pending_tasks()) : 0;
-		$ui_update['unsmushed_images'] = $this->task_manager->get_uncompressed_images(isset($data['use_cache']) ? $data['use_cache'] : "true");
+		$ui_update['unsmushed_images'] = $this->task_manager->get_uncompressed_images($use_cache);
 		$ui_update['admin_urls'] = $this->task_manager->get_admin_urls();
 		$ui_update['completed_task_count'] = $this->task_manager->options->get_option('completed_task_count', 0);
 		$ui_update['bytes_saved'] = WP_Optimize()->format_size($this->task_manager->options->get_option('total_bytes_saved', 0));
@@ -225,24 +238,29 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 		$ui_update['failed_task_count'] = $this->task_manager->get_failed_task_count();
 
 		if (is_multisite()) {
-			$ui_update['summary'] = sprintf(__('Since the last reset of compression statistics on this multisite, a total of %d image(s) were compressed across the network.', 'wp-optimize').' '.__('This saved approximately %s of space at an average of %02d percent per image.', 'wp-optimize'), $ui_update['completed_task_count'], $ui_update['bytes_saved'], $ui_update['percent_saved']);
+			// translators: %d: number of images compressed, %2$s: size of saved space, %3$02d: average percent saved
+			$ui_update['summary'] = sprintf(__('Since the last reset of compression statistics on this multisite, a total of %d image(s) were compressed across the network.', 'wp-optimize').' '.__('This saved approximately %2$s of space at an average of %3$02d percent per image.', 'wp-optimize'), $ui_update['completed_task_count'], $ui_update['bytes_saved'], $ui_update['percent_saved']);
 		} else {
-			$ui_update['summary'] = sprintf(__('Since your compression statistics were last reset, a total of %d image(s) were compressed on this site.', 'wp-optimize').' '.__('This saved approximately %s of space at an average of %02d percent per image.', 'wp-optimize'), $ui_update['completed_task_count'], $ui_update['bytes_saved'], $ui_update['percent_saved']);
+			// translators: %d: number of images compressed, %2$s: size of saved space, %3$02d: average percent saved
+			$ui_update['summary'] = sprintf(__('Since your compression statistics were last reset, a total of %d image(s) were compressed on this site.', 'wp-optimize').' '.__('This saved approximately %2$s of space at an average of %3$02d percent per image.', 'wp-optimize'), $ui_update['completed_task_count'], $ui_update['bytes_saved'], $ui_update['percent_saved']);
 		}
+		// translators: %d: number of images that could not be compressed
 		$ui_update['failed'] = sprintf(__("%d image(s) could not be compressed.", 'wp-optimize'), $ui_update['failed_task_count']) . ' ' . __('Please see the logs for more information, or try again later.', 'wp-optimize');
+		// translators: %d: number of images that were selected for compression, and pending processing
 		$ui_update['pending'] = sprintf(__("%d image(s) images were selected for compressing previously, but were not all processed.", 'wp-optimize'), $ui_update['pending_tasks']) . ' ' . __('You can either complete them now or cancel and retry later.', 'wp-optimize');
 		$ui_update['smush_complete'] = $this->task_manager->is_queue_processed();
 		
-		if (isset($data['image_list'])) {
-			$images = $data['image_list'];
-			$stats = $this->task_manager->get_session_stats($images);
+		if ($image_list) {
+			$stats = $this->task_manager->get_session_stats($image_list);
 			$ui_update['session_stats'] = "";
 
 			if (!empty($stats['success'])) {
-			$ui_update['session_stats'] .= sprintf(__("A total of %d image(s) were successfully compressed in this iteration.", 'wp-optimize'), $stats['success']);
+				// translators: %d: number of images compressed
+				$ui_update['session_stats'] .= sprintf(__("A total of %d image(s) were successfully compressed in this iteration.", 'wp-optimize'), $stats['success']);
 			}
 
 			if (!empty($stats['fail'])) {
+				// translators: %d: number of images that could not be compressed
 				$ui_update['session_stats'] .= sprintf(__("%d selected image(s) could not be compressed.", 'wp-optimize'), $stats['fail']) . ' ' . __('Please see the logs for more information, you may try again later.', 'wp-optimize');
 			}
 		}
@@ -254,18 +272,18 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	/**
 	 * Updates webp related options
 	 *
-	 * @param mixed $data - Sent in via AJAX
+	 * @param array $data - Sent in via AJAX
 	 * @return WP_Error|array - information about the operation or WP_Error object on failure
 	 */
 	public function update_webp_options($data) {
 		$webp_instance = WP_Optimize()->get_webp_instance();
 		$options = array();
-		$options['webp_conversion'] = filter_var($data['webp_conversion'], FILTER_VALIDATE_BOOLEAN);
+		$options['webp_conversion'] = isset($data['webp_conversion']) ? filter_var($data['webp_conversion'], FILTER_VALIDATE_BOOLEAN) : false;
 
 		// Only run checks when trying to enable WebP
 		if ($options['webp_conversion']) {
 			//Run checks if we are enabling webp conversion
-			if (!$webp_instance->shell_functions_available()) {
+			if ($this->is_only_shell_converters_available() && !$webp_instance->shell_functions_available()) {
 				$webp_instance->disable_webp_conversion();
 				$webp_instance->log("Required WebP shell functions are not available on the server, disabling WebP conversion");
 				return new WP_Error('update_failed_no_shell_functions', __('Required WebP shell functions are not available on the server.', 'wp-optimize'));
@@ -323,22 +341,36 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	}
 
 	/**
+	 * Checks if only shell converters available for WebP conversion.
+	 *
+	 * @return boolean
+	 */
+	private function is_only_shell_converters_available() {
+		$available_converters = WP_Optimize()->get_options()->get_option('webp_converters');
+		$available_converters = is_array($available_converters) ? $available_converters : array();
+		$converters_with_shell = WPO_WebP_Test_Run::get_converters_with_shell();
+		$available_with_shell = array_intersect($available_converters, $converters_with_shell);
+
+		return count($available_converters) > 0 && count($available_converters) === count($available_with_shell);
+	}
+
+	/**
 	 * Updates smush related options
 	 *
-	 * @param mixed $data - Sent in via AJAX
+	 * @param array $data - Sent in via AJAX
 	 * @return WP_Error|array - information about the operation or WP_Error object on failure
 	 */
 	public function update_smush_options($data) {
 		$options = array();
-		$options['compression_server'] = sanitize_text_field($data['compression_server']);
-		$options['lossy_compression'] = filter_var($data['lossy_compression'], FILTER_VALIDATE_BOOLEAN) ? true : false;
-		$options['back_up_original'] = filter_var($data['back_up_original'], FILTER_VALIDATE_BOOLEAN) ? true : false;
-		$options['back_up_delete_after'] = filter_var($data['back_up_delete_after'], FILTER_VALIDATE_BOOLEAN) ? true : false;
-		$options['back_up_delete_after_days'] = filter_var($data['back_up_delete_after_days'], FILTER_SANITIZE_NUMBER_INT);
-		$options['preserve_exif'] = filter_var($data['preserve_exif'], FILTER_VALIDATE_BOOLEAN) ? true : false;
-		$options['autosmush'] = filter_var($data['autosmush'], FILTER_VALIDATE_BOOLEAN) ? true : false;
-		$options['image_quality'] = filter_var($data['image_quality'], FILTER_SANITIZE_NUMBER_INT);
-		$options['show_smush_metabox'] = filter_var($data['show_smush_metabox'], FILTER_VALIDATE_BOOLEAN) ? 'show' : 'hide';
+		$options['compression_server'] = isset($data['compression_server']) ? sanitize_text_field($data['compression_server']) : $this->task_manager->get_default_webservice();
+		$options['lossy_compression'] = isset($data['lossy_compression']) ? filter_var($data['lossy_compression'], FILTER_VALIDATE_BOOLEAN) : false;
+		$options['back_up_original'] = isset($data['back_up_original']) ? filter_var($data['back_up_original'], FILTER_VALIDATE_BOOLEAN) : true;
+		$options['back_up_delete_after'] = isset($data['back_up_delete_after']) ? filter_var($data['back_up_delete_after'], FILTER_VALIDATE_BOOLEAN) : true;
+		$options['back_up_delete_after_days'] = isset($data['back_up_delete_after_days']) ? absint($data['back_up_delete_after_days']) : 50;
+		$options['preserve_exif'] = isset($data['preserve_exif']) ? filter_var($data['preserve_exif'], FILTER_VALIDATE_BOOLEAN) : false;
+		$options['autosmush'] = isset($data['autosmush']) ? filter_var($data['autosmush'], FILTER_VALIDATE_BOOLEAN) : false;
+		$options['image_quality'] = isset($data['image_quality']) ? absint($data['image_quality']) : 92;
+		$options['show_smush_metabox'] = isset($data['show_smush_metabox']) && filter_var($data['show_smush_metabox'], FILTER_VALIDATE_BOOLEAN) ? 'show' : 'hide';
 
 		$success = $this->task_manager->update_smush_options($options);
 
@@ -379,10 +411,12 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	/**
 	 * Checks if the selected server is online
 	 *
-	 * @param mixed $data - Sent in via AJAX
+	 * @param array $data - Sent in via AJAX
+	 *
+	 * @return array
 	 */
 	public function check_server_status($data) {
-		$server = sanitize_text_field($data['server']);
+		$server = isset($data['server']) ? sanitize_text_field($data['server']) : $this->task_manager->get_default_webservice();
 		$response = array();
 		$response['status'] = true;
 		$response['online'] = $this->task_manager->check_server_online($server);
@@ -411,8 +445,9 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	 */
 	public function clear_pending_images($data) {
 
-		if (!empty($data['restore_images'])) {
-			foreach ($data['restore_images'] as $image) {
+		if (!empty($data['restore_images']) && is_array($data['restore_images'])) {
+			$restore_images = $this->sanitize_images($data['restore_images']);
+			foreach ($restore_images as $image) {
 				$this->task_manager->restore_single_image($image['attachment_id'], $image['blog_id']);
 			}
 		}
@@ -441,8 +476,9 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 		$selected_images = array();
 
 		$unmark = isset($data['unmark']) && $data['unmark'];
+		$image_list = isset($data['selected_images']) && is_array($data['selected_images']) ? $this->sanitize_images($data['selected_images']) : array();
 
-		foreach ($data['selected_images'] as $image) {
+		foreach ($image_list as $image) {
 			if (!array_key_exists($image['blog_id'], $selected_images)) $selected_images[$image['blog_id']] = array();
 
 			$selected_images[$image['blog_id']][] = $image['attachment_id'];
@@ -471,15 +507,15 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 		$response['status'] = true;
 
 		if ($unmark) {
-			$response['summary'] = _n('The selected image was successfully marked as uncompressed', 'The selected images were successfully marked as uncompressed', count($data['selected_images']), 'wp-optimize');
+			$response['summary'] = _n('The selected image was successfully marked as uncompressed', 'The selected images were successfully marked as uncompressed', count($image_list), 'wp-optimize');
 		} else {
-			$response['summary'] = _n('The selected image was successfully marked as compressed', 'The selected images were successfully marked as compressed', count($data['selected_images']), 'wp-optimize');
+			$response['summary'] = _n('The selected image was successfully marked as compressed', 'The selected images were successfully marked as compressed', count($image_list), 'wp-optimize');
 		}
 
 		$response['info'] = $info;
 
-		if (1 === count($data['selected_images'])) {
-			$selected_image = reset($data['selected_images']);
+		if (1 === count($image_list)) {
+			$selected_image = reset($image_list);
 			$response['media_column_html'] = $this->get_smush_media_column_content($selected_image['blog_id'], $selected_image['attachment_id']);
 		}
 
@@ -534,6 +570,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 						if ($delete_only_backups_meta) {
 							if ($smushed_images_total > 0) {
 								$response['message'] = __('All the compressed images with backup copies of their original files were successfully restored.', 'wp-optimize');
+								// translators: %s - number of smushed images
 								$response['message'] .= ' '.sprintf(_n('Unable to restore %s image without backup files.', 'Unable to restore %s images without backup files.', $smushed_images_total, 'wp-optimize'), $smushed_images_total);
 							} else {
 								$response['message'] = __('All the compressed images were successfully restored.', 'wp-optimize');
@@ -560,7 +597,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	/**
 	 * Returns the log file
 	 *
-	 * @return WP_Error|file - logfile or WP_Error object on failure
+	 * @return void|WP_Error - logfile or WP_Error object on failure
 	 */
 	public function get_smush_logs() {
 
@@ -573,7 +610,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 		if (is_file($logfile)) {
 			if ($this->heartbeat_command) {
 				// The response will be inside the heartbeat response envelope, as each response of a heartbeat goes in its own unique ID key
-				readfile($logfile);
+				readfile($logfile); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile -- Using WP_Filesystem and get contents will result in `echo` and unescaped error
 			} else {
 				// Headers are needed for the `Download logs` link, which will run this command and just prompt a file download
 				header('Content-Description: File Transfer');
@@ -583,7 +620,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 				header('Cache-Control: must-revalidate');
 				header('Pragma: public');
 				header('Content-Length: ' . filesize($logfile));
-				readfile($logfile);
+				readfile($logfile); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile -- Using WP_Filesystem and get contents will result in `echo` and unescaped error
 				exit;
 			}
 		} else {
@@ -615,11 +652,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	public function reset_webp_serving_method() {
 		$webp_instance = WP_Optimize()->get_webp_instance();
 		//Run checks before calling reset_webp_serving_method
-		if (!$webp_instance->shell_functions_available()) {
-			$webp_instance->disable_webp_conversion();
-			$webp_instance->log("The WebP serving method cannot be reset because required WebP shell functions are not available on the server");
-			return new WP_Error('reset_failed_no_shell_functions', __('The WebP serving method cannot be reset because required WebP shell functions are not available on the server', 'wp-optimize'));
-		} elseif (!$webp_instance->is_webp_conversion_enabled()) {
+		if (!$webp_instance->is_webp_conversion_enabled()) {
 			$webp_instance->disable_webp_conversion();
 			$webp_instance->log("The WebP serving method cannot be reset because WebP conversion is currently disabled");
 			return new WP_Error('reset_failed_webp_conversion_disabled', __('The WebP serving method cannot be reset because WebP conversion is currently disabled', 'wp-optimize'));
@@ -638,7 +671,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	 * @return array
 	 */
 	public function convert_to_webp_format($data) {
-		$attachment_id = isset($data['attachment_id']) ? $data['attachment_id'] : 0;
+		$attachment_id = isset($data['attachment_id']) ? absint($data['attachment_id']) : 0;
 		if (0 === $attachment_id) return $this->image_not_found_response();
 
 		$images = WPO_Image_Utils::get_attachment_files($attachment_id);
@@ -661,10 +694,10 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	 * @return array
 	 */
 	public function get_smush_settings_form($data) {
-		$attachment_id = isset($data['attachment_id']) ? $data['attachment_id'] : 0;
+		$attachment_id = isset($data['attachment_id']) ? absint($data['attachment_id']) : 0;
 		if (0 === $attachment_id) return $this->image_not_found_response();
 
-		$compressed = get_post_meta($attachment_id, 'smush-complete', true) ? true : false;
+		$compressed = (bool) get_post_meta($attachment_id, 'smush-complete', true);
 
 		$smush_options = Updraft_Smush_Manager()->get_smush_options();
 
@@ -684,8 +717,8 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	/**
 	 * Get content for Media Library column content
 	 *
-	 * @param {int} $blog_id
-	 * @param {int} $attachment_id
+	 * @param int $blog_id
+	 * @param int $attachment_id
 	 *
 	 * @return string
 	 */
@@ -718,7 +751,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	 * @return array
 	 */
 	public function get_smush_details($data) {
-		$selected_images = isset($data['selected_images']) ? $data['selected_images'] : array();
+		$selected_images = isset( $data['selected_images'] ) && is_array( $data['selected_images'] ) ? array_map( 'absint', $data['selected_images'] ) : array();
 		$smush_details = array();
 		foreach ($selected_images as $attachment_id) {
 			$smush_details[$attachment_id] = $this->task_manager->get_smush_details($attachment_id);
@@ -728,6 +761,33 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 			'success' => true,
 			'smush_details' => $smush_details,
 		);
+	}
+
+	/**
+	 * Sanitize array of images ensuring proper integer values for attachment_id and blog_id
+	 *
+	 * @param array $images Array of image data to sanitize
+	 * @return array
+	 */
+	private function sanitize_images($images) {
+		$result = array();
+
+		foreach ($images as $image) {
+			$attachment_id = isset($image['attachment_id']) ? absint($image['attachment_id']) : 0;
+			$blog_id = isset($image['blog_id']) ? absint($image['blog_id']) : 0;
+	
+			// Skip entries where either value is zero
+			if (0 === $attachment_id || 0 === $blog_id) {
+				continue;
+			}
+	
+			$result[] = array(
+				'attachment_id' => $attachment_id,
+				'blog_id'       => $blog_id,
+			);
+		}
+
+		return $result;
 	}
 }
 

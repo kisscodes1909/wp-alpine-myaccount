@@ -21,73 +21,73 @@ if(version_compare($wp_version, '5.2.0')<0)
 $comparison_data=array(
 
 	array(
-		__('Add order number prefix', 'wt-woocommerce-sequential-order-numbers'),
+		esc_html__('Add order number prefix', 'wt-woocommerce-sequential-order-numbers'),
 		true,
 		true,
 	),
 	array(
-		__('Set order number length', 'wt-woocommerce-sequential-order-numbers'),
+		esc_html__('Set order number length', 'wt-woocommerce-sequential-order-numbers'),
 		true,
 		true,
 	),
 	array(
-		__('Dynamic preview of order numbers', 'wt-woocommerce-sequential-order-numbers'),
+		esc_html__('Dynamic preview of order numbers', 'wt-woocommerce-sequential-order-numbers'),
 		true,
 		true,
 	),
 	array(
-		__('Custom starting number for orders', 'wt-woocommerce-sequential-order-numbers'),
+		esc_html__('Custom starting number for orders', 'wt-woocommerce-sequential-order-numbers'),
 		true,
 		true,
 	),
 	array(
-		__('Keep existing order numbers', 'wt-woocommerce-sequential-order-numbers'),
+		esc_html__('Keep existing order numbers', 'wt-woocommerce-sequential-order-numbers'),
 		true,
 		true,
 	),
 	array(
-		__('Easy custom order number search', 'wt-woocommerce-sequential-order-numbers'),
+		esc_html__('Easy custom order number search', 'wt-woocommerce-sequential-order-numbers'),
 		true,
 		true,
 	),
 	array(
-		__('Order tracking', 'wt-woocommerce-sequential-order-numbers'),
+		esc_html__('Order tracking', 'wt-woocommerce-sequential-order-numbers'),
 		true,
 		true,
 	),
 	array(
-		__('Custom suffix for order numbers', 'wt-woocommerce-sequential-order-numbers'),
+		esc_html__('Custom suffix for order numbers', 'wt-woocommerce-sequential-order-numbers'),
 		false,
 		true,
 	),
 	array(
-		__('Add order date as suffix', 'wt-woocommerce-sequential-order-numbers'),
+		esc_html__('Add order date as suffix', 'wt-woocommerce-sequential-order-numbers'),
 		false,
 		true,
 	),
 	array(
-		__('Auto-reset order numbers', 'wt-woocommerce-sequential-order-numbers'),
+		esc_html__('Auto-reset order numbers', 'wt-woocommerce-sequential-order-numbers'),
 		false,
 		true,
 	),
 	array(
-		__('Separate order number sequence for free orders', 'wt-woocommerce-sequential-order-numbers'),
+		esc_html__('Separate order number sequence for free orders', 'wt-woocommerce-sequential-order-numbers'),
 		false,
 		true,
 	),
 	array(
-		__('Custom increment for order sequence', 'wt-woocommerce-sequential-order-numbers'),
+		esc_html__('Custom increment for order sequence', 'wt-woocommerce-sequential-order-numbers'),
 		false,
 		true,
 	),
 	array(
-		__('Premium suppport', 'wt-woocommerce-sequential-order-numbers'),
+		esc_html__('Premium suppport', 'wt-woocommerce-sequential-order-numbers'),
 		false,
 		true,
 	),
 	array(
-		__('Order number templates', 'wt-woocommerce-sequential-order-numbers'),
-		__('Limited', 'wt-woocommerce-sequential-order-numbers'),
+		esc_html__('Order number templates', 'wt-woocommerce-sequential-order-numbers'),
+		esc_html__('Limited', 'wt-woocommerce-sequential-order-numbers'),
 		true,
 	),
 );
@@ -99,22 +99,22 @@ function wt_seq_free_vs_pro_column_vl($vl, $yes_icon, $no_icon)
 		{
 			if(is_bool($value))
 			{
-				echo ($value ? $yes_icon : $no_icon);
+				echo wp_kses_post($value ? $yes_icon : $no_icon);
 			}else
 			{
 				//string only
-				echo $value;
+				echo esc_html($value);
 			}
 		}
 	}else
 	{
 		if(is_bool($vl))
 		{
-			echo ($vl ? $yes_icon : $no_icon);
+			echo wp_kses_post($vl ? $yes_icon : $no_icon);
 		}else
 		{
 			//string only
-			echo $vl;
+			echo esc_html($vl);
 		}
 	}
 }
@@ -122,16 +122,16 @@ function wt_seq_free_vs_pro_column_vl($vl, $yes_icon, $no_icon)
 <div class="wt_seq_free_vs_pro">
 	<table class="wt_sequential_freevs_pro">
 	<tr>
-		<td><?php _e('FEATURES', 'wt-woocommerce-sequential-order-numbers'); ?></td>
-		<td><?php _e('FREE', 'wt-woocommerce-sequential-order-numbers'); ?></td>
-		<td><?php _e('PREMIUM', 'wt-woocommerce-sequential-order-numbers'); ?></td>
+		<td><?php esc_html_e('FEATURES', 'wt-woocommerce-sequential-order-numbers'); ?></td>
+		<td><?php esc_html_e('FREE', 'wt-woocommerce-sequential-order-numbers'); ?></td>
+		<td><?php esc_html_e('PREMIUM', 'wt-woocommerce-sequential-order-numbers'); ?></td>
 	</tr>
 	<?php
 	foreach ($comparison_data as $val_arr)
 	{
 		?>
 		<tr>
-			<td><?php echo $val_arr[0];?></td>
+			<td><?php echo esc_html($val_arr[0]);?></td>
 			<td>
 				<?php
 				wt_seq_free_vs_pro_column_vl($val_arr[1], $yes_icon, $no_icon);

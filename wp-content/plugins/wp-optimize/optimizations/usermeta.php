@@ -21,6 +21,8 @@ class WP_Optimization_usermeta extends WP_Optimization {
 	 */
 	public function preview($params) {
 		// get data requested for preview.
+		// `$this->wpdb->prepare` is global `$wpdb->prepare`
+		// phpcs:disable
 		$sql = $this->wpdb->prepare(
 			"SELECT um.* FROM `" . $this->wpdb->usermeta . "` um".
 			" LEFT JOIN `" . $this->wpdb->users . "` wu ON wu.ID = um.user_id".
@@ -33,25 +35,26 @@ class WP_Optimization_usermeta extends WP_Optimization {
 		);
 
 		$users = $this->wpdb->get_results($sql, ARRAY_A);
+		// phpcs:enable
 
 		// get total count user meta for optimization.
 		$sql = "SELECT COUNT(*) FROM `" . $this->wpdb->usermeta . "` um LEFT JOIN `" . $this->wpdb->users . "` wu ON wu.ID = um.user_id WHERE wu.ID IS NULL;";
 
-		$total = $this->wpdb->get_var($sql);
+		$total = $this->wpdb->get_var($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- safe, no user input used
 
 		return array(
 			'id_key' => 'umeta_id',
 			'columns' => array(
 				'umeta_id' => __('ID', 'wp-optimize'),
 				'user_id' => __('User ID', 'wp-optimize'),
-				'meta_key' => __('Meta Key', 'wp-optimize'),
-				'meta_value' => __('Meta Value', 'wp-optimize'),
+				'meta_key' => __('Meta Key', 'wp-optimize'), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- This is not a query
+				'meta_value' => __('Meta Value', 'wp-optimize'), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- This is not a query
 			),
 			'offset' => $params['offset'],
 			'limit' => $params['limit'],
 			'total' => $total,
 			'data' => $this->htmlentities_array($users, array('ID')),
-			'message' => $total > 0 ? '' : __('No orphaned user meta data in your database', 'wp-optimize'),
+			'message' => $total > 0 ? '' : __('No orphaned user metadata in your database', 'wp-optimize'),
 		);
 	}
 
@@ -59,9 +62,11 @@ class WP_Optimization_usermeta extends WP_Optimization {
 	 * Do actions after optimize() function.
 	 */
 	public function after_optimize() {
-		$message = sprintf(_n('%s orphaned user meta data deleted', '%s orphaned user meta data deleted', $this->processed_count, 'wp-optimize'), number_format_i18n($this->processed_count));
+		// translators: %s is the number of orphaned user metadata deleted
+		$message = sprintf(_n('%s orphaned user metadata deleted', '%s orphaned user metadata deleted', $this->processed_count, 'wp-optimize'), number_format_i18n($this->processed_count));
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s is the number sites
 			$message .= ' ' . sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
@@ -91,12 +96,14 @@ class WP_Optimization_usermeta extends WP_Optimization {
 	 */
 	public function after_get_info() {
 		if ($this->found_count) {
-			$message = sprintf(_n('%s orphaned user meta data in your database', '%s orphaned user meta data in your database', $this->found_count, 'wp-optimize'), number_format_i18n($this->found_count));
+			// translators: %s is the number of orphaned user metadata
+			$message = sprintf(_n('%s orphaned user metadata in your database', '%s orphaned user metadata in your database', $this->found_count, 'wp-optimize'), number_format_i18n($this->found_count));
 		} else {
-			$message = __('No orphaned user meta data in your database', 'wp-optimize');
+			$message = __('No orphaned user metadata in your database', 'wp-optimize');
 		}
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s is the number sites
 			$message .= ' ' . sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
@@ -113,20 +120,24 @@ class WP_Optimization_usermeta extends WP_Optimization {
 	 */
 	public function get_info() {
 		$sql = "SELECT COUNT(*) FROM `" . $this->wpdb->usermeta . "` um LEFT JOIN `" . $this->wpdb->users . "` wu ON wu.ID = um.user_id WHERE wu.ID IS NULL;";
-		$usermeta = $this->wpdb->get_var($sql);
+		$usermeta = $this->wpdb->get_var($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- safe, no user input used
 
 		$this->found_count += $usermeta;
 	}
 
 	/**
 	 * Get settings label.
+	 *
+	 * @return string
 	 */
 	public function settings_label() {
-		return __('Clean user meta data', 'wp-optimize');
+		return __('Clean user metadata', 'wp-optimize');
 	}
 
 	/**
 	 * Get auto option description.
+	 *
+	 * @return string
 	 */
 	public function get_auto_option_description() {
 		return __('Remove orphaned user meta', 'wp-optimize');

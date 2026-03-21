@@ -12,6 +12,10 @@ use Automattic\Jetpack\Roles;
 use Automattic\Jetpack\Sync\Modules;
 use Automattic\Jetpack\Sync\Settings;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit( 0 );
+}
+
 /**
  * Class to handle sync for posts.
  */
@@ -65,26 +69,6 @@ class Posts extends Module {
 	const MAX_POST_CONTENT_LENGTH = 5000000;
 
 	/**
-	 * Max bytes allowed for post meta_value => length.
-	 * Current Setting : 2MB.
-	 *
-	 * @access public
-	 *
-	 * @var int
-	 */
-	const MAX_POST_META_LENGTH = 2000000;
-
-	/**
-	 * Max bytes allowed for full sync upload.
-	 * Current Setting : 7MB.
-	 *
-	 * @access public
-	 *
-	 * @var int
-	 */
-	const MAX_SIZE_FULL_SYNC = 7000000;
-
-	/**
 	 * Default previous post state.
 	 * Used for default previous post status.
 	 *
@@ -106,14 +90,28 @@ class Posts extends Module {
 	}
 
 	/**
-	 * The table in the database.
+	 * The table name.
 	 *
 	 * @access public
 	 *
 	 * @return string
+	 * @deprecated since 3.11.0 Use table() instead.
 	 */
 	public function table_name() {
+		_deprecated_function( __METHOD__, '3.11.0', 'Automattic\\Jetpack\\Sync\\Posts->table' );
 		return 'posts';
+	}
+
+	/**
+	 * The table in the database with the prefix.
+	 *
+	 * @access public
+	 *
+	 * @return string|bool
+	 */
+	public function table() {
+		global $wpdb;
+		return $wpdb->posts;
 	}
 
 	/**
@@ -159,6 +157,8 @@ class Posts extends Module {
 		// Listen for meta changes.
 		$this->init_listeners_for_meta_type( 'post', $callable );
 		$this->init_meta_whitelist_handler( 'post', array( $this, 'filter_meta' ) );
+
+		add_filter( 'jetpack_sync_before_enqueue_updated_post_meta', array( $this, 'on_before_enqueue_updated_attachment_metadata' ), 1 );
 
 		add_filter( 'jetpack_sync_before_enqueue_jetpack_sync_save_post', array( $this, 'filter_jetpack_sync_before_enqueue_jetpack_sync_save_post' ) );
 		add_filter( 'jetpack_sync_before_enqueue_jetpack_published_post', array( $this, 'filter_jetpack_sync_before_enqueue_jetpack_published_post' ) );
@@ -228,13 +228,13 @@ class Posts extends Module {
 	 */
 	public function init_before_send() {
 		// meta.
-		add_filter( 'jetpack_sync_before_send_added_post_meta', array( $this, 'trim_post_meta' ) );
-		add_filter( 'jetpack_sync_before_send_updated_post_meta', array( $this, 'trim_post_meta' ) );
+		add_filter( 'jetpack_sync_before_send_added_post_meta', array( $this, 'filter_added_post_meta_before_send' ), 5 ); // Incase this filter is used elsewhere, we run early.
+		add_filter( 'jetpack_sync_before_send_updated_post_meta', array( $this, 'filter_updated_post_meta_before_send' ), 5 ); // Incase this filter is used elsewhere, we run early.
 		add_filter( 'jetpack_sync_before_send_deleted_post_meta', array( $this, 'trim_post_meta' ) );
 		// Full sync.
 		$sync_module = Modules::get_module( 'full-sync' );
 		if ( $sync_module instanceof Full_Sync_Immediately ) {
-			add_filter( 'jetpack_sync_before_send_jetpack_full_sync_posts', array( $this, 'add_term_relationships' ) );
+			add_filter( 'jetpack_sync_before_send_jetpack_full_sync_posts', array( $this, 'build_full_sync_action_array' ) );
 		} else {
 			add_filter( 'jetpack_sync_before_send_jetpack_full_sync_posts', array( $this, 'expand_posts_with_metadata_and_terms' ) );
 		}
@@ -264,7 +264,7 @@ class Posts extends Module {
 	 * @todo Use $wpdb->prepare for the SQL query.
 	 *
 	 * @param array $config Full sync configuration for this sync module.
-	 * @return array Number of items yet to be enqueued.
+	 * @return int Number of items yet to be enqueued.
 	 */
 	public function estimate_full_sync_actions( $config ) {
 		global $wpdb;
@@ -288,7 +288,7 @@ class Posts extends Module {
 		$where_sql = Settings::get_blacklisted_post_types_sql();
 
 		// Config is a list of post IDs to sync.
-		if ( is_array( $config ) ) {
+		if ( is_array( $config ) && ! empty( $config ) ) {
 			$where_sql .= ' AND ID IN (' . implode( ',', array_map( 'intval', $config ) ) . ')';
 		}
 
@@ -307,7 +307,7 @@ class Posts extends Module {
 	}
 
 	/**
-	 * Filter meta arguments so that we don't sync meta_values over MAX_POST_META_LENGTH.
+	 * Filter meta arguments so that we don't sync meta_values over MAX_META_LENGTH.
 	 *
 	 * @param array $args action arguments.
 	 *
@@ -318,10 +318,80 @@ class Posts extends Module {
 		// Explicitly truncate meta_value when it exceeds limit.
 		// Large content will cause OOM issues and break Sync.
 		$serialized_value = maybe_serialize( $meta_value );
-		if ( strlen( $serialized_value ) >= self::MAX_POST_META_LENGTH ) {
+		if ( $serialized_value === null || strlen( $serialized_value ) >= self::MAX_META_LENGTH ) {
 			$meta_value = '';
 		}
 		return array( $meta_id, $object_id, $meta_key, $meta_value );
+	}
+
+	/**
+	 * Updated post meta send-time filter: refreshes _wp_attachment_metadata to the latest DB value, then trims.
+	 *
+	 * @param array $args [ $meta_id, $object_id, $meta_key, $meta_value ].
+	 * @return array Filtered args.
+	 */
+	public function filter_updated_post_meta_before_send( $args ) {
+		if ( ! is_array( $args ) || count( $args ) < 4 ) {
+			return $args;
+		}
+		list( $meta_id, $object_id, $meta_key, $meta_value ) = $args;
+		if ( '_wp_attachment_metadata' !== $meta_key || 'attachment' !== get_post_type( (int) $object_id ) ) {
+			return $this->trim_post_meta( $args );
+		}
+		$current_value = wp_get_attachment_metadata( (int) $object_id );
+		if ( is_array( $current_value ) && ! empty( $current_value ) ) {
+			$meta_value = $current_value;
+		}
+		return $this->trim_post_meta( array( $meta_id, $object_id, $meta_key, $meta_value ) );
+	}
+
+	/**
+	 * Added post meta send-time filter: refreshes _wp_attachment_metadata to the latest DB value, then trims.
+	 *
+	 * @param array $args [ $meta_id, $object_id, $meta_key, $meta_value ].
+	 * @return array|false Filtered args, or false to skip sending when the snapshot is clearly incomplete.
+	 */
+	public function filter_added_post_meta_before_send( $args ) {
+		if ( ! is_array( $args ) || count( $args ) < 4 ) {
+			return $args;
+		}
+		list( $meta_id, $object_id, $meta_key, $meta_value ) = $args;
+		if ( '_wp_attachment_metadata' !== $meta_key || 'attachment' !== get_post_type( (int) $object_id ) ) {
+			return $this->trim_post_meta( $args );
+		}
+		$current_value = wp_get_attachment_metadata( (int) $object_id );
+		// For added_post_meta, skip clearly incomplete snapshots (e.g., missing or empty sizes).
+		if ( ! is_array( $current_value ) || empty( $current_value ) ) {
+			return false;
+		}
+		if ( isset( $current_value['sizes'] ) && is_array( $current_value['sizes'] ) && count( $current_value['sizes'] ) === 0 ) {
+			return false;
+		}
+		$meta_value = $current_value;
+		return $this->trim_post_meta( array( $meta_id, $object_id, $meta_key, $meta_value ) );
+	}
+
+	/**
+	 * Enqueue-time per-request dedupe for updated attachment metadata.
+	 *
+	 * @param array $args [ $meta_id, $object_id, $meta_key, $meta_value ].
+	 * @return array|false
+	 */
+	public function on_before_enqueue_updated_attachment_metadata( $args ) {
+		if ( ! is_array( $args ) || count( $args ) < 3 ) {
+			return $args;
+		}
+		$post_id  = (int) $args[1];
+		$meta_key = $args[2];
+		if ( '_wp_attachment_metadata' !== $meta_key || 'attachment' !== get_post_type( $post_id ) ) {
+			return $args;
+		}
+		static $seen_updated_meta_for_post = array();
+		if ( isset( $seen_updated_meta_for_post[ $post_id ] ) ) {
+			return false;
+		}
+		$seen_updated_meta_for_post[ $post_id ] = true;
+		return $args;
 	}
 
 	/**
@@ -384,10 +454,13 @@ class Posts extends Module {
 	/**
 	 * Filter all meta that is not blacklisted, or is stored for a disallowed post type.
 	 *
-	 * @param array $args Hook arguments.
+	 * @param array|false $args Hook arguments.
 	 * @return array|false Hook arguments, or false if meta was filtered.
 	 */
 	public function filter_meta( $args ) {
+		if ( ! is_array( $args ) || count( $args ) < 3 ) {
+			return false;
+		}
 		if ( $this->is_post_type_allowed( $args[1] ) && $this->is_whitelisted_post_meta( $args[2] ) ) {
 			return $args;
 		}
@@ -603,6 +676,9 @@ class Posts extends Module {
 	 * @param \WP_Post $post       Post object.
 	 */
 	public function save_published( $new_status, $old_status, $post ) {
+		if ( ! $post instanceof \WP_Post ) {
+			return;
+		}
 		if ( 'publish' === $new_status && 'publish' !== $old_status ) {
 			$this->just_published[ $post->ID ] = true;
 		}
@@ -762,6 +838,9 @@ class Posts extends Module {
 		 */
 		if ( 'customize_changeset' === $post->post_type ) {
 			$post_content = json_decode( $post->post_content, true );
+			if ( ! is_iterable( $post_content ) ) {
+				return;
+			}
 			foreach ( $post_content as $key => $value ) {
 				// Skip if it isn't a widget.
 				if ( 'widget_' !== substr( $key, 0, strlen( 'widget_' ) ) ) {
@@ -777,12 +856,31 @@ class Posts extends Module {
 					$widget_data = array(
 						'name'  => $wp_registered_widgets[ $key ]['name'],
 						'id'    => $key,
-						'title' => $value['value']['title'],
+						'title' => $value['value']['title'] ?? '',
 					);
 					do_action( 'jetpack_widget_edited', $widget_data );
 				}
 			}
 		}
+	}
+
+	/**
+	 * Build the full sync action object for Posts.
+	 *
+	 * @access public
+	 *
+	 * @param array $args An array with the posts and the previous end.
+	 *
+	 * @return array An array with the posts, postmeta and the previous end.
+	 */
+	public function build_full_sync_action_array( $args ) {
+		list( $filtered_posts, $previous_end ) = $args;
+		return array(
+			$filtered_posts['objects'],
+			$filtered_posts['meta'],
+			array(), // WPCOM does not process term relationships in full sync posts actions for a while now, let's skip them.
+			$previous_end,
+		);
 	}
 
 	/**
@@ -793,15 +891,16 @@ class Posts extends Module {
 	 *
 	 * @param array $args The hook parameters.
 	 * @return array $args The expanded hook parameters.
+	 * @deprecated since 4.7.0
 	 */
 	public function add_term_relationships( $args ) {
-		list( $filtered_posts, $previous_interval_end )                       = $args;
-		list( $filtered_post_ids, $filtered_posts, $filtered_posts_metadata ) = $filtered_posts;
+		_deprecated_function( __METHOD__, '4.7.0' );
+		list( $filtered_posts, $previous_interval_end ) = $args;
 
 		return array(
-			$filtered_posts,
-			$filtered_posts_metadata,
-			$this->get_term_relationships( $filtered_post_ids ),
+			$filtered_posts['objects'],
+			$filtered_posts['meta'],
+			$this->get_term_relationships( $filtered_posts['object_ids'] ),
 			$previous_interval_end,
 		);
 	}
@@ -862,15 +961,33 @@ class Posts extends Module {
 			return array();
 		}
 
-		$posts          = $this->expand_posts( $post_ids );
-		$posts_metadata = $this->get_metadata( $post_ids, 'post', Settings::get_setting( 'post_meta_whitelist' ) );
+		$posts = $this->expand_posts( $post_ids );
 
-		// Filter posts and metadata based on maximum size constraints.
-		list( $filtered_post_ids, $filtered_posts, $filtered_posts_metadata ) = $this->filter_posts_and_metadata_max_size( $posts, $posts_metadata );
+		// If no posts were fetched, make sure to return the expected structure so that status is updated correctly.
+		if ( empty( $posts ) ) {
+			return array(
+				'object_ids' => $post_ids,
+				'objects'    => array(),
+				'meta'       => array(),
+			);
+		}
+		// Get the post IDs from the posts that were fetched.
+		$fetched_post_ids = wp_list_pluck( $posts, 'ID' );
+		$metadata         = $this->get_metadata( $fetched_post_ids, 'post', Settings::get_setting( 'post_meta_whitelist' ) );
+
+		// Filter the posts and metadata based on the maximum size constraints.
+		list( $filtered_post_ids, $filtered_posts, $filtered_posts_metadata ) = $this->filter_objects_and_metadata_by_size(
+			'post',
+			$posts,
+			$metadata,
+			self::MAX_META_LENGTH,
+			self::MAX_SIZE_FULL_SYNC
+		);
+
 		return array(
-			$filtered_post_ids,
-			$filtered_posts,
-			$filtered_posts_metadata,
+			'object_ids' => $filtered_post_ids,
+			'objects'    => $filtered_posts,
+			'meta'       => $filtered_posts_metadata,
 		);
 	}
 
@@ -886,72 +1003,5 @@ class Posts extends Module {
 		$posts = array_map( array( $this, 'filter_post_content_and_add_links' ), $posts );
 		$posts = array_values( $posts ); // Reindex in case posts were deleted.
 		return $posts;
-	}
-
-	/**
-	 * Filters posts and metadata based on maximum size constraints.
-	 * It always allows the first post with its metadata even if they exceed the limit, otherwise they will never be synced.
-	 *
-	 * @access public
-	 *
-	 * @param array $posts The array of posts to filter.
-	 * @param array $metadata The array of metadata to filter.
-	 * @return array An array containing the filtered post IDs, filtered posts, and filtered metadata.
-	 */
-	public function filter_posts_and_metadata_max_size( $posts, $metadata ) {
-		$filtered_posts    = array();
-		$filtered_metadata = array();
-		$filtered_post_ids = array();
-		$current_size      = 0;
-		foreach ( $posts as $post ) {
-			$post_content_size = isset( $post->post_content ) ? strlen( $post->post_content ) : 0;
-			$current_metadata  = array();
-			$metadata_size     = 0;
-			foreach ( $metadata as $key => $metadata_item ) {
-				if ( (int) $metadata_item->post_id === $post->ID ) {
-					// Trimming metadata if it exceeds limit. Similar to trim_post_meta.
-					$metadata_item_size = strlen( maybe_serialize( $metadata_item->meta_value ) );
-					if ( $metadata_item_size >= self::MAX_POST_META_LENGTH ) {
-						$metadata_item->meta_value = '';
-					}
-					$current_metadata[] = $metadata_item;
-					$metadata_size     += $metadata_item_size >= self::MAX_POST_META_LENGTH ? 0 : $metadata_item_size;
-					if ( ! empty( $filtered_post_ids ) && ( $current_size + $post_content_size + $metadata_size ) > ( self::MAX_SIZE_FULL_SYNC ) ) {
-						break 2; // Break both foreach loops.
-					}
-					unset( $metadata[ $key ] );
-				}
-			}
-			// Always allow the first post with its metadata.
-			if ( empty( $filtered_post_ids ) || ( $current_size + $post_content_size + $metadata_size ) <= ( self::MAX_SIZE_FULL_SYNC ) ) {
-				$filtered_post_ids[] = strval( $post->ID );
-				$filtered_posts[]    = $post;
-				$filtered_metadata   = array_merge( $filtered_metadata, $current_metadata );
-				$current_size       += $post_content_size + $metadata_size;
-			} else {
-				break;
-			}
-		}
-		return array(
-			$filtered_post_ids,
-			$filtered_posts,
-			$filtered_metadata,
-		);
-	}
-
-	/**
-	 * Set the status of the full sync action based on the objects that were sent.
-	 *
-	 * @access public
-	 *
-	 * @param array $status This module Full Sync status.
-	 * @param array $objects This module Full Sync objects.
-	 *
-	 * @return array The updated status.
-	 */
-	public function set_send_full_sync_actions_status( $status, $objects ) {
-		$status['last_sent'] = end( $objects[0] );
-		$status['sent']     += count( $objects[0] );
-		return $status;
 	}
 }

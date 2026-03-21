@@ -1,3 +1,7 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) exit;
+?>
+
 <h2>Quick links</h2>
 
 <div class="printful-quick-links">

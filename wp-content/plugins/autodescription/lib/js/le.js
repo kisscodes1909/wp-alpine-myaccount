@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -40,9 +40,9 @@ window.tsfLe = function () {
 	 * @property {Object} doctitle    - {value: string}
 	 * @property {Object} description - {value: string}
 	 * @property {Object} canonical   - {value: string}
-	 * @property {Object} noindex     - {value: number, isSelect: boolean, default: string}
-	 * @property {Object} nofollow    - {value: number, isSelect: boolean, default: string}
-	 * @property {Object} noarchive   - {value: number, isSelect: boolean, default: string}
+	 * @property {Object} noindex     - {value: number, isSelect: Boolean, default: string}
+	 * @property {Object} nofollow    - {value: number, isSelect: Boolean, default: string}
+	 * @property {Object} noarchive   - {value: number, isSelect: Boolean, default: string}
 	 * @property {Object} redirect    - {value: string, placeholder: string}
 	 */
 	let fieldsData;
@@ -50,7 +50,8 @@ window.tsfLe = function () {
 	/**
 	 * The current default post data obtained via tsfLePostData.
 	 * @typedef {?Object} postData
-	 * @property {Boolean} isFront
+	 * @property {Boolean}                isFront
+	 * @property {Object<string, Object>} primaryTerms
 	 */
 	let postData;
 
@@ -486,21 +487,22 @@ window.tsfLe = function () {
 				}
 				const queueUpdateCanonical = tsfUtils.debounce( updateCanonical, 1000/60 ); // 60 fps.
 
-				// TODO 5.1.x
-				// if ( Object.values( writeTerm ).includes( true ) ) {
-				// 	// We're not debouncing this because the event is difficult to trigger in quick succession.
-				// 	const updateParentTermSlugsViaPrimary = tsfUtils.debounce(
-				// 		async event => {
-				// 			const taxonomy = event.detail.taxonomy;
-				// 			if ( writeTerm[ taxonomy ] ) {
-				// 				termSlugs[ taxonomy ] = await tsfTermSlugs.get( event.detail.id, taxonomy );
-				// 				queueUpdateCanonical();
-				// 			}
-				// 		},
-				// 		100, // Magic number. High enough to prevent self-DoS, low enough to be responsive.
-				// 	);
-				// 	document.addEventListener( `tsf-updated-primary-term`, updateParentTermSlugsViaPrimary );
-				// }
+				if ( Object.values( writeTerm ).includes( true ) ) {
+					const updateParentTermSlugsViaPrimary = tsfUtils.debounce(
+						async event => {
+
+							const taxonomy = event.detail.taxonomy;
+
+							if ( writeTerm[ taxonomy ] ) {
+								termSlugs[ taxonomy ] = await tsfTermSlugs.get( event.detail.id, taxonomy );
+								queueUpdateCanonical();
+							}
+						},
+						100, // Magic number. High enough to prevent self-DoS, low enough to be responsive.
+					);
+					document.addEventListener( `tsf-updated-primary-term`, updateParentTermSlugsViaPrimary );
+				}
+
 				if ( writePostname ) {
 					const postNameInput = inlineEditWrap.querySelector( '[name=post_name]' );
 					const titleInput    = inlineEditWrap.querySelector( '[name=post_title]' );
@@ -680,7 +682,7 @@ window.tsfLe = function () {
 						if ( _defaultIndexOption )
 							_defaultIndexOption.innerHTML = indexSelect.dataset.defaultI18n.replace(
 								'%s',
-								tsf.escapeString( tsf.decodeEntities( indexDefaultValue ) )
+								tsf.escapeString( tsf.decodeEntities( indexDefaultValue ) ),
 							);
 
 						updateCanonicalPlaceholder();
@@ -730,6 +732,28 @@ window.tsfLe = function () {
 	}
 
 	/**
+	 * Passes quick-edit term data to primary-term handlers.
+	 *
+	 * @since 5.1.3
+	 * @access private
+	 *
+	 * @param {string} id The post ID.
+	 */
+	function _prepareTermInput( id ) {
+		window.tsfPTLE._prepareQuickEditTerms( id, postData?.primaryTerms );
+	}
+
+	/**
+	 * Ensures bulk-edit primary term selectors are available.
+	 *
+	 * @since 5.1.3
+	 * @access private
+	 */
+	function _prepareTermInputBulk() {
+		window.tsfPTLE._prepareBulkEditTerms();
+	}
+
+	/**
 	 * Initializes List-edit listeners on ready.
 	 *
 	 * @since 4.0.0
@@ -775,6 +799,7 @@ window.tsfLe = function () {
 					_prepareVisibilityInput,
 					_prepareTitleInput,
 					_prepareDescriptionInput,
+					_prepareTermInput,
 				].forEach( fn => {
 					try {
 						fn( id );
@@ -792,7 +817,7 @@ window.tsfLe = function () {
 		if ( _oldInlineEditTax ) {
 			window.inlineEditTax.edit = function( id ) {
 
-				let ret = _oldInlineEditTax.apply( this, arguments );
+				const ret = _oldInlineEditTax.apply( this, arguments );
 
 				if ( 'object' === typeof id )
 					id = window.inlineEditTax?.getId( id );
@@ -815,6 +840,27 @@ window.tsfLe = function () {
 					}
 				} );
 				window.tsfC?.resetCounterListener();
+
+				return ret;
+			}
+		}
+
+		// Hook for bulk edit
+		const _oldBulkEdit = window.inlineEditPost?.setBulk;
+		if ( _oldBulkEdit ) {
+			window.inlineEditPost.setBulk = function () {
+
+				const ret = _oldBulkEdit.apply( this, arguments );
+
+				[
+					_prepareTermInputBulk,
+				].forEach( fn => {
+					try {
+						fn();
+					} catch ( error ) {
+						console.error( `Error in ${fn.name}:`, error );
+					}
+				} );
 
 				return ret;
 			}

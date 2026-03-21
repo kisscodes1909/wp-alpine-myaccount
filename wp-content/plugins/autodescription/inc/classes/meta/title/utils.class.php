@@ -8,16 +8,16 @@ namespace The_SEO_Framework\Meta\Title;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\{
+use function The_SEO_Framework\{
 	get_query_type_from_args,
 	normalize_generation_args,
 };
 
-use \The_SEO_Framework\Data;
+use The_SEO_Framework\Data;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -140,7 +140,7 @@ class Utils {
 					// Only grab 10 of these. Yes, one might transform still on the 11th.
 					$it = 10;
 					$i  = 0;
-					// phpcs:ignore, WordPress.CodeAnalysis.AssignmentInCondition
+					// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition
 					while ( false !== ( $priority = \has_filter( $filter, $function ) ) ) {
 						$filtered[] = [ $filter, $function, $priority ];
 						\remove_filter( $filter, $function, $priority );
@@ -160,6 +160,6 @@ class Utils {
 	 * @internal Only to be used within Meta\Title::get_bare_unfiltered_generated_title()
 	 */
 	public static function reset_default_title_filters() {
-		static::remove_default_title_filters( true );
+		self::remove_default_title_filters( true );
 	}
 }

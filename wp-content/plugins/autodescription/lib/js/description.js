@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -185,19 +185,21 @@ window.tsfDescription = function () {
 			  useDefaultDescription = allowReferenceChange ? getStateOf( event.target.id, 'useDefaultDescription' ) : true;
 
 		let text = tsf.coalesceStrlen( allowReferenceChange && event.target.value.trim() )
-			?? tsf.coalesceStrlen( useDefaultDescription && getStateOf( event.target.id, 'defaultDescription' ) )
-			?? '';
+				?? tsf.coalesceStrlen( useDefaultDescription && getStateOf( event.target.id, 'defaultDescription' ) )
+				?? '';
 
 		const referenceValue = tsf.escapeString(
 			tsf.decodeEntities(
 				tsf.sDoubleSpace(
 					tsf.sTabs(
 						tsf.sSingleLine(
-							text
-						).trim()
-					)
-				)
-			) );
+							text,
+						)
+						.trim(),
+					),
+				),
+			),
+		);
 		const changeEvent = new Event( 'change' );
 
 		references.forEach( reference => {
@@ -347,7 +349,9 @@ window.tsfDescription = function () {
 	 * @param {string} id The input ID.
 	 */
 	function enqueueTriggerInput( id ) {
+
 		( id in _enqueueTriggerInputBuffer ) && clearTimeout( _enqueueTriggerInputBuffer[ id ] );
+
 		_enqueueTriggerInputBuffer[ id ] = setTimeout( () => triggerInput( id ), 1000/60 ); // 60fps
 	}
 
@@ -362,6 +366,7 @@ window.tsfDescription = function () {
 	 * @param {string} id The input id. When not set, all inputs will be triggered.
 	 */
 	function triggerUnregisteredInput( id ) {
+
 		if ( 'tsfAys' in window ) {
 			let wereSettingsChanged = tsfAys.areSettingsChanged();
 
@@ -422,6 +427,7 @@ window.tsfDescription = function () {
 	 * @param {Element} descriptionInput
 	 */
 	function _loadDescriptionActions( descriptionInput ) {
+
 		if ( ! descriptionInput instanceof Element ) return;
 
 		descriptionInput.addEventListener( 'input', _onUpdateDescriptionsTrigger );

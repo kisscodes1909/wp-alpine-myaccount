@@ -8,9 +8,9 @@ namespace The_SEO_Framework\Data\Filter;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\has_run;
+use function The_SEO_Framework\has_run;
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Data,
 	Helper\Taxonomy,
 	Helper\Post_Type,
@@ -19,7 +19,7 @@ use \The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -40,7 +40,7 @@ use \The_SEO_Framework\{
  * @since 5.0.0
  * @access private
  */
-class Plugin {
+final class Plugin {
 
 	/**
 	 * @since 5.0.0
@@ -68,7 +68,7 @@ class Plugin {
 		if ( empty( $value ) || ! \is_array( $value ) )
 			return $original_value;
 
-		static::register_sanitizers_jit();
+		self::register_sanitizers_jit();
 
 		// Use our filterable options as a fallback instead.
 		$original_value = array_merge(
@@ -86,7 +86,7 @@ class Plugin {
 		 */
 		$sanitizers = \apply_filters(
 			'the_seo_framework_settings_update_sanitizers',
-			static::$sanitizers,
+			self::$sanitizers,
 		);
 
 		$store = [];
@@ -124,8 +124,8 @@ class Plugin {
 	 */
 	public static function register_sanitizers( $filters ) {
 
-		// Remit FETCH_STATIC_PROP_R opcode calls every time we'd otherwise use static::$filters hereinafter.
-		$_sanitizers = &static::$sanitizers;
+		// Remit FETCH_STATIC_PROP_R opcode calls every time we'd otherwise use self::$filters hereinafter.
+		$_sanitizers = &self::$sanitizers;
 
 		foreach ( $filters as $option => $callbacks ) {
 			if ( \is_array( $callbacks[0] ) ) {
@@ -150,17 +150,18 @@ class Plugin {
 
 		$filters = [
 			'advanced_query_protection'    => 'checkbox',
-			'alter_archive_query'          => 'checkbox',
 			'alter_archive_query_type'     => 'alter_query_type',
+			'alter_archive_query'          => 'checkbox',
 			'alter_search_query_type'      => 'alter_query_type',
 			'alter_search_query'           => 'checkbox',
 			'author_noarchive'             => 'checkbox',
 			'author_nofollow'              => 'checkbox',
 			'author_noindex'               => 'checkbox',
-			'auto_description'             => 'checkbox',
 			'auto_description_html_method' => 'auto_description_method',
+			'auto_description'             => 'checkbox',
 			'baidu_verification'           => 'verification_code',
 			'bing_verification'            => 'verification_code',
+			'breadcrumb_use_meta_title'    => 'checkbox',
 			'cache_sitemap'                => 'checkbox',
 			'canonical_scheme'             => 'canonical_scheme',
 			'date_noarchive'               => 'checkbox',
@@ -169,9 +170,12 @@ class Plugin {
 			'disabled_post_types'          => [ 'disabled_post_types', 'checkbox_array' ],
 			'disabled_taxonomies'          => [ 'disabled_taxonomies', 'checkbox_array' ],
 			'display_character_counter'    => 'checkbox',
+			'display_list_edit_options'    => 'checkbox',
 			'display_pixel_counter'        => 'checkbox',
 			'display_seo_bar_metabox'      => 'checkbox',
 			'display_seo_bar_tables'       => 'checkbox',
+			'display_term_edit_options'    => 'checkbox',
+			'display_user_edit_options'    => 'checkbox',
 			'excerpt_the_feed'             => 'checkbox',
 			'facebook_author'              => 'facebook_profile_link',
 			'facebook_publisher'           => 'facebook_profile_link',
@@ -179,14 +183,14 @@ class Plugin {
 			'google_verification'          => 'verification_code',
 			'home_paged_noindex'           => 'checkbox',
 			'home_title_location'          => 'title_location',
+			'homepage_canonical'           => 'fully_qualified_url',
 			'homepage_description'         => 'metadata_text',
 			'homepage_noarchive'           => 'checkbox',
 			'homepage_nofollow'            => 'checkbox',
 			'homepage_noindex'             => 'checkbox',
-			'homepage_canonical'           => 'fully_qualified_url',
-			'homepage_redirect'            => 'fully_qualified_url',
 			'homepage_og_description'      => 'metadata_text',
 			'homepage_og_title'            => 'metadata_text',
+			'homepage_redirect'            => 'fully_qualified_url',
 			'homepage_social_image_id'     => 'absolute_integer',
 			'homepage_social_image_url'    => 'fully_qualified_url',
 			'homepage_tagline'             => 'checkbox',
@@ -271,18 +275,18 @@ class Plugin {
 			'twitter_tags'                 => 'checkbox',
 			'yandex_verification'          => 'verification_code',
 
-			// phpcs:disable, WordPress.Arrays.MultipleStatementAlignment.LongIndexSpaceBeforeDoubleArrow -- it fine.
+			// phpcs:disable WordPress.Arrays.MultipleStatementAlignment.LongIndexSpaceBeforeDoubleArrow -- it fine.
 			Data\Plugin\Helper::get_robots_option_index( 'post_type', 'noarchive' ) => 'checkbox_array',
 			Data\Plugin\Helper::get_robots_option_index( 'post_type', 'nofollow' )  => 'checkbox_array',
 			Data\Plugin\Helper::get_robots_option_index( 'post_type', 'noindex' )   => 'checkbox_array',
 			Data\Plugin\Helper::get_robots_option_index( 'taxonomy', 'noarchive' )  => 'checkbox_array',
 			Data\Plugin\Helper::get_robots_option_index( 'taxonomy', 'nofollow' )   => 'checkbox_array',
 			Data\Plugin\Helper::get_robots_option_index( 'taxonomy', 'noindex' )    => 'checkbox_array',
-			// phpcs:enable, WordPress.Arrays.MultipleStatementAlignment.LongIndexSpaceBeforeDoubleArrow
+			// phpcs:enable WordPress.Arrays.MultipleStatementAlignment.LongIndexSpaceBeforeDoubleArrow
 		];
 
 		// Remit FETCH_CLASS_NAME opcode, which performs a function call to check if it's valid.
-		$sanitizer_class = static::class;
+		$sanitizer_class = self::class;
 
 		foreach ( $filters as &$callbacks ) {
 			if ( \is_array( $callbacks ) ) {
@@ -293,14 +297,14 @@ class Plugin {
 			}
 		}
 
-		static::register_sanitizers( $filters );
+		self::register_sanitizers( $filters );
 	}
 
 	/**
 	 * @since 5.0.0
 	 *
 	 * @param mixed $value An unsanitized value.
-	 * @return int A boolean as a string (1 or 0) option value.
+	 * @return int A Boolean as a string (1 or 0) option value.
 	 */
 	public static function checkbox( $value ) {
 		return Sanitize::boolean_integer( $value );
@@ -421,7 +425,7 @@ class Plugin {
 	 * @since 5.0.0
 	 *
 	 * @param mixed $value An unsanitized value.
-	 * @return int[] An array of boolean as a string (1 or 0).
+	 * @return int[] An array of Boolean as a string (1 or 0).
 	 */
 	public static function checkbox_array( $value ) {
 

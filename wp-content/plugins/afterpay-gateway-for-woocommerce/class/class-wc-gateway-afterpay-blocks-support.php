@@ -56,13 +56,21 @@ final class WC_Gateway_Afterpay_Blocks_Support extends AbstractPaymentMethodType
 	 */
 	public function get_payment_method_data() {
 		$instance = WC_Gateway_Afterpay::getInstance();
+		$static_url       = $instance->get_static_url();
+		$country_code     = $instance->get_country_code();
+		$caa_is_available = $instance->feature_is_available( 'caa' );
+		if ( $country_code == 'US' && $caa_is_available ) {
+			$logo_url = $static_url . 'en-US/integration/logo/lockup/new-color-black-24.png';
+		} else {
+			$logo_url = $static_url . 'integration/checkout/logo-afterpay-colour-120x25.png';
+		}
 		wp_enqueue_style( 'afterpay_css' );
 		return array(
 			'mpid'                      => $instance->get_mpid(),
 			'currency'                  => get_woocommerce_currency(),
 			'min'                       => $instance->getOrderLimitMin(),
 			'max'                       => $instance->getOrderLimitMax(),
-			'logo_url'                  => $instance->get_static_url() . 'integration/checkout/logo-afterpay-colour-120x25.png',
+			'logo_url'                  => $logo_url,
 			'testmode'                  => $this->get_setting( 'testmode' ),
 			'locale'                    => $instance->get_js_locale(),
 			'supports'                  => $this->get_supported_features(),

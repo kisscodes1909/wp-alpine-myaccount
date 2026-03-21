@@ -7,13 +7,13 @@ namespace The_SEO_Framework\Bootstrap;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\is_headless;
+use function The_SEO_Framework\is_headless;
 
-use \The_SEO_Framework\Helper\Compatibility;
+use The_SEO_Framework\Helper\Compatibility;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2015 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2015 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -41,6 +41,7 @@ turn_on_autoloading: if ( ! is_headless( 'settings' ) ) {
 		if ( false !== \get_option( \THE_SEO_FRAMEWORK_SITE_CACHE ) )
 			$options[] = \THE_SEO_FRAMEWORK_SITE_CACHE;
 
+		// WP 6.7+: we should change 'yes' to true.
 		\wp_set_options_autoload( $options, 'yes' );
 	} elseif ( false !== \get_option( \THE_SEO_FRAMEWORK_SITE_OPTIONS ) ) {
 		// Turns on auto loading for The SEO Framework's main options.

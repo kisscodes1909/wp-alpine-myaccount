@@ -9,9 +9,11 @@ if ( ! class_exists( 'CR_Qna_Admin_Menu' ) ):
 	class CR_Qna_Admin_Menu {
 
 		protected $menu_slug;
+		private $customer_avatars = 'standard';
 
 		public function __construct() {
 			$this->menu_slug = 'cr-qna';
+			$this->customer_avatars = get_option( 'ivole_avatars', 'standard' );
 			add_action( 'admin_menu', array( $this, 'register_qna_menu' ), 11 );
 			add_action( 'admin_enqueue_scripts', array( $this, 'include_scripts' ) );
 			add_filter( 'wp_editor_settings', array( $this, 'wp_editor_settings_filter' ), 10, 2 );
@@ -43,7 +45,14 @@ if ( ! class_exists( 'CR_Qna_Admin_Menu' ) ):
 		public function display_qna_page() {
 			global $post_id, $wpdb;
 
-			$list_table = new CR_Qna_List_Table( [ 'screen' => get_current_screen() ] );
+			if ( 'initials' === $this->customer_avatars ) {
+				add_filter( 'get_avatar', array( 'CR_Reviews_Grid', 'cr_get_avatar' ), 10, 5 );
+			}
+			add_filter( 'get_avatar_comment_types', array( $this, 'add_qna_comment_type_for_avatars' ) );
+
+			$list_table = new CR_Qna_List_Table(
+				[ 'screen' => get_current_screen(), 'avatars' => $this->customer_avatars ]
+			);
 
 			$pagenum  = $list_table->get_pagenum();
 			$doaction = $list_table->current_action();
@@ -194,6 +203,7 @@ if ( ! class_exists( 'CR_Qna_Admin_Menu' ) ):
 				);
 				wp_enqueue_script( 'cr-all-reviews' );
 				wp_enqueue_script( 'cr_select2_admin_js', plugins_url( 'js/select2.min.js', dirname( dirname( __FILE__ ) ) ) );
+				wp_enqueue_script( 'cr-tiptip', plugins_url( 'js/jquery.tipTip.minified.js' , dirname( dirname( __FILE__ ) ) ), array(), Ivole::CR_VERSION, false );
 				wp_enqueue_style( 'cr-admin-css', plugins_url( 'css/admin.css', dirname( dirname( __FILE__) ) ), array(), Ivole::CR_VERSION );
 			}
 			if( 'comment.php' === $hook ) {
@@ -217,7 +227,9 @@ if ( ! class_exists( 'CR_Qna_Admin_Menu' ) ):
 			global $wp_list_table;
 
 			if ( ! $wp_list_table ) {
-				$wp_list_table = new CR_Qna_List_Table( [ 'screen' => 'cr-qna' ] );
+				$wp_list_table = new CR_Qna_List_Table(
+					[ 'screen' => 'cr-qna', 'avatars' => $this->customer_avatars ]
+				);
 			}
 
 			?>
@@ -378,7 +390,9 @@ if ( ! class_exists( 'CR_Qna_Admin_Menu' ) ):
 			$position = ( isset($_POST['position']) && (int) $_POST['position'] ) ? (int) $_POST['position'] : '-1';
 
 			ob_start();
-			$wp_list_table = new CR_Qna_List_Table( [ 'screen' => 'cr-qna' ] );
+			$wp_list_table = new CR_Qna_List_Table(
+				[ 'screen' => 'cr-qna', 'avatars' => $this->customer_avatars ]
+			);
 			$wp_list_table->single_row( $comment );
 			$comment_list_item = ob_get_clean();
 
@@ -426,6 +440,13 @@ if ( ! class_exists( 'CR_Qna_Admin_Menu' ) ):
 			}
 
 			return $count;
+		}
+
+		public function add_qna_comment_type_for_avatars( $types ) {
+			if ( ! in_array( 'cr_qna', $types ) ) {
+				$types[] = 'cr_qna';
+			}
+			return $types;
 		}
 
 	}

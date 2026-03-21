@@ -8,11 +8,11 @@ namespace The_SEO_Framework\Internal;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-// phpcs:disable, VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- That's the whole premise of this file.
+// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter -- That's the whole premise of this file.
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2018 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2018 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -37,13 +37,13 @@ namespace The_SEO_Framework\Internal;
  * @since 4.2.0 Changed namespace from \The_SEO_Framework to \The_SEO_Framework\Internal
  * @since 5.0.5 Repurposed for silencing the pool (\The_SEO_Framework\Pool).
  * @access private
- * @property static $instance
+ * @property The_SEO_Framework\Internal\Silencer $instance
  */
 final class Silencer {
 
 	/**
 	 * @since 5.0.5
-	 * @var static
+	 * @var The_SEO_Framework\Internal\Silencer
 	 */
 	private static $instance;
 
@@ -54,10 +54,10 @@ final class Silencer {
 
 	/**
 	 * @since 5.0.5
-	 * @return static
+	 * @return The_SEO_Framework\Internal\Silencer
 	 */
 	public static function instance() {
-		return static::$instance ??= new static;
+		return self::$instance ??= new self;
 	}
 
 	/**

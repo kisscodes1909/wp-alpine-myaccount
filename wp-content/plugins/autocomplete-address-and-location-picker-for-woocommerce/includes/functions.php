@@ -24,15 +24,15 @@ function aafw_autocomplete() {
 function aafw_premium_feature(  $value  ) {
     $result = $value;
     if ( aafw_is_free() ) {
-        $result = '<div class="aafw_premium_feature">
-						<a class="aafw_star_button" href="#"><svg style="color:#ffc106" width=20 aria-hidden="true" focusable="false" data-prefix="fas" data-icon="star" class=" aafw_premium_iconsvg-inline--fa fa-star fa-w-18" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"> <title>' . esc_attr__( 'Premium Feature', 'aafw' ) . '</title><path fill="currentColor" d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"></path></svg></a>
+        $result = ' <div class="aafw_premium_feature">
+						<a class="aafw_locker_button" href="#"><svg style="color:#ffc106" width=20 aria-hidden="true" focusable="false" class="aafw_premium_icon" role="img" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 390 511.815"><title>' . esc_attr__( 'Premium Feature', 'aafw' ) . '</title><path fill="currentColor" d="M24.983 197.869h16.918v-39.203c0-43.387 17.107-82.959 44.667-111.698C114.365 18 152.726 0 194.998 0c42.259 0 80.652 17.981 108.41 46.968 27.58 28.739 44.692 68.292 44.692 111.698v39.203h16.917c13.738 0 24.983 11.245 24.983 24.984v263.978c0 13.739-11.245 24.984-24.983 24.984H24.983C11.226 511.815 0 500.57 0 486.831V222.853c-.013-13.739 11.226-24.984 24.983-24.984zm149.509 173.905l-26.968 70.594h94.923l-24.966-71.573c15.852-8.15 26.688-24.67 26.688-43.719 0-27.169-22.015-49.169-49.184-49.169-27.153 0-49.153 22-49.153 49.169-.016 19.826 11.737 36.905 28.66 44.698zM89.187 197.869h211.602v-39.203c0-30.858-12.024-58.823-31.376-79.005-19.147-19.964-45.49-32.368-74.428-32.368-28.925 0-55.288 12.404-74.422 32.368-19.37 20.182-31.376 48.147-31.376 79.005v39.203z"/></svg></a>
 					  	<div class="aafw_premium_feature_note" style="display:none">
 						  <a href="#" class="aafw_premium_close">
 						  <svg aria-hidden="true"  width=10 focusable="false" data-prefix="fas" data-icon="times" class="svg-inline--fa fa-times fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></svg></a>
 						  <h2>' . esc_html( __( 'Premium Feature', 'aafw' ) ) . '</h2>
 						  <p>' . esc_html( __( 'You Discovered a Premium Feature!', 'aafw' ) ) . '</p>
 						  <p>' . esc_html( __( 'Upgrading to Premium will unlock it.', 'aafw' ) ) . '</p>
-						  <a target="_blank" href="https://powerfulwp.com/autocomplete-address-and-location-picker-for-woocommerce-premium#pricing" class="aafw_premium_buynow">' . esc_html( __( 'UNLOCK PREMIUM', 'aafw' ) ) . '</a>
+						  <a target="_blank" href="https://checkout.freemius.com/plugin/8803/plan/14760/licenses/1/" class="aafw_premium_buynow">' . esc_html( __( 'UNLOCK PREMIUM', 'aafw' ) ) . '</a>
 						  </div>
 					  </div>';
     }

@@ -8,11 +8,11 @@ namespace The_SEO_Framework\Sitemap;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\Helper;
+use The_SEO_Framework\Helper;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -71,7 +71,7 @@ class Lock {
 		\status_header( 503 );
 		\nocache_headers();
 
-		$lock_key = static::get_lock_key( $sitemap_id );
+		$lock_key = self::get_lock_key( $sitemap_id );
 		$timeout  = $lock_key ? \get_transient( $lock_key ) : false;
 
 		if ( $timeout ) {
@@ -101,7 +101,7 @@ class Lock {
 	 */
 	public static function lock_sitemap( $sitemap_id ) {
 
-		$lock_key = static::get_lock_key( $sitemap_id );
+		$lock_key = self::get_lock_key( $sitemap_id );
 
 		if ( ! $lock_key ) return false;
 
@@ -128,7 +128,7 @@ class Lock {
 	 */
 	public static function unlock_sitemap( $sitemap_id ) {
 
-		$lock_key = static::get_lock_key( $sitemap_id );
+		$lock_key = self::get_lock_key( $sitemap_id );
 
 		return $lock_key ? \delete_transient( $lock_key ) : false;
 	}
@@ -144,7 +144,7 @@ class Lock {
 	 */
 	public static function is_sitemap_locked( $sitemap_id ) {
 
-		$lock_key = static::get_lock_key( $sitemap_id );
+		$lock_key = self::get_lock_key( $sitemap_id );
 
 		return $lock_key ? \get_transient( $lock_key ) : false;
 	}

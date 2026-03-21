@@ -8,10 +8,10 @@ namespace The_SEO_Framework\Helper\Query;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\memo;
+use function The_SEO_Framework\memo;
 
-use \The_SEO_Framework\Data;
-use \The_SEO_Framework\Helper\{
+use The_SEO_Framework\Data;
+use The_SEO_Framework\Helper\{
 	Post_Type,
 	Query, // Yes, it is legal to share class and namespaces.
 	Taxonomy,
@@ -19,7 +19,7 @@ use \The_SEO_Framework\Helper\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -75,7 +75,7 @@ class Utils {
 	 */
 	public static function query_supports_seo() {
 
-		// phpcs:ignore, WordPress.CodeAnalysis.AssignmentInCondition -- I know.
+		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
 		if ( null !== $memo = memo() ) return $memo;
 
 		switch ( true ) {
@@ -108,7 +108,7 @@ class Utils {
 		 * This protects against (accidental) negative-SEO bombarding.
 		 * Support broken queries, so we can noindex them.
 		 */
-		if ( ! $supported && static::is_query_exploited() )
+		if ( ! $supported && self::is_query_exploited() )
 			$supported = true;
 
 		/**
@@ -162,7 +162,7 @@ class Utils {
 	 */
 	public static function is_query_exploited() {
 
-		// phpcs:ignore, WordPress.CodeAnalysis.AssignmentInCondition -- I know.
+		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
 		if ( null !== $memo = memo() ) return $memo;
 
 		if ( ! Data\Plugin::get_option( 'advanced_query_protection' ) )
@@ -237,7 +237,7 @@ class Utils {
 
 					case 'numeric_array':
 						// We can't protect non-pretty permalinks.
-						if ( ! static::using_pretty_permalinks() ) break;
+						if ( ! self::using_pretty_permalinks() ) break;
 
 						// If WordPress didn't canonical_redirect() the user yet, it's exploited.
 						// WordPress mitigates this via a 404 query when a numeric value is found without a leading 0.
@@ -297,7 +297,7 @@ class Utils {
 	 * @return bool
 	 */
 	public static function has_assigned_page_on_front() {
-		return static::has_page_on_front() && \get_option( 'page_on_front' );
+		return self::has_page_on_front() && \get_option( 'page_on_front' );
 	}
 
 	/**
@@ -309,6 +309,6 @@ class Utils {
 	 * @return bool
 	 */
 	public static function has_blog_page() {
-		return ! static::has_page_on_front() || \get_option( 'page_for_posts' );
+		return ! self::has_page_on_front() || \get_option( 'page_for_posts' );
 	}
 }

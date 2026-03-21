@@ -7,11 +7,11 @@ namespace The_SEO_Framework\Admin;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\is_headless;
+use function The_SEO_Framework\is_headless;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2021 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2021 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -60,12 +60,12 @@ final class PluginTable {
 		$tsf_links['tsfem']   = \sprintf(
 			'<a href="%s" rel="noreferrer noopener" target=_blank>%s</a>',
 			'https://theseoframework.com/extensions/',
-			\esc_html_x( 'Extensions', 'Plugin extensions', 'autodescription' )
+			\esc_html_x( 'Extensions', 'Plugin extensions', 'autodescription' ),
 		);
 		$tsf_links['pricing'] = \sprintf(
 			'<a href="%s" rel="noreferrer noopener" target=_blank>%s</a>',
 			'https://theseoframework.com/pricing/',
-			\esc_html_x( 'Pricing', 'Plugin pricing', 'autodescription' )
+			\esc_html_x( 'Pricing', 'Plugin pricing', 'autodescription' ),
 		);
 
 		return array_merge( $tsf_links, $links );

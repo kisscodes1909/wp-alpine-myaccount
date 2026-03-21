@@ -218,7 +218,12 @@ class WP_Customize_Repeater_Control extends WP_Customize_Control {
                 ?>
                 <div class="customizer-repeater-general-control-repeater-container customizer-repeater-draggable">
                     <div class="customizer-repeater-customize-control-title">
-                        <label style="padding: 0px 6px;"><?php echo $icon->choice ? $key . ' icon settings' : esc_html_e('Social icon settings', 'decorator-woocommerce-email-customizer'); ?></label>
+                        <label style="padding: 0px 6px;">
+                            <?php 
+                            // translators: %s is the social icon name.
+                            echo $icon->choice ? sprintf( esc_html__( '%s icon settings', 'decorator-woocommerce-email-customizer' ), esc_html( $key ) ) : esc_html_e('Social icon settings', 'decorator-woocommerce-email-customizer'); 
+                            ?>
+                        </label>
                         <button type="button" style="border:none !important;"class="social-repeater-general-control-remove-field" >
                             <span class="dashicons dashicons-trash"></span>
                         </button>
@@ -506,15 +511,12 @@ class WP_Customize_Repeater_Control extends WP_Customize_Control {
      * @param string $value Input value.
      */
     private function input_control($options, $value = '') {
-        ?>
-
-        <?php
         if (!empty($options['type'])) {
             switch ($options['type']) {
                 case 'textarea':
                     ?>
                     <span class="customize-control-title"><?php echo esc_html($options['label']); ?></span>
-                    <textarea class="<?php echo esc_attr($options['class']); ?>" placeholder="<?php echo esc_attr($options['label']); ?>"><?php echo (!empty($options['sanitize_callback']) ? call_user_func_array($options['sanitize_callback'], array($value)) : esc_attr($value) ); ?></textarea>
+                    <textarea class="<?php echo esc_attr($options['class']); ?>" placeholder="<?php echo esc_attr($options['label']); ?>"><?php echo esc_textarea( ! empty( $options['sanitize_callback'] ) ? call_user_func_array( $options['sanitize_callback'], array( $value ) ) : $value ); ?></textarea>
                     <?php
                     break;
                 case 'color':
@@ -537,7 +539,7 @@ class WP_Customize_Repeater_Control extends WP_Customize_Control {
                     }
                     ?>
                          >
-                        <input type="text" value="<?php echo (!empty($options['sanitize_callback']) ? call_user_func_array($options['sanitize_callback'], array($value)) : esc_attr($value) ); ?>" class="<?php echo esc_attr($options['class']); ?>" />
+                        <input type="text" value="<?php echo esc_attr( ! empty( $options['sanitize_callback'] ) ? call_user_func_array( $options['sanitize_callback'], array( $value ) ) : $value ); ?>" class="<?php echo esc_attr($options['class']); ?>" />
                     </div>
                     <?php
                     break;
@@ -545,7 +547,7 @@ class WP_Customize_Repeater_Control extends WP_Customize_Control {
         } else {
             ?>
             <span class="customize-control-title"><?php echo esc_html($options['label']); ?></span>
-            <input type="text" value="<?php echo (!empty($options['sanitize_callback']) ? call_user_func_array($options['sanitize_callback'], array($value)) : esc_attr($value) ); ?>" class="<?php echo esc_attr($options['class']); ?>" placeholder="<?php echo esc_attr($options['label']); ?>"/>
+            <input type="text" value="<?php echo esc_attr( ! empty( $options['sanitize_callback'] ) ? call_user_func_array( $options['sanitize_callback'], array( $value ) ) : $value ); ?>" class="<?php echo esc_attr($options['class']); ?>" placeholder="<?php echo esc_attr($options['label']); ?>"/>
             <?php
         }
     }
@@ -598,9 +600,9 @@ class WP_Customize_Repeater_Control extends WP_Customize_Control {
             <?php
             foreach ($social_icons as $skey => $svalue) {
                 if ($value == $svalue) {
-                    echo '<option value=' . $svalue . ' selected>' . $skey . '</option>';
+                    echo '<option value=' . esc_attr( $svalue ) . ' selected>' . esc_html( $skey ) . '</option>';
                 } else {
-                    echo '<option value=' . $svalue . '>' . $skey . '</option>';
+                    echo '<option value=' . esc_attr( $svalue ) . '>' . esc_html( $skey ) . '</option>';
                 }
             }
             ?>

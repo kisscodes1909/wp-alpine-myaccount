@@ -199,6 +199,43 @@ class Aafw_Admin {
 						<?php 
         }
         echo '<hr class="wp-header-end">';
+        // Display banner for free users
+        if ( aafw_is_free() === true ) {
+            ?>
+				<div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 12px 15px; margin: 20px 0; box-shadow: 0 1px 1px rgba(0,0,0,.04);">
+					<p style="margin: 0 0 8px 0; font-weight: 600; color: #856404; font-size: 14px;">
+						<?php 
+            echo esc_html( __( '⚠️ Important: Free Version Limitations', 'aafw' ) );
+            ?>
+					</p>
+					<p style="margin: 0 0 8px 0; color: #856404; font-size: 13px; line-height: 1.6;">
+						<strong><?php 
+            echo esc_html( __( 'Checkout Type:', 'aafw' ) );
+            ?></strong><br>
+						<?php 
+            echo esc_html( __( 'The free version supports Classic WooCommerce checkout only. WooCommerce Blocks checkout support is available in the Premium version.', 'aafw' ) );
+            ?>
+					</p>
+					<p style="margin: 0 0 12px 0; color: #856404; font-size: 13px; line-height: 1.6;">
+						<strong><?php 
+            echo esc_html( __( 'Google API Type:', 'aafw' ) );
+            ?></strong><br>
+						<?php 
+            echo esc_html( __( 'Google has deprecated Google Places API (Legacy) and it can no longer be enabled for new projects. The free version only supports Google Places API (Legacy). If you\'re a new Google Maps customer, you must upgrade to Premium to access Google Places API (New).', 'aafw' ) );
+            ?>
+					</p>
+					<p style="margin: 0;">
+						<?php 
+            echo sprintf( '<a href="%s" target="_blank" class="aafw_premium_buynow" style="background: #ffc107; border-color: #ffc107; color: #000; text-decoration: none; box-shadow: none; margin-right: 10px;">%s</a>', 'https://checkout.freemius.com/plugin/8803/plan/14760/licenses/1/', esc_html( __( 'Upgrade to Premium Now', 'aafw' ) ) );
+            ?>
+						<?php 
+            echo sprintf( '<a href="%s" target="_blank" class="aafw_more_details">%s</a>', 'https://powerfulwp.com/autocomplete-address-and-location-picker-for-woocommerce-premium/', esc_html( __( 'More Details', 'aafw' ) ) );
+            ?>
+					</p>
+				</div>
+				<?php 
+        } else {
+        }
         foreach ( $tabs as $tab ) {
             if ( '' === $current_tab ) {
                 settings_fields( 'aafw' );
@@ -231,6 +268,7 @@ class Aafw_Admin {
         register_setting( 'aafw', 'aafw_billing_autocomplete' );
         register_setting( 'aafw', 'aafw_initial_map' );
         register_setting( 'aafw', 'aafw_address_format' );
+        register_setting( 'aafw', 'aafw_debug_logs' );
         if ( in_array( 'pickup-and-delivery-from-customer-locations-for-woocommerce-pro', AAFW_PLUGINS, true ) ) {
             register_setting( 'aafw', 'aafw_pickup_autocomplete' );
         }
@@ -246,6 +284,13 @@ class Aafw_Admin {
                 'aafw_google_api_key',
                 __( 'Google API key', 'aafw' ),
                 array($this, 'google_api_key'),
+                'aafw',
+                'aafw_setting_section'
+            );
+            add_settings_field(
+                'aafw_api_type',
+                __( 'Google API Type', 'aafw' ),
+                array($this, 'aafw_api_type'),
                 'aafw',
                 'aafw_setting_section'
             );
@@ -342,6 +387,13 @@ class Aafw_Admin {
                 'aafw',
                 'aafw_setting_section'
             );
+            add_settings_field(
+                'aafw_debug_logs',
+                __( 'Debug logging', 'aafw' ),
+                array($this, 'aafw_debug_logs'),
+                'aafw',
+                'aafw_setting_section'
+            );
         }
         do_action( 'aafw_settings' );
     }
@@ -363,6 +415,28 @@ class Aafw_Admin {
         ?>
 				<br><?php 
         echo sprintf( esc_html( __( 'For more information on how to create the Google API key %1$sclick here%2$s.', 'aafw' ) ), '<a href="https://powerfulwp.com/docs/autocomplete-address-and-location-picker-for-woocommerce-premium/getting-started/general-settings/" target="_blank">', '</a>' );
+        ?>
+			</span>
+		</p>
+		<?php 
+    }
+
+    /**
+     * Plugin settings - API Type.
+     *
+     * @since 1.0.0
+     */
+    public function aafw_api_type() {
+        $select_element = '';
+        ?>
+		<p>
+			<?php 
+        echo aafw_premium_feature( $select_element );
+        ?>
+			 
+			<span class="description">
+				<?php 
+        echo esc_html( __( 'Select which Google Maps Places API to use for address autocomplete functionality.', 'aafw' ) );
         ?>
 			</span>
 		</p>
@@ -503,6 +577,33 @@ class Aafw_Admin {
     }
 
     /**
+     * Debug logging setting.
+     *
+     * @since 1.0.0
+     */
+    public function aafw_debug_logs() {
+        $enabled = get_option( 'aafw_debug_logs', '0' );
+        ?>
+		<p>
+			<label>
+				<input type="checkbox" class="regular-checkbox" name="aafw_debug_logs" value="1" <?php 
+        checked( '1', $enabled );
+        ?> />
+				<?php 
+        echo esc_html( __( 'Enable console debug logs on the checkout page.', 'aafw' ) );
+        ?>
+			</label>
+			<br>
+			<span class="description">
+				<?php 
+        echo esc_html( __( 'Only enable this while troubleshooting issues with address autocomplete or the map. Logs may include shopper address details.', 'aafw' ) );
+        ?>
+			</span>
+		</p>
+		<?php 
+    }
+
+    /**
      * Plugin settings.
      *
      * @since 1.0.0
@@ -529,8 +630,12 @@ class Aafw_Admin {
 			<p>
 			  <?php 
         ?>
-				<span><?php 
-        echo aafw_premium_feature( '' ) . esc_html( __( 'Choose where to show the map on the checkout page.', 'aafw' ) );
+				<span>
+				<?php 
+        echo aafw_premium_feature( '' );
+        ?>	
+				<?php 
+        echo esc_html( __( 'Choose where to show the map on the checkout page.', 'aafw' ) );
         ?></span>
 			</p>
 		<?php 
@@ -564,8 +669,12 @@ class Aafw_Admin {
 			<p>
 				<?php 
         ?>
-				<span><?php 
-        echo aafw_premium_feature( '' ) . sprintf( __( 'Enter latitude & longitude to center the map. You can find the coordinates of a place on <a target="_blank" href="%s">Google Maps</a>.', 'aafw' ), esc_url( 'https://maps.google.com/' ) );
+				<span>
+				<?php 
+        echo aafw_premium_feature( '' );
+        ?>	
+				<?php 
+        echo sprintf( __( 'Enter latitude & longitude to center the map. You can find the coordinates of a place on <a target="_blank" href="%s">Google Maps</a>.', 'aafw' ), esc_url( 'https://maps.google.com/' ) );
         ?></span>
 			</p>
 		<?php 
@@ -601,8 +710,12 @@ class Aafw_Admin {
 		<p>
 		<?php 
         ?>
-			 <span><?php 
-        echo aafw_premium_feature( '' ) . esc_html( __( 'Choose countries to limit the autocomplete search results, you can choose up to 5 countries.', 'aafw' ) );
+			 <span>
+			 <?php 
+        echo aafw_premium_feature( '' );
+        ?>	
+			 <?php 
+        echo esc_html( __( 'Choose countries to limit the autocomplete search results, you can choose up to 5 countries.', 'aafw' ) );
         ?></span>
 		</p>
 		<?php 

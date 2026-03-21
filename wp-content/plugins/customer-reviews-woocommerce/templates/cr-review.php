@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <li <?php comment_class(); ?> id="li-comment-<?php comment_ID(); ?>">
 
 	<?php
-		$verified = wc_review_is_from_verified_owner( $comment->comment_ID );
+		$verified = CR_Reviews::cr_review_is_from_verified_owner( $comment );
 		$cr_comment_container_class = 'comment_container';
 		if ( $verified ) {
 			$cr_comment_container_class .= ' cr-verified-owner';
@@ -46,7 +46,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		}
 
 		if ( ! $cr_hide_avatars ) {
-			$get_avtr = get_avatar( $comment, apply_filters( 'cr_review_gravatar_size', '60' ), '' );
+			$get_avtr = get_avatar( $comment, apply_filters( 'cr_review_gravatar_size', '60' ), '', '', array( 'class' => array( 'cr-std-avatar' ) ) );
 			if ( $get_avtr ) {
 				echo $get_avtr;
 			} else {
@@ -56,7 +56,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		?>
 
-		<div class="comment-text<?php echo $hide_avatars_class; ?>">
+		<div class="cr-comment-text<?php echo $hide_avatars_class; ?>">
 
 			<?php
 
@@ -93,7 +93,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 										} else {
 											$country_desc = $country['code'];
 										}
-										echo '<img src="' . plugin_dir_url( dirname( __FILE__ ) ) . 'img/flags/' . $country['code'] . '.svg" class="ivole-review-country-icon" alt="' . $country['code'] . '" title="' . $country_desc . '">';
+										echo '<img src="' .
+											$cr_plugin_dir_url . 'img/flags/' .
+											rawurlencode( strtolower( $country['code'] ) ) .
+											'.svg" class="ivole-review-country-icon" alt="' .
+											esc_attr( strtoupper( $country['code'] ) ) .
+											'" title="' .
+											esc_attr( $country_desc ) .
+											'">';
 									}
 								}
 								?>
@@ -148,7 +155,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				if ( 0 < $rating ) {
 					/* translators: %s: rating */
 					$label = sprintf( __( 'Rated %s out of 5', 'woocommerce' ), $rating );
-					$html_star_rating = '<div class="crstar-rating" role="img" aria-label="' . esc_attr( $label ) . '">' . CR_Reviews::get_star_rating_html( $rating, 0 ) . '</div>';
+					$html_star_rating = '<div class="crstar-rating-svg" role="img" aria-label="' . esc_attr( $label ) . '">' . CR_Reviews::get_star_rating_svg( $rating, 0, '' ) . '</div>';
 					$product_avatar_name = '';
 
 					if(

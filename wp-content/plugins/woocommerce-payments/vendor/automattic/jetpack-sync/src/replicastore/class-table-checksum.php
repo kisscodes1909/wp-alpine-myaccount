@@ -148,7 +148,7 @@ class Table_Checksum {
 
 		$this->salt = $salt;
 
-		$this->default_tables = $this->get_default_tables();
+		$this->default_tables = static::get_default_tables();
 
 		$this->perform_text_conversion = $perform_text_conversion;
 
@@ -181,7 +181,7 @@ class Table_Checksum {
 	 *
 	 * @return array
 	 */
-	protected function get_default_tables() {
+	protected static function get_default_tables() {
 		global $wpdb;
 
 		return array(
@@ -289,13 +289,28 @@ class Table_Checksum {
 			),
 			'links'                      => $wpdb->links, // TODO describe in the array format or add exceptions.
 			'options'                    => $wpdb->options, // TODO describe in the array format or add exceptions.
+			'wc_product_lookup'          => array( // wc_product_lookup is a table in the cache database
+				'table'                     => $wpdb->posts,
+				'range_field'               => 'ID',
+				'key_fields'                => array( 'ID' ),
+				'checksum_fields'           => array( 'post_modified_gmt' ),
+				'filter_values'             => array(
+					'post_type' => array(
+						'operator' => 'IN',
+						'values'   => array( 'product', 'product_variation' ),
+					),
+				),
+				'is_table_enabled_callback' => function () {
+					return false !== Sync\Modules::get_module( 'woocommerce_products' );
+				},
+			),
 			'woocommerce_order_items'    => array(
 				'table'                     => "{$wpdb->prefix}woocommerce_order_items",
 				'range_field'               => 'order_item_id',
 				'key_fields'                => array( 'order_item_id' ),
 				'checksum_fields'           => array( 'order_id' ),
 				'checksum_text_fields'      => array( 'order_item_name', 'order_item_type' ),
-				'is_table_enabled_callback' => array( $this, 'enable_woocommerce_tables' ),
+				'is_table_enabled_callback' => 'Automattic\Jetpack\Sync\Replicastore\Table_Checksum::enable_woocommerce_tables',
 			),
 			'woocommerce_order_itemmeta' => array(
 				'table'                     => "{$wpdb->prefix}woocommerce_order_itemmeta",
@@ -306,7 +321,9 @@ class Table_Checksum {
 				'parent_table'              => 'woocommerce_order_items',
 				'parent_join_field'         => 'order_item_id',
 				'table_join_field'          => 'order_item_id',
-				'is_table_enabled_callback' => array( $this, 'enable_woocommerce_tables' ),
+				'is_table_enabled_callback' => function () {
+					return false !== Sync\Modules::get_module( 'meta' ) && self::enable_woocommerce_tables();
+				},
 			),
 			'wc_orders'                  => array(
 				'table'                     => "{$wpdb->prefix}wc_orders",
@@ -379,6 +396,15 @@ class Table_Checksum {
 				},
 			),
 		);
+	}
+
+	/**
+	 * Get allowed table configurations.
+	 *
+	 * @return array
+	 */
+	public static function get_allowed_tables() {
+		return apply_filters( 'jetpack_sync_checksum_allowed_tables', static::get_default_tables() );
 	}
 
 	/**
@@ -872,7 +898,7 @@ class Table_Checksum {
 	 *
 	 * @return bool
 	 */
-	protected function enable_woocommerce_tables() {
+	public static function enable_woocommerce_tables() {
 		/**
 		 * On WordPress.com, we can't directly check if the site has support for WooCommerce.
 		 * Having the option to override the functionality here helps with syncing WooCommerce tables.
@@ -889,14 +915,8 @@ class Table_Checksum {
 			return true;
 		}
 
-		// No need to proceed if WooCommerce is not available.
-		if ( ! class_exists( 'WooCommerce' ) ) {
-			return false;
-		}
-
-		// TODO more checks if needed. Probably query the DB to make sure the tables exist.
-
-		return true;
+		// If the 'woocommerce' module is enabled, this means that WooCommerce class exists.
+		return false !== Sync\Modules::get_module( 'woocommerce' );
 	}
 
 	/**

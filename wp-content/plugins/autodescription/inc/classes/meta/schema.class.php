@@ -8,12 +8,12 @@ namespace The_SEO_Framework\Meta;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\{
+use function The_SEO_Framework\{
 	get_query_type_from_args,
 	normalize_generation_args,
 };
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Data,
 	Helper\Format\Arrays,
 	Helper\Query,
@@ -21,7 +21,7 @@ use \The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -123,12 +123,12 @@ class Schema {
 		);
 
 		// Fill the graph's references dynamically. Append extra graphs when given.
-		foreach ( static::$writer_queue as $writer )
+		foreach ( self::$writer_queue as $writer )
 			foreach ( \call_user_func( $writer ) as $extra_graph )
 				$graph[] = $extra_graph;
 
 		// Reset queue.
-		static::$writer_queue = [];
+		self::$writer_queue = [];
 
 		/**
 		 * For consistency, data should be filtered deep, such as (WordPress) title
@@ -162,6 +162,6 @@ class Schema {
 	 * @param callable $callback The callback to call to write graph.
 	 */
 	public static function register_entity_writer( $id, $callback ) {
-		static::$writer_queue[ $id ] = $callback;
+		self::$writer_queue[ $id ] = $callback;
 	}
 }

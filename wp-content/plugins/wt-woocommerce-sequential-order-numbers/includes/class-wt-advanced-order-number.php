@@ -16,15 +16,12 @@ class Wt_Advanced_Order_Number {
         if (defined('WT_SEQUENCIAL_ORDNUMBER_VERSION')) {
             $this->version = WT_SEQUENCIAL_ORDNUMBER_VERSION;
         } else {
-            $this->version = '1.6.7';
+            $this->version = '1.7.7';
         }
         $this->plugin_name = 'wt-advanced-order-number';
         $this->plugin_base_name = WT_SEQUENCIAL_ORDNUMBER_BASE_NAME;
 
         $this->load_dependencies();
-        if(get_bloginfo('version') < 6.7){
-            $this->set_locale();
-        }
         $this->define_admin_hooks();
         $this->define_public_hooks();
 
@@ -37,8 +34,7 @@ class Wt_Advanced_Order_Number {
 
     private function load_dependencies() {
 
-        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wt-advanced-order-number-loader.php';
-        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wt-advanced-order-number-i18n.php';
+        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wt-advanced-order-number-loader.php';        
         require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-wt-advanced-order-number-admin.php';
         require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wt-advanced-order-number-public.php';
         require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wt-advanced-order-number-review_request.php';
@@ -55,12 +51,6 @@ class Wt_Advanced_Order_Number {
         $this->loader = new Wt_Advanced_Order_Number_Loader();
         $this->plugin_common = new Wt_Advanced_Order_Number_Common($this->get_plugin_name(), $this->get_version());
 
-    }
-
-    private function set_locale() {
-
-        $plugin_i18n = new Wt_Advanced_Order_Number_i18n();
-        $this->loader->add_action('init', $plugin_i18n, 'load_plugin_textdomain');
     }
 
         /**
@@ -89,7 +79,12 @@ class Wt_Advanced_Order_Number {
 
         }
 
-        add_action('plugins_loaded', array($this, 'setup_sequential_number'));    
+        add_action('plugins_loaded', array($this, 'setup_sequential_number')); 
+        
+        // REST API support for custom order number search.
+        add_filter( 'woocommerce_rest_orders_collection_params', array($this, 'wt_sequential_add_custom_order_number_query_arg'), 10, 1 );
+        add_filter( 'woocommerce_rest_orders_prepare_object_query', array($this, 'wt_sequential_filter_orders_by_custom_order_number'), 100, 2 );
+
     }
 
     public function define_common_hooks() {
@@ -335,7 +330,7 @@ class Wt_Advanced_Order_Number {
 		    $orders = wc_get_orders([
 			    'return'     => 'ids',
 			    'limit'      => 1,
-			    'meta_query' => [
+			    'meta_query' => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 				    [
 					    'key'        => '_order_number',
 					    'value'      => $order_id,
@@ -346,8 +341,8 @@ class Wt_Advanced_Order_Number {
 	    } else {
 		    $orders = get_posts( [
 			    'numberposts' => 1,
-			    'meta_key'    => '_order_number',
-			    'meta_value'  => $order_id,
+			    'meta_key'    => '_order_number', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			    'meta_value'  => $order_id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 			    'post_type'   => 'shop_order',
 			    'post_status' => 'any',
 			    'fields'      => 'ids',
@@ -481,21 +476,22 @@ class Wt_Advanced_Order_Number {
         global $wpdb;
         $key='_order_number';
 
-        if("order_table" === Wt_Advanced_Order_Number_Common::which_table_to_take()){
-			$table_name = $wpdb->prefix.'wc_orders_meta';
-			$r = $wpdb->get_col($wpdb->prepare("
-			SELECT COUNT(om.meta_value) AS num_exists FROM {$table_name} om
-			WHERE om.meta_key = '%s' AND om.meta_value = '%s'", $key,$order_number));
+        if( 'order_table' === Wt_Advanced_Order_Number_Common::which_table_to_take()){
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+            $r = $wpdb->get_col($wpdb->prepare("
+			SELECT COUNT(om.meta_value) AS num_exists FROM {$wpdb->prefix}wc_orders_meta om
+			WHERE om.meta_key = %s AND om.meta_value = %s", $key,$order_number));
 			return (isset($r[0]) && $r[0]>0) ? true : false;
 		}
         else
         {
             $post_type = 'shop_order';
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
             $r = $wpdb->get_col($wpdb->prepare("
             SELECT COUNT(pm.meta_value) AS num_exists FROM {$wpdb->postmeta} pm
             LEFT JOIN {$wpdb->posts} p ON p.ID = pm.post_id
-            WHERE pm.meta_key = '%s' 
-            AND p.post_type = '%s' AND pm.meta_value = '%s'", $key, $post_type,$order_number));
+            WHERE pm.meta_key = %s 
+            AND p.post_type = %s AND pm.meta_value = %s", $key, $post_type,$order_number));
             return (isset($r[0]) && $r[0]>0) ? true : false;
         }
     }
@@ -514,7 +510,8 @@ class Wt_Advanced_Order_Number {
 
     public function wt_quickpay_order_number_for_api( $order_number, $order, $recurring ) {
 
-        $order_id = (WC()->version < '2.7.0') ? $order->id : $order->get_id();
+        $order_id = $order->get_id();
+
 
         $sequence_number = Wt_Advanced_Order_Number_Common::get_order_meta($order_id, '_order_number');
 
@@ -579,6 +576,7 @@ class Wt_Advanced_Order_Number {
             update_option('wt_seq_basic_installation_date',$install_date);
         }
         $utc_timestamp = get_option('wt_seq_basic_installation_date');
+        // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
         $utc_timestamp_converted = date( 'Y-m-d h:i:s', $utc_timestamp );
         $local_timestamp = get_date_from_gmt( $utc_timestamp_converted, 'Y-m-d h:i:s' );
         if($order_date < $local_timestamp)
@@ -664,8 +662,13 @@ class Wt_Advanced_Order_Number {
     public function set_sequential_number($post_id, $post = array() ) {
 
         global $wpdb;
-        if ( is_array( $post ) || is_null( $post ) || ( is_object( $post ) && (( isset( $post->post_type )) || isset( $post->type) ) && (( ( 'shop_order' === $post->post_type ) ) || ( 'shop_order' === $post->type ) ) ) ){
+        if ( is_array( $post ) || is_null( $post ) || ( is_object( $post ) && ( ( isset( $post->post_type ) && ( 'shop_order' === $post->post_type ) ) || ( isset( $post->type ) && ( 'shop_order' === $post->type ) ) ) ) ){
+
             $order = $post instanceof \WC_Order ? $post : ($post_id instanceof \WC_Order ? $post_id :wc_get_order( $post_id ));
+
+            if(!$order || ! $order instanceof \WC_Order){
+                return;
+            }
 
             // checks whether the order is subscription order
             if ( is_object( $order ) && is_a( $order, 'WC_Subscription' ) ) {
@@ -687,7 +690,7 @@ class Wt_Advanced_Order_Number {
                 return ;
             }
 
-            $order_id = (WC()->version < '2.7.0') ? $order->id : $order->get_id();
+            $order_id = $order->get_id();
             $order_number = Wt_Advanced_Order_Number_Common::get_order_meta($order_id, '_order_number');
             $increment_counter = !empty((int) get_option('wt_sequence_increment_counter', 1)) ? (int) get_option('wt_sequence_increment_counter', 1) : 1;
             $is_old_order = self::is_old_order($order_id);
@@ -708,25 +711,25 @@ class Wt_Advanced_Order_Number {
                 wp_mkdir_p( $lockFolderPath );
             }
             $lockFilePath	= $lockFolderPath.'/wt_sequential_order_number.lock';
-            $file 			= fopen($lockFilePath,"w");
+            // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- No suitable alternative.
+            $file 			= fopen($lockFilePath,"c");
 
-            if (flock($file,LOCK_EX)) {
+            if ( $this->wt_safe_file_lock($file) ) {
 
                 if (empty($order_number) && false === $is_old_order) { 
 
                     $prefix = self::get_sequence_prefix($order_id);
 
                     $last_order_num = get_option('wt_last_order_number', 0);
-
-                    $query_array = [
-                        "INSERT INTO {$wpdb->postmeta} (post_id, meta_key, meta_value) VALUES (%d,%s,%s)",
-                    ];
-                        
-                    if(Wt_Advanced_Order_Number_Common::is_wc_hpos_enabled()) {
-                            
+  
+                    if( Wt_Advanced_Order_Number_Common::is_wc_hpos_enabled() ) {  
                         $table_name = $wpdb->prefix.'wc_orders_meta';
-
-                        $query_array[] = "INSERT INTO {$table_name} (order_id, meta_key, meta_value) VALUES (%d,%s,%s)";  
+                        $query_array= array( "INSERT INTO {$table_name} (order_id, meta_key, meta_value) VALUES (%d,%s,%s)" );
+                        if("yes" === get_option( 'woocommerce_custom_orders_table_data_sync_enabled' )){
+                            $query_array []= "INSERT INTO {$wpdb->postmeta} (post_id, meta_key, meta_value) VALUES (%d,%s,%s)" ;
+                        }
+                    }else{
+                        $query_array = array( "INSERT INTO {$wpdb->postmeta} (post_id, meta_key, meta_value) VALUES (%d,%s,%s)" );
                     }
 
                     $wt_last_order_number = get_option('wt_last_order_number', $last_order_num);
@@ -752,14 +755,17 @@ class Wt_Advanced_Order_Number {
                         $next_order_number = self::add_prefix_suffix($next_insert_id_padding,$order_id);               
                     }
                     foreach ($query_array as $sql) {
-                            
-                        $query = $wpdb->prepare($sql, $post_id, '_order_number', $next_order_number); 
-
+                        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                        $query = $wpdb->prepare($sql, $post_id, '_order_number', $next_order_number);
+                        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching,PluginCheck.Security.DirectDB.UnescapedDBParameter
                         $res = $wpdb->query($query);
                     }
                     $order->save();
                 } 
-                flock($file,LOCK_UN);
+                if ( is_resource( $file ) ) {
+                    flock($file,LOCK_UN);
+                    fclose($file); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- No suitable alternative.
+                }
             } else {
 
                 sleep(2);
@@ -786,7 +792,7 @@ class Wt_Advanced_Order_Number {
 
     public function display_sequence_number($order_number, $order) {
 
-        $order_id = (WC()->version < '2.7.0') ? $order->id : $order->get_id();
+        $order_id = $order->get_id();
         $sequential_order_number = Wt_Advanced_Order_Number_Common::get_order_meta($order_id, '_order_number');
         $sequential_order_number = apply_filters('wt_alter_sequence_number',$sequential_order_number,$order_id);
         return ($sequential_order_number) ? $sequential_order_number : $order_number;
@@ -855,12 +861,102 @@ class Wt_Advanced_Order_Number {
             $order_table = $query->get_table_name('orders');
     
             $order_meta_table = $query->get_table_name('meta');
-    
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
             $where = $wpdb->prepare("`$order_table`.id in (SELECT order_id FROM `$order_meta_table` WHERE meta_key = %s AND meta_value LIKE %s)",
             '_order_number',
             '%' . $wpdb->esc_like($search_term) . '%');
         }
     
         return $where;
+    }
+
+    /**
+     * @since 1.7.1
+     * Add custom order number query arg to the REST API.
+     *
+     * @param array $args Query arguments.
+     * @return array Query arguments.
+     */
+    public function wt_sequential_add_custom_order_number_query_arg( $args ) {
+        $args['order_number'] = array(
+            'description'       => __('Filter by custom order number', 'wt-woocommerce-sequential-order-numbers'),
+            'type'              => 'string',
+            'validate_callback' => 'is_string',
+        );
+        return $args;
+    }
+    /**
+     * @since 1.7.1
+     * Filter orders by custom order number.
+     *
+     * @param array $query Query arguments.
+     * @param \WP_REST_Request $request Request arguments.
+     * @return array Query arguments.
+     */
+    public function wt_sequential_filter_orders_by_custom_order_number( $query, $request ) {
+
+        if ( isset( $request['order_number'] ) && $request instanceof \WP_REST_Request) {
+            global $wpdb;
+            if( Wt_Advanced_Order_Number_Common::is_wc_hpos_enabled() ) {  
+                $order_table = $wpdb->prefix.'wc_orders';
+                $order_meta_table = $wpdb->prefix.'wc_orders_meta';
+                $order_id_column = 'order_id';
+            }else{
+                $order_table = $wpdb->prefix.'posts';
+                $order_meta_table = $wpdb->prefix.'postmeta';
+                $order_id_column = 'post_id';
+            }
+            
+            /**
+             * Filter orders by custom order number.
+             * @since 1.7.1
+             *
+             * @param bool $search_exact Whether to search for exact order number. Default is false.
+             * @return bool Whether to search for exact order number.
+             */
+            $search_exact = apply_filters('wt_sequential_search_exact_order_number',false);
+
+            if($search_exact){
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                $where = $wpdb->prepare("SELECT `$order_table`.id FROM `$order_table` WHERE `$order_table`.id in (SELECT $order_id_column FROM `$order_meta_table` WHERE meta_key = %s AND meta_value = %s)",
+                '_order_number',
+                $request['order_number']);
+            }else{
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                $where = $wpdb->prepare("SELECT `$order_table`.id FROM `$order_table` WHERE `$order_table`.id in (SELECT $order_id_column FROM `$order_meta_table` WHERE meta_key = %s AND meta_value LIKE %s)",
+                '_order_number',
+                '%' . $wpdb->esc_like($request['order_number']) . '%');
+            }
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching,PluginCheck.Security.DirectDB.UnescapedDBParameter
+            $results = $wpdb->get_results( $where );
+            $order_ids = array_column($results, 'id');
+            if( !empty($order_ids) && is_array($order_ids)){
+                $query['post__in'] = $order_ids;
+            }else{
+                $query['post__in'] = array( '0' ); // If no orders found, return an empty array.
+            }
+
+        }
+        return $query;
+    }
+    /**
+     * @since 1.7.5.1
+     * Safely lock a file using flock.
+     *
+     * @param resource $file File handle.
+     * @return bool True if lock was acquired, false otherwise.
+     */
+    public function wt_safe_file_lock($file) {
+       // Detect if environment supports flock
+        $can_flock = !defined('WPCOM_IS_VIP_ENV') || !WPCOM_IS_VIP_ENV;
+        // Alternatively, allow override via filter
+        $can_flock = apply_filters('webtoffee_use_flock', $can_flock);
+
+        if ($can_flock && is_resource($file)) {
+            // Use @ to suppress warnings in unsupported contexts
+            return @flock($file, LOCK_EX);
+        }
+        // Fallback: no locking
+        return true;
     }
 }

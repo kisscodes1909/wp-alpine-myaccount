@@ -22,7 +22,7 @@ class WPO_Cache_Rules {
 	/**
 	 * Instance of this class
 	 *
-	 * @var mixed
+	 * @var WPO_Cache_Rules | null
 	 */
 	public static $instance;
 
@@ -48,6 +48,7 @@ class WPO_Cache_Rules {
 
 		add_action('update_option_page_on_front', array($this, 'purge_cache_on_homepage_change'));
 		add_action('update_option_page_for_posts', array($this, 'purge_cache_on_blog_page_change'), 10, 2);
+		add_action('update_option_show_avatars', array($this, 'purge_cache_on_avatars_change'), 10, 2);
 
 		add_action('woocommerce_variation_set_stock', array($this, 'purge_product_page'), 10, 1);
 		add_action('woocommerce_product_set_stock', array($this, 'purge_product_page'), 10, 1);
@@ -98,11 +99,12 @@ class WPO_Cache_Rules {
 
 			WPO_Page_Cache::delete_single_post_cache($post_id);
 			WPO_Page_Cache::delete_comments_feed();
+			WPO_Page_Cache::instance()->file_log("Cache for URL: {{URL}} has been purged, triggered by action: " . current_filter(), $post_id);
 		}
 	}
 
 	/**
-	 * Every time a comment's status changes, purge it's parent posts cache
+	 * Every time a comment's status changes, purge its parent posts cache
 	 *
 	 * @param int $comment_id Comment ID.
 	 */
@@ -112,6 +114,7 @@ class WPO_Cache_Rules {
 			if (is_object($comment) && !empty($comment->comment_post_ID)) {
 				WPO_Page_Cache::delete_single_post_cache($comment->comment_post_ID);
 				WPO_Page_Cache::delete_comments_feed();
+				WPO_Page_Cache::instance()->file_log("Cache for URL: {{URL}} has been purged, triggered by action: " . current_filter(), $comment->comment_post_ID);
 			}
 		}
 	}
@@ -133,12 +136,12 @@ class WPO_Cache_Rules {
 			 * @param WP_Comment $comment
 			 * @return boolean
 			 */
-			$add_cookie = apply_filters('wpo_add_commented_post_cookie', '' == $comment->comment_type || 'comment' == $comment->comment_type, $comment);
+			$add_cookie = apply_filters('wpo_add_commented_post_cookie', '' === $comment->comment_type || 'comment' === $comment->comment_type, $comment);
 			if (!$add_cookie) return;
 
 			$url = get_permalink($comment->comment_post_ID);
-			$url_info = parse_url($url);
-			setcookie('wpo_commented_post', 1, time() + WEEK_IN_SECONDS, isset($url_info['path']) ? $url_info['path'] : '/');
+			$url_info = wp_parse_url($url);
+			setcookie('wpo_commented_post', 1, time() + WEEK_IN_SECONDS, $url_info['path'] ?? '/');
 		}
 	}
 
@@ -154,13 +157,17 @@ class WPO_Cache_Rules {
 	 * We want the whole cache purged here as different parts
 	 * of the site could potentially change on post updates
 	 *
-	 * @param Integer $post_id - WP post id
+	 * @param int $post_id - WP post id
 	 */
 	public function purge_post_on_update($post_id) {
 		$post_type = get_post_type($post_id);
 		$post_type_object = get_post_type_object($post_type);
 
 		if ((defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) || 'revision' === $post_type || null === $post_type_object || !$post_type_object->public) {
+			return;
+		}
+		$post_status = get_post_status($post_id);
+		if ('publish' !== $post_status) {
 			return;
 		}
 
@@ -172,12 +179,12 @@ class WPO_Cache_Rules {
 		 */
 		if (apply_filters('wpo_purge_all_cache_on_update', false, $post_id)) {
 			$this->purge_cache();
-			return;
 		} else {
 			if (apply_filters('wpo_delete_cached_homepage_on_post_update', true, $post_id)) WPO_Page_Cache::delete_homepage_cache();
 			WPO_Page_Cache::delete_feed_cache();
 			WPO_Page_Cache::delete_single_post_cache($post_id);
 			WPO_Page_Cache::delete_post_feed_cache($post_id);
+			WPO_Page_Cache::instance()->file_log("Cache for URL: {{URL}} has been purged, triggered by action: " . current_filter(), $post_id);
 		}
 	}
 
@@ -199,22 +206,34 @@ class WPO_Cache_Rules {
 
 		if (null === $post_obj) return;
 
-		if ('post' == $post_type) {
+		$post_status = get_post_status($post_id);
+		if ('publish' !== $post_status) {
+			return;
+		}
+
+		if ('post' === $post_type) {
 			// delete blog page cache
 			$blog_post_id = get_option('page_for_posts');
 			if ($blog_post_id) {
 				WPO_Page_Cache::delete_cache_by_url(get_permalink($blog_post_id), true);
+				WPO_Page_Cache::instance()->file_log("Cache for blog post has been purged due to updates to post with Title: {{title}} and URL: {{URL}}, triggered by action: " . current_filter(), $post_id);
 			}
 		
 			// delete next and previous posts cache.
-			$globals_post = isset($GLOBALS['post']) ? $GLOBALS['post'] : false;
+			$globals_post = $GLOBALS['post'] ?? false;
 			$GLOBALS['post'] = get_post($post_id);
 			$previous_post = function_exists('get_previous_post') ? get_previous_post() : false;
 			$next_post = function_exists('get_next_post') ? get_next_post() : false;
 			if ($globals_post) $GLOBALS['post'] = $globals_post;
 			
-			if ($previous_post) WPO_Page_Cache::delete_cache_by_url(get_permalink($previous_post), true);
-			if ($next_post) WPO_Page_Cache::delete_cache_by_url(get_permalink($next_post), true);
+			if ($previous_post) {
+				WPO_Page_Cache::delete_cache_by_url(get_permalink($previous_post), true);
+				WPO_Page_Cache::instance()->file_log("Cache for previous post (with URL: {{URL}}) adjacent to post with id: " . $post_id . " has been purged, triggered by action: " . current_filter(), $previous_post->ID);
+			}
+			if ($next_post) {
+				WPO_Page_Cache::delete_cache_by_url(get_permalink($next_post), true);
+				WPO_Page_Cache::instance()->file_log("Cache for next post (with URL: {{URL}}) adjacent to post with id: " . $post_id . " has been purged, triggered by action: " . current_filter(), $next_post->ID);
+			}
 			
 			// delete all archive pages for post.
 			$post_date = get_post_time('Y-m-j', false, $post_id);
@@ -229,11 +248,24 @@ class WPO_Cache_Rules {
 			foreach ($archive_links as $link) {
 				WPO_Page_Cache::delete_cache_by_url($link, true);
 			}
-		} elseif ($post_obj->has_archive) {
+			WPO_Page_Cache::instance()->file_log("Cache for all archives page associated with post_type: " . $post_type . " and Title: {{title}} have been purged, triggered by action: " . current_filter(), $post_id);
+		}
+		if ($post_obj->has_archive) {
 			// delete archive page for custom post type.
 			WPO_Page_Cache::delete_cache_by_url(get_post_type_archive_link($post_type), true);
+			WPO_Page_Cache::instance()->file_log("Cache for archive page associated with post_type: " . $post_type . " and Title: {{title}} has been purged, triggered by action: " . current_filter(), $post_id);
 		}
-
+		if (post_type_supports($post_type, 'author')) {
+			$author_id  = get_post_field('post_author', $post_id);
+			$post_author = get_user_by('id', $author_id);
+			if ($author_id && $post_author) {
+				$author_url = get_author_posts_url($author_id);
+				if (!empty($author_url)) {
+					WPO_Page_Cache::delete_cache_by_url($author_url, true);
+					WPO_Page_Cache::instance()->file_log("Cache for author page URL: " . $author_url . " associated with post_type: " . $post_type . " and Title: {{title}} has been purged, triggered by action: " . current_filter(), $post_id);
+				}
+			}
+		}
 	}
 
 	/**
@@ -252,6 +284,7 @@ class WPO_Cache_Rules {
 			$term_permalink = get_term_link($term['term_id']);
 			if (!is_wp_error($term_permalink)) {
 				WPO_Page_Cache::delete_cache_by_url($term_permalink, true);
+				WPO_Page_Cache::instance()->file_log("Cache for term page with URL: " . $term_permalink . "  have been purged, triggered by action: " . current_filter());
 			}
 		}
 
@@ -260,7 +293,7 @@ class WPO_Cache_Rules {
 			'numberposts'      => -1,
 			'post_type'        => 'any',
 			'fields'           => 'ids',
-			'tax_query' => array(
+			'tax_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- because we can't use `get_objects_in_term` for `OR` relationships
 				'relation' => 'OR',
 				array(
 					'taxonomy' => $taxonomy,
@@ -274,6 +307,9 @@ class WPO_Cache_Rules {
 			foreach ($posts as $post_id) {
 				WPO_Page_Cache::delete_single_post_cache($post_id);
 			}
+			$term_permalink = get_term_link($term_id);
+			WPO_Page_Cache::instance()->file_log("Cache for associated posts for term with URL: "
+				. $term_permalink. " have been purged, triggered by action: " . current_filter());
 		}
 	}
 
@@ -298,7 +334,7 @@ class WPO_Cache_Rules {
 		/**
 		 * Adds a way to exit the purge of terms permalink using the provided parameters.
 		 *
-		 * @param bool   $purge      The value filtered, whether or not to purge the related elements
+		 * @param bool   $purge      The value filtered, whether to purge the related elements or not
 		 * @param int    $object_id  Object ID.
 		 * @param array  $terms      An array of object terms.
 		 * @param array  $tt_ids     An array of term taxonomy IDs.
@@ -315,18 +351,21 @@ class WPO_Cache_Rules {
 
 		if (!empty($affected_terms_ids)) {
 			// walk through all changed terms and purge cached pages for them.
+			$is_cache_purged = false;
 			foreach ($affected_terms_ids as $tt_id) {
 				$term = get_term($tt_id, $taxonomy, ARRAY_A);
 				if (!is_array($term)) continue;
 
 				$term_permalink = get_term_link($term['term_id']);
 				if (!is_wp_error($term_permalink)) {
-					$url = parse_url($term_permalink);
+					$url = wp_parse_url($term_permalink);
 					// Check if the permalink contains a valid path, to avoid deleting the whole cache.
 					if (!isset($url['path']) || '/' === $url['path']) return;
 					WPO_Page_Cache::delete_cache_by_url($term_permalink, true);
+					$is_cache_purged = true;
 				}
 			}
+			if ($is_cache_purged) WPO_Page_Cache::instance()->file_log("Cache for multiple term taxonomy have been purged due to post terms update, triggered by action: " . current_filter());
 		}
 	}
 
@@ -336,6 +375,7 @@ class WPO_Cache_Rules {
 	public function purge_product_page($product_with_stock) {
 		if (!empty($product_with_stock->get_id())) {
 			WPO_Page_Cache::delete_single_post_cache($product_with_stock->get_id());
+			WPO_Page_Cache::instance()->file_log("Cache for URL: {{URL}} has been purged, triggered by action: " . current_filter(), $product_with_stock->get_id());
 		}
 	}
 
@@ -354,6 +394,7 @@ class WPO_Cache_Rules {
 			WPO_Page_Cache::delete_cache_by_url(get_permalink($old_value));
 		}
 		WPO_Page_Cache::delete_homepage_cache();
+		WPO_Page_Cache::instance()->file_log("Cache for homepage has been purged due to change in the Homepage displays options, triggered by action: " . current_filter());
 	}
 
 	/**
@@ -369,6 +410,19 @@ class WPO_Cache_Rules {
 		if ($value) {
 			WPO_Page_Cache::delete_cache_by_url(get_permalink($value));
 		}
+		WPO_Page_Cache::instance()->file_log("Cache for homepage has been purged due to changes in the Posts page options, triggered by action: " . current_filter());
+	}
+
+	/**
+	 * Purges cache if the avatars option is changed
+	 *
+	 * @param boolean $old_value
+	 * @param boolean $value
+	 */
+	public function purge_cache_on_avatars_change($old_value, $value) {
+		if ($old_value !== $value) {
+			$this->purge_cache();
+		}
 	}
 
 	/**
@@ -377,6 +431,7 @@ class WPO_Cache_Rules {
 	public function purge_cache() {
 		if (!empty($this->config['enable_page_caching'])) {
 			wpo_cache_flush();
+			WPO_Page_Cache::instance()->file_log("Full Cache Purge triggered by action: " . current_filter());
 		}
 	}
 
@@ -389,13 +444,14 @@ class WPO_Cache_Rules {
 		// delete front page form cache if defined in the settings
 		if (is_array($config['cache_exception_urls']) && in_array('/', $config['cache_exception_urls'])) {
 			WPO_Page_Cache::delete_cache_by_url(home_url());
+			WPO_Page_Cache::instance()->file_log("Cache for homepage has been purged due to changes in the cache configurations, triggered by action: " . current_filter());
 		}
 	}
 
 	/**
 	 * Returns an instance of the current class, creates one if it doesn't exist
 	 *
-	 * @return object
+	 * @return self
 	 */
 	public static function instance() {
 		if (empty(self::$instance)) {

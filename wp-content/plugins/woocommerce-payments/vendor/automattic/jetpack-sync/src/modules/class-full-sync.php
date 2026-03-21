@@ -13,6 +13,10 @@ use Automattic\Jetpack\Sync\Modules;
 use Automattic\Jetpack\Sync\Queue;
 use Automattic\Jetpack\Sync\Settings;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit( 0 );
+}
+
 /**
  * This class does a full resync of the database by
  * enqueuing an outbound action for every single object
@@ -80,9 +84,10 @@ class Full_Sync extends Module {
 	 * @access public
 	 *
 	 * @param array $module_configs Full sync configuration for all sync modules.
+	 * @param mixed $context        Context for the full sync.
 	 * @return bool Always returns true at success.
 	 */
-	public function start( $module_configs = null ) {
+	public function start( $module_configs = null, $context = null ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		$was_already_running = $this->is_started() && ! $this->is_finished();
 
 		// Remove all evidence of previous full sync items and status.
@@ -335,6 +340,10 @@ class Full_Sync extends Module {
 				$id        = 'comment_ID';
 				$where_sql = Settings::get_comments_filter_sql();
 				break;
+			default:
+				// This should never be reached due to the guard condition above,
+				// but Phan complains so let's make it happy.
+				return array();
 		}
 
 		// TODO: Call $wpdb->prepare on the following query.

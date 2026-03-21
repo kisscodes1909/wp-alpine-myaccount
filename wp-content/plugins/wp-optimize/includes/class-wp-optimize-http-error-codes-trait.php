@@ -141,21 +141,26 @@ trait WP_Optimize_HTTP_Error_Codes_Trait {
 		if (is_wp_error($response)) return $response;
 
 		$response_code = wp_remote_retrieve_response_code($response);
-		if (200 != $response_code) {
+		if (200 !== $response_code) {
 			$link = sprintf('<a href="%s" target="_blank">%s</a>', $style, $style);
 
-			if (401 == $response_code) {
+			if (401 === $response_code) {
 				$error = '<b>' . esc_html__('401 Unauthorized', 'wp-optimize') . '</b>';
+				// translators: %s is a `401 Unauthorized` error message
 				$error_string = sprintf(esc_html__('The server responded with a %s error.', 'wp-optimize'), $error) . ' '
 					. esc_html__('This usually happens when the site requires authentication to access it.', 'wp-optimize') . ' '
+					// translators: %s is a link to the style.css file
 					. sprintf(esc_html__('Please temporarily disable authentication for the following URL: %s and retry.', 'wp-optimize'), $link);
-			} elseif (404 == $response_code) {
-				$error = '<b>' . esc_html__('404 File Not Found', 'wp-optmize') . '</b>';
+			} elseif (404 === $response_code) {
+				$error = '<b>' . esc_html__('404 File Not Found', 'wp-optimize') . '</b>';
+				// translators: %s is a `404 File Not Found` error message
 				$error_string = sprintf(esc_html__('The server responded with a %s error', 'wp-optimize'), $error) . ' '
+					// translators: %s is a link to the style.css file
 					. sprintf(esc_html__('Please temporarily restore the file under URL: %s, or just create an empty file and try again.', 'wp-optimize'), $link);
 			} else {
 				$error = '<b>' . $response_code . ' ' . $this->get_http_code_label($response_code) . '</b>';
-				$error_string = sprintf(esc_html__('The server responded with a %s error whilst trying to open the URL: %s.', 'wp-optimize'), $error, $link) . ' '
+				// translators: %1$s is an HTTP error response code, %2$s is a link to the style.css file
+				$error_string = sprintf(esc_html__('The server responded with a %1$s error whilst trying to open the URL: %2$s.', 'wp-optimize'), $error, $link) . ' '
 					. esc_html__('Please contact your website administrator to resolve this.', 'wp-optimize') . ' ' . esc_html__('Once the issue is addressed, try again.', 'wp-optimize');
 			}
 
@@ -182,7 +187,9 @@ trait WP_Optimize_HTTP_Error_Codes_Trait {
 			$this->set_codes();
 		}
 
-		return $code . " " . !empty($this->http_codes[$code]) ? $this->http_codes[$code] : esc_html__("HTTP Code", "wp-optimize");
+		$message = $this->http_codes[$code] ?? esc_html__("HTTP Code", "wp-optimize");
+
+		return $code . " " . $message;
 	}
 }
 endif;

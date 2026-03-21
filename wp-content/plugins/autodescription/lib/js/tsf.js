@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2015 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2015 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -52,7 +52,7 @@ window.tsf = function () {
 	 *
 	 * @since 4.0.0
 	 * @access public
-	 * @type {(Object<string,*>)|boolean|null} l10n Localized strings
+	 * @type {(Object<string,*>)|Boolean|null} l10n Localized strings
 	 */
 	const l10n = tsfL10n;
 
@@ -581,13 +581,10 @@ window.tsf = function () {
 			 * The code below isn't affected by the above mentioned issues; albeit not as smoothly executed as we'd like...
 			 * such as any page on theseoframework.com; which benefit from considering load order & inline scripts, making for seamless rendering.
 			 *
-			 * WordPress admin always forces us to load JS assets last--at least, when we do things by their book. We should
+			 * WordPress admin always forces us to load JS assets last–at least, when we do things by their book. We should
 			 * honor this, at the expense of extra layout shifts and delayed rendering of critical markup.
-			 *
-			 * @source jQuery 3.5.1
 			 */
-			if ( document.readyState === 'complete' ||
-				( document.readyState !== 'loading' && ! document.documentElement.doScroll ) ) {
+			if ( 'complete' === document.readyState ) {
 				// Handle it asynchronously to allow scripts the opportunity to delay ready.
 				setTimeout( _doReady() );
 			} else {

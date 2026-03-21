@@ -8,7 +8,7 @@ namespace The_SEO_Framework\Front;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Helper,
 	Helper\Query,
 	Meta,
@@ -16,7 +16,7 @@ use \The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2020 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2020 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -67,7 +67,7 @@ final class Redirect {
 			 */
 			\do_action( 'the_seo_framework_before_redirect', $url );
 
-			static::do_redirect( $url );
+			self::do_redirect( $url );
 		}
 	}
 
@@ -104,14 +104,14 @@ final class Redirect {
 		if ( ! Helper\Redirect::allow_external_redirect() ) {
 			// Only HTTP/HTTPS and home URLs are allowed. Maintain current request's scheme.
 			$url = Meta\URI\Utils::set_url_scheme( Meta\URI\Utils::convert_path_to_url(
-				Meta\URI\Utils::set_url_scheme( $url, 'relative' )
+				Meta\URI\Utils::set_url_scheme( $url, 'relative' ),
 			) );
 
 			\wp_safe_redirect( $url, $redirect_type );
 			exit;
 		}
 
-		// phpcs:ignore, WordPress.Security.SafeRedirect.wp_redirect_wp_redirect -- intended feature.
+		// phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect -- intended feature.
 		\wp_redirect( $url, $redirect_type );
 		exit;
 	}

@@ -11,6 +11,13 @@ if ( ! class_exists( '\\WPO\\IPS\\Semaphore' ) ) :
 class Semaphore {
 
 	/**
+	 * Transient key for caching scheduled cleanup status
+	 *
+	 * @var string
+	 */
+	public const CLEANUP_TRANSIENT_KEY = 'wpo_ips_semaphore_cleanup_scheduled';
+
+	/**
 	 * Prefix for the lock in the WP options table
 	 *
 	 * @var string
@@ -98,24 +105,34 @@ class Semaphore {
 	private function ensure_database_initialised(): int {
 		global $wpdb;
 
-		$sql = $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name = %s", $this->option_name );
+		// Check if the lock option already exists
+		$existing_option = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name = %s",
+				$this->option_name
+			)
+		);
 
-		if ( 1 === (int) $wpdb->get_var( $sql ) ) {
+		if ( 1 === (int) $existing_option ) {
 			$this->log( 'Lock option (' . $this->option_name . ', ' . $wpdb->options . ') already existed in the database', 'debug' );
 			return 1;
 		}
 
-		$sql = $wpdb->prepare( "INSERT INTO {$wpdb->options} (option_name, option_value, autoload) VALUES(%s, '0', 'no');", $this->option_name );
-
-		$rows_affected = $wpdb->query( $sql );
+		// Insert the lock option with a default value of 0
+		$rows_affected = $wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->prepare(
+				"INSERT INTO {$wpdb->options} (option_name, option_value, autoload) VALUES (%s, '0', 'no')",
+				$this->option_name
+			)
+		);
 
 		if ( $rows_affected > 0 ) {
 			$this->log( 'Lock option (' . $this->option_name . ', ' . $wpdb->options . ') was created in the database', 'debug' );
+			return 2;
 		} else {
-			$this->log( 'Lock option (' . $this->option_name . ', ' . $wpdb->options . ') failed to be created in the database (could already exist)', 'notice' );
+			$this->log( 'Lock option (' . $this->option_name . ', ' . $wpdb->options . ') failed to be created in the database', 'notice' );
+			return 0;
 		}
-
-		return ( $rows_affected > 0 ) ? 2 : 0;
 	}
 
 	/**
@@ -135,10 +152,16 @@ class Semaphore {
 		$time_now      = time();
 		$retries       = $retries > 0 ? $retries : $this->retries;
 		$acquire_until = $time_now + $this->locked_for;
+		$query         = $wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->prepare(
+				"UPDATE {$wpdb->options} SET option_value = %s WHERE option_name = %s AND option_value < %d",
+				$acquire_until,
+				$this->option_name,
+				$time_now
+			)
+		);
 
-		$sql = $wpdb->prepare( "UPDATE {$wpdb->options} SET option_value = %s WHERE option_name = %s AND option_value < %d", $acquire_until, $this->option_name, $time_now );
-
-		if ( 1 === $wpdb->query( $sql ) ) {
+		if ( 1 === $query ) {
 			$this->log( 'Lock (' . $this->option_name . ', ' . $wpdb->options . ') acquired', 'info' );
 			$this->acquired = true;
 			return true;
@@ -150,20 +173,36 @@ class Semaphore {
 		}
 
 		do {
+			$query = $wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+				$wpdb->prepare(
+					"UPDATE {$wpdb->options} SET option_value = %s WHERE option_name = %s AND option_value < %d",
+					$acquire_until,
+					$this->option_name,
+					$time_now
+				)
+			);
+
 			// Now that the row has been created, try again
-			if ( 1 === $wpdb->query( $sql ) ) {
+			if ( 1 === $query ) {
 				$this->log( 'Lock (' . $this->option_name . ', ' . $wpdb->options . ') acquired after initialising the database', 'info' );
 				$this->acquired = true;
 				return true;
 			}
+
 			$retries--;
+
 			if ( $retries >= 0 ) {
 				$this->log( 'Lock (' . $this->option_name . ', ' . $wpdb->options . ') not yet acquired; sleeping', 'debug' );
 				sleep( 1 );
 				// As a second has passed, update the time we are aiming for
 				$time_now = time();
 				$acquire_until = $time_now + $this->locked_for;
-				$sql = $wpdb->prepare( "UPDATE {$wpdb->options} SET option_value = %s WHERE option_name = %s AND option_value < %d", $acquire_until, $this->option_name, $time_now );
+				$sql = $wpdb->prepare(
+					"UPDATE {$wpdb->options} SET option_value = %s WHERE option_name = %s AND option_value < %d",
+					$acquire_until,
+					$this->option_name,
+					$time_now
+				);
 			}
 		} while ( $retries >= 0 );
 
@@ -185,11 +224,15 @@ class Semaphore {
 		}
 
 		global $wpdb;
-		$sql = $wpdb->prepare( "UPDATE {$wpdb->options} SET option_value = '0' WHERE option_name = %s", $this->option_name );
 
 		$this->log( 'Lock option (' . $this->option_name . ', ' . $wpdb->options . ') released', 'info' );
 
-		$result = (int) $wpdb->query( $sql ) === 1;
+		$result = $wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->prepare(
+				"UPDATE {$wpdb->options} SET option_value = '0' WHERE option_name = %s",
+				$this->option_name
+			)
+		) === 1;
 
 		$this->acquired = false;
 
@@ -206,7 +249,12 @@ class Semaphore {
 		$this->acquired = false;
 
 		global $wpdb;
-		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s", $this->option_name ) );
+		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->prepare(
+				"DELETE FROM {$wpdb->options} WHERE option_name = %s",
+				$this->option_name
+			)
+		);
 
 		$this->log( 'Lock option (' . $this->option_name . ', ' . $wpdb->options . ') was deleted from the database' );
 	}
@@ -279,7 +327,7 @@ class Semaphore {
 
 		$option_prefix = $legacy ? self::$legacy_option_prefix : self::$option_prefix;
 
-		$wpdb->query(
+		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->prepare(
 				"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s AND option_value = '0'",
 				$wpdb->esc_like( $option_prefix ) . '%'
@@ -299,7 +347,7 @@ class Semaphore {
 
 		$option_prefix = $legacy ? self::$legacy_option_prefix : self::$option_prefix;
 
-		$count = (int) $wpdb->get_var(
+		$count = (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->prepare(
 				"SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name LIKE %s AND option_value = '0'",
 				$wpdb->esc_like( $option_prefix ) . '%'
@@ -324,7 +372,26 @@ class Semaphore {
 	 * @return bool - whether the cleanup is scheduled
 	 */
 	public static function is_cleanup_scheduled(): bool {
-		return function_exists( 'as_next_scheduled_action' ) && as_next_scheduled_action( self::get_cleanup_hook_name() );
+		$cached = get_transient( self::CLEANUP_TRANSIENT_KEY );
+		if ( $cached !== false ) {
+			return (bool) $cached;
+		}
+
+		$error_message = 'Action Scheduler is not available. Cannot check if cleanup is scheduled.';
+		$scheduled     = false;
+
+		if ( function_exists( 'as_has_scheduled_action' ) ) {
+			$scheduled = \as_has_scheduled_action( self::get_cleanup_hook_name() );
+		} elseif ( function_exists( 'as_next_scheduled_action' ) ) {
+			$scheduled = \as_next_scheduled_action( self::get_cleanup_hook_name() );
+		} elseif ( function_exists( 'wcpdf_log_error' ) ) {
+			\wcpdf_log_error( $error_message, 'critical' );
+		} else {
+			error_log( $error_message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		}
+
+		set_transient( self::CLEANUP_TRANSIENT_KEY, $scheduled ? 1 : 0, DAY_IN_SECONDS );
+		return (bool) $scheduled;
 	}
 
 	/**
@@ -336,18 +403,26 @@ class Semaphore {
 		$action = null;
 
 		if ( self::is_cleanup_scheduled() ) {
-			$args = array(
-				'hook'    => self::get_cleanup_hook_name(),
-				'status'  => \ActionScheduler_Store::STATUS_PENDING,
-				'orderby' => 'timestamp',
-				'order'   => 'ASC',
-				'limit'   => 1,
-			);
+			$error_message = 'Action Scheduler is not available. Cannot get cleanup action.';
 
-			$actions = as_get_scheduled_actions( $args );
+			if ( function_exists( '\\as_get_scheduled_actions' ) ) {
+				$args = array(
+					'hook'    => self::get_cleanup_hook_name(),
+					'status'  => \ActionScheduler_Store::STATUS_PENDING,
+					'orderby' => 'timestamp',
+					'order'   => 'ASC',
+					'limit'   => 1,
+				);
 
-			if ( ! empty( $actions ) && 1 === count( $actions ) ) {
-				$action = reset( $actions );
+				$actions = \as_get_scheduled_actions( $args );
+
+				if ( ! empty( $actions ) && 1 === count( $actions ) ) {
+					$action = reset( $actions );
+				}
+			} elseif ( function_exists( 'wcpdf_log_error' ) ) {
+				\wcpdf_log_error( $error_message, 'critical' );
+			} else {
+				error_log( $error_message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			}
 		}
 
@@ -361,8 +436,18 @@ class Semaphore {
 	 */
 	public static function schedule_semaphore_cleanup(): void {
 		if ( ! self::is_cleanup_scheduled() ) {
-			$interval = apply_filters( self::get_cleanup_hook_name() . '_interval', 30 * DAY_IN_SECONDS ); // default: every 30 days
-			as_schedule_recurring_action( time(), $interval, self::get_cleanup_hook_name() );
+			$frequency     = apply_filters( self::get_cleanup_hook_name() . '_frequency', ( (int) ( WPO_WCPDF()->settings->debug_settings['cleanup_days'] ?? 7 ) ) * DAY_IN_SECONDS );
+			$frequency     = apply_filters_deprecated( self::get_cleanup_hook_name() . '_interval', array( $frequency ), '4.7.0', self::get_cleanup_hook_name() . '_frequency' );
+			$error_message = 'Action Scheduler is not available. Cannot schedule the semaphore cleanup action.';
+
+			if ( function_exists( '\as_schedule_recurring_action' ) ) {
+				\as_schedule_recurring_action( time(), $frequency, self::get_cleanup_hook_name() );
+				set_transient( self::CLEANUP_TRANSIENT_KEY, 1, DAY_IN_SECONDS ); // Update transient so next check is cached
+			} elseif ( function_exists( 'wcpdf_log_error' ) ) {
+				\wcpdf_log_error( $error_message, 'critical' );
+			} else {
+				error_log( $error_message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			}
 		}
 	}
 
@@ -372,11 +457,22 @@ class Semaphore {
 	 * @return void
 	 */
 	public static function init_cleanup(): void {
+		// This is to prevent the cleanup from running before the plugin is fully loaded
+		if ( ! WPO_WCPDF()->dependencies_are_ready() ) {
+			return;
+		}
+
 		// Schedule cleanup of released locks
-		self::schedule_semaphore_cleanup();
+		if ( function_exists( 'as_supports' ) && as_supports( 'ensure_recurring_actions_hook' ) ) {
+			// Preferred: runs periodically in the background.
+			add_action( 'action_scheduler_ensure_recurring_actions', array( __CLASS__, 'schedule_semaphore_cleanup' ) );
+		} else {
+			// Fallback: runs on every page load
+			self::schedule_semaphore_cleanup();
+		}
 
 		// Cleanup released locks
-		add_action( self::get_cleanup_hook_name(), array( __CLASS__, 'cleanup_released_locks' ) );
+		\add_action( self::get_cleanup_hook_name(), array( __CLASS__, 'cleanup_released_locks' ) );
 	}
 
 }

@@ -530,19 +530,13 @@ class Assets {
 		} else {
 			$data['domainMap']   = (object) $data['domainMap']; // Ensure it becomes a json object.
 			$data['domainPaths'] = (object) $data['domainPaths']; // Ensure it becomes a json object.
-			$wp_scripts->add_inline_script( $handle, 'wp.jpI18nLoader.state = ' . wp_json_encode( $data, JSON_UNESCAPED_SLASHES ) . ';' );
+			$wp_scripts->add_inline_script( $handle, 'wp.jpI18nLoader.state = ' . wp_json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP ) . ';' );
 		}
 
 		// Deprecated state module: Depend on wp-i18n to ensure global `wp` exists and because anything needing this will need that too.
 		$wp_scripts->add( 'wp-jp-i18n-state', false, array( 'wp-deprecated', $handle ) );
 		$wp_scripts->add_inline_script( 'wp-jp-i18n-state', 'wp.deprecated( "wp-jp-i18n-state", { alternative: "wp-jp-i18n-loader" } );' );
 		$wp_scripts->add_inline_script( 'wp-jp-i18n-state', 'wp.jpI18nState = wp.jpI18nLoader.state;' );
-
-		// Register the React JSX runtime script - used as a polyfill until we can update JSX transforms. See https://github.com/Automattic/jetpack/issues/38424.
-		// @todo Remove this when we drop support for WordPress 6.5, as well as the script inclusion in test_wp_default_scripts_hook.
-		$jsx_url = self::normalize_path( plugins_url( '../build/react-jsx-runtime.js', __FILE__ ) );
-		$wp_scripts->add( 'react-jsx-runtime', $jsx_url, array( 'react' ), '18.3.1', true );
-		$wp_scripts->add_data( 'react-jsx-runtime', 'group', 1 );
 	}
 
 	// endregion .

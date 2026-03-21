@@ -3,8 +3,8 @@ Contributors: aftership
 Donate link: https://www.aftership.com/
 Tags: woocommerce shipping,woocommerce tracking,shipment tracking,order tracking, woocommerce,track order,dhl,ups,usps,fedex,shipping,tracking,order
 Requires at least: 2.9
-Tested up to: 6.5
-Stable tag: 1.17.15
+Tested up to: 6.8
+Stable tag: 1.18.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -140,33 +140,13 @@ Tailor a dynamic branded tracking page. Upload promotional banner, logo, and fav
 6. AfterShip Tracking Admin portal
 
 == Changelog ==
-
-= 1.17.15 =
-* Support multiple tracking numbers in one Shipment (Beta)
-* Enable the option to select 'Other' as a courier when fulfilling orders.
-
-= 1.17.14 =
+= 1.18.1 =
 * Fix known issue
 
-= 1.17.13 =
-* Update courier list
-
-= 1.17.12 =
+= 1.18.0 =
 * Fix known issue
 
-= 1.17.11 =
-* Fix known issue
-
-= 1.17.10 =
-* Enhancement: support order number column (csv template) for Import Tracking
-
-= 1.17.0 =
-* Enhancement: support script tags API
-
-= 1.16.9 =
-* Update recommendation icons
-
-= 1.16.8 =
+= 1.17.18 =
 * Fix known issue
 
 = 1.16.6 =

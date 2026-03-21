@@ -8,15 +8,15 @@
 
 namespace The_SEO_Framework;
 
-\defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) or die;
+( \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) ) or die;
 
-use \The_SEO_Framework\Admin\Settings\Layout\Form;
+use The_SEO_Framework\Admin\Settings\Layout\Form;
 
-// phpcs:disable, WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
+// phpcs:disable WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -61,6 +61,11 @@ $robots_settings = [
 ?>
 <div class=tsf-quick-edit-columns>
 	<?php
+	\wp_nonce_field(
+		Data\Admin\Post::SAVE_NONCES['bulk-edit']['action'],
+		Data\Admin\Post::SAVE_NONCES['bulk-edit']['name'],
+	);
+
 	/**
 	 * @since 4.0.5
 	 * @param string $post_type The current post type.
@@ -80,7 +85,7 @@ $robots_settings = [
 					// This is bad accessibility, but it's exactly as bad as WP is, and we don't want to stray away from their standards.
 					echo '<label class=clear>';
 						printf( '<span class=title>%s</span>', \esc_html( $_setting['label'] ) );
-						// phpcs:disable, WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
+						// phpcs:disable WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
 						echo Form::make_single_select_form( [
 							'id'       => $_setting['id'],
 							'name'     => $_setting['name'],
@@ -92,7 +97,7 @@ $robots_settings = [
 							],
 							'selected' => 'nochange',
 						] );
-						// phpcs:enable, WordPress.Security.EscapeOutput
+						// phpcs:enable WordPress.Security.EscapeOutput
 					echo '</label>';
 				}
 				?>

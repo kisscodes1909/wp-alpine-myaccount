@@ -39,7 +39,7 @@
                 $(this).parent().hide();
                 return false;
             });
-            $("body").on("click", ".aafw_star_button", function() {
+            $("body").on("click", ".aafw_locker_button", function() {
                 if ($(this).next().is(":visible")) {
                     $(this).next().hide();
                 } else {

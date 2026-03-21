@@ -10,6 +10,10 @@ namespace Automattic\Jetpack\Sync\Modules;
 use Automattic\Jetpack\Sync\Listener;
 use Automattic\Jetpack\Sync\Settings;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit( 0 );
+}
+
 /**
  * Class to handle sync for term relationships.
  */
@@ -56,14 +60,28 @@ class Term_Relationships extends Module {
 	}
 
 	/**
-	 * The table in the database.
+	 * The table name.
 	 *
 	 * @access public
 	 *
 	 * @return string
+	 * @deprecated since 3.11.0 Use table() instead.
 	 */
 	public function table_name() {
+		_deprecated_function( __METHOD__, '3.11.0', 'Automattic\\Jetpack\\Sync\\Term_Relationships->table' );
 		return 'term_relationships';
+	}
+
+	/**
+	 * The table in the database with the prefix.
+	 *
+	 * @access public
+	 *
+	 * @return string|bool
+	 */
+	public function table() {
+		global $wpdb;
+		return $wpdb->term_relationships;
 	}
 
 	/**
@@ -164,11 +182,14 @@ class Term_Relationships extends Module {
 
 		return $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT object_id, term_taxonomy_id 
-				FROM $wpdb->term_relationships 
-				WHERE ( object_id = %d AND term_taxonomy_id < %d ) OR ( object_id < %d ) 
-				ORDER BY object_id DESC, term_taxonomy_id 
-				DESC LIMIT %d",
+				"SELECT tr.object_id, tr.term_taxonomy_id 				
+				FROM $wpdb->term_relationships tr INNER JOIN $wpdb->term_taxonomy tt 
+				ON tr.term_taxonomy_id=tt.term_taxonomy_id
+				WHERE " .
+				Settings::get_whitelisted_taxonomies_sql() // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				. ' AND ( ( tr.object_id = %d AND tr.term_taxonomy_id < %d ) OR ( tr.object_id < %d ) )
+				ORDER BY tr.object_id DESC, tr.term_taxonomy_id 
+				DESC LIMIT %d',
 				$status['last_sent']['object_id'],
 				$status['last_sent']['term_taxonomy_id'],
 				$status['last_sent']['object_id'],

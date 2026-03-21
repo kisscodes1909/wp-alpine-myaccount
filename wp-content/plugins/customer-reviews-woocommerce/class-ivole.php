@@ -4,6 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once( __DIR__ . '/includes/misc/class-cr-utils.php' );
 require_once( __DIR__ . '/includes/emails/class-cr-email-func.php' );
 require_once( __DIR__ . '/includes/emails/class-cr-sender.php' );
 require_once( __DIR__ . '/includes/emails/class-cr-email.php' );
@@ -12,6 +13,8 @@ require_once( __DIR__ . '/includes/emails/class-cr-phone-vldtr.php' );
 require_once( __DIR__ . '/includes/emails/class-cr-wtsap.php' );
 require_once( __DIR__ . '/includes/emails/class-cr-email-review-notification.php' );
 require_once( __DIR__ . '/includes/emails/class-cr-wpmail-log.php' );
+require_once( __DIR__ . '/includes/emails/class-cr-copy-link.php' );
+require_once( __DIR__ . '/includes/emails/class-cr-woo-emails.php' );
 require_once('class-cr-referrals.php');
 require_once( __DIR__ . '/includes/reminders/class-cr-manual.php' );
 require_once( __DIR__ . '/includes/reminders/class-cr-admin-menu-reminders.php' );
@@ -63,10 +66,11 @@ require_once( __DIR__ . '/includes/google/class-cr-product-feed-attributes.php' 
 require_once( __DIR__ . '/includes/google/class-cr-product-feed-reviews.php' );
 require_once( __DIR__ . '/includes/google/class-cr-product-fields.php' );
 require_once( __DIR__ . '/includes/misc/class-cr-admin-menu-diagnostics.php' );
-require_once( __DIR__ . '/includes/import-export/class-cr-reviews-importer.php' );
 require_once( __DIR__ . '/includes/import-export/class-cr-admin-menu-import.php' );
+require_once( __DIR__ . '/includes/import-export/class-cr-import-reviews.php' );
 require_once( __DIR__ . '/includes/import-export/class-cr-export-reviews.php' );
-require_once( __DIR__ . '/includes/import-export/class-cr-reviews-exporter.php' );
+require_once( __DIR__ . '/includes/import-export/class-cr-import-qna.php' );
+require_once( __DIR__ . '/includes/import-export/class-cr-export-qna.php' );
 require_once( __DIR__ . '/includes/tags/class-cr-admin-menu-tags.php' );
 require_once( __DIR__ . '/includes/tags/class-cr-tags.php' );
 require_once( __DIR__ . '/includes/trust-badge/class-cr-trust-badge.php' );
@@ -81,7 +85,7 @@ require_once( __DIR__ . '/includes/analytics/class-cr-reminders-log.php' );
 require_once( __DIR__ . '/includes/analytics/class-cr-reviews-top-charts.php' );
 
 class Ivole {
-	const CR_VERSION = '5.64.1';
+	const CR_VERSION = '5.102.0';
 
 	public function __construct() {
 		if( function_exists( 'wc' ) ) {
@@ -102,6 +106,7 @@ class Ivole {
 			new CR_Local_Forms_Ajax();
 			new CR_Reviews_Notifications();
 			new CR_WPMail_Log();
+			new CR_Woo_Emails();
 
 			$cr_all_reviews = new CR_All_Reviews();
 			$cr_reviews_grid = new CR_Reviews_Grid();
@@ -118,9 +123,7 @@ class Ivole {
 				$settings_admin_menu = new CR_Settings_Admin_Menu();
 				$diagnostics_admin_menu = new CR_Diagnostics_Admin_Menu();
 				$cr_manual = new CR_Manual();
-				$reviews_importer = new CR_Reviews_Importer();
 				$import_admin_menu = new CR_Import_Admin_Menu();
-				$reviews_exporter = new CR_Reviews_Exporter();
 
 				new CR_Review_Reminder_Settings( $settings_admin_menu );
 				new CR_Review_Extensions_Settings( $settings_admin_menu );
@@ -139,7 +142,10 @@ class Ivole {
 				new CR_Identifiers_Product_Feed( $product_feed_admin_menu );
 				new CR_Attributes_Product_Feed( $product_feed_admin_menu );
 				new CR_Reviews_Product_Feed( $product_feed_admin_menu );
+				new CR_Import_Reviews( $import_admin_menu );
 				new CR_Export_Reviews( $import_admin_menu );
+				new CR_Import_Qna( $import_admin_menu );
+				new CR_Export_Qna( $import_admin_menu );
 
 				$this->add_plugin_row_meta();
 			}

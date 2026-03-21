@@ -6,24 +6,24 @@
 
 namespace The_SEO_Framework;
 
-\defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) or die;
+( \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) ) or die;
 
-use \The_SEO_Framework\Admin\Settings\Layout\{
+use The_SEO_Framework\Admin\Settings\Layout\{
 	Form,
 	HTML,
 	Input,
 };
-use \The_SEO_Framework\Helper\{
+use The_SEO_Framework\Helper\{
 	Compatibility,
 	Format\Markdown,
 	Query,
 };
 
-// phpcs:disable, WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
+// phpcs:disable WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2016 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2016 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -282,7 +282,7 @@ switch ( $instance ) :
 		HTML::header_title( \__( 'Timestamps Settings', 'autodescription' ) );
 		HTML::description_noesc( Markdown::convert(
 			/* translators: the backticks are Markdown! Preserve them as-is! */
-			\esc_html__( 'The `<lastmod>` tag shows the last updated time of a page. It helps search engines to quickly find content changes via the sitemap.', 'autodescription' )
+			\esc_html__( 'The `<lastmod>` tag shows the last updated time of a page. It helps search engines to quickly find content changes via the sitemap.', 'autodescription' ),
 		) );
 
 		HTML::wrap_fields(
@@ -373,7 +373,7 @@ switch ( $instance ) :
 		</p>
 		<p class=hide-if-no-tsf-js>
 			<?php
-			// phpcs:ignore, WordPress.Security.EscapeOutput.OutputNotEscaped -- already escaped.
+			// phpcs:disable WordPress.Security.EscapeOutput -- already escaped.
 			echo Form::get_image_uploader_form( [
 				'id'   => 'sitemap_logo',
 				'data' => [
@@ -389,6 +389,7 @@ switch ( $instance ) :
 					'button_text'  => \__( 'Select Logo', 'autodescription' ),
 				],
 			] );
+			// phpcs:enable WordPress.Security.EscapeOutput
 			?>
 		</p>
 		<?php

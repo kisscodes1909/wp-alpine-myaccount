@@ -8,17 +8,17 @@ namespace The_SEO_Framework\Helper\Query;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\is_headless;
+use function The_SEO_Framework\is_headless;
 
-use \The_SEO_Framework\Data;
-use \The_SEO_Framework\Helper\{
+use The_SEO_Framework\Data;
+use The_SEO_Framework\Helper\{
 	Post_Type,
 	Taxonomy,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -104,7 +104,7 @@ class Exclusion {
 		}
 
 		// Two separated equals queries are faster than a single IN with 'meta_key'.
-		// phpcs:disable, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- We prepared our whole lives.
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- We prepared our whole lives.
 		$cache = [
 			'archive' => $wpdb->get_results(
 				"SELECT post_id, meta_value FROM $wpdb->postmeta $join WHERE meta_key = 'exclude_from_archive' $where",
@@ -113,7 +113,7 @@ class Exclusion {
 				"SELECT post_id, meta_value FROM $wpdb->postmeta $join WHERE meta_key = 'exclude_local_search' $where",
 			),
 		];
-		// phpcs:enable, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		foreach ( [ 'archive', 'search' ] as $type ) {
 			array_walk(

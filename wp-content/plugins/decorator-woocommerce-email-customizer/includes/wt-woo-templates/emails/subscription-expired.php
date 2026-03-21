@@ -14,10 +14,10 @@ if (!defined('ABSPATH')) {
 <table class="td" cellspacing="0" cellpadding="6" style="width: 100%; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;" border="1">
     <thead>
         <tr>
-            <th class="td" scope="col" style="text-align:left;"><?php esc_html_e('Subscription', 'xa-woocommerce-subscription'); ?></th>
-            <th class="td" scope="col" style="text-align:left;"><?php esc_html_e('Price', 'xa-woocommerce-subscription'); ?></th>
-            <th class="td" scope="col" style="text-align:left;"><?php esc_html_e('Last Order Date', 'xa-woocommerce-subscription'); ?></th>
-            <th class="td" scope="col" style="text-align:left;"><?php esc_html_e('End of Prepaid Term', 'xa-woocommerce-subscription'); ?></th>
+            <th class="td" scope="col" style="text-align:left;"><?php esc_html_e('Subscription', 'decorator-woocommerce-email-customizer'); ?></th>
+            <th class="td" scope="col" style="text-align:left;"><?php esc_html_e('Price', 'decorator-woocommerce-email-customizer'); ?></th>
+            <th class="td" scope="col" style="text-align:left;"><?php esc_html_e('Last Order Date', 'decorator-woocommerce-email-customizer'); ?></th>
+            <th class="td" scope="col" style="text-align:left;"><?php esc_html_e('End of Prepaid Term', 'decorator-woocommerce-email-customizer'); ?></th>
         </tr>
     </thead>
     <tbody>
@@ -34,7 +34,7 @@ if (!defined('ABSPATH')) {
                 if (!empty($last_order_time_created)) {
                     echo esc_html(date_i18n(wc_date_format(), $last_order_time_created));
                 } else {
-                    esc_html_e('-', 'xa-woocommerce-subscription');
+                    echo '-';
                 }
                 ?>
             </td>

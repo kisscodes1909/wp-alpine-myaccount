@@ -7,7 +7,7 @@
 			<strong class="wpo_min_cache_path">
 				<?php
 
-				$cache_path = WPO_MINIFY_PHP_VERSION_MET ? WP_Optimize_Minify_Cache_Functions::cache_path() : array("cachedir" => __('none', 'wp-optimize'));
+				$cache_path = WP_Optimize_Minify_Cache_Functions::cache_path();
 				echo esc_html($cache_path['cachedir']);
 				?>
 			</strong>
@@ -138,12 +138,12 @@
 		<div class="wpo-minify-default-exclusions<?php echo $wpo_minify_options['edit_default_exclutions'] ? '' : ' hidden'; ?>">
 			<h3><?php esc_html_e('Known incompatible files', 'wp-optimize'); ?></h3>
 			<fieldset>
-				<label for="ignore_list">
+				<p>
 					<?php esc_html_e('List of files that can\'t or shouldn\'t be minified or merged.', 'wp-optimize'); ?>
 					<?php esc_html_e('Do not edit this if you are not sure what it is.', 'wp-optimize'); ?>
 					<br><?php esc_html_e('Tick the checkbox to merge / minify the corresponding file anyways.', 'wp-optimize'); ?>
 					<span tabindex="0" data-tooltip="<?php esc_attr_e('Files that have been consistently reported by other users to cause trouble when merged', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span> </span>
-				</label>
+				</p>
 				<?php
 					$user_excluded_ignorelist_items = is_array($wpo_minify_options['ignore_list']) ? $wpo_minify_options['ignore_list'] : array();
 					if (empty($default_ignore)) {
@@ -160,11 +160,11 @@
 
 			<h3><?php esc_html_e('IE incompatible files', 'wp-optimize'); ?></h3>
 			<fieldset>
-				<label for="blacklist">
+				<p>
 					<?php esc_html_e('List of excluded files used for IE compatibility.', 'wp-optimize'); ?>
 					<?php esc_html_e('Do not edit this if you are not sure what it is.', 'wp-optimize'); ?>
 					<br><?php esc_html_e('Tick the checkbox to merge / minify the corresponding file anyways.', 'wp-optimize'); ?>
-				</label>
+				</p>
 				<?php
 					$user_excluded_blacklist_items = is_array($wpo_minify_options['blacklist']) ? $wpo_minify_options['blacklist'] : array();
 					if (empty($default_ie_blacklist)) {
@@ -277,8 +277,11 @@
 	
 			<h1><?php esc_html_e('CDN Options', 'wp-optimize'); ?></h1>
 			<p class="wpo_min-bold-green">
-				<?php printf(esc_html__('When the "Enable defer on processed JavaScript files" option is enabled, JavaScript and CSS files will not be loaded from the CDN due to %scompatibility%s reasons.', 'wp-optimize'), '<a target="_blank" href="https://www.chromestatus.com/feature/5718547946799104">', '</a>'); ?>
-				<?php esc_html_e('However, you can define a CDN Domain below, in order to use it for all of the static assets "inside" your CSS and JS files.', 'wp-optimize'); ?>
+			<?php
+				// translators: %1$s is opening anchor tag and %2$s is closing anchor tag
+				printf(esc_html__('When the "Enable defer on processed JavaScript files" option is enabled, JavaScript and CSS files will not be loaded from the CDN due to %1$scompatibility%2$s reasons.', 'wp-optimize'), '<a target="_blank" href="https://www.chromestatus.com/feature/5718547946799104">', '</a>');
+				esc_html_e('However, you can define a CDN Domain below, in order to use it for all of the static assets "inside" your CSS and JS files.', 'wp-optimize');
+			?>
 			</p>
 	
 			<h3><?php esc_html_e('Your CDN domain', 'wp-optimize'); ?></h3>
@@ -333,7 +336,7 @@
 				type="submit"
 				value="<?php esc_attr_e('Save settings', 'wp-optimize'); ?>"
 			>
-			<img class="wpo_spinner" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); ?>" alt="...">
+			<img class="wpo_spinner" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="...">
 			<span class="save-done dashicons dashicons-yes display-none"></span>
 		</p>
 		<input type="hidden" name="minify_advanced_tab" value="1">

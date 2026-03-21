@@ -6,13 +6,13 @@
 
 namespace The_SEO_Framework;
 
-\defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) or die;
+( \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) ) or die;
 
-// phpcs:disable, WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
+// phpcs:disable WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -42,7 +42,7 @@ if ( THE_SEO_FRAMEWORK_DEBUG ) {
 Sitemap\Registry::output_sitemap_urlset_open_tag();
 
 $sitemap_base = new Sitemap\Optimized\Base; // TODO make static? Why would this need to be instantiated anyway?
-// phpcs:ignore, WordPress.Security.EscapeOutput
+// phpcs:ignore WordPress.Security.EscapeOutput
 echo $sitemap_base->generate_sitemap( $sitemap_id );
 
 Sitemap\Registry::output_sitemap_urlset_close_tag();

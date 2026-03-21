@@ -115,7 +115,7 @@ class Settings {
 	public static function get_settings() {
 		$settings = array();
 		foreach ( array_keys( self::$valid_settings ) as $setting ) {
-			$settings[ $setting ] = self::get_setting( $setting );
+			$settings[ $setting ] = static::get_setting( $setting );
 		}
 
 		return $settings;
@@ -283,6 +283,7 @@ class Settings {
 			/**
 			 * Regular option update and handling
 			 */
+			$updated = false;
 			if ( self::is_network_setting( $setting ) ) {
 				if ( is_multisite() && is_main_site() ) {
 					$updated = update_site_option( self::SETTINGS_OPTION_PREFIX . $setting, $value );
@@ -302,26 +303,6 @@ class Settings {
 			if ( 'dedicated_sync_enabled' === $setting && $updated && (bool) $value ) {
 				if ( ! Dedicated_Sender::can_spawn_dedicated_sync_request() ) {
 					update_option( self::SETTINGS_OPTION_PREFIX . $setting, 0, true );
-				}
-			}
-
-			// Do not enable wpcom rest api if we cannot send a test request.
-
-			if ( 'wpcom_rest_api_enabled' === $setting && $updated && (bool) $value ) {
-				$sender = Sender::get_instance();
-				$data   = array(
-					'timestamp' => microtime( true ),
-				);
-				$items  = $sender->send_action( 'jetpack_sync_wpcom_rest_api_enable_test', $data );
-				// If we can't send a test request, disable the setting and send action tolog the error.
-				if ( is_wp_error( $items ) ) {
-					update_option( self::SETTINGS_OPTION_PREFIX . $setting, 0, true );
-					$data = array(
-						'timestamp'     => microtime( true ),
-						'response_code' => $items->get_error_code(),
-						'response_body' => $items->get_error_message() ?? '',
-					);
-					$sender->send_action( 'jetpack_sync_wpcom_rest_api_enable_error', $data );
 				}
 			}
 		}
@@ -350,7 +331,7 @@ class Settings {
 	 * @return string SQL WHERE clause.
 	 */
 	public static function get_blacklisted_post_types_sql() {
-		return 'post_type NOT IN (\'' . implode( '\', \'', array_map( 'esc_sql', self::get_setting( 'post_types_blacklist' ) ) ) . '\')';
+		return 'post_type NOT IN (\'' . implode( '\', \'', array_map( 'esc_sql', static::get_setting( 'post_types_blacklist' ) ) ) . '\')';
 	}
 
 	/**
@@ -365,7 +346,7 @@ class Settings {
 		return array(
 			'post_type' => array(
 				'operator' => 'NOT IN',
-				'values'   => array_map( 'esc_sql', self::get_setting( 'post_types_blacklist' ) ),
+				'values'   => array_map( 'esc_sql', static::get_setting( 'post_types_blacklist' ) ),
 			),
 		);
 	}
@@ -380,7 +361,25 @@ class Settings {
 	 * @return string SQL WHERE clause.
 	 */
 	public static function get_blacklisted_taxonomies_sql() {
-		return "taxonomy NOT IN ('" . implode( "', '", array_map( 'esc_sql', self::get_setting( 'taxonomies_blacklist' ) ) ) . "')";
+		return "taxonomy NOT IN ('" . implode( "', '", array_map( 'esc_sql', static::get_setting( 'taxonomies_blacklist' ) ) ) . "')";
+	}
+
+	/**
+	 * Returns escaped SQL for whitelisted taxonomies.
+	 * Can be injected directly into a WHERE clause.
+	 *
+	 * @access public
+	 * @static
+	 *
+	 * @return string SQL WHERE clause.
+	 */
+	public static function get_whitelisted_taxonomies_sql() {
+		global $wp_taxonomies;
+
+		$allowed_taxonomies = array_keys( $wp_taxonomies );
+		$allowed_taxonomies = array_diff( $allowed_taxonomies, static::get_setting( 'taxonomies_blacklist' ) );
+
+		return "taxonomy IN ('" . implode( "', '", array_map( 'esc_sql', $allowed_taxonomies ) ) . "')";
 	}
 
 	/**
@@ -393,7 +392,7 @@ class Settings {
 	 * @return string SQL WHERE clause.
 	 */
 	public static function get_whitelisted_post_meta_sql() {
-		return 'meta_key IN (\'' . implode( '\', \'', array_map( 'esc_sql', self::get_setting( 'post_meta_whitelist' ) ) ) . '\')';
+		return 'meta_key IN (\'' . implode( '\', \'', array_map( 'esc_sql', static::get_setting( 'post_meta_whitelist' ) ) ) . '\')';
 	}
 
 	/**
@@ -408,7 +407,7 @@ class Settings {
 		return array(
 			'meta_key' => array(
 				'operator' => 'IN',
-				'values'   => array_map( 'esc_sql', self::get_setting( 'post_meta_whitelist' ) ),
+				'values'   => array_map( 'esc_sql', static::get_setting( 'post_meta_whitelist' ) ),
 			),
 		);
 	}
@@ -425,7 +424,7 @@ class Settings {
 		return array(
 			'taxonomy' => array(
 				'operator' => 'NOT IN',
-				'values'   => array_map( 'esc_sql', self::get_setting( 'taxonomies_blacklist' ) ),
+				'values'   => array_map( 'esc_sql', static::get_setting( 'taxonomies_blacklist' ) ),
 			),
 		);
 	}
@@ -442,7 +441,7 @@ class Settings {
 		global $wp_taxonomies;
 
 		$allowed_taxonomies = array_keys( $wp_taxonomies );
-		$allowed_taxonomies = array_diff( $allowed_taxonomies, self::get_setting( 'taxonomies_blacklist' ) );
+		$allowed_taxonomies = array_diff( $allowed_taxonomies, static::get_setting( 'taxonomies_blacklist' ) );
 		return array(
 			'taxonomy' => array(
 				'operator' => 'IN',
@@ -461,7 +460,7 @@ class Settings {
 	 * @return string SQL WHERE clause.
 	 */
 	public static function get_whitelisted_comment_meta_sql() {
-		return 'meta_key IN (\'' . implode( '\', \'', array_map( 'esc_sql', self::get_setting( 'comment_meta_whitelist' ) ) ) . '\')';
+		return 'meta_key IN (\'' . implode( '\', \'', array_map( 'esc_sql', static::get_setting( 'comment_meta_whitelist' ) ) ) . '\')';
 	}
 
 	/**
@@ -476,7 +475,7 @@ class Settings {
 		return array(
 			'meta_key' => array(
 				'operator' => 'IN',
-				'values'   => array_map( 'esc_sql', self::get_setting( 'comment_meta_whitelist' ) ),
+				'values'   => array_map( 'esc_sql', static::get_setting( 'comment_meta_whitelist' ) ),
 			),
 		);
 	}
@@ -573,7 +572,7 @@ class Settings {
 	 * @return boolean Whether sync is enabled.
 	 */
 	public static function is_sync_enabled() {
-		return ! ( self::get_setting( 'disable' ) || self::get_setting( 'network_disable' ) );
+		return ! ( static::get_setting( 'disable' ) || static::get_setting( 'network_disable' ) );
 	}
 
 	/**
@@ -664,7 +663,7 @@ class Settings {
 	 * @return boolean Whether sync is enabled.
 	 */
 	public static function is_sender_enabled( $queue_id ) {
-		return (bool) self::get_setting( $queue_id . '_sender_enabled' );
+		return (bool) static::get_setting( $queue_id . '_sender_enabled' );
 	}
 
 	/**
@@ -676,7 +675,7 @@ class Settings {
 	 * @return boolean Whether sync is enabled.
 	 */
 	public static function is_checksum_enabled() {
-		return ! (bool) self::get_setting( 'checksum_disable' );
+		return ! (bool) static::get_setting( 'checksum_disable' );
 	}
 
 	/**
@@ -688,7 +687,7 @@ class Settings {
 	 * @return boolean Whether dedicated Sync flow is enabled.
 	 */
 	public static function is_dedicated_sync_enabled() {
-		return (bool) self::get_setting( 'dedicated_sync_enabled' );
+		return (bool) static::get_setting( 'dedicated_sync_enabled' );
 	}
 
 	/**
@@ -700,7 +699,7 @@ class Settings {
 	 * @return boolean Whether custom queue table is enabled.
 	 */
 	public static function is_custom_queue_table_enabled() {
-		return (bool) self::get_setting( 'custom_queue_table_enabled' );
+		return (bool) static::get_setting( 'custom_queue_table_enabled' );
 	}
 
 	/**
@@ -712,6 +711,6 @@ class Settings {
 	 * @return boolean Whether wpcom rest api is enabled.
 	 */
 	public static function is_wpcom_rest_api_enabled() {
-		return (bool) self::get_setting( 'wpcom_rest_api_enabled' );
+		return (bool) static::get_setting( 'wpcom_rest_api_enabled' );
 	}
 }

@@ -31,7 +31,7 @@ class Manager {
 	/**
 	 * A copy of the raw POST data for signature verification purposes.
 	 *
-	 * @var String
+	 * @var string
 	 */
 	protected $raw_post_data;
 
@@ -81,6 +81,28 @@ class Manager {
 	private static $disconnected_users = array();
 
 	/**
+	 * Cached connection status.
+	 *
+	 * @var bool|null True if the site is connected, false if not, null if not determined yet.
+	 */
+	private static $is_connected = null;
+
+	/**
+	 * Memoized user ID of the connection owner.
+	 * If undefined or invalid, set to 0.
+	 *
+	 * @var null|int
+	 */
+	private static $connection_owner_id = null;
+
+	/**
+	 * Tracks whether connection status invalidation hooks have been added.
+	 *
+	 * @var bool
+	 */
+	private static $connection_invalidators_added = false;
+
+	/**
 	 * Initialize the object.
 	 * Make sure to call the "Configure" first.
 	 *
@@ -123,7 +145,9 @@ class Manager {
 			add_filter( 'shutdown', array( new Package_Version_Tracker(), 'maybe_update_package_versions' ) );
 		}
 
-		add_action( 'rest_api_init', array( $manager, 'initialize_rest_api_registration_connector' ) );
+		// This runs on priority 11 - at least one api method in the connection package is set to override a previously
+		// existing method from the Jetpack plugin. Running later than Jetpack's api init ensures the override is successful.
+		add_action( 'rest_api_init', array( $manager, 'initialize_rest_api_registration_connector' ), 11 );
 
 		( new Nonce_Handler() )->init_schedule();
 
@@ -140,6 +164,15 @@ class Manager {
 		add_action( 'deleted_user', array( $manager, 'disconnect_user_force' ), 9, 1 );
 		add_action( 'remove_user_from_blog', array( $manager, 'disconnect_user_force' ), 9, 1 );
 
+		// Add hooks for cleaning up account mismatch transients
+		$user_account_status = new User_Account_Status();
+		add_action( 'delete_user', array( $user_account_status, 'clean_account_mismatch_transients' ), 9, 1 );
+		add_action( 'remove_user_from_blog', array( $user_account_status, 'clean_account_mismatch_transients' ), 9, 1 );
+		add_action( 'user_register', array( $user_account_status, 'clean_account_mismatch_transients' ), 9, 1 );
+		add_action( 'profile_update', array( $user_account_status, 'clean_account_mismatch_transients' ), 9, 1 );
+
+		$manager->add_connection_status_invalidation_hooks();
+
 		// Set up package version hook.
 		add_filter( 'jetpack_package_versions', __NAMESPACE__ . '\Package_Version::send_package_version_to_tracker' );
 
@@ -155,8 +188,29 @@ class Manager {
 
 		// Initial Partner management.
 		Partner::init();
+	}
 
-		add_filter( 'jetpack_admin_js_script_data', array( Initial_State::class, 'set_connection_script_data' ), 10, 1 );
+	/**
+	 * Adds hooks to invalidate the memoized connection status.
+	 */
+	private function add_connection_status_invalidation_hooks() {
+		if ( self::$connection_invalidators_added ) {
+			return;
+		}
+
+		// Force is_connected() to recompute after important actions.
+		add_action( 'jetpack_site_registered', array( $this, 'reset_connection_status' ) );
+		add_action( 'jetpack_site_disconnected', array( $this, 'reset_connection_status' ) );
+		add_action( 'jetpack_sync_register_user', array( $this, 'reset_connection_status' ) );
+		add_action( 'pre_update_jetpack_option_id', array( $this, 'reset_connection_status' ) );
+		add_action( 'pre_update_jetpack_option_blog_token', array( $this, 'reset_connection_status' ) );
+		add_action( 'pre_update_jetpack_option_user_token', array( $this, 'reset_connection_status' ) );
+		add_action( 'pre_update_jetpack_option_user_tokens', array( $this, 'reset_connection_status' ) );
+		add_action( 'pre_update_jetpack_option_master_user', array( $this, 'reset_connection_status' ) );
+		// phpcs:ignore WPCUT.SwitchBlog.SwitchBlog -- wpcom flags **every** use of switch_blog, apparently expecting valid instances to ignore or suppress the sniff.
+		add_action( 'switch_blog', array( $this, 'reset_connection_status' ) );
+
+		self::$connection_invalidators_added = true;
 	}
 
 	/**
@@ -174,7 +228,7 @@ class Manager {
 		$deprecated,
 		$has_connected_owner,
 		$is_signed,
-		Jetpack_XMLRPC_Server $xmlrpc_server = null
+		?Jetpack_XMLRPC_Server $xmlrpc_server = null
 	) {
 		add_filter( 'xmlrpc_blog_options', array( $this, 'xmlrpc_options' ), 1000, 2 );
 		if ( $deprecated !== null ) {
@@ -224,7 +278,7 @@ class Manager {
 			// Hack to preserve $HTTP_RAW_POST_DATA.
 			add_filter( 'xmlrpc_methods', array( $this, 'xmlrpc_methods' ) );
 
-		} elseif ( $has_connected_owner && ! $is_signed ) {
+		} elseif ( $has_connected_owner ) {
 			// The jetpack.authorize method should be available for unauthenticated users on a site with an
 			// active Jetpack connection, so that additional users can link their account.
 			$callback = array( $this->xmlrpc_server, 'authorize_xmlrpc_methods' );
@@ -282,7 +336,7 @@ class Manager {
 		nocache_headers();
 		$wp_xmlrpc_server->serve_request();
 
-		exit;
+		exit( 0 );
 	}
 
 	/**
@@ -324,10 +378,10 @@ class Manager {
 	/**
 	 * Authenticates XML-RPC and other requests from the Jetpack Server
 	 *
-	 * @param WP_User|Mixed $user user object if authenticated.
-	 * @param String        $username username.
-	 * @param String        $password password string.
-	 * @return WP_User|Mixed authenticated user or error.
+	 * @param WP_User|mixed $user user object if authenticated.
+	 * @param string        $username username.
+	 * @param string        $password password string.
+	 * @return WP_User|mixed authenticated user or error.
 	 */
 	public function authenticate_jetpack( $user, $username, $password ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		if ( is_a( $user, '\\WP_User' ) ) {
@@ -397,6 +451,13 @@ class Manager {
 			return false;
 		}
 
+		// Skip XML-RPC signature verification for OAuth authorization flow.
+		// OAuth uses GET requests without body-hash and has its own
+		// signature verification in Authorize_Json_Api class.
+		if ( isset( $_GET['action'] ) && $_GET['action'] === 'jetpack_json_api_authorization' ) {
+			return false;
+		}
+
 		$signature_details = array(
 			'token'     => isset( $_GET['token'] ) ? wp_unslash( $_GET['token'] ) : '',
 			'timestamp' => isset( $_GET['timestamp'] ) ? wp_unslash( $_GET['timestamp'] ) : '',
@@ -417,8 +478,9 @@ class Manager {
 
 		if (
 			empty( $token_key )
-		||
-			empty( $version ) || (string) $jetpack_api_version !== $version ) {
+				|| empty( $version )
+				|| (string) $jetpack_api_version !== $version
+		) {
 			return new \WP_Error( 'malformed_token', 'Malformed token in request', compact( 'signature_details', 'error_type' ) );
 		}
 
@@ -437,7 +499,7 @@ class Manager {
 			$user_id = (int) $user_id;
 
 			$user = new \WP_User( $user_id );
-			if ( ! $user || ! $user->exists() ) {
+			if ( ! $user->exists() ) {
 				return new \WP_Error(
 					'unknown_user',
 					sprintf( 'User %d does not exist', $user_id ),
@@ -560,7 +622,7 @@ class Manager {
 	 *
 	 * @deprecated 1.25.0
 	 * @see Manager::has_connected_owner
-	 * @return Boolean is the site connected?
+	 * @return bool is the site connected?
 	 */
 	public function is_active() {
 		return (bool) $this->get_tokens()->get_access_token( true );
@@ -598,9 +660,31 @@ class Manager {
 	 * @return bool
 	 */
 	public function is_connected() {
-		$has_blog_id    = (bool) \Jetpack_Options::get_option( 'id' );
-		$has_blog_token = (bool) $this->get_tokens()->get_access_token();
-		return $has_blog_id && $has_blog_token;
+		if ( self::$is_connected === null ) {
+			if ( ! self::$connection_invalidators_added ) {
+				$this->add_connection_status_invalidation_hooks();
+			}
+
+			$has_blog_id = (bool) \Jetpack_Options::get_option( 'id' );
+			if ( $has_blog_id ) {
+				self::$is_connected = (bool) $this->get_tokens()->get_access_token();
+			} else {
+				// Short-circuit, no need to check for tokens if there's no blog ID.
+				self::$is_connected = false;
+			}
+		}
+		return self::$is_connected;
+	}
+
+	/**
+	 * Resets the memoized connection status.
+	 * This will force the connection status to be recomputed on the next check.
+	 *
+	 * @since 5.0.0
+	 */
+	public function reset_connection_status() {
+		self::$is_connected        = null;
+		self::$connection_owner_id = null;
 	}
 
 	/**
@@ -744,8 +828,14 @@ class Manager {
 	 * @return bool|int Returns the ID of the connection owner or False if no connection owner found.
 	 */
 	public function get_connection_owner_id() {
-		$owner = $this->get_connection_owner();
-		return $owner instanceof \WP_User ? $owner->ID : false;
+		// Check if the memoized value is available.
+		if ( null === self::$connection_owner_id ) {
+			$owner                     = $this->get_connection_owner();
+			self::$connection_owner_id = $owner instanceof \WP_User ? $owner->ID : 0;
+		}
+
+		// If the ID is set to 0, there's no valid connection owner.
+		return self::$connection_owner_id > 0 ? self::$connection_owner_id : false;
 	}
 
 	/**
@@ -753,7 +843,7 @@ class Manager {
 	 *
 	 * @todo Refactor to properly load the XMLRPC client independently.
 	 *
-	 * @param Integer $user_id the user identifier.
+	 * @param int|null $user_id the user identifier.
 	 * @return bool|array An array with the WPCOM user data on success, false otherwise.
 	 */
 	public function get_connected_user_data( $user_id = null ) {
@@ -795,9 +885,7 @@ class Manager {
 	 * @return WP_User|false False if no connection owner found.
 	 */
 	public function get_connection_owner() {
-
 		$user_id = \Jetpack_Options::get_option( 'master_user' );
-
 		if ( ! $user_id ) {
 			return false;
 		}
@@ -837,8 +925,8 @@ class Manager {
 	 * Returns true if the provided user is the Jetpack connection owner.
 	 * If user ID is not specified, the current user will be used.
 	 *
-	 * @param Integer|Boolean $user_id the user identifier. False for current user.
-	 * @return Boolean True the user the connection owner, false otherwise.
+	 * @param int|bool $user_id the user identifier. False for current user.
+	 * @return bool True the user the connection owner, false otherwise.
 	 */
 	public function is_connection_owner( $user_id = false ) {
 		if ( ! $user_id ) {
@@ -854,9 +942,9 @@ class Manager {
 	 *
 	 * @access public
 	 *
-	 * @param Integer $user_id (optional) the user identifier, defaults to current user.
-	 * @param String  $redirect_url the URL to redirect the user to for processing, defaults to
-	 *                              admin_url().
+	 * @param int|null    $user_id (optional) the user identifier, defaults to current user.
+	 * @param string|null $redirect_url the URL to redirect the user to for processing, defaults to
+	 *                             admin_url().
 	 * @return WP_Error only in case of a failed user lookup.
 	 */
 	public function connect_user( $user_id = null, $redirect_url = null ) {
@@ -877,23 +965,52 @@ class Manager {
 
 		// Using wp_redirect intentionally because we're redirecting outside.
 		wp_redirect( $this->get_authorization_url( $user, $redirect_url ) ); // phpcs:ignore WordPress.Security.SafeRedirect
-		exit();
+		exit( 0 );
 	}
 
 	/**
 	 * Force user disconnect.
 	 *
-	 * @param int $user_id Local (external) user ID.
+	 * @param int  $user_id Local (external) user ID.
+	 * @param bool $disconnect_all_users Whether to disconnect all users before disconnecting the primary user.
 	 *
 	 * @return bool
 	 */
-	public function disconnect_user_force( $user_id ) {
+	public function disconnect_user_force( $user_id, $disconnect_all_users = false ) {
 		if ( ! (int) $user_id ) {
 			// Missing user ID.
 			return false;
 		}
+		// If we are disconnecting the primary user we may need to disconnect all other users first
+		if ( $user_id === $this->get_connection_owner_id() && $disconnect_all_users && ! $this->disconnect_all_users_except_primary() ) {
+			return false;
+		}
 
 		return $this->disconnect_user( $user_id, true, true );
+	}
+
+	/**
+	 * Disconnects all users except the primary user.
+	 *
+	 * @return bool
+	 */
+	public function disconnect_all_users_except_primary() {
+
+		$all_connected_users = $this->get_connected_users();
+
+		foreach ( $all_connected_users as $user ) {
+			// Skip the primary.
+			if ( $user->ID === $this->get_connection_owner_id() ) {
+				continue;
+			}
+			$disconnected = $this->disconnect_user( $user->ID, false, true );
+			// If we fail to disconnect any user, we should not proceed with disconnecting the primary user.
+			if ( ! $disconnected ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -904,10 +1021,10 @@ class Manager {
 	 *
 	 * @todo Refactor to properly load the XMLRPC client independently.
 	 *
-	 * @param Integer $user_id the user identifier.
-	 * @param bool    $can_overwrite_primary_user Allow for the primary user to be disconnected.
-	 * @param bool    $force_disconnect_locally Disconnect user locally even if we were unable to disconnect them from WP.com.
-	 * @return Boolean Whether the disconnection of the user was successful.
+	 * @param int|null $user_id the user identifier.
+	 * @param bool     $can_overwrite_primary_user Allow for the primary user to be disconnected.
+	 * @param bool     $force_disconnect_locally Disconnect user locally even if we were unable to disconnect them from WP.com.
+	 * @return bool Whether the disconnection of the user was successful.
 	 */
 	public function disconnect_user( $user_id = null, $can_overwrite_primary_user = false, $force_disconnect_locally = false ) {
 		$user_id         = empty( $user_id ) ? get_current_user_id() : (int) $user_id;
@@ -927,6 +1044,10 @@ class Manager {
 
 		$is_disconnected_locally = false;
 		if ( $is_disconnected_from_wpcom || $force_disconnect_locally ) {
+			// Get the WordPress.com email before disconnecting the user
+			$wpcom_user_data = $this->get_connected_user_data( $user_id );
+			$wpcom_email     = isset( $wpcom_user_data['email'] ) ? $wpcom_user_data['email'] : null;
+
 			// Disconnect the user locally.
 			$is_disconnected_locally = $this->get_tokens()->disconnect_user( $user_id );
 
@@ -934,6 +1055,12 @@ class Manager {
 				// Delete cached connected user data.
 				$transient_key = "jetpack_connected_user_data_$user_id";
 				delete_transient( $transient_key );
+
+				// Clean up account mismatch transients for this user
+				if ( $wpcom_email ) {
+					$user_account_status = new User_Account_Status();
+					$user_account_status->clean_account_mismatch_transients( $wpcom_email );
+				}
 
 				/**
 				 * Fires after the current user has been unlinked from WordPress.com.
@@ -947,6 +1074,9 @@ class Manager {
 
 				if ( $is_primary_user ) {
 					Jetpack_Options::delete_option( 'master_user' );
+
+					// Clear the memoized connection owner ID since it changed
+					self::$connection_owner_id = null;
 				}
 			}
 		}
@@ -980,7 +1110,7 @@ class Manager {
 	 *
 	 * @since 1.29.0
 	 *
-	 * @param Integer $new_owner_id The ID of the user to become the connection owner.
+	 * @param int $new_owner_id The ID of the user to become the connection owner.
 	 *
 	 * @return true|WP_Error True if owner successfully changed, WP_Error otherwise.
 	 */
@@ -1020,6 +1150,9 @@ class Manager {
 			// This will ensure consistency with WPCOM.
 			\Jetpack_Options::update_option( 'master_user', $new_owner_id );
 
+			// Clear the memoized connection owner ID since it changed
+			self::$connection_owner_id = null;
+
 			// Track it.
 			( new Tracking() )->record_user_event( 'set_connection_owner_success' );
 
@@ -1037,9 +1170,9 @@ class Manager {
 	 *
 	 * @since 1.29.0
 	 *
-	 * @param Integer $new_owner_id The ID of the user to become the connection owner.
+	 * @param int $new_owner_id The ID of the user to become the connection owner.
 	 *
-	 * @return Boolean Whether the ownership transfer was successful.
+	 * @return bool Whether the ownership transfer was successful.
 	 */
 	public function update_connection_owner_wpcom( $new_owner_id ) {
 		// Notify WPCOM about the connection owner change.
@@ -1064,8 +1197,8 @@ class Manager {
 	/**
 	 * Returns the requested Jetpack API URL.
 	 *
-	 * @param String $relative_url the relative API path.
-	 * @return String API URL.
+	 * @param string $relative_url the relative API path.
+	 * @return string API URL.
 	 */
 	public function api_url( $relative_url ) {
 		$api_base    = Constants::get_constant( 'JETPACK__API_BASE' );
@@ -1077,10 +1210,10 @@ class Manager {
 		 * @since 1.7.0
 		 * @since-jetpack 8.0.0
 		 *
-		 * @param String $url the generated URL.
-		 * @param String $relative_url the relative URL that was passed as an argument.
-		 * @param String $api_base the API base string that is being used.
-		 * @param String $api_version the API version string that is being used.
+		 * @param string $url the generated URL.
+		 * @param string $relative_url the relative URL that was passed as an argument.
+		 * @param string $api_base the API base string that is being used.
+		 * @param string $api_version the API version string that is being used.
 		 */
 		return apply_filters(
 			'jetpack_api_url',
@@ -1094,7 +1227,7 @@ class Manager {
 	/**
 	 * Returns the Jetpack XMLRPC WordPress.com API endpoint URL.
 	 *
-	 * @return String XMLRPC API URL.
+	 * @return string XMLRPC API URL.
 	 */
 	public function xmlrpc_api_url() {
 		$base = preg_replace(
@@ -1110,7 +1243,7 @@ class Manager {
 	 * remain public because the call to action comes from the current site, not from
 	 * WordPress.com.
 	 *
-	 * @param String $api_endpoint (optional) an API endpoint to use, defaults to 'register'.
+	 * @param string $api_endpoint (optional) an API endpoint to use, defaults to 'register'.
 	 * @return true|WP_Error The error object.
 	 */
 	public function register( $api_endpoint = 'register' ) {
@@ -1366,7 +1499,7 @@ class Manager {
 	 * @since 1.7.0
 	 * @since-jetpack 2.6.0
 	 *
-	 * @param Mixed $response the response object, or the error object.
+	 * @param mixed $response the response object, or the error object.
 	 * @return string|WP_Error A JSON object on success or WP_Error on failures
 	 **/
 	protected function validate_remote_register_response( $response ) {
@@ -1507,6 +1640,16 @@ class Manager {
 				// With site connections in mind, non-admin users can connect their account only if a connection owner exists.
 				$caps = $this->has_connected_owner() ? array( 'read' ) : array( 'manage_options' );
 				break;
+			case 'jetpack_unlink_user':
+				$is_offline_mode = ( new Status() )->is_offline_mode();
+				if ( $is_offline_mode ) {
+					$caps = array( 'do_not_allow' );
+					break;
+				}
+
+				// Non-admins can always disconnect
+				$caps = array( 'read' );
+				break;
 		}
 		return $caps;
 	}
@@ -1535,7 +1678,7 @@ class Manager {
 	 *
 	 * @since 1.7.0
 	 * @since-jetpack 5.4.0
-	 * @param Integer $min_timeout the minimum timeout value.
+	 * @param int $min_timeout the minimum timeout value.
 	 **/
 	public function set_min_time_limit( $min_timeout ) {
 		$timeout = $this->get_max_execution_time();
@@ -1563,12 +1706,17 @@ class Manager {
 			return $cached_date;
 		}
 
+		/**
+		 * We don't use the 'ID' field, but need it to overcome a WP caching bug: https://core.trac.wordpress.org/ticket/62003
+		 *
+		 * @todo Remote the 'ID' field from users fetching when the issue is fixed and Jetpack-supported WP versions move beyond it.
+		 */
 		$earliest_registered_users  = get_users(
 			array(
 				'role'    => 'administrator',
 				'orderby' => 'user_registered',
 				'order'   => 'ASC',
-				'fields'  => array( 'user_registered' ),
+				'fields'  => array( 'ID', 'user_registered' ),
 				'number'  => 1,
 			)
 		);
@@ -1606,16 +1754,16 @@ class Manager {
 	 * @return array $amended arguments.
 	 */
 	public static function apply_activation_source_to_args( $args ) {
-		list( $activation_source_name, $activation_source_keyword ) = get_option( 'jetpack_activation_source' );
+		$activation_source = get_option( 'jetpack_activation_source' );
 
-		if ( $activation_source_name ) {
+		if ( ! empty( $activation_source[0] ) ) {
 			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.urlencode_urlencode
-			$args['_as'] = urlencode( $activation_source_name );
+			$args['_as'] = urlencode( $activation_source[0] );
 		}
 
-		if ( $activation_source_keyword ) {
+		if ( ! empty( $activation_source[1] ) ) {
 			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.urlencode_urlencode
-			$args['_ak'] = urlencode( $activation_source_keyword );
+			$args['_ak'] = urlencode( $activation_source[1] );
 		}
 
 		return $args;
@@ -1624,9 +1772,9 @@ class Manager {
 	/**
 	 * Generates two secret tokens and the end of life timestamp for them.
 	 *
-	 * @param String  $action  The action name.
-	 * @param Integer $user_id The user identifier.
-	 * @param Integer $exp     Expiration time in seconds.
+	 * @param string   $action  The action name.
+	 * @param int|bool $user_id The user identifier.
+	 * @param int      $exp     Expiration time in seconds.
 	 */
 	public function generate_secrets( $action, $user_id = false, $exp = 600 ) {
 		return ( new Secrets() )->generate( $action, $user_id, $exp );
@@ -1637,8 +1785,8 @@ class Manager {
 	 *
 	 * @deprecated 1.24.0 Use Automattic\Jetpack\Connection\Secrets->get() instead.
 	 *
-	 * @param String  $action  The action name.
-	 * @param Integer $user_id The user identifier.
+	 * @param string $action  The action name.
+	 * @param int    $user_id The user identifier.
 	 * @return string|array an array of secrets or an error string.
 	 */
 	public function get_secrets( $action, $user_id ) {
@@ -1651,8 +1799,8 @@ class Manager {
 	 *
 	 * @deprecated 1.24.0 Use Automattic\Jetpack\Connection\Secrets->delete() instead.
 	 *
-	 * @param String  $action  The action name.
-	 * @param Integer $user_id The user identifier.
+	 * @param string $action  The action name.
+	 * @param int    $user_id The user identifier.
 	 */
 	public function delete_secrets( $action, $user_id ) {
 		_deprecated_function( __METHOD__, '1.24.0', 'Automattic\\Jetpack\\Connection\\Secrets->delete' );
@@ -1693,6 +1841,9 @@ class Manager {
 				'fallback_no_verify_ssl_certs',
 			)
 		);
+
+		// Clear the memoized connection owner ID since it changed
+		self::$connection_owner_id = null;
 
 		( new Secrets() )->delete_all();
 		$this->get_tokens()->delete_all();
@@ -2126,6 +2277,8 @@ class Manager {
 		wp_clear_scheduled_hook( 'jetpack_clean_nonces' );
 
 		( new Nonce_Handler() )->clean_all();
+
+		Heartbeat::init()->deactivate();
 
 		/**
 		 * Fires before a site is disconnected.
@@ -2604,6 +2757,8 @@ class Manager {
 	/**
 	 * If the site-level connection is active, add the list of plugins using connection to the heartbeat (except Jetpack itself)
 	 *
+	 * @since 6.11.0 Add the list of Jetpack package versions to the heartbeat.
+	 *
 	 * @param array $stats The Heartbeat stats array.
 	 * @return array $stats
 	 */
@@ -2620,6 +2775,9 @@ class Manager {
 				$stats[ $stats_group ][] = $plugin_slug;
 			}
 		}
+
+		$stats['jetpack_package_versions'] = apply_filters( 'jetpack_package_versions', array() );
+
 		return $stats;
 	}
 

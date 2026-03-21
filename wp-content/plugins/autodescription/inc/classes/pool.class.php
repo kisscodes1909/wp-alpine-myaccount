@@ -8,11 +8,11 @@ namespace The_SEO_Framework;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\Traits\Internal\Static_Deprecator;
+use The_SEO_Framework\Traits\Internal\Static_Deprecator;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -39,6 +39,7 @@ use \The_SEO_Framework\Traits\Internal\Static_Deprecator;
  *        Instead, use tsf()->admin()->layout()->make_single_select_form();
  *        Failing to do so might result in a crash when we need to deprecate a call,
  *        defeating the purpose of the static deprecator.
+ * @NOTE: All static:: calls within this class are intentional, to allow overrides in deprecators.
  *
  * @todo: If the subobjects require complex fallbacks, put them in a new \Internal
  *        subobject. Create private class constant to hold that class location.
@@ -55,7 +56,7 @@ class Pool extends Legacy_API {
 	 */
 	private static $pool = [];
 
-	// phpcs:disable, Squiz.Commenting.VariableComment.Missing -- see trait Static_Deprecator.
+	// phpcs:disable Squiz.Commenting.VariableComment.Missing -- see trait Static_Deprecator.
 
 	/**
 	 * Returns a pool of Admin classes as instantiated object with deprecation capabilities.
@@ -425,7 +426,7 @@ class Pool extends Legacy_API {
 		return static::$pool['escape'] ??= new class extends Data\Filter\Escape {
 			use Static_Deprecator;
 
-			private $colloquial_handle     = 'tsf()->filter()->escape()';
+			private $colloquial_handle     = 'tsf()->escape()';
 			private $deprecated_methods    = [];
 			private $deprecated_properties = [];
 		};
@@ -802,7 +803,7 @@ class Pool extends Legacy_API {
 		return static::$pool['sanitize'] ??= new class extends Data\Filter\Sanitize {
 			use Static_Deprecator;
 
-			private $colloquial_handle     = 'tsf()->filter()->sanitize()';
+			private $colloquial_handle     = 'tsf()->sanitize()';
 			private $deprecated_methods    = [];
 			private $deprecated_properties = [];
 		};

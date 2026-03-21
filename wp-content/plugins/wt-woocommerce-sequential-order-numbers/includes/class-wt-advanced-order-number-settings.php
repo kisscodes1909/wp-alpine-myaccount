@@ -116,7 +116,8 @@ class Wt_Advanced_Order_Number_Settings_Page extends WC_Settings_Page {
 				array(
 					'name' => ' ',
 					'type' => 'title',
-					'desc' =>  sprintf(__("%sRead documentation%s", 'wt-woocommerce-sequential-order-numbers'), '<a href="https://www.webtoffee.com/sequential-order-number-woocommerce-plugin-user-guide/" target="_blank">', '</a>'),
+					// translators: %1$s: open anchor tag with documentation link, %2$s: close anchor tag
+					'desc' =>  sprintf(__('%1$sRead documentation%2$s', 'wt-woocommerce-sequential-order-numbers'), '<a href="https://www.webtoffee.com/sequential-order-number-woocommerce-plugin-user-guide/" target="_blank">', '</a>'),
 					'id' => 'wt_sequencial_documentation',
 				),
 				array(
@@ -145,7 +146,8 @@ class Wt_Advanced_Order_Number_Settings_Page extends WC_Settings_Page {
 				),
 				array(
 					'title'    => __( 'Order date format', 'wt-woocommerce-sequential-order-numbers' ),
-					'desc'     => sprintf(__("Pick a date format from a list of %s predefined formats %s. You can use alphanumeric characters as separators.", 'wt-woocommerce-sequential-order-numbers'), '<a class="wt_seq_num_frmt_hlp_btn" data-wf-trget="wt_sequence_order_date_prefix">', '</a>'),
+					// translators: %1$s: open anchor tag with help button, %2$s: close anchor tag
+					'desc'     => sprintf(__('Pick a date format from a list of %1$s predefined formats %2$s. You can use alphanumeric characters as separators.', 'wt-woocommerce-sequential-order-numbers'), '<a class="wt_seq_num_frmt_hlp_btn" data-wf-trget="wt_sequence_order_date_prefix">', '</a>'),
 					'desc_tip' => __( ' Order date prefix will appear after default prefix', 'wt-woocommerce-sequential-order-numbers' ),
 					'id'       => 'wt_sequence_order_date_prefix',
 					'type' => 'text',
@@ -247,7 +249,8 @@ class Wt_Advanced_Order_Number_Settings_Page extends WC_Settings_Page {
 				array(
 					'name' => ' ',
 					'type' => 'title',
-					'desc' =>  sprintf(__("Unlock the pro benefits by upgrading to %s Sequential Order Number for WooCommerce Pro%s ", 'wt-woocommerce-sequential-order-numbers'), '<a href="https://www.webtoffee.com/product/woocommerce-sequential-order-numbers/?utm_source=free_plugin_listing&utm_medium=sequential_free&utm_campaign=Sequential_Order_Numbers&utm_content='.WT_SEQUENCIAL_ORDNUMBER_VERSION.'" target="_blank">', '</a>'),
+					// translators: %1$s: open anchor tag with pro link, %2$s: close anchor tag
+					'desc' =>  sprintf(__('Unlock the pro benefits by upgrading to %1$s Sequential Order Number for WooCommerce Pro%2$s ', 'wt-woocommerce-sequential-order-numbers'), '<a href="https://www.webtoffee.com/product/woocommerce-sequential-order-numbers/?utm_source=free_plugin_listing&utm_medium=sequential_free&utm_campaign=Sequential_Order_Numbers&utm_content='.WT_SEQUENCIAL_ORDNUMBER_VERSION.'" target="_blank">', '</a>'),
 					'id' => 'wt_sequencial_pro_version_link',
 				),
 				array(
@@ -269,9 +272,9 @@ class Wt_Advanced_Order_Number_Settings_Page extends WC_Settings_Page {
 		$settings = $this->get_settings();
  		echo'<div class="wfte_branding" style="float:right; text-align:end;">
         		<div class="wfte_branding_label" style="width:100%;padding-bottom:10px;font-size:11px;font-weight:600;">';
-        		_e('Sequential order numbers for WooCommerce | Developed by', 'wt-woocommerce-sequential-order-numbers');
+        		esc_html_e('Sequential order numbers for WooCommerce | Developed by', 'wt-woocommerce-sequential-order-numbers');
         echo    '</div>
-        		<div style="width: 100%;">'.$webtoffee_logo.'</div>
+        		<div style="width: 100%;">'.wp_kses_post($webtoffee_logo).'</div>
         	</div>';
 
         echo '<div class="wt_seq_order_settings_left" style="float:left; width:75%;">';
@@ -280,6 +283,14 @@ class Wt_Advanced_Order_Number_Settings_Page extends WC_Settings_Page {
 
 		echo '</div>';
 
+		// WooCommerce save button overlaps the woo review seeking nudge.
+		echo '<style>
+		.woocommerce-save-button {
+			margin-bottom: 30px;
+		}
+		</style>';
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if(isset($_GET['page']) && 'wc-settings' === $_GET['page'] && isset($_GET['tab']) && 'wts_settings' === $_GET['tab'] && ((isset($_GET['section']) && '' === $_GET['section'] ) || !isset($_GET['section'])))
         {
 			echo '<div class="wt_seq_order_settings_right" style="float:left; width:25%; margin-top:114px;">';
@@ -287,20 +298,23 @@ class Wt_Advanced_Order_Number_Settings_Page extends WC_Settings_Page {
 			echo '</div>';
 		}
 
-		// add goto pro section in general settings page.
+		// Add goto pro section in general settings page.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if(isset($_GET['page']) && 'wc-settings' === $_GET['page'] && isset($_GET['tab']) && 'wts_settings' === $_GET['tab'] && ((isset($_GET['section']) && '' === $_GET['section']) || !isset($_GET['section'])))
         {
 			do_action('wt_sequential_goto_pro_section_bottom');
 		}
 
-		// add free_vs_pro page
+		// Add free_vs_pro page.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if(isset($_GET['page']) && 'wc-settings' === $_GET['page'] && isset($_GET['tab']) && 'wts_settings' === $_GET['tab']&& isset($_GET['section']) && 'free_vs_pro' === $_GET['section'])
         {
 			do_action('wt_sequential_free_vs_pro_section');
 			do_action('wt_sequential_free_vs_pro_section_bottom');
 		}
 
-		// add other solutions page
+		// Add other solutions page.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if(isset($_GET['page']) && 'wc-settings' === $_GET['page'] && isset($_GET['tab']) && 'wts_settings' === $_GET['tab'] && isset($_GET['section']) && 'other_solution' === $_GET['section'] )
         {
 			do_action('wt_sequential_other_solution_section');

@@ -72,7 +72,6 @@ class AfterShip_API_Authentication {
 		$key   = 'AFTERSHIP_WP_KEY';
 		$key1  = str_replace( ' ', '-', ucwords( strtolower( str_replace( '_', ' ', $key ) ) ) );
 		$key2  = 'AFTERSHIP-WP-KEY';
-		$qskey = isset( $_GET['key'] ) ? $_GET['key'] : null;
 
 		// get aftership wp key
 		if ( ! empty( $headers[ $key ] ) ) {
@@ -81,10 +80,8 @@ class AfterShip_API_Authentication {
 			$api_key = $headers[ $key1 ];
 		} elseif ( ! empty( $headers[ $key2 ] ) ) {
 			$api_key = $headers[ $key2 ];
-		} elseif ( ! empty( $qskey ) ) {
-			$api_key = $qskey;
 		} else {
-			throw new Exception( __( 'AfterShip\'s WordPress Key is missing', 'aftership' ), 404 );
+			throw new Exception( __( 'AfterShip\'s WordPress Key is missing', 'aftership' ), 401 );
 		}
 
 		$user = $this->get_user_by_api_key( $api_key );

@@ -7,11 +7,20 @@ if (!class_exists('WP_Optimize_Load_Url_Task')) {
 }
 
 class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
-
+	
+	/**
+	 * @var string
+	 */
 	protected $preload_type = 'page_cache';
-
+	
+	/**
+	 * @var string
+	 */
 	protected $task_type = 'load-url-task';
-
+	
+	/**
+	 * @var null | WP_Optimize_Page_Cache_Preloader
+	 */
 	static protected $_instance = null;
 
 	/**
@@ -59,7 +68,7 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 
 			$last_schedule_type = $previous_settings['preload_schedule_type'];
 
-			$last_use_nighttime = $this->options->get_option('page_cache_schedule_preload_nighttime');
+			$last_use_nighttime = (int) $this->options->get_option('page_cache_schedule_preload_nighttime');
 			// By default, we schedule preload events to the nighttime.
 			$use_nighttime = apply_filters('wpo_page_cache_schedule_preload_use_nighttime', 1);
 
@@ -67,11 +76,11 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 
 			if (wp_next_scheduled('wpo_page_cache_schedule_preload')) {
 				// if already scheduled this schedule type
-				if ($new_settings['preload_schedule_type'] == $last_schedule_type && ($last_use_nighttime === $use_nighttime)) {
+				if ($new_settings['preload_schedule_type'] === $last_schedule_type && ($last_use_nighttime === $use_nighttime)) {
 					// If the schedule type is cache lifespan, check if the cache lifespan changed.
-					if ('wpo_use_cache_lifespan' == $new_settings['preload_schedule_type']) {
+					if ('wpo_use_cache_lifespan' === $new_settings['preload_schedule_type']) {
 						// Else, if the settings cache lifespan settings haven't changed, returns
-						if ($new_settings['page_cache_length_value'] == $previous_settings['page_cache_length_value'] && $new_settings['page_cache_length_unit'] == $previous_settings['page_cache_length_unit']) {
+						if ($new_settings['page_cache_length_value'] === $previous_settings['page_cache_length_value'] && $new_settings['page_cache_length_unit'] === $previous_settings['page_cache_length_unit']) {
 							return;
 						}
 					} else {
@@ -139,7 +148,7 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 		if (!$schedule_type) return;
 
 		// Don't run preload if cache lifespan option enabled and cache not expired yet.
-		if ('wpo_use_cache_lifespan' == $schedule_type) {
+		if ('wpo_use_cache_lifespan' === $schedule_type) {
 
 			/**
 			 * Filters the allowed time difference between the cache exiry and the current time, in seconds.
@@ -181,6 +190,8 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 	/**
 	 * Get cache config option value.
 	 *
+	 * @param string $option
+	 *
 	 * @return mixed
 	 */
 	public function get_cache_config($option) {
@@ -208,8 +219,10 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 
 			$this->log(__('Creating tasks for preload site urls.', 'wp-optimize'));
 
+			$wpo_cache_specific_urls_only = wpo_cache_specific_urls_only();
+
 			foreach ($urls as $url) {
-				if (wpo_url_in_exceptions($url)) continue;
+				if (!$wpo_cache_specific_urls_only && wpo_url_in_exceptions($url)) continue;
 
 				if ($this->url_is_already_cached($url, $type)) {
 					continue;
@@ -244,7 +257,7 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 
 		$mobile_args = array(
 			'httpversion' => '1.1',
-			'user-agent'  => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1',
+			'user-agent'  => WP_Optimize_Utils::get_user_agent('mobile'),
 			'timeout'     => 10,
 			'headers'     => apply_filters('wpo_preload_headers', array()),
 		);
@@ -268,7 +281,7 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 
 		$amp_args = array(
 			'httpversion' => '1.1',
-			'user-agent'  => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.89 Safari/537.36',
+			'user-agent'  => WP_Optimize_Utils::get_user_agent(),
 			'timeout'     => 10,
 			'headers'     => array(
 				'X-WP-Optimize-Cache-Preload' => 'Yes',
@@ -300,6 +313,7 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 			$this->options->update_option('wpo_last_page_cache_preload_type', 'posts');
 		}
 
+		// translators: %d: Number of URLs found
 		$this->log(sprintf(_n('%d url found.', '%d urls found.', count($urls), 'wp-optimize'), count($urls)));
 
 		/**
@@ -336,10 +350,10 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 		// if we get error then
 		// sometimes returns error due to timeout
 		if (is_wp_error($response)) {
-			$response = file_get_contents($sitemap_url);
+			$response = @file_get_contents($sitemap_url); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress warnings when there is network error
 
 			// if response is empty then try load from file.
-			if (empty($response) && '' == $sitemap_url) {
+			if (empty($response)) {
 				$sitemap_file = $this->get_local_sitemap_file();
 
 				if (is_file($sitemap_file)) {
@@ -418,7 +432,7 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 				if (count($matches[0])) {
 					$prefix = strpos($permalink, '?') ? '&page=' : '';
 					for ($page = 0; $page < count($matches[0]); $page++) {
-						if ('' != $prefix) {
+						if ('' !== $prefix) {
 							$urls[] = $permalink . $prefix . ($page+2);
 						} else {
 							$urls[] = trailingslashit($permalink) . ($page+2);
@@ -458,7 +472,7 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 	 */
 	public function is_domain_mapping_enabled() {
 		// SUNRISE constant is defined with installation WordPress MU Domain Mapping plugin.
-		$enabled = is_multisite() && defined('SUNRISE') && 'on' == strtolower(SUNRISE);
+		$enabled = is_multisite() && defined('SUNRISE') && 'on' === strtolower(SUNRISE);
 
 		/**
 		 * Filters if Multisite Domain mapping is enabled.
@@ -481,9 +495,9 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 		$domain = '';
 		$multisite_plugin_table_name = $wpdb->base_prefix.'domain_mapping';
 		// Check if table exists
-		if ($wpdb->get_var("SHOW TABLES LIKE '$multisite_plugin_table_name'") != $multisite_plugin_table_name) {
+		if ($wpdb->get_var("SHOW TABLES LIKE '" . esc_sql($multisite_plugin_table_name) . "'") !== $multisite_plugin_table_name) {
 			// This table created in WordPress MU Domain Mapping plugin.
-			$row = $wpdb->get_row("SELECT `domain` FROM {$multisite_plugin_table_name} WHERE `blog_id` = {$blog_id} AND `active` = 1", ARRAY_A);
+			$row = $wpdb->get_row($wpdb->prepare("SELECT `domain` FROM " .esc_sql($multisite_plugin_table_name) . " WHERE `blog_id` = %d AND `active` = %d", $blog_id, 1), ARRAY_A);
 			if (!empty($row)) {
 				$domain = $row['domain'];
 			}
@@ -507,8 +521,9 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 	 * @return void
 	 */
 	public function create_tasks_for_auto_preload_urls() {
+		$wpo_cache_specific_urls_only = wpo_cache_specific_urls_only();
 		foreach ($this->url_preload_list as $url) {
-			if (wpo_url_in_exceptions($url)) continue;
+			if (!$wpo_cache_specific_urls_only && wpo_url_in_exceptions($url)) continue;
 
 			$description = 'Preload - '.$url;
 			$options = array('url' => $url, 'preload_type' => 'manual', 'anonymous_user_allowed' => (defined('DOING_CRON') && DOING_CRON) || (defined('WP_CLI') && WP_CLI));
@@ -532,8 +547,8 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 	/**
 	 * Captures and logs any interesting messages
 	 *
-	 * @param String $message    - the error message
-	 * @param String $error_type - the error type
+	 * @param string $message    - the error message
+	 * @param string $error_type - the error type
 	 */
 	public function log($message, $error_type = 'info') {
 
@@ -590,14 +605,14 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 			}
 
 			if ($this->should_regenerate_file($file_path, $preload_type)) {
-				// delefe the expired cache file
-				unlink($file_path);
+				// delete the expired cache file
+				wp_delete_file($file_path);
 				$regenerate_count++;
 			}
 		}
 
 		// if 0 == $regenerate_count, nothing all the expected files exist, and none were deleted.
-		return 0 == $regenerate_count;
+		return 0 === $regenerate_count;
 	}
 
 	/**
@@ -623,7 +638,7 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 		if (null === $is_preloader_scheduled) {
 			$is_preloader_scheduled = WPO_Cache_Config::instance()->get_option('enable_schedule_preload');
 			$schedule_type = WPO_Cache_Config::instance()->get_option('preload_schedule_type');
-			$lifespan = WPO_Cache_Config::instance()->get_option('page_cache_length');
+			$lifespan = (int) WPO_Cache_Config::instance()->get_option('page_cache_length');
 			$schedule_interval = $this->get_schedule_interval($schedule_type);
 
 			/**
@@ -647,14 +662,14 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 			$regenerate_file_when_no_expiry_date = apply_filters('wpo_regenerate_file_when_no_expiry_date', true);
 		}
 
-		if (($always_regenerate_file_if_preload_is_manual && 'manual' == $preload_type) || ($always_regenerate_file_if_preload_is_scheduled && 'scheduled' == $preload_type)) {
+		if (($always_regenerate_file_if_preload_is_manual && 'manual' === $preload_type) || ($always_regenerate_file_if_preload_is_scheduled && 'scheduled' === $preload_type)) {
 			$result = true;
 		} else {
 
 			$modified_time = (int) filemtime($path);
 
 			// cache lifespan is set.
-			if (0 != $lifespan) {
+			if (0 !== $lifespan) {
 				$expiry_time = $modified_time + $lifespan - $lifespan_expiry_threshold;
 				$result = time() > $expiry_time;
 			} elseif ($is_preloader_scheduled) {
@@ -671,6 +686,8 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 
 	/**
 	 * Add preloader headers
+	 *
+	 * @param array $headers Preload headers
 	 */
 	public function preload_headers($headers) {
 		$headers['X-WP-Optimize-Cache-Preload'] = 'Yes';
@@ -700,11 +717,23 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 			'error' => __('Probably page cache preload is running already.', 'wp-optimize')
 		);
 	}
-
+	
+	/**
+	 * Returns preload data
+	 *
+	 * @return array
+	 */
 	protected function get_preload_data() {
 		return WP_Optimize()->get_page_cache()->get_cache_size();
 	}
-
+	
+	/**
+	 * Returns preloading message
+	 *
+	 * @param array $cache_size
+	 *
+	 * @return array
+	 */
 	protected function get_preloading_message($cache_size) {
 		return array(
 			'done' => false,
@@ -713,16 +742,32 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 			'file_count' => $cache_size['file_count']
 		);
 	}
-
+	
+	/**
+	 * Returns last preload message
+	 *
+	 * @param array  $cache_size
+	 * @param string $last_preload_time_str
+	 *
+	 * @return array
+	 */
 	protected function get_last_preload_message($cache_size, $last_preload_time_str) {
 		return array(
 			'done' => true,
+			// translators: %s is the last preload time
 			'message' => sprintf(__('Last preload finished at %s', 'wp-optimize'), $last_preload_time_str),
 			'size' => WP_Optimize()->format_size($cache_size['size']),
 			'file_count' => $cache_size['file_count']
 		);
 	}
-
+	
+	/**
+	 * Returns preload success message
+	 *
+	 * @param array $cache_size
+	 *
+	 * @return array
+	 */
 	protected function get_preload_success_message($cache_size) {
 		return array(
 			'done' => true,
@@ -730,7 +775,16 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 			'file_count' => $cache_size['file_count']
 		);
 	}
-
+	
+	/**
+	 * Returns preload progress message
+	 *
+	 * @param array  $cache_size
+	 * @param string $preloaded_message
+	 * @param int    $preload_resuming_in
+	 *
+	 * @return array
+	 */
 	protected function get_preload_progress_message($cache_size, $preloaded_message, $preload_resuming_in) {
 		return array(
 			'done' => false,
@@ -753,8 +807,8 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 		$gmt_offset = WP_Optimize_Utils::get_gmt_offset();
 
 		// Set time to random time from 1 a.m. to 4:59 a.m.
-		$random_time = sprintf('%02d:%02d', rand(1, 4), rand(0, 59));
-		$nighttime = strtotime(date("Y-m-d {$random_time}:00", $time)) - $gmt_offset;
+		$random_time = sprintf('%02d:%02d', wp_rand(1, 4), wp_rand(0, 59));
+		$nighttime = strtotime(gmdate("Y-m-d {$random_time}:00", $time)) - $gmt_offset;
 		
 		if ($nighttime < time()) $nighttime += 24 * 3600;
 

@@ -32,11 +32,6 @@ if ( ! class_exists( 'CR_Reviews_Grid' ) ) {
 			add_action( 'wp_ajax_cr_fetch_product_tags', array( $this, 'fetch_product_tags' ) );
 			add_action( 'wp_ajax_ivole_show_more_grid_reviews', array( $this, 'show_more_reviews' ) );
 			add_action( 'wp_ajax_nopriv_ivole_show_more_grid_reviews', array( $this, 'show_more_reviews' ) );
-			if ( class_exists( 'WP_Block_Editor_Context' ) ) {
-				add_filter( 'block_editor_settings_all', array( $this, 'add_block_editor_settings' ), 10, 2 );
-			} else {
-				add_filter( 'block_editor_settings', array( $this, 'add_block_editor_settings' ), 10, 2 );
-			}
 		}
 
 		/**
@@ -65,15 +60,6 @@ if ( ! class_exists( 'CR_Reviews_Grid' ) ) {
 			}
 		}
 
-		/**
-		* Returns the review grid markup.
-		*
-		* @since 3.61
-		*
-		* @param array $attributes Block attributes.
-		*
-		* @return string
-		*/
 		public function render_reviews_grid( $attributes ) {
 			wp_enqueue_script( 'cr-colcade' );
 			$this->attributes = $attributes;
@@ -231,9 +217,42 @@ if ( ! class_exists( 'CR_Reviews_Grid' ) ) {
 
 			if ( function_exists( 'pll_current_language' ) ) {
 				// Polylang compatibility
+				if ( apply_filters( 'cr_reviews_polylang_merge', true ) ) {
+					foreach ( $post_ids as $product_id ) {
+						$translationIds = PLL()->model->post->get_translations( $product_id );
+						foreach ( $translationIds as $key => $translationID ) {
+							$post_ids[] = intval( $translationID );
+						}
+					}
+					$args['post__in'] = $post_ids;
+				}
 				$args['lang'] = '';
 			} elseif ( has_filter( 'wpml_current_language' ) ) {
 				// WPML compatibility
+				// Check for the 'show reviews in all languages' setting of WPML
+				$is_filtered = apply_filters(
+					'wpml_is_comment_query_filtered',
+					true,
+					null,
+					(object) array( 'query_vars' => array( 'post_type' => 'product' ) )
+				);
+				if ( false === $is_filtered ) {
+					foreach ( $post_ids as $product_id ) {
+						$trid = apply_filters( 'wpml_element_trid', NULL, $product_id, 'post_product' );
+						if ( $trid ) {
+							$translations = apply_filters( 'wpml_get_element_translations', NULL, $trid, 'post_product' );
+							if ( $translations && is_array( $translations ) ) {
+								foreach ( $translations as $translation ) {
+									if ( isset( $translation->element_id ) ) {
+										$post_ids[] = intval( $translation->element_id );
+									}
+								}
+							}
+						}
+					}
+					$args['post__in'] = $post_ids;
+				}
+				//
 				global $sitepress;
 				if ( $sitepress ) {
 					remove_filter( 'comments_clauses', array( $sitepress, 'comments_clauses' ), 10, 2 );
@@ -241,6 +260,8 @@ if ( ! class_exists( 'CR_Reviews_Grid' ) ) {
 			}
 
 			$reviews = [];
+			$count_all_product_reviews = 0;
+			$count_all_shop_reviews = 0;
 			// Query needs to be modified if min_chars constraints are set
 			if ( ! empty( $attributes['min_chars'] ) ) {
 				$this->min_chars = $attributes['min_chars'];
@@ -265,22 +286,36 @@ if ( ! class_exists( 'CR_Reviews_Grid' ) ) {
 					$args['order'] = $order;
 					$args['number'] = $max_reviews;
 					$reviews = get_comments( $args );
+					// get the total count of product reviews for use on the show more button label
+					$args_c = $args;
+					unset( $args_c['number'] );
+					$args_c['count'] = true;
+					$count_all_product_reviews = get_comments( $args_c );
+				} else {
+					$args = null;
 				}
 			}
 
 			$shop_page_id = wc_get_page_id( 'shop' );
+			$shop_page_ids = CR_Reviews_List_Table::get_shop_page();
+			$args_s = null;
 			if( true === $attributes['shop_reviews'] ) {
 				$max_shop_reviews = $attributes['count_shop_reviews'];
-				if( $shop_page_id > 0 && $max_shop_reviews > 0 ) {
+				if ( 0 < count( $shop_page_ids ) && 0 < $max_shop_reviews ) {
 					$args_s = array(
 						'status'      => 'approve',
 						'post_status' => 'publish',
-						'post_id'			=> $shop_page_id,
+						'post__in'    => $shop_page_ids,
 						'meta_key'    => 'rating',
 						'orderby'     => $order_by,
 						'comment__in' => $comment_in,
 						'comment__not_in' => $comment__not_in
 					);
+
+					if ( function_exists( 'pll_current_language' ) ) {
+						// Polylang compatibility
+						$args_s['lang'] = '';
+					}
 
 					if( get_query_var( CR_Reviews::$rating_get_filter ) ) {
 						$rating = intval( get_query_var( CR_Reviews::$rating_get_filter ) );
@@ -295,7 +330,7 @@ if ( ! class_exists( 'CR_Reviews_Grid' ) ) {
 					}
 
 					$shop_reviews = [];
-					if( 'RAND' === $order ) {
+					if ( 'RAND' === $order ) {
 						$all_shop_reviews = get_comments( $args_s );
 						$count_all_shop_reviews = count( $all_shop_reviews );
 						if( 0 < $count_all_shop_reviews ) {
@@ -314,6 +349,11 @@ if ( ! class_exists( 'CR_Reviews_Grid' ) ) {
 							$args_s['order'] = $order;
 							$args_s['number'] = $max_shop_reviews;
 							$shop_reviews = get_comments( $args_s );
+							// get the total count of shop reviews for use on the show more button label
+							$args_s_c = $args_s;
+							unset( $args_s_c['number'] );
+							$args_s_c['count'] = true;
+							$count_all_shop_reviews = get_comments( $args_s_c );
 						}
 					}
 
@@ -327,27 +367,25 @@ if ( ! class_exists( 'CR_Reviews_Grid' ) ) {
 			}
 			remove_filter( 'comments_clauses', array( $this, 'min_chars_comments_clauses' ) );
 
-			// WPML compatibility
-			if( has_filter( 'wpml_current_language' ) && ! function_exists( 'pll_current_language' ) ) {
-				global $sitepress;
-				if ( $sitepress ) {
-					add_filter( 'comments_clauses', array( $sitepress, 'comments_clauses' ), 10, 2 );
-				}
-			}
-
 			$num_reviews = count( $reviews );
+			$count_all_reviews = $count_all_product_reviews + $count_all_shop_reviews;
 
 			// make sure that we do not return more reviews than necessary
-			if( 0 < $attributes['count_total'] ) {
-				if( $num_reviews > $attributes['count_total'] ) {
+			if ( 0 < $attributes['count_total'] ) {
+				if ( $num_reviews > $attributes['count_total'] ) {
 					$reviews_temp = array();
 					while( count( $reviews_temp ) < $attributes['count_total'] ) {
 						$randomKey = mt_rand( 0, $num_reviews-1 );
-						$reviews_temp[] = $reviews[$randomKey];
+						$reviews_temp[$randomKey] = $reviews[$randomKey];
 					}
-					$reviews = $reviews_temp;
+					$reviews = array_values( $reviews_temp );
 				}
 			}
+
+			$remaining_reviews = $count_all_reviews - count( $reviews );
+
+			// get replies to reviews
+			$cr_replies = $this->get_review_replies( $reviews );
 
 			$cr_verified_label = get_option( 'ivole_verified_owner', '' );
 			if( $cr_verified_label ) {
@@ -381,7 +419,12 @@ if ( ! class_exists( 'CR_Reviews_Grid' ) ) {
 			$card_style = "border-color:" . $attributes['color_brdr'] . ";";
 			$card_style .= "background-color:" . $attributes['color_bcrd'] . ";";
 			$product_style = "background-color:" . $attributes['color_pr_bcrd'] . ";";
-			$stars_style = "color:" . $attributes['color_stars'] . ";";
+			$stars_style = $attributes['color_stars'];
+			$max_chars = $attributes['max_chars'];
+			$cr_grid_hr_style = "border-color:" . $attributes['color_brdr'] . ";";
+			$cr_grid_hr_replies_style = "background-color:" . $attributes['color_brdr'] . ";";
+			$cr_grid_replies_pill_style = "border-color:" . $attributes['color_brdr'] . ";";
+			$cr_grid_replies_pill_style .= "background-color:" . $attributes['color_bcrd'] . ";";
 
 			$id = uniqid( 'cr-reviews-grid-' );
 
@@ -401,9 +444,16 @@ if ( ! class_exists( 'CR_Reviews_Grid' ) ) {
 
 			// display a summary bar
 			$summary_bar = '';
-			if ( $attributes['show_summary_bar'] || $attributes['add_review'] ) {
-				if( !empty($args_s) ) $summary_bar = $this->show_summary_table( $args, $args_s );
-				else $summary_bar = $this->show_summary_table( $args );
+			if ( $attributes['show_summary_bar'] || $attributes['add_review'] || $attributes['schema_markup'] ) {
+				$summary_bar = $this->show_summary_table( $args, $args_s );
+			}
+
+			// WPML compatibility
+			if ( has_filter( 'wpml_current_language' ) && ! function_exists( 'pll_current_language' ) ) {
+				global $sitepress;
+				if ( $sitepress ) {
+					add_filter( 'comments_clauses', array( $sitepress, 'comments_clauses' ), 10, 2 );
+				}
 			}
 
 			// display incentivized badges
@@ -438,112 +488,111 @@ if ( ! class_exists( 'CR_Reviews_Grid' ) ) {
 		}
 
 		public function render_reviews_grid_shortcode( $attributes ) {
-			$shortcode_enabled = get_option( 'ivole_reviews_shortcode', 'no' );
-			if( $shortcode_enabled === 'no' ) {
-				return;
-			} else {
-				// Convert shortcode attributes to block attributes
-				$attributes = shortcode_atts( array(
-					'count' => 3,
-					'show_products' => true,
-					'product_links' => true,
-					'sort_by' => 'date',
-					'sort' => 'DESC',
-					'categories' => array(),
-					'products' => 'current',
-					'color_ex_brdr' => '#ebebeb',
-					'color_brdr' => '#ebebeb',
-					'color_ex_bcrd' => '',
-					'color_bcrd' => '#ffffff',
-					'color_pr_bcrd' => '#f4f4f4',
-					'color_stars' => '#FFD707',
-					'shop_reviews' => 'false',
-					'count_shop_reviews' => 1,
-					'inactive_products' => 'false',
-					'avatars' => 'initials',
-					'show_more' => 0,
-					'count_total' => 0,
-					'product_tags' => [],
-					'tags' => [],
-					'min_chars' => 0,
-					'show_summary_bar' => 'false',
-					'add_review' => 'false',
-					'comment__not_in' => []
-				), $attributes, 'cusrev_reviews_grid' );
+			// Convert shortcode attributes to block attributes
+			$attributes = shortcode_atts( array(
+				'count' => 3,
+				'show_products' => true,
+				'product_links' => true,
+				'sort_by' => 'date',
+				'sort' => 'DESC',
+				'categories' => array(),
+				'products' => 'current',
+				'color_ex_brdr' => '#ebebeb',
+				'color_brdr' => '#ebebeb',
+				'color_ex_bcrd' => '',
+				'color_bcrd' => '#ffffff',
+				'color_pr_bcrd' => '#f4f4f4',
+				'color_stars' => '#FFBC00',
+				'shop_reviews' => 'false',
+				'count_shop_reviews' => 1,
+				'inactive_products' => 'false',
+				'avatars' => 'initials',
+				'show_more' => 0,
+				'count_total' => 0,
+				'product_tags' => [],
+				'tags' => [],
+				'max_chars' => 0,
+				'min_chars' => 0,
+				'show_summary_bar' => 'false',
+				'add_review' => 'false',
+				'schema_markup' => 'false',
+				'comment__not_in' => []
+			), $attributes, 'cusrev_reviews_grid' );
 
-				$attributes['count'] = absint( $attributes['count'] );
-				$attributes['show_products'] = ( $attributes['show_products'] !== 'false' && boolval( $attributes['count'] ) );
-				$attributes['product_links'] = ( $attributes['product_links'] !== 'false' );
-				$attributes['shop_reviews'] = ( $attributes['shop_reviews'] !== 'false' && boolval( $attributes['count_shop_reviews'] ) );
-				$attributes['count_shop_reviews'] = absint( $attributes['count_shop_reviews'] );
-				$attributes['inactive_products'] = ( $attributes['inactive_products'] === 'true' );
-				$attributes['show_more'] = absint( $attributes['show_more'] );
-				$attributes['count_total'] = absint( $attributes['count_total'] );
-				$attributes['min_chars'] = intval( $attributes['min_chars'] );
-				$attributes['show_summary_bar'] = ( $attributes['show_summary_bar'] === 'true' );
-				if( $attributes['min_chars'] < 0 ) {
-					$attributes['min_chars'] = 0;
-				}
+			$attributes['count'] = absint( $attributes['count'] );
+			$attributes['show_products'] = ( $attributes['show_products'] !== 'false' && boolval( $attributes['count'] ) );
+			$attributes['product_links'] = ( $attributes['product_links'] !== 'false' );
+			$attributes['shop_reviews'] = ( $attributes['shop_reviews'] !== 'false' && boolval( $attributes['count_shop_reviews'] ) );
+			$attributes['count_shop_reviews'] = absint( $attributes['count_shop_reviews'] );
+			$attributes['inactive_products'] = ( $attributes['inactive_products'] === 'true' );
+			$attributes['show_more'] = absint( $attributes['show_more'] );
+			$attributes['count_total'] = absint( $attributes['count_total'] );
+			$attributes['max_chars'] = absint( $attributes['max_chars'] );
+			$attributes['min_chars'] = intval( $attributes['min_chars'] );
+			$attributes['show_summary_bar'] = ( $attributes['show_summary_bar'] === 'true' );
+			if( $attributes['min_chars'] < 0 ) {
+				$attributes['min_chars'] = 0;
+			}
 
-				if ( ! is_array( $attributes['categories'] ) ) {
-					$attributes['categories'] = array_filter( array_map( 'trim', explode( ',', $attributes['categories'] ) ) );
-				}
+			if ( ! is_array( $attributes['categories'] ) ) {
+				$attributes['categories'] = array_filter( array_map( 'trim', explode( ',', $attributes['categories'] ) ) );
+			}
 
-				if (
-					is_string( $attributes['products'] ) &&
-					'current' === trim( strtolower( $attributes['products'] ) )
-				) {
-					if ( is_product() ) {
-						$product = wc_get_product();
-						if ( is_object( $product ) ) {
-							$id = $product->get_id();
-							$attributes['products'] = array( $id );
-						} else {
-							$attributes['products'] = array();
-						}
+			if (
+				is_string( $attributes['products'] ) &&
+				'current' === trim( strtolower( $attributes['products'] ) )
+			) {
+				if ( is_product() ) {
+					$product = wc_get_product();
+					if ( is_object( $product ) ) {
+						$id = $product->get_id();
+						$attributes['products'] = array( $id );
 					} else {
 						$attributes['products'] = array();
 					}
-				} elseif ( ! is_array( $attributes['products'] ) ) {
-					$products = str_replace( ' ', '', $attributes['products'] );
-					$products = explode( ',', $products );
-					$products = array_filter( $products, 'is_numeric' );
-					$products = array_map( 'intval', $products );
-
-					$attributes['products'] = $products;
 				} else {
-					$attributes['products'] = array_map( 'intval', $attributes['products'] );
+					$attributes['products'] = array();
 				}
+			} elseif ( ! is_array( $attributes['products'] ) ) {
+				$products = str_replace( ' ', '', $attributes['products'] );
+				$products = explode( ',', $products );
+				$products = array_filter( $products, 'is_numeric' );
+				$products = array_map( 'intval', $products );
 
-				if(
-					! empty( $attributes['product_tags'] ) &&
-			 		! is_array( $attributes['product_tags'] )
-				) {
-					$attributes['product_tags'] = array_filter( array_map( 'trim', explode( ',', $attributes['product_tags'] ) ) );
-				}
-
-				if(
-					! empty( $attributes['tags'] ) &&
-			 		! is_array( $attributes['tags'] )
-				) {
-					$attributes['tags'] = array_filter( array_map( 'trim', explode( ',', $attributes['tags'] ) ) );
-				}
-
-				if ( 'true' === $attributes['add_review'] ) {
-					$product_id = CR_All_Reviews::is_it_a_product_page();
-					if ( $product_id ) {
-						$attributes['add_review'] = $product_id;
-					} else {
-						$attributes['add_review'] = true;
-					}
-				} elseif ( is_numeric( $attributes['add_review'] ) ) {
-					$attributes['add_review'] = intval( $attributes['add_review'] );
-				} else {
-					$attributes['add_review'] = false;
-				}
-
-				return $this->render_reviews_grid( $attributes );
+				$attributes['products'] = $products;
+			} else {
+				$attributes['products'] = array_map( 'intval', $attributes['products'] );
 			}
+
+			if(
+				! empty( $attributes['product_tags'] ) &&
+		 		! is_array( $attributes['product_tags'] )
+			) {
+				$attributes['product_tags'] = array_filter( array_map( 'trim', explode( ',', $attributes['product_tags'] ) ) );
+			}
+
+			if(
+				! empty( $attributes['tags'] ) &&
+		 		! is_array( $attributes['tags'] )
+			) {
+				$attributes['tags'] = array_filter( array_map( 'trim', explode( ',', $attributes['tags'] ) ) );
+			}
+
+			if ( 'true' === $attributes['add_review'] ) {
+				$product_id = CR_All_Reviews::is_it_a_product_page();
+				if ( $product_id ) {
+					$attributes['add_review'] = $product_id;
+				} else {
+					$attributes['add_review'] = true;
+				}
+			} elseif ( is_numeric( $attributes['add_review'] ) ) {
+				$attributes['add_review'] = intval( $attributes['add_review'] );
+			} else {
+				$attributes['add_review'] = false;
+			}
+			$attributes['schema_markup'] = $attributes['schema_markup'] === 'true' ? true : false;
+
+			return $this->render_reviews_grid( $attributes );
 		}
 
 		/**
@@ -709,7 +758,7 @@ if ( ! class_exists( 'CR_Reviews_Grid' ) ) {
 			wp_register_script(
 				'cr-frontend-js',
 				plugins_url('/js/frontend.js', dirname( dirname( __FILE__ ) ) ),
-				array(),
+				array('jquery'),
 				Ivole::CR_VERSION,
 				true
 			);
@@ -866,7 +915,7 @@ if ( ! class_exists( 'CR_Reviews_Grid' ) ) {
 			return $clauses;
 		}
 
-		private function show_summary_table( $args, $args_shop = array() ){
+		private function show_summary_table( $args, $args_shop ) {
 			$all = $this->count_ratings( 0, $args, $args_shop );
 			$output = '';
 			if ($all > 0) {
@@ -941,7 +990,7 @@ if ( ! class_exists( 'CR_Reviews_Grid' ) ) {
 			}
 			$output .= '<div class="cr-overall-rating-wrap">';
 			$output .= '<div class="cr-average-rating"><span>' . number_format_i18n( $average, 1 ) . '</span></div>';
-			$output .= '<div class="cr-average-rating-stars"><div class="crstar-rating"><span style="width:'.($average / 5 * 100).'%;"></span></div></div>';
+			$output .= '<div class="cr-average-rating-stars"><div class="crstar-rating-svg" role="img" aria-label="' . esc_attr( sprintf( __( 'Rated %s out of 5', 'woocommerce' ), number_format_i18n( $average, 1 ) ) ) . '">' . CR_Reviews::get_star_rating_svg( $average, 0, '' ) . '</div></div>';
 			$output .= '<div class="cr-total-rating-count">' . sprintf( _n( 'Based on %s review', 'Based on %s reviews', $all, 'customer-reviews-woocommerce' ), number_format_i18n( $all ) ) . '</div>';
 			$output .= '</div>';
 			$output .= '<div class="cr-summary-separator"><div class="cr-summary-separator-int"></div></div>';
@@ -1039,34 +1088,68 @@ if ( ! class_exists( 'CR_Reviews_Grid' ) ) {
 			} else {
 				$output .= '<div class="cr-count-filtered-reviews"></div>';
 			}
+
+			// add structured data
+			if (
+				$this->attributes['schema_markup'] &&
+				! $this->attributes['shop_reviews'] &&
+				$this->attributes['products'] &&
+				is_array( $this->attributes['products'] ) &&
+				1 === count( $this->attributes['products'] )
+			) {
+				$prod_temp = wc_get_product( $this->attributes['products'][0] );
+				if ( $prod_temp ) {
+					$prod_name = esc_html( strip_tags( $prod_temp->get_title() ) );
+					$schema = array(
+						'@context' => 'https://schema.org/',
+						'@type' => 'Product',
+						'name' => $prod_name,
+						'aggregateRating' => array(
+							'@type' => 'aggregateRating',
+							'ratingValue' => round( $average, 1 ),
+							'bestRating' => 5,
+							'ratingCount' => $all
+						)
+					);
+					$output .= '<script type="application/ld+json">';
+					$output .= wp_json_encode( $schema );
+					$output .= '</script>';
+				}
+			}
+
 			$output .= '</div>';
 
 			return $output;
 		}
 
-		private function count_ratings( $rating, $args, $args_shop = array() ) {
-			$args['count'] = true;
-			$args['type__not_in'] = 'cr_qna';
-			$args['parent'] = 0;
-			unset($args['meta_query']);
-
-			if ($rating > 0) {
-				$args['meta_query'][] = array(
-					'key' => 'rating',
-					'value'   => $rating,
-					'compare' => '=',
-					'type'    => 'numeric'
-				);
-			}
+		private function count_ratings( $rating, $args, $args_shop ) {
+			$count = 0;
 
 			if ( ! empty( $this->min_chars ) ) {
 				add_filter( 'comments_clauses', array( $this, 'min_chars_comments_clauses' ) );
 			}
-			$count = get_comments( $args );
 
-			if( !empty( $args_shop ) ){
+			if ( $args && is_array( $args ) ) {
+				$args['count'] = true;
+				$args['type__not_in'] = array( 'cr_qna' );
+				$args['parent'] = 0;
+				unset($args['meta_query']);
+
+				if ($rating > 0) {
+					$args['meta_query'][] = array(
+						'key' => 'rating',
+						'value'   => $rating,
+						'compare' => '=',
+						'type'    => 'numeric'
+					);
+				}
+
+				$count = get_comments( $args );
+			}
+
+			if ( $args_shop && is_array( $args_shop ) ) {
 				$args_shop['count'] = true;
-				$args_shop['type__not_in'] = 'cr_qna';
+				$args_shop['type__not_in'] = array( 'cr_qna' );
 				$args_shop['parent'] = 0;
 				unset($args_shop['meta_query']);
 
@@ -1082,26 +1165,49 @@ if ( ! class_exists( 'CR_Reviews_Grid' ) ) {
 				$count_shop = get_comments($args_shop);
 				$count = $count + $count_shop;
 			}
+
 			remove_filter( 'comments_clauses', array( $this, 'min_chars_comments_clauses' ) );
 
 			return $count;
 		}
 
 		public static function cr_get_avatar( $avatar, $id_or_email, $size = 96, $default = '', $alt = '' ) {
+			$tmp_name = '';
 			if ( is_object( $id_or_email ) && isset( $id_or_email->comment_ID ) ) {
-				$id_or_email = get_comment( $id_or_email );
-				$author = trim( mb_ereg_replace( '[\.,]', ' ', get_comment_author( $id_or_email ) ) );
-				if( 0 < mb_strlen( $author ) ) {
-					$initials = mb_substr( $author, 0, 1 );
-					$words = mb_split( '\s+', $author );
-					if( 1 < count( $words ) ) {
-						$initials .= mb_substr( $words[1], 0, 1 );
+				// It's a comment object
+				if ( isset( $id_or_email->comment_author ) ) {
+					$tmp_name = $id_or_email->comment_author;
+				}
+			}
+			if ( $tmp_name ) {
+				if ( function_exists( 'mb_ereg_replace' ) ) {
+					$author = trim( mb_ereg_replace( '[\.,]', ' ', $tmp_name ) );
+					if ( 0 < mb_strlen( $author ) ) {
+						$initials = mb_substr( $author, 0, 1 );
+						$words = mb_split( '\s+', $author );
+						if( 1 < count( $words ) ) {
+							$initials .= mb_substr( $words[1], 0, 1 );
+						}
+						$initials = mb_strtoupper( $initials );
+						if ( ! $alt ) {
+							$alt = $initials;
+						}
 					}
-					$initials = mb_strtoupper( $initials );
-					if ( ! $alt ) {
-						$alt = $initials;
+				} else {
+					$author = trim( preg_replace( '/[\.,]/', ' ', $tmp_name ) );
+					if( 0 < strlen( $author ) ) {
+						$initials = substr( $author, 0, 1 );
+						$words = preg_split( '/\s+/', $author );
+						if( 1 < count( $words ) ) {
+							$initials .= substr( $words[1], 0, 1 );
+						}
+						$initials = strtoupper( $initials );
+						if ( ! $alt ) {
+							$alt = $initials;
+						}
 					}
-
+				}
+				if ( $initials ) {
 					$svg_template = '
 						<svg width="%d" height="%d" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 							<rect x="0" y="0" width="%d" height="%d" style="fill: #CCD1D4"></rect>
@@ -1117,17 +1223,42 @@ if ( ! class_exists( 'CR_Reviews_Grid' ) ) {
 
 					$svg = sprintf( $svg_template, $size, $size, $size, $size, $size/2, $initials );
 
-					$avatar = sprintf( '<img alt="%s" src="%s" width="%d" height="%d" class="%s"><div class="cr-avatar-check">%s</div>', $alt, 'data:image/svg+xml;base64,' . base64_encode( $svg ), $size, $size, 'avatar', $svg_avatar_check );
+					$avatar = sprintf( '<img alt="%s" src="%s" width="%d" height="%d" class="%s"><div class="cr-avatar-check">%s</div>', $alt, 'data:image/svg+xml;base64,' . base64_encode( $svg ), $size, $size, 'cr-avatar', $svg_avatar_check );
 				}
 			}
 			return $avatar;
 		}
 
-		public function add_block_editor_settings( $settings, $p ) {
-			$settings['cusrev'] = array(
-				'reviews_shortcodes' => ( get_option( 'ivole_reviews_shortcode', 'no' ) !== 'no' )
-			);
-			return $settings;
+		private function get_review_replies( array $reviews ) {
+			$replies_map = [];
+
+			// Collect parent IDs from input array
+			$parent_ids = wp_list_pluck( $reviews, 'comment_ID' );
+
+			if ( empty( $parent_ids ) ) {
+				return $replies_map;
+			}
+
+			// Fetch all replies in one query
+			$all_replies = get_comments( [
+				'parent__in' => $parent_ids,
+				'orderby'    => 'comment_date_gmt',
+				'order'      => 'ASC',
+				'number'     => 0,  // no limit
+			] );
+
+			// Build map: parent_id => array of replies
+			foreach ( $all_replies as $reply ) {
+				$pid = $reply->comment_parent;
+
+				if ( ! isset( $replies_map[ $pid ] ) ) {
+					$replies_map[ $pid ] = [];
+				}
+
+				$replies_map[ $pid ][] = $reply;
+			}
+
+			return $replies_map;
 		}
 
 	}

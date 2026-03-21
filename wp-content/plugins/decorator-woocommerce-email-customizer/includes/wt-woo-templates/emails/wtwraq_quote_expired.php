@@ -12,9 +12,17 @@ do_action( 'woocommerce_email_header', $email_heading, $email );
 <h2>
     <?php
     if ( 'yes' === $quote->get_meta( '_wtwraq_is_guest_request' ) ) {
-        printf( '<a>%1$s</a> <time>(%2$s)</time>', esc_html__( 'Quote #', 'wt-woo-request-quote' ), $quote->get_id(), esc_html( get_date_from_gmt( wtwraq_get_date( $quote, '_wtwraq_quote_sent_date' ), get_option( 'date_format' ) ) ) );
+        printf( 
+            '<a>%1$s</a> <time>(%2$s)</time>', 
+            esc_html__( 'Quote #', 'decorator-woocommerce-email-customizer' ) . esc_html( $quote->get_id() ), 
+            esc_html( get_date_from_gmt( wtwraq_get_date( $quote, '_wtwraq_quote_sent_date' ), get_option( 'date_format' ) ) ) );
     } else {
-        printf( '<a href="%1$s">%2$s</a> <time>(%3$s)</time>', esc_url( wc_get_endpoint_url( 'view-quote', $quote->get_id(), get_permalink( get_option( 'woocommerce_myaccount_page_id' ) ) ) ), esc_html__( 'Quote #' . $quote->get_id(), 'wt-woo-request-quote' ), esc_html( get_date_from_gmt( wtwraq_get_date( $quote, '_wtwraq_quote_sent_date' ), get_option( 'date_format' ) ) ) );
+        printf( 
+            '<a href="%1$s">%2$s</a> <time>(%3$s)</time>', 
+            esc_url( wc_get_endpoint_url( 'view-quote', $quote->get_id(), get_permalink( get_option( 'woocommerce_myaccount_page_id' ) ) ) ), 
+            esc_html__( 'Quote #', 'decorator-woocommerce-email-customizer' ) . esc_html( $quote->get_id() ), 
+            esc_html( get_date_from_gmt( wtwraq_get_date( $quote, '_wtwraq_quote_sent_date' ), get_option( 'date_format' ) ) ) 
+        );
     }
     ?>
 </h2>

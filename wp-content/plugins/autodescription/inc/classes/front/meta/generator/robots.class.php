@@ -8,11 +8,11 @@ namespace The_SEO_Framework\Front\Meta\Generator;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\Meta;
+use The_SEO_Framework\Meta;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -50,29 +50,6 @@ final class Robots {
 	public static function generate_robots() {
 
 		$meta = Meta\Robots::get_meta();
-
-		if ( \has_filter( 'the_seo_framework_robots_meta' ) ) {
-			/**
-			 * @since 2.6.0
-			 * @since 5.0.0 1. Deprecated.
-			 *              2. No longer used internally.
-			 * @deprecated
-			 * @param array $meta The robots meta.
-			 * @param int   $id   The current post or term ID.
-			 */
-			$meta = implode(
-				',',
-				(array) \apply_filters_deprecated(
-					'the_seo_framework_robots_meta',
-					[
-						explode( ',', $meta ),
-						\The_SEO_Framework\Helper\Query::get_the_real_id(),
-					],
-					'5.0.0 of The SEO Framework',
-					'the_seo_framework_robots_meta_array',
-				)
-			);
-		}
 
 		if ( $meta )
 			yield 'robots' => [

@@ -1,19 +1,4 @@
 <?php
-/**
-* Display single product reviews (comments)
-*
-* This template can be overridden by copying it to yourtheme/woocommerce/single-product-reviews.php.
-*
-* HOWEVER, on occasion WooCommerce will need to update template files and you
-* (the theme developer) will need to copy the new files to your theme to
-* maintain compatibility. We try to do this as little as possible, but it does
-* happen. When this occurs the version of the template file will be bumped and
-* the readme will list any important changes.
-*
-* @see     https://docs.woocommerce.com/document/template-structure/
-* @package WooCommerce/Templates
-* @version 4.3.0
-*/
 
 defined( 'ABSPATH' ) || exit;
 
@@ -36,14 +21,19 @@ $nonce = wp_create_nonce( "cr_product_reviews_" . $cr_product_id );
 
 ?>
 <div id="reviews" class="cr-reviews-ajax-reviews">
+	<?php do_action( 'cr_reviews_section', $cr_product_id ); ?>
 	<div id="comments" class="cr-reviews-ajax-comments" data-nonce="<?php echo $nonce; ?>" data-page="1">
 		<h2 class="woocommerce-Reviews-title">
 			<?php
-			$count = $product->get_review_count();
-			if ( $count && wc_review_ratings_enabled() ) {
+			$cr_get_reviews = CR_Ajax_Reviews::get_reviews( $cr_product_id );
+			if ( 0 < $cr_get_reviews['reviews_count'] ) {
 				/* translators: 1: reviews count 2: product name */
-				$reviews_title = sprintf( esc_html( _n( '%1$s review for %2$s', '%1$s reviews for %2$s', $count, 'woocommerce' ) ), esc_html( $count ), '<span>' . get_the_title() . '</span>' );
-				echo apply_filters( 'woocommerce_reviews_title', $reviews_title, $count, $product ); // WPCS: XSS ok.
+				$reviews_title = sprintf(
+					esc_html( _n( '%1$s review for %2$s', '%1$s reviews for %2$s', $cr_get_reviews['reviews_count'], 'woocommerce' ) ),
+					esc_html( $cr_get_reviews['reviews_count'] ),
+					'<span>' . get_the_title() . '</span>'
+				);
+				echo apply_filters( 'woocommerce_reviews_title', $reviews_title, $cr_get_reviews['reviews_count'], $product );
 			} else {
 				esc_html_e( 'Reviews', 'woocommerce' );
 			}
@@ -60,10 +50,8 @@ $nonce = wp_create_nonce( "cr_product_reviews_" . $cr_product_id );
 		}
 		$new_reviews_allowed = in_array( $cr_form_permissions, array( 'registered', 'verified', 'anybody' ) ) ? true : false;
 		$cr_per_page = CR_Ajax_Reviews::get_per_page();
-		if ( have_comments() ) : ?>
-			<?php
+		if ( 0 < $cr_get_reviews['reviews_count'] ) :
 			$no_comments_yet = false;
-			$cr_get_reviews = CR_Ajax_Reviews::get_reviews( $cr_product_id );
 			do_action( 'cr_reviews_summary', $cr_product_id, true, $new_reviews_allowed );
 			do_action( 'cr_reviews_customer_images', $cr_get_reviews['reviews'] );
 			if ( $new_reviews_allowed ) {
@@ -75,7 +63,11 @@ $nonce = wp_create_nonce( "cr_product_reviews_" . $cr_product_id );
 			if ( has_filter( 'wpml_object_id' ) ) {
 				if( class_exists( 'WCML_Comments' ) ) {
 					global $woocommerce_wpml;
-					if( $woocommerce_wpml ) :
+					if (
+						$woocommerce_wpml &&
+						isset( $woocommerce_wpml->comments ) &&
+						method_exists( $woocommerce_wpml->comments, 'comments_link' )
+					) :
 						?>
 							<div class="cr-ajax-reviews-wpml-switch">
 								<?php
@@ -83,8 +75,8 @@ $nonce = wp_create_nonce( "cr_product_reviews_" . $cr_product_id );
 								?>
 							</div>
 						<?php
-						// remove the default WPML switch from above the review form
-						remove_action( 'comment_form_before', array( $woocommerce_wpml->comments, 'comments_link' ) );
+					// remove the default WPML switch from above the review form
+					remove_action( 'comment_form_before', array( $woocommerce_wpml->comments, 'comments_link' ) );
 					endif;
 				}
 			}
@@ -97,6 +89,7 @@ $nonce = wp_create_nonce( "cr_product_reviews_" . $cr_product_id );
 						'woocommerce_product_review_list_args',
 						array(
 							'callback' => array( 'CR_Reviews', 'callback_comments' ),
+							'max_depth' => 5,
 							'reverse_top_level' => false,
 							'per_page' => $cr_per_page,
 							'page' => 1,
@@ -162,7 +155,8 @@ $nonce = wp_create_nonce( "cr_product_reviews_" . $cr_product_id );
 						'cr_form_item_media_desc' => $cr_form_item_media_desc,
 						'cr_form_permissions' => $cr_form_permissions,
 						'cr_form_checkbox' => $cr_form_checkbox,
-						'cr_form_checkbox_text' => wp_specialchars_decode( $cr_form_checkbox_text, ENT_QUOTES )
+						'cr_form_checkbox_text' => wp_specialchars_decode( $cr_form_checkbox_text, ENT_QUOTES ),
+						'cr_form_settings_array' => $form_settings
 					),
 					'customer-reviews-woocommerce',
 					dirname( dirname( __FILE__ ) ) . '/templates/'

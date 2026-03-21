@@ -76,14 +76,16 @@ class Tracking {
 		) {
 			wp_send_json_error(
 				__( 'You aren’t authorized to do that.', 'jetpack-connection' ),
-				403
+				403,
+				JSON_UNESCAPED_SLASHES
 			);
 		}
 
 		if ( ! isset( $_REQUEST['tracksEventName'] ) || ! isset( $_REQUEST['tracksEventType'] ) ) {
 			wp_send_json_error(
 				__( 'No valid event name or type.', 'jetpack-connection' ),
-				403
+				403,
+				JSON_UNESCAPED_SLASHES
 			);
 		}
 
@@ -98,7 +100,7 @@ class Tracking {
 
 		$this->record_user_event( filter_var( wp_unslash( $_REQUEST['tracksEventName'] ) ), $tracks_data, null, false );
 
-		wp_send_json_success();
+		wp_send_json_success( null, null, JSON_UNESCAPED_SLASHES );
 	}
 
 	/**
@@ -280,24 +282,28 @@ class Tracking {
 	 */
 	public function tracks_get_identity( $user_id ) {
 
-		// Meta is set, and user is still connected.  Use WPCOM ID.
+		// Meta is set, and user is still connected. Use WPCOM ID.
 		$wpcom_id = get_user_meta( $user_id, 'jetpack_tracks_wpcom_id', true );
-		if ( $wpcom_id && $this->connection->is_user_connected( $user_id ) ) {
+		if ( $wpcom_id && is_string( $wpcom_id ) && $this->connection->is_user_connected( $user_id ) ) {
 			return array(
 				'_ut' => 'wpcom:user_id',
 				'_ui' => $wpcom_id,
 			);
 		}
 
-		// User is connected, but no meta is set yet.  Use WPCOM ID and set meta.
+		// User is connected, but no meta is set yet. Use WPCOM ID and set meta.
 		if ( $this->connection->is_user_connected( $user_id ) ) {
 			$wpcom_user_data = $this->connection->get_connected_user_data( $user_id );
-			update_user_meta( $user_id, 'jetpack_tracks_wpcom_id', $wpcom_user_data['ID'] );
+			$wpcom_id        = $wpcom_user_data['ID'] ?? null;
 
-			return array(
-				'_ut' => 'wpcom:user_id',
-				'_ui' => $wpcom_user_data['ID'],
-			);
+			if ( is_string( $wpcom_id ) ) {
+				update_user_meta( $user_id, 'jetpack_tracks_wpcom_id', $wpcom_id );
+
+				return array(
+					'_ut' => 'wpcom:user_id',
+					'_ui' => $wpcom_id,
+				);
+			}
 		}
 
 		// User isn't linked at all.  Fall back to anonymous ID.

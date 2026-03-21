@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
                   'fa-linkedin' => 'linkedin.png',
                   'fa-vimeo' => 'vimeo.png'
                 );
-		$social_enable = //get_option( 'footer_social_enable' );
+		$social_enable = get_option( 'footer_social_enable' );
 		$social_links  = get_option( 'footer_social_repeater' );
                 $social_position  = get_option( 'social_links_enable' );
                 $social_folder  = get_option( 'social_links_icon_color' );
@@ -78,7 +78,10 @@ defined( 'ABSPATH' ) || exit;
                                                                                                                        $base = RP_DECORATOR_PLUGIN_URL . '/assets/images/default/';
                                                                                                                    }
                                                                                                                    $img_link = $base . $social_icons[$social_link->choice];
-                                                                                                                   echo '<span class="wt-social-link-icon" style="font-size: 20px;"><img src='.$img_link.' width="20" ></img></span>';
+                                                                                                                   printf( 
+                                                                                                                        '<span class="wt-social-link-icon" style="font-size: 20px;"><img src="%s" width="20" ></img></span>',
+                                                                                                                        esc_url( $img_link )
+                                                                                                                   );
                                                                                                                }
                                                                                                             
                                                                                                         ?>
@@ -116,7 +119,10 @@ defined( 'ABSPATH' ) || exit;
                                                                                                                        $base = RP_DECORATOR_PLUGIN_URL . '/assets/images/black/';
                                                                                                                    }
                                                                                                                    $img_link = $base . $social_icons[$social_link->choice];
-                                                                                                                   echo '<span class="wt-social-link-icon" style="font-size: 20px;"><img src='.$img_link.' width="20" ></img></span>';
+                                                                                                                   printf( 
+                                                                                                                        '<span class="wt-social-link-icon" style="font-size: 20px;"><img src="%s" width="20" ></img></span>',
+                                                                                                                        esc_url( $img_link )
+                                                                                                                   );
                                                                                                                }
                                                                                                         ?>
                                                                                                         <span class="wt-social-link-title" ><?php echo esc_html($social_link->title); ?></span>

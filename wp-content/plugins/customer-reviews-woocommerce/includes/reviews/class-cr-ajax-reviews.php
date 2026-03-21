@@ -38,7 +38,6 @@ if (! class_exists('CR_Ajax_Reviews')) :
 			$post_in = array();
 			if( function_exists( 'pll_current_language' ) && function_exists( 'PLL' )  && apply_filters( 'cr_reviews_polylang_merge', true ) ) {
 				// Polylang integration
-				global $polylang;
 				$translationIds = PLL()->model->post->get_translations( $product_id );
 				foreach ( $translationIds as $key => $translationID ) {
 					$post_in[] = $translationID;
@@ -165,7 +164,7 @@ if (! class_exists('CR_Ajax_Reviews')) :
 				}
 			}
 			// exclude qna
-			$args['type__not_in'] = 'cr_qna';
+			$args['type__not_in'] = array( 'cr_qna' );
 
 			// get the reviews based on the prepared query
 			$reviews_tmp = get_comments( $args );
@@ -219,7 +218,7 @@ if (! class_exists('CR_Ajax_Reviews')) :
 					'orderby' => 'comment_date_gmt',
 					'order' => 'DESC',
 					'parent__in' => $reviews_ids,
-					'type__not_in' => 'cr_qna'
+					'type__not_in' => array( 'cr_qna' )
 				);
 				// loop to check for nested comments (replies to replies)
 				$fetch_more_replies = true;
@@ -289,12 +288,15 @@ if (! class_exists('CR_Ajax_Reviews')) :
 					$initials_setting = get_option( 'ivole_avatars', 'standard' );
 					if( 'initials' === $initials_setting ) {
 						add_filter( 'get_avatar', array( 'CR_Reviews_Grid', 'cr_get_avatar' ), 10, 5 );
+					} else {
+						add_filter( 'get_avatar', array( 'CR_Reviews', 'change_avatar_class' ), 10, 6 );
 					}
 					$hide_avatars = 'hidden' === get_option( 'ivole_avatars', 'standard' ) ? true : false;
 					$more_reviews = wp_list_comments( apply_filters(
 						'woocommerce_product_review_list_args',
 						array(
 							'callback' => array( 'CR_Reviews', 'callback_comments' ),
+							'max_depth' => 5,
 							'reverse_top_level' => false,
 							'per_page' => self::$per_page,
 							'page' => $page,
@@ -374,6 +376,7 @@ if (! class_exists('CR_Ajax_Reviews')) :
 							'woocommerce_product_review_list_args',
 							array(
 								'callback' => array( 'CR_Reviews', 'callback_comments' ),
+								'max_depth' => 5,
 								'reverse_top_level' => false,
 								'per_page' => self::$per_page,
 								'page' => 1,
@@ -443,6 +446,7 @@ if (! class_exists('CR_Ajax_Reviews')) :
 							'woocommerce_product_review_list_args',
 							array(
 								'callback' => array( 'CR_Reviews', 'callback_comments' ),
+								'max_depth' => 5,
 								'reverse_top_level' => false,
 								'per_page' => self::$per_page,
 								'page' => 1,
@@ -492,8 +496,7 @@ if (! class_exists('CR_Ajax_Reviews')) :
 			$post_in = array();
 
 			if( function_exists( 'pll_current_language' ) && function_exists( 'PLL' ) && apply_filters( 'cr_reviews_polylang_merge', true ) ) {
-				//Polylang integration
-				global $polylang;
+				// Polylang integration
 				$translationIds = PLL()->model->post->get_translations( $product_id );
 				foreach ( $translationIds as $key => $translationID ) {
 					$post_in[] = $translationID;
@@ -731,7 +734,7 @@ if (! class_exists('CR_Ajax_Reviews')) :
 				'cr-reviews-slider',
 				plugins_url( 'js/slick.min.js', dirname( dirname( __FILE__ ) ) ),
 				array( 'jquery' ),
-				'3.119',
+				Ivole::CR_VERSION,
 				true
 			);
 		}
@@ -746,9 +749,9 @@ if (! class_exists('CR_Ajax_Reviews')) :
 		public static function get_search_field( $search_button ) {
 			$search_val = '';
 			$clear_class = 'cr-clear-input';
-			if( get_query_var( 'crsearch' ) ) {
+			if ( get_query_var( 'crsearch' ) ) {
 				$search_val = strval( get_query_var( 'crsearch' ) );
-				if( 0 < mb_strlen( $search_val ) ) {
+				if ( 0 < strlen( $search_val ) ) {
 					$clear_class = 'cr-clear-input cr-visible';
 				}
 			}
@@ -763,7 +766,7 @@ if (! class_exists('CR_Ajax_Reviews')) :
 							<path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
 							<path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
 						</svg>
-						<input name="cr_input_text_search" class="cr-input-text" type="text" placeholder="'. esc_attr__( 'Search customer reviews', 'customer-reviews-woocommerce' ) .'" value="' . $search_val . '" aria-label="' . esc_attr__( 'Search customer reviews', 'customer-reviews-woocommerce' ) . '">
+						<input name="cr_input_text_search" class="cr-input-text" type="text" placeholder="'. esc_attr__( 'Search customer reviews', 'customer-reviews-woocommerce' ) .'" value="' . esc_attr( $search_val ) . '" aria-label="' . esc_attr__( 'Search customer reviews', 'customer-reviews-woocommerce' ) . '">
 						<span class="' . $clear_class . '">
 							<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-circle-fill" fill="#868686" xmlns="http://www.w3.org/2000/svg">
 								<path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>

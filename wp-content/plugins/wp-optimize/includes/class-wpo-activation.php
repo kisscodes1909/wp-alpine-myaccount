@@ -9,24 +9,35 @@ class WPO_Activation {
 	 * Actions to be performed upon plugin activation
 	 */
 	public static function actions() {
-		if (is_multisite() && !is_network_admin()) {
+		if (!WP_Optimize()->is_minimum_requirement_met()) {
+			WP_Optimize()->add_notice_minimum_requirements_not_met();
+			WP_Optimize()->deactivate_plugin();
+			WP_Optimize()->die_minimum_requirement_not_met();
+		}
+
+		if (is_multisite() && !current_user_can('manage_network_options')) {
 			self::deactivate_and_die();
 		}
 
 		if (!self::is_reactivated()) {
 			self::set_as_newly_activated();
+			$onboarding = WP_Optimize()->get_onboarding();
+			$onboarding->activate_onboarding_wizard();
 		}
 
 		WP_Optimize()->get_options()->set_default_options();
 		WP_Optimize()->get_minify()->plugin_activate();
 		WP_Optimize()->get_gzip_compression()->restore();
 		WP_Optimize()->get_browser_cache()->restore();
+		WP_Optimize()->get_table_management()->create_plugin_tables();
+		WP_Optimize()->get_webp_instance()->plugin_activate();
 
 		self::init_batch_processing();
 
 		if (self::is_premium()) {
 			self::init_premium();
 		}
+
 	}
 
 	/**
@@ -34,8 +45,8 @@ class WPO_Activation {
 	 */
 	private static function deactivate_and_die() {
 		deactivate_plugins(plugin_basename(WPO_PLUGIN_MAIN_PATH . 'wp-optimize.php'));
-		wp_die(__('Only Network Administrator can activate WP-Optimize plugin.', 'wp-optimize') .
-			' <a href="' . admin_url('plugins.php') . '">' . __('go back', 'wp-optimize') . '</a>');
+		wp_die(esc_html__('Only Network Administrator can activate the WP-Optimize plugin.', 'wp-optimize') .
+			' <a href="' . esc_url(admin_url('plugins.php')) . '">' . esc_html__('go back', 'wp-optimize') . '</a>');
 	}
 
 	/**
@@ -44,7 +55,7 @@ class WPO_Activation {
 	 * @return mixed
 	 */
 	private static function is_reactivated() {
-		return WP_Optimize()->get_options()->get_option('last-optimized', false);
+		return WP_Optimize()->get_options()->get_option('last-optimized');
 	}
 
 	/**

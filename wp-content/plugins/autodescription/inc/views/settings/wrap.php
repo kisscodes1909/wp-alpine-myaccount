@@ -6,15 +6,15 @@
 
 namespace The_SEO_Framework;
 
-\defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) or die;
+( \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) ) or die;
 
-use \The_SEO_Framework\Admin\Settings\Layout\Input;
+use The_SEO_Framework\Admin\Settings\Layout\Input;
 
-// phpcs:disable, WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
+// phpcs:disable WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2017 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2017 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -44,11 +44,13 @@ if (
 		\esc_html_x( 'Extensions', 'Plugin extensions', 'autodescription' ),
 	);
 } else {
-	$_extensions_button = Admin\Utils::display_extension_suggestions() ? \sprintf(
-		'<a href="%s" class=button rel="noreferrer noopener" target=_blank>%s</a>',
-		'https://theseoframework.com/?p=3599',
-		\esc_html_x( 'Extensions', 'Plugin extensions', 'autodescription' )
-	) : '';
+	$_extensions_button = Admin\Utils::display_extension_suggestions()
+		? \sprintf(
+			'<a href="%s" class=button rel="noreferrer noopener" target=_blank>%s</a>',
+			'https://theseoframework.com/?p=3599',
+			\esc_html_x( 'Extensions', 'Plugin extensions', 'autodescription' ),
+		)
+		: '';
 }
 
 $_save_button = \get_submit_button(
@@ -56,7 +58,7 @@ $_save_button = \get_submit_button(
 	[ 'primary' ],
 	'submit',
 	false,
-	[ 'id' => '' ] // we output this twice, don't set ID.
+	[ 'id' => '' ], // we output this twice, don't set ID.
 );
 
 $_ays_reset    = \esc_js( \__( 'Are you sure you want to reset all SEO settings to their defaults?', 'autodescription' ) );
@@ -84,7 +86,7 @@ $hook_name = Admin\Menu::get_page_hook_name();
 			<h1><?= \esc_html( \get_admin_page_title() ) ?></h1>
 			<div class="tsf-top-buttons tsf-end">
 				<?php
-				// phpcs:ignore, WordPress.Security.EscapeOutput.OutputNotEscaped -- submit_button() escapes (mostly...)
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- submit_button() escapes (mostly...)
 				echo $_save_button, $_reset_button, $_extensions_button;
 				?>
 			</div>
@@ -103,13 +105,13 @@ $hook_name = Admin\Menu::get_page_hook_name();
 		<div class=tsf-bottom-wrap>
 			<div class="tsf-bottom-buttons tsf-start">
 				<?php
-				// phpcs:ignore, WordPress.Security.EscapeOutput.OutputNotEscaped -- submit_button() escapes (mostly...)
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- submit_button() escapes (mostly...)
 				echo $_extensions_button;
 				?>
 			</div>
 			<div class="tsf-bottom-buttons tsf-end">
 				<?php
-				// phpcs:ignore, WordPress.Security.EscapeOutput.OutputNotEscaped -- submit_button() escapes (mostly...)
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- submit_button() escapes (mostly...)
 				echo $_save_button;
 				?>
 			</div>

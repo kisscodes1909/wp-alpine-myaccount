@@ -8,6 +8,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 <?php do_action( 'wt_decorator_email_body_content', $coupon, $sent_to_admin, $plain_text, $email ); ?>
 
 <p><?php $coupon_data  = Wt_Smart_Coupon_Public::get_coupon_meta_data($coupon); ?></p> 
-<p><?php echo Wt_Smart_Coupon_Public::get_coupon_html($coupon, $coupon_data, 'email_coupon'); ?></p>
+<p>
+	<?php 
+	echo Wt_Smart_Coupon_Public::get_coupon_html($coupon, $coupon_data, 'email_coupon'); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	?>
+</p>
 
 <?php do_action( 'woocommerce_email_footer', $email ); ?>

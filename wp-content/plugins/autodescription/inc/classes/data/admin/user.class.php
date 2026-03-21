@@ -8,11 +8,11 @@ namespace The_SEO_Framework\Data\Admin;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\Data;
+use The_SEO_Framework\Data;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -33,7 +33,24 @@ use \The_SEO_Framework\Data;
  * @since 5.0.0
  * @access private
  */
-class User {
+final class User {
+
+	/**
+	 * @since 5.1.3
+	 * @var array[] {
+	 *     The nonce data per save context.
+	 *     WordPress's native nonce doesn't suffice because these options are togglable.
+	 *
+	 *     @type string $name   The nonce field name.
+	 *     @type string $action The nonce action.
+	 * }
+	 */
+	public const SAVE_NONCES = [
+		'user-edit' => [
+			'name'   => 'tsf_user_nonce_name',
+			'action' => 'tsf_user_nonce_action',
+		],
+	];
 
 	/**
 	 * Saves user profile fields.
@@ -55,8 +72,10 @@ class User {
 
 		if ( ! \current_user_can( 'edit_user', $user_id ) ) return;
 
-		// Redundant. Before hooks fire, this is already checked.
-		\check_admin_referer( "update-user_{$user_id}" );
+		if (
+			   ! isset( $_POST[ self::SAVE_NONCES['user-edit']['name'] ] )
+			|| ! \wp_verify_nonce( $_POST[ self::SAVE_NONCES['user-edit']['name'] ], self::SAVE_NONCES['user-edit']['action'] )
+		) return;
 
 		if ( ! Data\User::user_has_author_info_cap_on_network( $user_id ) ) return;
 

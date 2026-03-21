@@ -6,6 +6,7 @@
  * @var string $site_url
  * @var string $pfc_button_text
  */
+if ( ! defined( 'ABSPATH' ) ) exit;
 ?>
 <a class="button"
    style="background-color: <?php esc_attr_e($pfc_button_color); ?>"

@@ -82,18 +82,22 @@ if( $cr_current_user instanceof WP_User ) {
 	<?php else : ?>
 
 		<div class="cr-review-form-item">
-			<img src="<?php echo esc_url( $cr_item_pic ); ?>" alt="<?php echo esc_attr( $cr_item_name ); ?>"/>
+			<img src="<?php echo esc_url( $cr_item_pic ); ?>" alt="<?php echo esc_attr( $cr_item_name ); ?>" loading="lazy" />
 			<span><?php echo esc_html( $cr_item_name ); ?></span>
 			<input type="hidden" value="<?php echo esc_attr( $cr_item_id ); ?>" class="cr-review-form-item-id" />
 		</div>
 
-		<?php do_action( 'cr_review_form_rating', $cr_item_id ); ?>
+		<?php
+			$cr_hash = random_int( 0, 99 ) . '_';
+			do_action( 'cr_review_form_header', $cr_item_id, $cr_form_settings_array, $cr_hash );
+			do_action( 'cr_review_form_rating', $cr_item_id, $cr_hash );
+		?>
 
 		<div class="cr-review-form-comment">
 			<div class="cr-review-form-lbl">
 				<?php _e( 'Your review', 'customer-reviews-woocommerce' ); ?>
 			</div>
-			<textarea rows="5" name="cr_review_form_comment_txt" class="cr-review-form-comment-txt"></textarea>
+			<textarea rows="5" name="cr_review_form_comment_txt" class="cr-review-form-comment-txt" aria-label="<?php echo esc_attr__( 'Your review', 'customer-reviews-woocommerce' ); ?>"></textarea>
 			<div class="cr-review-form-field-error">
 				<?php _e( '* Review is required', 'customer-reviews-woocommerce' ); ?>
 			</div>
@@ -104,7 +108,7 @@ if( $cr_current_user instanceof WP_User ) {
 				<div class="cr-review-form-lbl">
 					<?php _e( 'Name', 'customer-reviews-woocommerce' ); ?>
 				</div>
-				<input type="text" name="cr_review_form_name" class="cr-review-form-txt" autocomplete="name" value="<?php echo $cr_user_name;?>"></input>
+				<input type="text" name="cr_review_form_name" class="cr-review-form-txt" autocomplete="name" value="<?php echo $cr_user_name;?>" aria-label="<?php echo esc_attr__( 'Name', 'customer-reviews-woocommerce' ); ?>"></input>
 				<div class="cr-review-form-field-error">
 					<?php _e( '* Name is required', 'customer-reviews-woocommerce' ); ?>
 				</div>
@@ -113,7 +117,7 @@ if( $cr_current_user instanceof WP_User ) {
 				<div class="cr-review-form-lbl">
 					<?php _e( 'Email', 'customer-reviews-woocommerce' ); ?>
 				</div>
-				<input type="email" name="cr_review_form_email" class="cr-review-form-txt" autocomplete="email" value="<?php echo $cr_user_email;?>"></input>
+				<input type="email" name="cr_review_form_email" class="cr-review-form-txt" autocomplete="email" value="<?php echo $cr_user_email;?>" aria-label="<?php echo esc_attr__( 'Email', 'customer-reviews-woocommerce' ); ?>"></input>
 				<div class="cr-review-form-field-error">
 					<?php _e( '* Email is required', 'customer-reviews-woocommerce' ); ?>
 				</div>
@@ -161,7 +165,7 @@ if( $cr_current_user instanceof WP_User ) {
 								}
 							?>
 						</div>
-						<input type="file" accept="image/jpeg,image/png,video/*" class="cr-form-item-media-file"<?php echo ( 1 < $counter ? ' data-lastindex="' . $counter . '"' : '' ); ?>>
+						<input type="file" accept="image/jpeg,image/png,video/*" aria-label="<?php echo esc_attr__( $cr_form_item_media_desc ); ?>" class="cr-form-item-media-file"<?php echo ( 1 < $counter ? ' data-lastindex="' . $counter . '"' : '' ); ?>>
 					</div>
 					<div class="cr-review-form-field-error"></div>
 				</div>
@@ -189,7 +193,7 @@ if( $cr_current_user instanceof WP_User ) {
 		<div class="cr-review-form-buttons">
 			<button type="button" class="cr-review-form-submit">
 				<span><?php _e( 'Submit', 'customer-reviews-woocommerce' ); ?></span>
-				<img src="<?php echo plugin_dir_url( dirname( __FILE__ ) ) . 'img/spinner-dots.svg'; ?>" alt="Loading" />
+				<img src="<?php echo CR_Utils::cr_get_plugin_dir_url() . 'img/spinner-dots.svg'; ?>" alt="Loading" />
 			</button>
 			<button type="button" class="cr-review-form-cancel">
 				<?php _e( 'Cancel', 'customer-reviews-woocommerce' ); ?>
@@ -198,7 +202,7 @@ if( $cr_current_user instanceof WP_User ) {
 
 		<div class="cr-review-form-result">
 			<span></span>
-			<button type="button" class="cr-review-form-continue"></button>
+			<button type="button" class="cr-review-form-continue" aria-label="<?php echo esc_attr__( 'Continue', 'customer-reviews-woocommerce' ); ?>"></button>
 		</div>
 
 	<?php endif; ?>

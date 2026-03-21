@@ -106,7 +106,7 @@ if (!class_exists('RP_Decorator_WC')) {
         public static function remove_decorator_draft() {
             global $wpdb;
             $d_status = false;
-            $drafted_data = $wpdb->get_results('SELECT id,post_content,post_status FROM ' . $wpdb->prefix . "posts WHERE post_type = 'customize_changeset'", ARRAY_A);
+            $drafted_data = $wpdb->get_results('SELECT id,post_content,post_status FROM ' . $wpdb->prefix . "posts WHERE post_type = 'customize_changeset'", ARRAY_A); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
             foreach ($drafted_data as $key => $drafted_template) {
                 $did = $drafted_template['id'];
                 $drafted_content = $drafted_template['post_content'];
@@ -196,19 +196,32 @@ if (!class_exists('RP_Decorator_WC')) {
          * @return void
          */
         public function print_open_customizer_button($options) {
-            ?><tr valign="top">
+            ?>
+            <tr valign="top">
                 <th scope="row" class="titledesc" style="width:230px;">
-            <?php _e('Customize WooCommerce Emails', 'decorator-woocommerce-email-customizer'); ?>
+                    <?php esc_html_e( 'Customize WooCommerce Emails', 'decorator-woocommerce-email-customizer' ); ?>
                 </th>
-                <td class="forminp forminp-<?php echo sanitize_title($options['type']); ?>">
-                    <a href="<?php echo RP_Decorator_Customizer::get_customizer_url(); ?>">
-                        <button type="button" class="button button-secondary" value="<?php _e('Open Decorator', 'decorator-woocommerce-email-customizer'); ?>">
-            <?php _e('Open Decorator', 'decorator-woocommerce-email-customizer'); ?>
+                <td class="forminp forminp-<?php echo esc_attr( $options['type'] ); ?>">
+                    <a href="<?php echo esc_url( RP_Decorator_Customizer::get_customizer_url() ); ?>" target="_blank">
+                        <button type="button" class="button button-secondary" value="<?php esc_html_e('Open Decorator', 'decorator-woocommerce-email-customizer'); ?>">
+                            <?php esc_html_e('Open Decorator', 'decorator-woocommerce-email-customizer'); ?>
                         </button>
                     </a>
-                    <p class="description"><?php printf(__('Make WooCommerce emails match your brand. <a href="%s">Decorator</a> plugin by <a href="%s">WebToffee</a>.', 'decorator-woocommerce-email-customizer'), 'https://wordpress.org/plugins/decorator-woocommerce-email-customizer', 'https://www.webtoffee.com'); ?></p>
+                    <p class="description">
+                        <?php 
+                        printf( 
+                            // translators: 1: opening a tag 2: closing a tag 3: opening a tag 4: closing a tag
+                            esc_html__( 'Make WooCommerce emails match your brand. %1$s Decorator %2$s plugin by %3$s WebToffee %4$s.', 'decorator-woocommerce-email-customizer' ), 
+                            '<a href="'. esc_url( 'https://wordpress.org/plugins/decorator-woocommerce-email-customizer' ) .'" target="_blank">', 
+                            '</a>', 
+                            '<a href="'. esc_url( 'https://www.webtoffee.com' ) .'" target="_blank">', 
+                            '</a>'
+                        ); 
+                        ?>
+                    </p>
                 </td>
-            </tr><?php
+            </tr>
+            <?php
         }
 
         /**
@@ -237,8 +250,8 @@ if (!class_exists('RP_Decorator_WC')) {
 
             $body_text_enable = get_option('rp_decorator_' . $key . '_body_text_enable_switch',1);
             
-            if(isset($_POST['customized'])&& isset($_GET['rp-decorator-preview']) && $_GET['rp-decorator-preview'] == 1){                
-                 $temp_style_data = json_decode(wp_unslash($_POST['customized']), true);
+            if(isset($_POST['customized'])&& isset($_GET['rp-decorator-preview']) && $_GET['rp-decorator-preview'] == 1){   // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing        
+                 $temp_style_data = json_decode(wc_clean( wp_unslash( $_POST['customized'] ) ), true); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- Already sanitized.
                  if(array_key_exists('rp_decorator_' . $key . '_body_text_enable_switch', $temp_style_data)){
                      $body_text_enable = $temp_style_data['rp_decorator_' . $key . '_body_text_enable_switch'];
                  }
@@ -284,7 +297,7 @@ if (!class_exists('RP_Decorator_WC')) {
                     }
                     $body_text = str_replace('{invoice_pay_link}', $pay_link, $body_text);
                 }
-            } elseif (strstr($key, 'wt_smart_coupon')) {
+            } elseif ( 'wt_smart_coupon' === $key ) {
                 $body_text = get_option('rp_decorator_' . $key . '_body')?  get_option('rp_decorator_' . $key . '_body') : RP_Decorator_Settings::get_default_value('wt_smart_coupon_body');;
             } else {
                 $body_text = get_option('rp_decorator_' . $key . '_body') ?  get_option('rp_decorator_' . $key . '_body') : RP_Decorator_Settings::get_default_value($key.'_body');              
@@ -360,10 +373,10 @@ if (!class_exists('RP_Decorator_WC')) {
                         case 'subscription_expiry_intimation' :   
                             $subscription = hf_get_subscription( $order );
                             $end_time       = $subscription->get_time( 'end' );
-                            $subscription_end_date  = date(wc_date_format(), $end_time); 
+                            $subscription_end_date  = gmdate(wc_date_format(), $end_time); 
 
                             $next_payment     = $subscription->get_time( 'next_payment' );
-                            $subscription_next_payment_date = date(wc_date_format(), $next_payment);
+                            $subscription_next_payment_date = gmdate(wc_date_format(), $next_payment);
 
                             $body_text = str_replace('{subscription_end_date}', $subscription_end_date, $body_text);
                             $body_text = str_replace('{subscription_next_payment_date}', $subscription_next_payment_date, $body_text);
@@ -423,8 +436,8 @@ if (!class_exists('RP_Decorator_WC')) {
             
             $body_text_enable = get_option('rp_decorator_' . $key . '_body_text_enable_switch',1);
             
-            if(isset($_POST['customized'])&& isset($_GET['rp-decorator-preview']) && $_GET['rp-decorator-preview'] == 1){                
-                 $temp_style_data = json_decode(wp_unslash($_POST['customized']), true);
+            if(isset($_POST['customized'])&& isset($_GET['rp-decorator-preview']) && $_GET['rp-decorator-preview'] == 1){ // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing             
+                 $temp_style_data = json_decode(wc_clean( wp_unslash( $_POST['customized'] ) ), true); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- Already sanitized.
                  if(array_key_exists('rp_decorator_' . $key . '_body_text_enable_switch', $temp_style_data)){
                      $body_text_enable = $temp_style_data['rp_decorator_' . $key . '_body_text_enable_switch'];
                  }
@@ -491,8 +504,8 @@ if (!class_exists('RP_Decorator_WC')) {
         public function wt_add_lineitem_image($args) {
             $line_item_image = RP_Decorator_Customizer::opt('order_items_image');
             $line_item_sku = RP_Decorator_Customizer::opt('order_items_sku');
-            if (isset($_POST['customized']) && !empty($_POST['customized'])) {
-                $data = json_decode(wp_unslash($_POST['customized']), true);
+            if (isset($_POST['customized']) && !empty($_POST['customized'])) { //phpcs:ignore WordPress.Security.NonceVerification.Missing
+                $data = json_decode(wc_clean( wp_unslash( $_POST['customized'] ) ), true); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- Already sanitized.
                 if (array_key_exists('rp_decorator[order_items_image]', $data)) {
                     if ($line_item_image != $data['rp_decorator[order_items_image]']) {
                         $line_item_image = $data['rp_decorator[order_items_image]'];

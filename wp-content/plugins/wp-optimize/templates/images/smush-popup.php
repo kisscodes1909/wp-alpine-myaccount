@@ -2,7 +2,7 @@
 <div id="wpo_smush_images_information_container" style="display:none;">
 	<div id="wpo_smush_images_information_wrapper">
 		<h3 id="wpo_smush_images_information_heading"><?php esc_html_e('Compressing images', 'wp-optimize');?></h3>
-		<h4 id="wpo_smush_images_information_server"></h4>
+		<h4 id="wpo_smush_images_information_server"><?php echo esc_html($compression_server_hint); ?></h4>
 		<div class="progress-bar orange stripes">
 			<span style="width: 100%"></span>
 		</div>
@@ -46,7 +46,7 @@
 	<div id="summary-message"></div>
 	<input type="button" id="wpo_smush_get_logs" class="wpo_smush_get_logs wpo_primary_small button-primary" value="<?php esc_attr_e('View logs', 'wp-optimize'); ?>">
 	<input type="button" id="wpo_smush_clear_stats_btn" class="wpo_primary_small button-primary align-right" value="<?php esc_attr_e('Clear compression statistics', 'wp-optimize'); ?>">
-	<img id="wpo_smush_images_clear_stats_spinner" class="display-none align-right" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); ?>" alt="...">
+	<img id="wpo_smush_images_clear_stats_spinner" class="display-none align-right" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); ?>" alt="..."><?php // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>
 	<span id="wpo_smush_images_clear_stats_done" class="dashicons dashicons-yes display-none save-done align-right"></span>
 	<span class="clearfix"></span>
 	<input type="button" class="wpo_primary_small button-primary wpo_smush_stats_cta_btn" value="<?php esc_attr_e('Close', 'wp-optimize'); ?>">

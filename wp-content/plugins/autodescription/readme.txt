@@ -3,9 +3,9 @@ Contributors: Cybr
 Donate link: https://github.com/sponsors/sybrew
 Tags: seo, xml sitemap, google search, open graph, structured data
 Requires at least: 6.0
-Tested up to: 6.7
+Tested up to: 6.9
 Requires PHP: 7.4.0
-Stable tag: 5.1.2
+Stable tag: 5.1.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -243,6 +243,16 @@ You can also output these breadcrumbs visually in your theme by [using a shortco
 
 == Changelog ==
 
+### 5.1.4
+
+This tiny update adds a new setting and shortcode attribute for breadcrumb title output, letting you choose between meta titles or page titles. We rushed this one out because our notification didn't work, and we do not want to send out notifications without giving [a feature in return](https://theseoframework.com/?p=4425).
+
+### 5.1.3
+
+This update adds primary term selection to quick/bulk edit, option visibility toggles, comprehensive Avada theme compatibility, improved Elementor handling, and [various bug fixes](https://theseoframework.com/?p=4423).
+
+We also deleted all deprecated code from before TSF v5.0. If you added custom snippets from before 2 years ago without resolving the deprecations, you may experience issues. Feel free to reach out to us in our [support forums](https://wordpress.org/support/plugin/autodescription) if you need help.
+
 ### 5.1.2
 
 This patch [resolves another issue](https://theseoframework.com/?p=4380) where saving author meta data could cause an error.
@@ -294,6 +304,10 @@ But surely it is obvious to everyone that all the endeavor of the part by which 
 * **You can find the full changelog [here](https://theseoframework.com/?cat=2).**
 
 == Upgrade Notice ==
+
+= 5.1.3 =
+
+We removed all deprecated code from before TSF v5.0. You may experience issues if you added custom snippets from before 2 years ago without resolving the deprecations. We'll be happy to help you in our [support forums](https://wordpress.org/support/plugin/autodescription).
 
 = 5.0.0 =
 

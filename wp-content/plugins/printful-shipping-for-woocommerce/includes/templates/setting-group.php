@@ -7,6 +7,7 @@
  * @var string $carrier_version
  * @var array $settings
  */
+if ( ! defined( 'ABSPATH' ) ) exit;
 ?>
 <div class="printful-setting-group">
 

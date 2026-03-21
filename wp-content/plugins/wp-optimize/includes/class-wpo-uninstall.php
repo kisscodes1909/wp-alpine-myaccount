@@ -15,12 +15,24 @@ class WPO_Uninstall {
 		WP_Optimize()->get_minify()->plugin_uninstall();
 		WP_Optimize()->get_options()->wipe_settings();
 		WP_Optimize()->delete_transients_and_semaphores();
+		WP_Optimize()->get_table_management()->delete_plugin_tables();
 		Updraft_Tasks_Activation::uninstall(WPO_PLUGIN_SLUG);
 		self::delete_wpo_folder();
+		if (class_exists('WPO_Gravatar_Data')) {
+			wpo_delete_files(WPO_Gravatar_Data::WPO_CACHE_GRAVATAR_DIR);
+		}
+
+		if (class_exists('WP_Optimize_Minify_Analytics')) {
+			wpo_delete_files(WP_Optimize_Minify_Analytics::WPO_CACHE_GTAG_DIR);
+		}
+
+		if (class_exists('WP_Optimize_Lazy_Load')) {
+			WP_Optimize_Lazy_Load::instance()->delete_image_cache();
+		}
 		
 		$htaccess_file = self::get_upload_basedir() . '.htaccess';
 		if (is_file($htaccess_file) && 0 === filesize($htaccess_file)) {
-			unlink($htaccess_file);
+			wp_delete_file($htaccess_file);
 		}
 		
 		wp_clear_scheduled_hook('process_smush_tasks');
@@ -55,7 +67,8 @@ class WPO_Uninstall {
 			'server-signature',
 			'logs',
 		);
-		return apply_filters('wpo_uploads_sub_folders', $sub_folders);
+		$filtered_sub_folders = apply_filters('wpo_uploads_sub_folders', $sub_folders);
+		return is_array($filtered_sub_folders) ? $filtered_sub_folders : $sub_folders;
 	}
 
 	/**
@@ -69,12 +82,16 @@ class WPO_Uninstall {
 			foreach ($wpo_sub_folders as $folder) {
 				wpo_delete_files($wpo_folder . $folder);
 			}
-
-			$files = @scandir($wpo_folder); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress warning if it arises due to race condition
+			
+			// phpcs:disable
+			// Generic.PHP.NoSilencedErrors.Discouraged -- suppress warning if it arises due to race condition
+			// WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- Not applicable in this context
+			$files = @scandir($wpo_folder);
 			if (false === $files) return;
 			if (2 === count($files)) {
-				@rmdir($wpo_folder); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress error due to file permission issues
+				@rmdir($wpo_folder);
 			}
+			// phpcs:enable
 		}
 	}
 }

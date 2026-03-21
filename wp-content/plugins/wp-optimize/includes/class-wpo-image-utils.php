@@ -16,7 +16,7 @@ class WPO_Image_Utils {
 		$attachment_images = array();
 		$upload_dir = wp_get_upload_dir();
 
-		// get sizes info from attachment meta data.
+		// get sizes info from attachment metadata.
 		$meta = wp_get_attachment_metadata($attachment_id);
 		if (!is_array($meta) || !array_key_exists('sizes', $meta)) return $attachment_images;
 
@@ -51,11 +51,11 @@ class WPO_Image_Utils {
 	 *
 	 * @param string $file
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	public static function get_extension($file) {
 		$file_type = wp_check_filetype($file);
-		return $file_type['ext'];
+		return (string) $file_type['ext'];
 	}
 
 	/**

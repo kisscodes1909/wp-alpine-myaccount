@@ -32,11 +32,13 @@ class WP_Optimization_trash extends WP_Optimization {
 
 		$retention_subquery = '';
 
-		if ('true' == $this->retention_enabled) {
+		if ('true' === $this->retention_enabled) {
 			$retention_subquery = ' and post_modified < NOW() - INTERVAL ' . $this->retention_period . ' WEEK';
 		}
 
 		// get data requested for preview.
+		// `$this->wpdb->prepare` is global `$wpdb->prepare`
+		// phpcs:disable
 		$sql = $this->wpdb->prepare(
 			"SELECT `ID`, `post_title`, `post_date`".
 			" FROM `" . $this->wpdb->posts . "`".
@@ -50,6 +52,7 @@ class WP_Optimization_trash extends WP_Optimization {
 		);
 
 		$posts = $this->wpdb->get_results($sql, ARRAY_A);
+		// phpcs:enable
 
 		// fix empty revision titles.
 		if (!empty($posts)) {
@@ -59,7 +62,7 @@ class WP_Optimization_trash extends WP_Optimization {
 					'post_type' => 'post',
 				);
 				$posts[$key]['post_title'] = array(
-					'text' => '' == $post['post_title'] ? '('.__('no title', 'wp-optimize').')' : $post['post_title'],
+					'text' => '' === $post['post_title'] ? '('.__('no title', 'wp-optimize').')' : $post['post_title'],
 					'url' => add_query_arg($args, 'edit.php'),
 				);
 			}
@@ -68,12 +71,12 @@ class WP_Optimization_trash extends WP_Optimization {
 		// get total count auto-draft for optimization.
 		$sql = "SELECT COUNT(*) FROM `" . $this->wpdb->posts . "` WHERE post_status = 'trash'";
 
-		if ('true' == $this->retention_enabled) {
+		if ('true' === $this->retention_enabled) {
 			$sql .= ' and post_modified < NOW() - INTERVAL ' . $this->retention_period . ' WEEK';
 		}
 		$sql .= ';';
 
-		$total = $this->wpdb->get_var($sql);
+		$total = $this->wpdb->get_var($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- safe, no user input used
 
 		return array(
 			'id_key' => 'ID',
@@ -94,9 +97,11 @@ class WP_Optimization_trash extends WP_Optimization {
 	 * Do actions after optimize() function.
 	 */
 	public function after_optimize() {
+		// translators: %s is the number of posts removed from trash
 		$message = sprintf(_n('%s post removed from Trash', '%s posts removed from Trash', $this->processed_count, 'wp-optimize'), number_format_i18n($this->processed_count));
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s is the number of sites
 			$message .= ' ' . sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
@@ -108,10 +113,11 @@ class WP_Optimization_trash extends WP_Optimization {
 	 * Do optimization.
 	 */
 	public function optimize() {
-
+		// `$this->wpdb` is global `$wpdb`
+		// phpcs:disable
 		$remove_ids_sql = "SELECT ID FROM `" . $this->wpdb->posts . "` WHERE post_status = 'trash'";
 
-		if ('true' == $this->retention_enabled) {
+		if ('true' === $this->retention_enabled) {
 			$remove_ids_sql .= ' AND post_modified < NOW() - INTERVAL ' . $this->retention_period . ' WEEK';
 		}
 
@@ -120,7 +126,9 @@ class WP_Optimization_trash extends WP_Optimization {
 
 		// if optimize called from preview dialog then get posted ids.
 		if (isset($this->data['ids'])) {
-			$post_remove_ids = array_intersect($post_remove_ids, $this->data['ids']);
+			// Ensure ids are integers
+			$safe_ids = array_map('absint', $this->data['ids']);
+			$post_remove_ids = array_intersect($post_remove_ids, $safe_ids);
 		}
 
 		// remove related data for trashed posts.
@@ -142,7 +150,7 @@ class WP_Optimization_trash extends WP_Optimization {
 
 		$clean = "DELETE FROM `" . $this->wpdb->posts . "` WHERE post_status = 'trash'";
 
-		if ('true' == $this->retention_enabled) {
+		if ('true' === $this->retention_enabled) {
 			$clean .= ' AND post_modified < NOW() - INTERVAL ' . $this->retention_period . ' WEEK';
 		}
 
@@ -156,7 +164,7 @@ class WP_Optimization_trash extends WP_Optimization {
 		// remove trashed posts.
 		$posttrash = $this->query($clean);
 		$this->processed_count += $posttrash;
-
+		// phpcs:enable
 	}
 
 	/**
@@ -164,17 +172,19 @@ class WP_Optimization_trash extends WP_Optimization {
 	 */
 	public function after_get_info() {
 		if ($this->found_count > 0) {
+			// translators: %s is the number of trashed posts
 			$message = sprintf(_n('%s trashed post in your database', '%s trashed posts in your database', $this->found_count, 'wp-optimize'), number_format_i18n($this->found_count));
 		} else {
 			$message = __('No trashed posts found', 'wp-optimize');
 		}
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s is the number of sites
 			$message .= ' ' . sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
 		// add preview link for output.
-		if (0 != $this->found_count && null != $this->found_count) {
+		if ($this->found_count > 0) {
 			$message = $this->get_preview_link($message);
 		}
 
@@ -187,12 +197,12 @@ class WP_Optimization_trash extends WP_Optimization {
 	public function get_info() {
 
 		$sql = "SELECT COUNT(*) FROM `" . $this->wpdb->posts . "` WHERE post_status = 'trash'";
-		if ('true' == $this->retention_enabled) {
+		if ('true' === $this->retention_enabled) {
 			$sql .= ' and post_modified < NOW() - INTERVAL ' . $this->retention_period . ' WEEK';
 		}
 		$sql .= ';';
 
-		$trash = $this->wpdb->get_var($sql);
+		$trash = $this->wpdb->get_var($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- safe, no user input used
 		$this->found_count += $trash;
 
 	}
@@ -200,11 +210,12 @@ class WP_Optimization_trash extends WP_Optimization {
 	/**
 	 * Return settings label
 	 *
-	 * @return string|void
+	 * @return string
 	 */
 	public function settings_label() {
 
-		if ('true' == $this->retention_enabled) {
+		if ('true' === $this->retention_enabled) {
+			// translators: %d is the number of weeks
 			return sprintf(__('Clean trashed posts which are older than %d weeks', 'wp-optimize'), $this->retention_period);
 		} else {
 			return __('Clean all trashed posts', 'wp-optimize');
@@ -214,7 +225,7 @@ class WP_Optimization_trash extends WP_Optimization {
 	/**
 	 * Return description
 	 *
-	 * @return string|void
+	 * @return string
 	 */
 	public function get_auto_option_description() {
 		return __('Remove trashed posts', 'wp-optimize');

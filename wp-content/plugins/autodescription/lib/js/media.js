@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2018 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2018 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -39,7 +39,7 @@ window.tsfMedia = function () {
 	 *
 	 * @since 3.1.0
 	 * @access public
-	 * @type {(Object<string,*>)|boolean|null} l10n Localized strings
+	 * @type {(Object<string,*>)|Boolean|null} l10n Localized strings
 	 */
 	const l10n = tsfMediaL10n;
 
@@ -632,12 +632,14 @@ window.tsfMedia = function () {
 	 * @param {Event} event
 	 */
 	function _updateImageNotifications( event ) {
+
 		const imageId = event.target.id?.replace( /-[a-z]+$/, '' ); // inferred from get_image_uploader_form().
 
 		if ( ! imageId ) return;
 
 		const preview      = document.getElementById( `${imageId}-preview` ),
-			  imageWarning = document.getElementById( `${imageId}-image-warning` );
+			  imageWarning = document.getElementById( `${imageId}-image-warning` ),
+			  imageType    = document.getElementById( `${imageId}-select` )?.dataset?.inputType;
 
 		_notificationBuffer.has( imageId ) && clearTimeout( _notificationBuffer.get( imageId ) );
 
@@ -687,6 +689,7 @@ window.tsfMedia = function () {
 					if ( success ) {
 						// 250px is the max width for tooltips; we subtract 24 for padding, and 1 for subpixel rounding errors.
 						// We set min-height and width as that will prevent jumping. Also, those are the absolute-minimum for sharing/schema images.
+						// imageObject.style    = "max-width:min(100%,225px);max-height:225px;min-width:60px;min-height:60px;border-radius:3px;display:block";
 						imageObject.style    = "max-width:225px;max-height:225px;min-width:60px;min-height:60px;border-radius:3px;display:block;";
 						preview.dataset.desc = imageObject.outerHTML;
 
@@ -703,14 +706,20 @@ window.tsfMedia = function () {
 					// If there's already a display warning, we don't want to overwrite it.
 					if ( ! warning.length ) {
 						// Let's keep the check simple for now.
-						let ext = imageObject.src.length && imageObject.src.split( '.' ).pop().toLowerCase();
+						let ext = imageObject.src?.split( '.' ).pop().toLowerCase();
 
-						if ( ext.length ) {
-							if ( l10n.warning.warnedTypes.hasOwnProperty( ext ) ) {
-								warning = l10n.warning.i18n.extWarned.replace( '%s', tsf.escapeString( ext ) );
-							} else if ( l10n.warning.forbiddenTypes.hasOwnProperty( ext ) ) {
-								warning      = l10n.warning.i18n.extForbidden.replace( '%s', tsf.escapeString( ext ) );
+						if ( ext?.length ) {
+							if (
+								   l10n.warning.forbiddenTypes?.[ imageType ]?.hasOwnProperty( ext )
+								|| l10n.warning.forbiddenTypes?.all?.hasOwnProperty( ext )
+							) {
+								warning     = l10n.warning.i18n.extForbidden.replace( '%s', tsf.escapeString( ext ) );
 								warningType = 'error';
+							} else if (
+								   l10n.warning.warnedTypes?.[ imageType ]?.hasOwnProperty( ext )
+								|| l10n.warning.warnedTypes?.all?.hasOwnProperty( ext )
+							) {
+								warning = l10n.warning.i18n.extWarned.replace( '%s', tsf.escapeString( ext ) );
 							}
 						}
 						// TODO: If the above fails, we'd have to parse the MIME type.

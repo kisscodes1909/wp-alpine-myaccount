@@ -111,6 +111,7 @@ $cr_uninstall_options = array(
 	'ivole_google_generate_xml_feed',
 	'ivole_google_exclude_variable_parent',
 	'ivole_product_feed_file_url',
+	'ivole_product_feed_file_name',
 	'ivole_product_feed_variations',
 	'ivole_product_feed_attributes',
 	'ivole_excl_product_ids',
@@ -123,6 +124,7 @@ $cr_uninstall_options = array(
 	'ivole_product_feed_enable_brand',
 	'ivole_product_feed_enable_material',
 	'ivole_product_feed_enable_multipack',
+	'ivole_product_feed_enable_condition',
 	'ivole_product_feed_enable_bundle',
 	'ivole_product_feed_enable_identifier_exists',
 	'ivole_questions_answers',
@@ -137,6 +139,7 @@ $cr_uninstall_options = array(
 	'ivole_email_body',
 	'ivole_email_body_coupon',
 	'ivole_feed_file_url',
+	'ivole_feed_file_name',
 	'ivole_trust_badge_floating_type',
 	'ivole_verified_owner',
 	'ivole_avatars',
@@ -160,7 +163,10 @@ $cr_uninstall_options = array(
 	'ivole_review_forms',
 	'ivole_wa_message',
 	'ivole_track_reminder_open',
-	'ivole_review_login_url'
+	'ivole_review_login_url',
+	'ivole_qna_settings',
+	'ivole_form_terms_page',
+	'ivole_form_expiry_period'
 );
 
 foreach ( $cr_uninstall_options as $uninstall_option ) {
@@ -174,5 +180,7 @@ $reminders_table = $wpdb->prefix . 'cr_reminders_log';
 $wpdb->query( "DROP TABLE IF EXISTS `$reminders_table`;" );
 $wpmail_log_table = $wpdb->prefix . 'cr_wpmail_log';
 $wpdb->query( "DROP TABLE IF EXISTS `$wpmail_log_table`;" );
+$reco_events_table = $wpdb->prefix . 'cr_reco_events';
+$wpdb->query( "DROP TABLE IF EXISTS `$reco_events_table`;" );
 
 wp_cache_flush();

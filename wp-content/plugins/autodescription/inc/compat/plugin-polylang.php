@@ -2,31 +2,32 @@
 /**
  * @package The_SEO_Framework\Compat\Plugin\PolyLang
  * @subpackage The_SEO_Framework\Compatibility
+ * @access private
  */
 
 namespace The_SEO_Framework;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Helper\Query,
 	Meta\URI,
 };
 
-\add_action( 'the_seo_framework_sitemap_header', __NAMESPACE__ . '\\_polylang_set_sitemap_language' );
-\add_filter( 'the_seo_framework_sitemap_endpoint_list', __NAMESPACE__ . '\\_polylang_register_sitemap_languages', 20 );
-\add_filter( 'the_seo_framework_sitemap_hpt_query_args', __NAMESPACE__ . '\\_polylang_sitemap_append_non_translatables' );
-\add_filter( 'the_seo_framework_sitemap_nhpt_query_args', __NAMESPACE__ . '\\_polylang_sitemap_append_non_translatables' );
-\add_filter( 'the_seo_framework_title_from_custom_field', __NAMESPACE__ . '\\pll__' );
-\add_filter( 'the_seo_framework_title_from_generation', __NAMESPACE__ . '\\pll__' );
-\add_filter( 'the_seo_framework_generated_description', __NAMESPACE__ . '\\pll__' );
-\add_filter( 'the_seo_framework_custom_field_description', __NAMESPACE__ . '\\pll__' );
-\add_filter( 'the_seo_framework_front_init', __NAMESPACE__ . '\\_hijack_polylang_home_url' );
-\add_filter( 'pll_home_url_white_list', __NAMESPACE__ . '\\_polylang_allow_tsf_home_url' );
-\add_filter( 'pll_home_url_allow_list', __NAMESPACE__ . '\\_polylang_allow_tsf_home_url' );
-\add_action( 'the_seo_framework_cleared_sitemap_transients', __NAMESPACE__ . '\\_polylang_flush_sitemap' );
-\add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\_defunct_badly_coded_polylang_script', 11 );
-\add_filter( 'the_seo_framework_seo_column_keys_order', __NAMESPACE__ . '\\_polylang_seo_column_keys_order' );
+\add_action( 'the_seo_framework_sitemap_header', __NAMESPACE__ . '\_polylang_set_sitemap_language' );
+\add_filter( 'the_seo_framework_sitemap_endpoint_list', __NAMESPACE__ . '\_polylang_register_sitemap_languages', 20 );
+\add_filter( 'the_seo_framework_sitemap_hpt_query_args', __NAMESPACE__ . '\_polylang_sitemap_append_non_translatables' );
+\add_filter( 'the_seo_framework_sitemap_nhpt_query_args', __NAMESPACE__ . '\_polylang_sitemap_append_non_translatables' );
+\add_filter( 'the_seo_framework_title_from_custom_field', __NAMESPACE__ . '\pll__' );
+\add_filter( 'the_seo_framework_title_from_generation', __NAMESPACE__ . '\pll__' );
+\add_filter( 'the_seo_framework_custom_field_description', __NAMESPACE__ . '\pll__' );
+\add_filter( 'the_seo_framework_generated_description', __NAMESPACE__ . '\pll__' );
+\add_filter( 'the_seo_framework_front_init', __NAMESPACE__ . '\_hijack_polylang_home_url' );
+\add_filter( 'pll_home_url_white_list', __NAMESPACE__ . '\_polylang_allow_tsf_home_url' );
+\add_filter( 'pll_home_url_allow_list', __NAMESPACE__ . '\_polylang_allow_tsf_home_url' );
+\add_action( 'the_seo_framework_cleared_sitemap_transients', __NAMESPACE__ . '\_polylang_flush_sitemap' );
+\add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\_defunct_badly_coded_polylang_script', 11 );
+\add_filter( 'the_seo_framework_seo_column_keys_order', __NAMESPACE__ . '\_polylang_seo_column_keys_order' );
 
 /**
  * Registeres more sitemaps for the robots.txt to parse.
@@ -107,13 +108,12 @@ function _polylang_register_sitemap_languages( $list ) {
  *
  * @hook the_seo_framework_sitemap_header 10
  * @since 4.1.2
- * @access private
  */
 function _polylang_set_sitemap_language() {
 
 	if ( ! \function_exists( 'PLL' ) || ! ( \PLL() instanceof \PLL_Frontend ) ) return;
 
-	// phpcs:ignore, WordPress.Security.NonceVerification.Recommended -- Arbitrary input expected.
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Arbitrary input expected.
 	$lang = $_GET['lang'] ?? '';
 
 	// Language codes are user-definable: copy Polylang's filtering.
@@ -156,7 +156,6 @@ function _polylang_set_sitemap_language() {
  *              in this case we can use term_id since we're specifying the taxonomy directly.
  *              WordPress 4.4.0 and later also rectifies term_id/term_taxonomy_id stratification, which is
  *              why we couldn't find an issue whilst introducing this filter.
- * @access private
  *
  * @param array $args The query arguments.
  * @return array The augmented query arguments.
@@ -205,7 +204,6 @@ function _polylang_sitemap_append_non_translatables( $args ) {
  * @hook the_seo_framework_generated_description 10
  * @hook the_seo_framework_custom_field_description 10
  * @since 3.1.0
- * @access private
  *
  * @param string $string The title or description
  * @return string
@@ -228,7 +226,6 @@ function pll__( $string ) {
  * @since 4.0.5
  * @since 5.0.0 Removed clearing once-per-request restriction.
  * @global \wpdb $wpdb
- * @access private
  */
 function _polylang_flush_sitemap() {
 	global $wpdb;
@@ -318,7 +315,7 @@ function _hijack_polylang_home_url() {
 				return \call_user_func_array( $default_cb, $args );
 
 			// Trick Polylang.
-			// phpcs:ignore, WordPress.WP.GlobalVariablesOverride.Prohibited -- it's called a hijack for a reason.
+			// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- it's called a hijack for a reason.
 			$wp_actions['template_redirect'] = 1;
 
 			$url = \call_user_func_array( $default_cb, $args );

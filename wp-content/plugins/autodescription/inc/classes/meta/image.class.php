@@ -8,12 +8,12 @@ namespace The_SEO_Framework\Meta;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\{
+use function The_SEO_Framework\{
 	get_query_type_from_args,
 	normalize_generation_args,
 };
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Data,
 	Data\Filter\Sanitize,
 	Helper\Query,
@@ -22,7 +22,7 @@ use \The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -48,39 +48,42 @@ class Image {
 
 	/**
 	 * @since 5.0.0
+	 * @since 5.1.3 The first argument is null by default now.
 	 *
 	 * @param array|null $args    The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
 	 *                            Leave null to autodetermine query.
 	 * @param string     $context Caller context. Internally supports 'organization', 'social', and 'oembed'. Default 'social'.
 	 * @return string The first valid image URL found, if any.
 	 */
-	public static function get_first_image_url( $args, $context = 'social' ) {
-		return static::get_first_custom_image_url( $args, $context )
-			?: static::get_first_generated_image_url( $args, $context );
+	public static function get_first_image_url( $args = null, $context = 'social' ) {
+		return self::get_first_custom_image_url( $args, $context )
+			?: self::get_first_generated_image_url( $args, $context );
 	}
 
 	/**
 	 * @since 5.0.0
+	 * @since 5.1.3 The first argument is null by default now.
 	 *
 	 * @param array|null $args    The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
 	 *                            Leave null to autodetermine query.
 	 * @param string     $context Caller context. Internally supports 'organization', 'social', and 'oembed'. Default 'social'.
 	 * @return string The first valid image URL found, if any.
 	 */
-	public static function get_first_custom_image_url( $args, $context = 'social' ) {
-		return current( static::get_custom_image_details( $args, null, $context ) )['url'] ?? '';
+	public static function get_first_custom_image_url( $args = null, $context = 'social' ) {
+		return current( self::get_custom_image_details( $args, null, $context ) )['url'] ?? '';
 	}
 
 	/**
 	 * @since 5.0.0
+	 * @since 5.1.3 The first argument is null by default now.
 	 *
 	 * @param array|null $args    The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
 	 *                            Leave null to autodetermine query.
 	 * @param string     $context Caller context. Internally supports 'organization', 'social', and 'oembed'. Default 'social'.
 	 * @return string The first valid image URL found, if any.
 	 */
-	public static function get_first_generated_image_url( $args, $context = 'social' ) {
-		return current( static::get_generated_image_details( $args, null, $context ) )['url'] ?? '';
+	public static function get_first_generated_image_url( $args = null, $context = 'social' ) {
+		return current( self::get_generated_image_details( $args, null, $context ) )['url'] ?? '';
 	}
 
 	/**
@@ -109,43 +112,8 @@ class Image {
 	 * }
 	 */
 	public static function get_image_details( $args = null, $single = false, $context = 'social' ) {
-		/**
-		 * @since 4.0.5
-		 * @since 4.2.0 Now supports the `$args['pta']` index.
-		 * @since 5.0.0 Deprecated.
-		 * @deprecated
-		 * @param array      $details {
-		 *     The image details array, sequential.
-		 *
-		 *     @type string $url      The image URL.
-		 *     @type int    $id       The image ID.
-		 *     @type int    $width    The image width in pixels.
-		 *     @type int    $height   The image height in pixels.
-		 *     @type string $alt      The image alt tag.
-		 *     @type string $caption  The image caption.
-		 *     @type int    $filesize The image filesize in bytes.
-		 * }
-		 * @param array|null $args    The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-		 *                            Is null when the query is auto-determined.
-		 * @param bool       $single  Whether to fetch one image, or multiple.
-		 * @param string     $context Caller context. Internally supports 'organization', 'social', and 'oembed'. Default 'social'.
-		 * @param bool       $clean   Deprecated. We always clean now.
-		 */
-		return \apply_filters_deprecated(
-			'the_seo_framework_image_details',
-			[
-				(
-					   static::get_custom_image_details( $args, $single, $context )
-					?: static::get_generated_image_details( $args, $single, $context )
-				),
-				$args,
-				$single,
-				$context,
-				true,
-			],
-			'5.0.0 of The SEO Framework',
-			'the_seo_framework_custom_image_details or the_seo_framework_generated_image_details',
-		);
+		return self::get_custom_image_details( $args, $single, $context )
+			?: self::get_generated_image_details( $args, $single, $context );
 	}
 
 	/**
@@ -194,8 +162,8 @@ class Image {
 		return \apply_filters(
 			'the_seo_framework_custom_image_details',
 			$single
-				? array_filter( [ static::generate_custom_image_details( $args, $context )->current() ] )
-				: [ ...static::generate_custom_image_details( $args, $context ) ],
+				? array_filter( [ self::generate_custom_image_details( $args, $context )->current() ] )
+				: [ ...self::generate_custom_image_details( $args, $context ) ],
 			$args,
 			$single,
 		);
@@ -246,8 +214,8 @@ class Image {
 		return \apply_filters(
 			'the_seo_framework_generated_image_details',
 			$single
-				? array_filter( [ static::generate_generated_image_details( $args, $context )->current() ] )
-				: [ ...static::generate_generated_image_details( $args, $context ) ],
+				? array_filter( [ self::generate_generated_image_details( $args, $context )->current() ] )
+				: [ ...self::generate_generated_image_details( $args, $context ) ],
 			$args,
 			$single,
 			$context,
@@ -277,17 +245,17 @@ class Image {
 	 */
 	public static function generate_image_details( $args = null, $context = 'social' ) {
 
-		foreach ( static::generate_custom_image_details( $args, $context ) as $details ) {
+		foreach ( self::generate_custom_image_details( $args, $context ) as $details ) {
 			yield $details;
 			$yielded_custom = true;
 		}
 
 		empty( $yielded_custom )
-			and yield from static::generate_generated_image_details( $args, $context );
+			and yield from self::generate_generated_image_details( $args, $context );
 	}
 
 	/**
-	 * Yields generated image details.
+	 * Yields generated custom image details.
 	 * Yes, brilliant name.
 	 *
 	 * @since 5.0.0
@@ -311,9 +279,9 @@ class Image {
 	public static function generate_custom_image_details( $args = null, $context = 'social' ) {
 
 		if ( isset( $args ) ) {
-			yield from static::generate_custom_image_details_from_args( $args, $context );
+			yield from self::generate_custom_image_details_from_args( $args, $context );
 		} else {
-			yield from static::generate_custom_image_details_from_query( $context );
+			yield from self::generate_custom_image_details_from_query( $context );
 		}
 	}
 
@@ -343,10 +311,10 @@ class Image {
 
 		isset( $args ) and normalize_generation_args( $args );
 
-		$params = static::get_image_generation_params( $args, $context );
+		$params = self::get_image_generation_params( $args, $context );
 
 		foreach (
-			static::generate_image_from_callbacks( $args, $params['cbs'], $params['size'], ! $params['multi'] )
+			self::generate_image_from_callbacks( $args, $params['cbs'], $params['size'], ! $params['multi'] )
 			as $details
 		) {
 			yield $details;
@@ -354,7 +322,7 @@ class Image {
 		}
 
 		empty( $yielded_cbs )
-			and yield from static::generate_image_from_callbacks( $args, $params['fallback'], $params['size'], true );
+			and yield from self::generate_image_from_callbacks( $args, $params['fallback'], $params['size'], true );
 	}
 
 	/**
@@ -422,7 +390,7 @@ class Image {
 		}
 
 		if ( ! empty( $details['url'] ) ) {
-			$details = Sanitize::image_details( static::merge_extra_image_details( $details, 'full' ) );
+			$details = Sanitize::image_details( self::merge_extra_image_details( $details, 'full' ) );
 
 			if ( $details['url'] )
 				yield $details;
@@ -451,8 +419,6 @@ class Image {
 	 */
 	public static function generate_custom_image_details_from_args( $args, $context = 'social' ) {
 
-		normalize_generation_args( $args );
-
 		if ( 'organization' === $context ) {
 			$details = [
 				'url' => Data\Plugin::get_option( 'knowledge_logo_url' ),
@@ -461,38 +427,49 @@ class Image {
 		} else {
 			normalize_generation_args( $args );
 
-			if ( $args['tax'] ) {
-				$details = [
-					'url' => Data\Plugin\Term::get_meta_item( 'social_image_url', $args['id'] ),
-					'id'  => Data\Plugin\Term::get_meta_item( 'social_image_id', $args['id'] ),
-				];
-			} elseif ( $args['pta'] ) {
-				$details = [
-					'url' => Data\Plugin\PTA::get_meta_item( 'social_image_url', $args['pta'] ),
-					'id'  => Data\Plugin\PTA::get_meta_item( 'social_image_id', $args['pta'] ),
-				];
-			} elseif ( empty( $args['uid'] ) && Query::is_real_front_page_by_id( $args['id'] ) ) {
-				$details = [
-					'url' => Data\Plugin::get_option( 'homepage_social_image_url' ),
-					'id'  => Data\Plugin::get_option( 'homepage_social_image_id' ),
-				];
+			switch ( get_query_type_from_args( $args ) ) {
+				case 'single':
+					if ( Query::is_static_front_page( $args['id'] ) ) {
+						$details = [
+							'url' => Data\Plugin::get_option( 'homepage_social_image_url' ),
+							'id'  => Data\Plugin::get_option( 'homepage_social_image_id' ),
+						];
 
-				if ( $args['id'] && ! $details['url'] ) {
+						if ( empty( $details['url'] ) ) {
+							$details = [
+								'url' => Data\Plugin\Post::get_meta_item( '_social_image_url', $args['id'] ),
+								'id'  => Data\Plugin\Post::get_meta_item( '_social_image_id', $args['id'] ),
+							];
+						}
+					} else {
+						$details = [
+							'url' => Data\Plugin\Post::get_meta_item( '_social_image_url', $args['id'] ),
+							'id'  => Data\Plugin\Post::get_meta_item( '_social_image_id', $args['id'] ),
+						];
+					}
+					break;
+				case 'term':
 					$details = [
-						'url' => Data\Plugin\Post::get_meta_item( '_social_image_url', $args['id'] ),
-						'id'  => Data\Plugin\Post::get_meta_item( '_social_image_id', $args['id'] ),
+						'url' => Data\Plugin\Term::get_meta_item( 'social_image_url', $args['id'] ),
+						'id'  => Data\Plugin\Term::get_meta_item( 'social_image_id', $args['id'] ),
 					];
-				}
-			} elseif ( $args['id'] ) {
-				$details = [
-					'url' => Data\Plugin\Post::get_meta_item( '_social_image_url', $args['id'] ),
-					'id'  => Data\Plugin\Post::get_meta_item( '_social_image_id', $args['id'] ),
-				];
+					break;
+				case 'homeblog':
+					$details = [
+						'url' => Data\Plugin::get_option( 'homepage_social_image_url' ),
+						'id'  => Data\Plugin::get_option( 'homepage_social_image_id' ),
+					];
+					break;
+				case 'pta':
+					$details = [
+						'url' => Data\Plugin\PTA::get_meta_item( 'social_image_url', $args['pta'] ),
+						'id'  => Data\Plugin\PTA::get_meta_item( 'social_image_id', $args['pta'] ),
+					];
 			}
 		}
 
 		if ( ! empty( $details['url'] ) ) {
-			$details = Sanitize::image_details( static::merge_extra_image_details( $details, 'full' ) );
+			$details = Sanitize::image_details( self::merge_extra_image_details( $details, 'full' ) );
 
 			if ( $details['url'] )
 				yield $details;
@@ -516,7 +493,7 @@ class Image {
 	 *     The image generation parameters, associative.
 	 *
 	 *     @type string  $size     The image size by name.
-	 *     @type boolean $multi    Whether multiple images may be returned.
+	 *     @type Boolean $multi    Whether multiple images may be returned.
 	 *     @type array   $cbs:     An array of image generation callbacks, in order of most important to least.
 	 *                             When 'multi' (or $single input) parameter is "false", it will use the first found.
 	 *     @type array   $fallback An array of image generation callbacks, in order of most important to least.
@@ -580,7 +557,7 @@ class Image {
 		 *     The image generation parameters.
 		 *
 		 *     @type string  $size     The image size to use.
-		 *     @type boolean $multi    Whether to allow multiple images to be returned. This may be overwritten by generators to 'false'.
+		 *     @type Boolean $multi    Whether to allow multiple images to be returned. This may be overwritten by generators to 'false'.
 		 *     @type array   $cbs      The callbacks to parse. Ideally be generators, so we can halt remotely.
 		 *     @type array   $fallback The callbacks to parse. Ideally be generators, so we can halt remotely.
 		 * ];
@@ -631,7 +608,7 @@ class Image {
 		if ( isset( $args ) ) {
 			foreach ( $cbs as $cb ) {
 				foreach ( \call_user_func_array( $cb, [ $args, $size ] ) as $details ) {
-					$details = Sanitize::image_details( static::merge_extra_image_details( $details, $size ) );
+					$details = Sanitize::image_details( self::merge_extra_image_details( $details, $size ) );
 
 					if ( $details['url'] ) {
 						yield $details;
@@ -668,9 +645,9 @@ class Image {
 					$fiber = \call_user_func_array( $cb, [ null, $size ] );
 				}
 
-				// phpcs:ignore, WordPress.CodeAnalysis.AssignmentInCondition -- gotta check and end early.
+				// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- gotta check and end early.
 				while ( $fiber->valid() || ( $fiber = false ) ) {
-					$details = Sanitize::image_details( static::merge_extra_image_details(
+					$details = Sanitize::image_details( self::merge_extra_image_details(
 						$fiber->current(),
 						$size,
 					) );

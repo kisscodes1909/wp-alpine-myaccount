@@ -202,7 +202,7 @@
 								file_html += '<span class="cr-comment-image-detach-spinner"></span></div>';
 								if ( 'video' === file["type"] ) {
 									file_html += '<div class="cr-video-cont">';
-									file_html += '<video preload="metadata" class="cr-video-a" src="' + file["url"] + '"></video>';
+									file_html += '<video preload="metadata" class="cr-video-a" src="' + file["url"] + '#t=0.1"></video>';
 									file_html += '<img class="cr-comment-videoicon" src="' + cr_ajax_object.videoicon + '">';
 									file_html += '<button class="cr-comment-video-close"><span class="dashicons dashicons-no"></span></button>';
 									file_html += '</div></div>';
@@ -556,7 +556,12 @@
 			var cr_data = {
 				"action": "cr_update_tags",
 				"review_id": jQuery(this).data("reviewid"),
-				"tags": JSON.stringify(jQuery(this).parents("td.tags").find("select.cr_tags").eq(0).select2("data")),
+				"tags": JSON.stringify(
+					jQuery(this).parents("td.tags").find("select.cr_tags").eq(0).select2("data").map( item => ( {
+							text: item.text
+						} )
+					)
+				),
 				"cr_nonce": jQuery(this).data("nonce")
 			};
 			jQuery(this).parents("td.tags").find(".cr-tags-edit").addClass("cr-update-in-progress");
@@ -644,6 +649,19 @@
 				jQuery("#the-comment-list #comment-" + response.review_id + " .row-actions").removeClass("cr-del-verif-confirm");
 			}, "json");
 		});
+
+		jQuery(".cr-help-tip").tipTip( {
+			attribute: "data-tip",
+			fadeIn: 50,
+			fadeOut: 50,
+			delay: 200,
+			keepAlive: false,
+		} );
+
+		jQuery( ".cr-review-loc-country" ).select2( {
+			templateResult: cr_formatCountry,
+			templateSelection: cr_formatCountry
+		} );
 
 	});
 
@@ -733,4 +751,18 @@
 			}
 		});
 	}
+
+	function cr_formatCountry( country ) {
+		if ( ! country.id ) {
+			return jQuery(
+				`<span class="cr-select-country-cont"><span class="cr-select-country-name">${country.text}</span></span>`
+			);
+		}
+		const code = country.id.toLowerCase();
+		const flag = `<img src="${cr_ajax_object.flags_path}${code}.svg" class="cr-select-country-flag" />`;
+		return jQuery(
+			`<span class="cr-select-country-cont">${flag}<span class="cr-select-country-name">${country.text}</span></span>`
+		);
+	}
+
 }());

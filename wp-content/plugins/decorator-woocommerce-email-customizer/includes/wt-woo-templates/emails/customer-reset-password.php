@@ -44,8 +44,8 @@ if (empty($wt_custom_style)) {
     $wt_custom_style = RP_Decorator_Customizer::wt_get_current_template();
 }
 $button_check = get_option('rp_decorator_customer_reset_password_btn_switch');
-if (isset($_POST['customized']) && !empty($_POST['customized'])) {
-    $data = json_decode(wp_unslash($_POST['customized']), true);
+if (isset($_POST['customized']) && !empty($_POST['customized'])) { //phpcs:ignore WordPress.Security.NonceVerification.Missing
+    $data = json_decode(wc_clean( wp_unslash( $_POST['customized'] ) ), true); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- Already sanitized.
     if (array_key_exists('rp_decorator_customer_reset_password_btn_switch', $data)) {
         if ($button_check != $data['rp_decorator_customer_reset_password_btn_switch']) {
             $button_check = $data['rp_decorator_customer_reset_password_btn_switch'];

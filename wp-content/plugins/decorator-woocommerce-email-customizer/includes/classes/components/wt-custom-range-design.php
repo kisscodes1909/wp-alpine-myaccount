@@ -19,8 +19,8 @@ class WP_Customize_Range_value_Control extends \WP_Customize_Control {
      * @since 3.4.0
      */
     public function enqueue() {
-        wp_enqueue_script('customizer-range-value-control', $this->abs_path_to_url(RP_DECORATOR_PLUGIN_URL . '/assets/js/customizer-range-value-control.js'), array('jquery'), rand(), true);
-        wp_enqueue_style('customizer-range-value-control', $this->abs_path_to_url(RP_DECORATOR_PLUGIN_URL . '/assets/css/customizer-range-value-control.css'), array(), rand());
+        wp_enqueue_script('customizer-range-value-control', $this->abs_path_to_url(RP_DECORATOR_PLUGIN_URL . '/assets/js/customizer-range-value-control.js'), array('jquery'), RP_DECORATOR_VERSION, true);
+        wp_enqueue_style('customizer-range-value-control', $this->abs_path_to_url(RP_DECORATOR_PLUGIN_URL . '/assets/css/customizer-range-value-control.css'), array(), RP_DECORATOR_VERSION);
     }
 
     /**
@@ -41,11 +41,11 @@ class WP_Customize_Range_value_Control extends \WP_Customize_Control {
                     $this->link();
                     ?>
                                                                               >
-                    <span class="range-slider__value">0</span> <button type="button" id="<?php echo $wt_id; ?>" style="background: white;border: none !important;color: #aab9c2;"><span class="dashicons dashicons-image-rotate"></span></button>
+                    <span class="range-slider__value">0</span> <button type="button" id="<?php echo esc_attr( $wt_id ); ?>" style="background: white;border: none !important;color: #aab9c2;"><span class="dashicons dashicons-image-rotate"></span></button>
                 </span>
             </div>
             <?php if (!empty($this->description)) : ?>
-                <span class="description customize-control-description"><?php echo $this->description; ?></span>
+                <span class="description customize-control-description"><?php echo esc_html( $this->description ); ?></span>
             <?php endif; ?>
         </label>
         <?php

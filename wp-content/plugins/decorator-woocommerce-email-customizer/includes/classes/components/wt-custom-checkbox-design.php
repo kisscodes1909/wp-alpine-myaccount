@@ -27,12 +27,12 @@ if ( class_exists( 'WP_Customize_Control' ) && ! class_exists( 'WP_Customize_Tog
                                         <div class="checkbox switch">
                                             <label>
                                               <input type="checkbox" class="switch-control" value="<?php echo esc_attr( $this->value() ); ?>" <?php $this->link(); checked( $this->value() ); ?>/>
-                                              <span class="switch-label"><?php echo $this->description; ?></span>
+                                              <span class="switch-label"><?php echo esc_html( $this->description ); ?></span>
                                             </label>
                                          </div>
 				</div>
 				<?php if ( ! empty( $this->description ) ) : ?>
-				<span class="description customize-control-description"><?php echo $this->description; ?></span>
+				<span class="description customize-control-description"><?php echo esc_html( $this->description ); ?></span>
 				<?php endif; ?>
 			</label>
 

@@ -41,7 +41,8 @@ if ( ! class_exists( 'CR_Shortcodes_Settings' ) ):
 
 		public function display() {
 			$this->init_settings();
-
+			global $hide_save_button;
+			$hide_save_button = true;
 			WC_Admin_Settings::output_fields( $this->settings );
 		}
 
@@ -57,13 +58,6 @@ if ( ! class_exists( 'CR_Shortcodes_Settings' ) ):
 					'type'  => 'title',
 					'desc'  => __( 'The plugin provides several shortcodes and Gutenberg blocks that you can use to display reviews in various places on your website. You can find the list of available shortcodes and their parameters below.', 'customer-reviews-woocommerce' ),
 					'id'    => 'cr_options_shortcodes'
-				),
-				array(
-					'title'   => __( 'Reviews Shortcodes', 'customer-reviews-woocommerce' ),
-					'desc'    => __( 'Enable shortcodes and Gutenberg blocks', 'customer-reviews-woocommerce' ),
-					'id'      => 'ivole_reviews_shortcode',
-					'default' => 'no',
-					'type'    => 'checkbox'
 				),
 				array(
 					'id'      => 'ivole_reviews_shortcode_desc',
@@ -84,7 +78,7 @@ if ( ! class_exists( 'CR_Shortcodes_Settings' ) ):
 			$shortcodes_desc = '<p class="cr-admin-shortcodes-large"><code>[cusrev_all_reviews]</code></p>' .
 			'<p>' .__( 'Use this shortcode to display a list of all reviews on any page or post. Here are the default parameters of the shortcode:', 'customer-reviews-woocommerce' ) . '</p>' .
 			'<p class="cr-admin-shortcodes"><code>[cusrev_all_reviews sort="DESC" sort_by="date" per_page="10" show_summary_bar="true" show_media="true" ' .
-			'show_products="true" categories="" product_tags="" tags="" products="current" product_reviews="true" shop_reviews="true" inactive_products="false" show_replies="false" show_more="5" min_chars="0" avatars="initials" users="all" add_review="false"]</code></p>' .
+			'show_products="true" categories="" product_tags="" tags="" products="current" product_reviews="true" shop_reviews="true" inactive_products="false" show_replies="false" show_more="5" min_chars="0" avatars="initials" users="all" add_review="false" schema_markup="false"]</code></p>' .
 			'<p class="cr-admin-shortcodes"><b>' . __( 'Parameters:', 'customer-reviews-woocommerce' ) . '</b></p>' .
 			'<ul>' .
 			'<li>' . sprintf( __( '%1$s argument defines how reviews are sorted. Possible values are %2$s and %3$s.', 'customer-reviews-woocommerce' ), '<code>sort</code>', '<code>"ASC"</code>', '<code>"DESC"</code>' ) . '</li>' .
@@ -106,13 +100,24 @@ if ( ! class_exists( 'CR_Shortcodes_Settings' ) ):
 			'<li>' . sprintf( __( '%1$s argument accepts %2$s, %3$s or %4$s and defines how avatars of customers will be displayed on reviews.', 'customer-reviews-woocommerce' ), '<code>avatars</code>', '<code>"initials"</code>', '<code>"standard"</code>', '<code>"hidden"</code>' ) . '</li>' .
 			'<li>' . sprintf( __( '%1$s parameter accepts %2$s or %3$s. Use it to display reviews written by anyone or only the current WordPress user.', 'customer-reviews-woocommerce' ), '<code>users</code>', '<code>"all"</code>', '<code>"current"</code>' ) . '</li>' .
 			'<li>' . sprintf( __( '%1$s parameter accepts %2$s, %3$s or a product ID. Use it to display a form to write a new review. If the shortcode is placed on a page of a product and the parameter is set to %2$s, the review form will correspond to that product. If the shortocode is placed on a non-product page and the parameter is set to %2$s, the review form will collect shop reviews. If the parameter is set to a product ID, the review form will correspond to a product with that ID.', 'customer-reviews-woocommerce' ), '<code>add_review</code>', '<code>"true"</code>', '<code>"false"</code>' ) . '</li>' .
+			'<li>' . sprintf(
+				__( '%1$s parameter accepts %2$s or %3$s and controls if %4$s structured data should be created for search engines. To comply with schema markup guidelines, this parameter takes effect only when the shortcode displays reviews for a single product, that is, when parameter %5$s is %2$s, parameter %6$s is %3$s, and parameter %7$s is set to either %8$s or a single product ID.', 'customer-reviews-woocommerce' ),
+				'<code>schema_markup</code>',
+				'<code>"true"</code>',
+				'<code>"false"</code>',
+				'<code>AggregateRating</code>',
+				'<code>product_reviews</code>',
+				'<code>shop_reviews</code>',
+				'<code>products</code>',
+				'<code>"current"</code>'
+				) . '</li>' .
 			'</ul>' . '<br>' .
 
 			'<p class="cr-admin-shortcodes-large"><code>[cusrev_reviews_grid]</code></p>' .
 			'<p>' . __( 'Use this shortcode to display a grid of reviews on any page or post. Here are the default parameters of the shortcode:', 'customer-reviews-woocommerce' ) . '</p>' .
 			'<p class="cr-admin-shortcodes"><code>[cusrev_reviews_grid count="3" show_products="true" product_links="true" sort_by="date" sort="DESC" categories="" product_tags="" tags="" ' .
-			'products="current" color_ex_brdr="#ebebeb" color_brdr="#ebebeb" color_ex_bcrd="" color_bcrd="#ffffff" color_pr_bcrd="#f4f4f4" color_stars="#FFD707" ' .
-			'shop_reviews="false" count_shop_reviews="1" inactive_products="false" avatars="initials" show_more="0" min_chars="0" show_summary_bar="false" add_review="false"]</code></p>' .
+			'products="current" color_ex_brdr="#ebebeb" color_brdr="#ebebeb" color_ex_bcrd="" color_bcrd="#ffffff" color_pr_bcrd="#f4f4f4" color_stars="#FFBC00" ' .
+			'shop_reviews="false" count_shop_reviews="1" inactive_products="false" avatars="initials" show_more="0" max_chars="0" min_chars="0" show_summary_bar="false" add_review="false" schema_markup="false"]</code></p>' .
 			'<p class="cr-admin-shortcodes"><b>' . __( 'Parameters:', 'customer-reviews-woocommerce' ) . '</b></p>' .
 			'<ul>' .
 			'<li>' . sprintf( __( '%1$s argument defines the number of product reviews to show. It is recommended to keep it between %2$s and %3$s.', 'customer-reviews-woocommerce' ), '<code>count</code>', '<code>"1"</code>', '<code>"9"</code>' ) . '</li>' .
@@ -135,16 +140,27 @@ if ( ! class_exists( 'CR_Shortcodes_Settings' ) ):
 			'<li>' . sprintf( __( '%1$s argument accepts %2$s or %3$s and specifies if reviews corresponding to unpublished products will be shown.', 'customer-reviews-woocommerce' ), '<code>inactive_products</code>', '<code>"true"</code>', '<code>"false"</code>' ) . '</li>' .
 			'<li>' . sprintf( __( '%1$s argument accepts %2$s, %3$s or %4$s and defines how avatars of customers will be displayed on reviews.', 'customer-reviews-woocommerce' ), '<code>avatars</code>', '<code>"initials"</code>', '<code>"standard"</code>', '<code>"false"</code>' ) . '</li>' .
 			'<li>' . sprintf( __( '%1$s argument defines the number of additional reviews to display after a user presses the \'Show more\' button. If this argument is %2$s, then \'Show more\' button will be hidden.', 'customer-reviews-woocommerce' ), '<code>show_more</code>', '<code>"0"</code>' ) . '</li>' .
+			'<li>' . sprintf( __( '%1$s argument limits the number of characters that are displayed by default for each review. A \'Show More\' button will be added to display the remaining content for reviews that exceed this limit. If you do not want to limit the number of characters to display, set this argument to %2$s.', 'customer-reviews-woocommerce' ), '<code>max_chars</code>', '<code>"0"</code>' ) . '</li>' .
 			'<li>' . sprintf( __( '%1$s argument defines the minimum number of characters that a review must have to be displayed. If this argument is %2$s, then all reviews (including rating-only reviews) will be displayed.', 'customer-reviews-woocommerce' ), '<code>min_chars</code>', '<code>"0"</code>' ) . '</li>' .
 			'<li>' . sprintf( __( '%1$s argument accepts %2$s or %3$s and specifies if a summary bar should be shown on top of the reviews.', 'customer-reviews-woocommerce' ), '<code>show_summary_bar</code>', '<code>"true"</code>', '<code>"false"</code>' ) . '</li>' .
 			'<li>' . sprintf( __( '%1$s parameter accepts %2$s, %3$s or a product ID. Use it to display a form to write a new review. If the shortcode is placed on a page of a product and the parameter is set to %2$s, the review form will correspond to that product. If the shortocode is placed on a non-product page and the parameter is set to %2$s, the review form will collect shop reviews. If the parameter is set to a product ID, the review form will correspond to a product with that ID.', 'customer-reviews-woocommerce' ), '<code>add_review</code>', '<code>"true"</code>', '<code>"false"</code>' ) . '</li>' .
+			'<li>' . sprintf(
+				__( '%1$s parameter accepts %2$s or %3$s and controls if %4$s structured data should be created for search engines. To comply with schema markup guidelines, this parameter takes effect only when the shortcode displays reviews for a single product, that is, when parameter %5$s is %3$s and parameter %6$s is set to either %7$s or a single product ID.', 'customer-reviews-woocommerce' ),
+				'<code>schema_markup</code>',
+				'<code>"true"</code>',
+				'<code>"false"</code>',
+				'<code>AggregateRating</code>',
+				'<code>shop_reviews</code>',
+				'<code>products</code>',
+				'<code>"current"</code>'
+				) . '</li>' .
 			'</ul>' . '<br>' .
 			sprintf( __( '%1$s shortcode is also available as <strong>Reviews Grid</strong> block in the new WordPress Gutenberg page editor (blocks require WordPress 5.0 or newer).', 'customer-reviews-woocommerce' ), '<code>[cusrev_reviews_grid]</code>' ) . '<br><br>' .
 
 			'<p class="cr-admin-shortcodes-large"><code>[cusrev_reviews_slider]</code></p>' .
 			'<p>' . __( 'Use this shortcode to display a slider with reviews on any page or post. Here are the default parameters of the shortcode:', 'customer-reviews-woocommerce' ) . '</p>' .
 			'<p class="cr-admin-shortcodes"><code>[cusrev_reviews_slider count="5" slides_to_show="3" show_products="true" product_links="true" sort_by="date" sort="DESC" categories="" product_tags="" tags="" ' .
-			'products="current" color_ex_brdr="#ebebeb" color_brdr="#ebebeb" color_ex_bcrd="" color_bcrd="#ffffff" color_pr_bcrd="#f4f4f4" color_stars="#FFD707" shop_reviews="false" count_shop_reviews="1" inactive_products="false" autoplay="false" avatars="initials" max_chars="0" min_chars="0" show_dots="true"]</code></p>' .
+			'products="current" color_ex_brdr="#ebebeb" color_brdr="#ebebeb" color_ex_bcrd="" color_bcrd="#ffffff" color_pr_bcrd="#f4f4f4" color_stars="#FFBC00" shop_reviews="false" count_shop_reviews="1" inactive_products="false" autoplay="false" avatars="initials" max_chars="0" min_chars="0" show_dots="true"]</code></p>' .
 			'<p class="cr-admin-shortcodes"><b>' . __( 'Parameters:', 'customer-reviews-woocommerce' ) . '</b></p>' .
 			'<ul>' .
 			'<li>' . sprintf( __( '%1$s argument defines the number of product reviews to show. It is recommended to keep it between %2$s and %3$s. If you do not want to show product reviews, set it to %4$s and enable shop reviews (see the parameters below).', 'customer-reviews-woocommerce' ), '<code>count</code>', '<code>"0"</code>', '<code>"5"</code>', '<code>"0"</code>' ) . '</li>' .
@@ -176,11 +192,12 @@ if ( ! class_exists( 'CR_Shortcodes_Settings' ) ):
 
 			'<p class="cr-admin-shortcodes-large"><code>[cusrev_reviews_rating]</code></p>' .
 			'<p>' . __( 'Use this shortcode to display a widget with rating stars on any single WooCommerce product page. Here are the default parameters of the shortcode:', 'customer-reviews-woocommerce' ) . '</p>' .
-			'<p class="cr-admin-shortcodes"><code>[cusrev_reviews_slider color_stars="#FFBC00" product=""]</code></p>' .
+			'<p class="cr-admin-shortcodes"><code>[cusrev_reviews_rating color_stars="#FFBC00" product="" group="false"]</code></p>' .
 			'<p class="cr-admin-shortcodes"><b>' . __( 'Parameters:', 'customer-reviews-woocommerce' ) . '</b></p>' .
 			'<ul>' .
 			'<li>' . sprintf( __( '%1$s parameter is a hex color code of rating stars.', 'customer-reviews-woocommerce' ), '<code>"color_stars"</code>' ) . '</li>' .
 			'<li>' . sprintf( __( '%1$s parameter accepts a product ID. Use this parameter to show rating stars of a specific product. If you provide an empty parameter like %2$s and place the shortcode on a WooCommerce product page, it will display a rating of that product.', 'customer-reviews-woocommerce' ), '<code>"product"</code>', '<code>""</code>' ) . '</li>' .
+			'<li>' . sprintf( __( '%1$s parameter accepts %2$s or %3$s and controls how rating stars are displayed for grouped products. When set to %2$s, the shortcode will show an aggregated rating based on all child products of a grouped product. When set to %3$s, the shortcode will display only the rating of the current product, even if it is a grouped product.', 'customer-reviews-woocommerce' ), '<code>"group"</code>', '<code>"true"</code>', '<code>"false"</code>' ) . '</li>' .
 			'</ul>' . '<br>' .
 
 			'<p class="cr-admin-shortcodes-large"><code>[cusrev_qna]</code></p>' .
@@ -191,6 +208,19 @@ if ( ! class_exists( 'CR_Shortcodes_Settings' ) ):
 			'<li>' . sprintf( __( '%1$s parameter accepts a comma-separated list of product IDs or %2$s. If product IDs are provided, the block will display Q & A linked to the corresponding products. If the parameter is equal to %3$s, the block will display Q & A for all products in the store.', 'customer-reviews-woocommerce' ), '<code>products</code>', '<code>"all"</code>', '<code>"all"</code>' ) . '</li>' .
 			'<li>' . sprintf( __( '%1$s parameter accepts a comma-separated list of non-product pages (e.g., regular WordPress pages or posts) or %2$s. If non-product page IDs are provided, the block will display Q & A linked to the corresponding non-product pages. If the parameter is equal to %3$s, the block will display Q & A for all non-product pages in the store.', 'customer-reviews-woocommerce' ), '<code>shop</code>', '<code>"all"</code>', '<code>"all"</code>' ) . '</li>' .
 			'</ul>';
+
+			if ( 'no' === get_option( 'ivole_verified_reviews', 'no' )  ) {
+				$shortcodes_desc .= '<br><p class="cr-admin-shortcodes-large"><code>[cusrev_review_button]</code></p>' .
+				'<p>' . __( 'Use this shortcode to display a button linking to an aggregated review form in the customer-facing WooCommerce email notifications "Processing order" and "Completed order". You can add the shortcode in the “Additional content” field of these email notifications. Below are the default parameters of the shortcode:', 'customer-reviews-woocommerce' ) . '</p>' .
+				'<p class="cr-admin-shortcodes"><code>[cusrev_review_button label="Review" bg="#0073aa" color="#ffffff" radius="4px"]</code></p>' .
+				'<p class="cr-admin-shortcodes"><b>' . __( 'Parameters:', 'customer-reviews-woocommerce' ) . '</b></p>' .
+				'<ul>' .
+				'<li>' . sprintf( __( '%1$s parameter accepts a string that will be used as the button text.', 'customer-reviews-woocommerce' ), '<code>label</code>' ) . '</li>' .
+				'<li>' . sprintf( __( '%1$s parameter accepts a hex color code that defines the button\'s background color.', 'customer-reviews-woocommerce' ), '<code>bg</code>' ) . '</li>' .
+				'<li>' . sprintf( __( '%1$s parameter accepts a hex color code that defines the text color of the button.', 'customer-reviews-woocommerce' ), '<code>color</code>' ) . '</li>' .
+				'<li>' . sprintf( __( '%1$s parameter accepts a value that defines the border radius of the button\'s corners.', 'customer-reviews-woocommerce' ), '<code>radius</code>' ) . '</li>' .
+				'</ul>';
+			}
 
 			$shortcodes_desc = apply_filters( 'cr_settings_shortcodes_desc', $shortcodes_desc );
 			?>

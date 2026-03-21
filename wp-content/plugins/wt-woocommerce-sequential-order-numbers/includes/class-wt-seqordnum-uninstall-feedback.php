@@ -101,7 +101,7 @@ if (!class_exists('WT_Sequentialordnum_Uninstall_Feedback')) :
             <div class="wtsequentialordnum-modal" id="wtsequentialordnum-wtsequentialordnum-modal">
                 <div class="wtsequentialordnum-modal-wrap">
                     <div class="wtsequentialordnum-modal-header">
-                        <h3><?php _e('If you have a moment, please let us know why you are deactivating:', 'wt-woocommerce-sequential-order-numbers'); ?></h3>
+                        <h3><?php esc_html_e('If you have a moment, please let us know why you are deactivating:', 'wt-woocommerce-sequential-order-numbers'); ?></h3>
                     </div>
                     <div class="wtsequentialordnum-modal-body">
                         <ul class="reasons">
@@ -110,18 +110,18 @@ if (!class_exists('WT_Sequentialordnum_Uninstall_Feedback')) :
                             { 
                             ?>
                                 <li data-type="<?php echo esc_attr($reason['type']); ?>" data-placeholder="<?php echo esc_attr(isset($reason['placeholder']) ? $reason['placeholder'] : ''); ?>">
-                                    <label><input type="radio" name="selected-reason" value="<?php echo $reason['id']; ?>"><?php echo $reason['text']; ?></label>
+                                    <label><input type="radio" name="selected-reason" value="<?php echo esc_attr($reason['id']); ?>"><?php echo esc_html($reason['text']); ?></label>
                                     <?php
                                     if($reason['type']=='main_reason')
                                     {
                                         ?>
-                                        <ul class="sub_reasons" data-parent="<?php echo $reason['id']; ?>">
+                                        <ul class="sub_reasons" data-parent="<?php echo esc_attr($reason['id']); ?>">
                                             <?php
                                             foreach($reason['sub_reason'] as $sub_reason)
                                             {
                                                ?>
                                                 <li data-type="<?php echo esc_attr($sub_reason['type']); ?>" data-placeholder="<?php echo esc_attr($sub_reason['placeholder']); ?>">
-                                                    <label><input type="radio" name="selected-sub-reason" value="<?php echo $sub_reason['id']; ?>"><?php echo $sub_reason['text']; ?></label>
+                                                    <label><input type="radio" name="selected-sub-reason" value="<?php echo esc_attr($sub_reason['id']); ?>"><?php echo esc_html($sub_reason['text']); ?></label>
                                                 </li>
                                                <?php 
                                             }
@@ -137,18 +137,30 @@ if (!class_exists('WT_Sequentialordnum_Uninstall_Feedback')) :
                             ?>
                         </ul>
 
+                        <label style="margin-bottom: 0;">
+                            <span class="wtsequentialordnum-checkbox-top-border"></span>
+                            <input type="checkbox" id="wtsequentialordnum_contact_me_checkbox" name="wtsequentialordnum_contact_me_checkbox" value="1">
+                            <?php esc_html_e("WebToffee can contact me about this feedback.", "wt-woocommerce-sequential-order-numbers"); ?>
+                        </label>
+                        <div id="wtsequentialordnum_email_field_wrap" style="display:none; margin-top:10px;">
+                            <label for="wtsequentialordnum_contact_email" style="font-weight:bold;"><?php esc_html_e("Enter your email address.", "wt-woocommerce-sequential-order-numbers"); ?></label>
+                            <br>
+                            <input type="email" id="wtsequentialordnum_contact_email" name="wtsequentialordnum_contact_email" class="input-text" style="width:75%; height: 40px; padding:2px; margin-top:10px; border-radius:5px; border:2px solid #2874ba; padding-left:15px;" placeholder="<?php esc_attr_e("Enter email address", "wt-woocommerce-sequential-order-numbers"); ?>">
+                            <div id="wtsequentialordnum_email_error" style="color:red; display:none; font-size:12px; margin-top:5px;"></div>
+                        </div>
+
                         <div class="wtsequentialordnum_policy_infobox">
-                            <?php _e("We do not collect any personal data when you submit this form. It's your feedback that we value.", "wt-woocommerce-sequential-order-numbers");?>
-                            <a href="https://www.webtoffee.com/privacy-policy/" target="_blank"><?php _e('Privacy Policy', 'wt-woocommerce-sequential-order-numbers');?></a>        
+                            <?php esc_html_e("We do not collect any personal data when you submit this form. It's your feedback that we value.", "wt-woocommerce-sequential-order-numbers");?>
+                            <a href="https://www.webtoffee.com/privacy-policy/" target="_blank"><?php esc_html_e('Privacy Policy', 'wt-woocommerce-sequential-order-numbers');?></a>        
                         </div>
                     </div>
                     <div class="wtsequentialordnum-modal-footer">
-                        <a class="button-primary" href="https://www.webtoffee.com/support/" target="_blank">
+                        <a class="button-primary" href="https://www.webtoffee.com/contact/" target="_blank">
                             <span class="dashicons dashicons-external" style="margin-top:3px;"></span> 
-                            <?php _e('Go to support', 'wt-woocommerce-sequential-order-numbers'); ?></a>
-                        <button class="button-primary wtsequentialordnum-model-submit"><?php _e('Submit & Deactivate', 'wt-woocommerce-sequential-order-numbers'); ?></button>
-                        <button class="button-secondary wtsequentialordnum-model-cancel"><?php _e('Cancel', 'wt-woocommerce-sequential-order-numbers'); ?></button>
-                        <a href="#" class="dont-bother-me"><?php _e('I rather wouldn\'t say', 'wt-woocommerce-sequential-order-numbers'); ?></a>
+                            <?php esc_html_e('Go to support', 'wt-woocommerce-sequential-order-numbers'); ?></a>
+                        <button class="button-primary wtsequentialordnum-model-submit"><?php esc_html_e('Submit & Deactivate', 'wt-woocommerce-sequential-order-numbers'); ?></button>
+                        <button class="button-secondary wtsequentialordnum-model-cancel"><?php esc_html_e('Cancel', 'wt-woocommerce-sequential-order-numbers'); ?></button>
+                        <a href="#" class="dont-bother-me"><?php esc_html_e('I rather wouldn\'t say', 'wt-woocommerce-sequential-order-numbers'); ?></a>
                     </div>
                 </div>
             </div>
@@ -190,11 +202,12 @@ if (!class_exists('WT_Sequentialordnum_Uninstall_Feedback')) :
                     padding: 12px 20px;
                     text-align: left;
                 }
-                .wtsequentialordnum_policy_infobox{font-style:italic; text-align:left; font-size:12px; color:#aaa; line-height:14px; margin-top:35px;}
+                .wtsequentialordnum_policy_infobox{font-style:italic; text-align:left; font-size:12px; color:#aaa; line-height:14px; margin-top:15px;}
                 .wtsequentialordnum_policy_infobox a{ font-size:11px; color:#4b9cc3; text-decoration-color: #99c3d7; }
                 .sub_reasons{ display:none; margin-left:15px; margin-top:10px; }
                 a.dont-bother-me{ color:#939697; text-decoration-color:#d0d3d5; float:right; margin-top:7px; }
                 .reasons li{ padding-top:5px; }
+                .wtsequentialordnum-checkbox-top-border { display: block; border-top: 1px solid #ddd; margin-top: 1px; margin-bottom: 15px; width: 100%; }
             </style>
             <script type="text/javascript">
                 (function ($) {
@@ -237,7 +250,16 @@ if (!class_exists('WT_Sequentialordnum_Uninstall_Feedback')) :
                                 }
                             }
                         });
-
+                        modal.on('click', '#wtsequentialordnum_contact_me_checkbox', function() {
+                            if ($(this).is(':checked')) {
+                                $('#wtsequentialordnum_email_field_wrap').slideDown();
+                            } else {
+                                $('#wtsequentialordnum_email_field_wrap').slideUp();
+                                $('#wtsequentialordnum_contact_email').val('');
+                                $('#wtsequentialordnum_email_error').hide();
+                            }
+                        });
+                        
                         modal.on('click', 'button.wtsequentialordnum-model-submit', function (e) {
                             e.preventDefault();
                             var button = $(this);
@@ -274,14 +296,32 @@ if (!class_exists('WT_Sequentialordnum_Uninstall_Feedback')) :
                                     }
                                 }  
                             }
+                            
+                            // Email validation
+                            var emailCheckbox = $('#wtsequentialordnum_contact_me_checkbox');
+                            var emailField = $('#wtsequentialordnum_contact_email');
+                            var emailError = $('#wtsequentialordnum_email_error');
+                            emailError.hide();
+                            
+                            if (emailCheckbox.is(':checked')) {
+                                var emailVal = emailField.val();
+                                var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                                if (!emailVal || !emailPattern.test(emailVal)) {
+                                    emailError.text('<?php echo esc_js(__('Please enter a valid email address.', 'wt-woocommerce-sequential-order-numbers')); ?>').show();
+                                    emailField.focus();
+                                    return;
+                                }
+                            }
+                            
                             $.ajax({
                                 url: ajaxurl,
                                 type: 'POST',
                                 data: {
                                     action: 'wtsequentialordnum_submit_uninstall_reason',
-                                    _wpnonce: '<?php echo wp_create_nonce(WT_SEQUENCIAL_ORDNUMBER_NAME);?>',
+                                    _wpnonce: '<?php echo esc_attr(wp_create_nonce(WT_SEQUENCIAL_ORDNUMBER_NAME));?>',
                                     reason_id: reason_id,
-                                    reason_info: reason_info
+                                    reason_info: reason_info,
+                                    user_email: $('#wtsequentialordnum_contact_me_checkbox').is(':checked') ? $('#wtsequentialordnum_contact_email').val() : ''
                                 },
                                 beforeSend: function () {
                                     button.addClass('disabled');
@@ -301,7 +341,7 @@ if (!class_exists('WT_Sequentialordnum_Uninstall_Feedback')) :
         public function send_uninstall_reason()
         {
             global $wpdb;
-            $nonce=isset($_POST['_wpnonce']) ? sanitize_text_field($_POST['_wpnonce']) : ''; 
+            $nonce=isset($_POST['_wpnonce']) ? sanitize_text_field(wp_unslash($_POST['_wpnonce'])) : ''; 
             if(!(wp_verify_nonce($nonce,WT_SEQUENCIAL_ORDNUMBER_NAME)))
             {   
                 wp_send_json_error();
@@ -312,14 +352,14 @@ if (!class_exists('WT_Sequentialordnum_Uninstall_Feedback')) :
             }
 
             $data = array(
-                'reason_id' => sanitize_text_field($_POST['reason_id']),
+                'reason_id' => sanitize_text_field(wp_unslash($_POST['reason_id'])),
                 'plugin' =>$this->plugin_id,
                 'auth' =>$this->auth_key,
                 'date' => gmdate("M d, Y h:i:s A"),
                 'url' => '',
-                'user_email' => '',
-                'reason_info' => isset($_REQUEST['reason_info']) ? trim(stripslashes(sanitize_text_field($_REQUEST['reason_info']))) : '',
-                'software' => $_SERVER['SERVER_SOFTWARE'],
+                'user_email' => isset($_POST['user_email']) ? sanitize_email(wp_unslash($_POST['user_email'])) : '',
+                'reason_info' => isset($_REQUEST['reason_info']) ? trim(stripslashes(sanitize_text_field(wp_unslash($_REQUEST['reason_info'])))) : '',
+                'software' => isset($_SERVER['SERVER_SOFTWARE']) ? sanitize_text_field( wp_unslash($_SERVER['SERVER_SOFTWARE'])) : '',
                 'php_version' => phpversion(),
                 'mysql_version' => $wpdb->db_version(),
                 'wp_version' => get_bloginfo('version'),

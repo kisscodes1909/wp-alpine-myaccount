@@ -33,7 +33,7 @@ if (!$table_prefix) {
 }
 ?>
 
-<table id="wpoptimize_table_list" class="wp-list-table widefat striped tablesorter wp-list-table-mobile-labels">
+<table id="wpoptimize_table_list" class="wp-list-table widefat striped wp-list-table-mobile-labels sortable">
 	<thead>
 		<tr>
 			<th><?php esc_html_e('No.', 'wp-optimize'); ?></th>
@@ -43,18 +43,18 @@ if (!$table_prefix) {
 			<th><?php esc_html_e('Index Size', 'wp-optimize'); ?></th>
 			<th><?php esc_html_e('Type', 'wp-optimize'); ?></th>
 			<th><?php esc_html_e('Overhead', 'wp-optimize'); ?></th>
-			<th><?php esc_html_e('Actions', 'wp-optimize'); ?></th>
+			<th class="no-sort"><?php esc_html_e('Actions', 'wp-optimize'); ?></th>
 		</tr>
 	</thead>
 	<?php
 	if ($load_data) {
-		WP_Optimize()->include_template('database/tables-body.php', false, array('optimize_db' => $optimize_db));
+		WP_Optimize()->include_template('database/tables-body.php', false, $table_list_data);
 	} else {
 	?>
 		<tbody>
 			<tr>
 				<td></td>
-				<td class="loading" align="center" colspan="6"><img class="wpo-ajax-template-loader" width="16" height="16" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); ?>"> <?php esc_html_e('Loading tables list...', 'wp-optimize'); ?></td>
+				<td class="loading" colspan="6"><img class="wpo-ajax-template-loader" width="16" height="16" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="..."> <?php esc_html_e('Loading tables list...', 'wp-optimize'); ?></td>
 				<td></td>
 			</tr>
 		</tbody>

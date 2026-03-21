@@ -6,20 +6,20 @@
 
 namespace The_SEO_Framework;
 
-\defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) or die;
+( \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) ) or die;
 
-use \The_SEO_Framework\Admin\Settings\Layout\{
+use The_SEO_Framework\Admin\Settings\Layout\{
 	Form,
 	HTML,
 	Input,
 };
-use \The_SEO_Framework\Data\Filter\Sanitize;
+use The_SEO_Framework\Data\Filter\Sanitize;
 
-// phpcs:disable, WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
+// phpcs:disable WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2017 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2017 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -118,7 +118,7 @@ $_default_i18n = \__( 'Default (%s)', 'autodescription' );
 				<th scope=row valign=top><?php \esc_html_e( 'Doing it Right', 'autodescription' ); ?></th>
 				<td>
 					<?php
-					// phpcs:ignore, WordPress.Security.EscapeOutput -- generate_bar() escapes.
+					// phpcs:ignore WordPress.Security.EscapeOutput -- generate_bar() escapes.
 					echo Admin\SEOBar\Builder::generate_bar( $generator_args );
 					?>
 				</td>
@@ -203,7 +203,7 @@ $_default_i18n = \__( 'Default (%s)', 'autodescription' );
 					[
 						'state' => [
 							'defaultDescription' => \esc_html(
-								Meta\Description::get_generated_description( $generator_args )
+								Meta\Description::get_generated_description( $generator_args ),
 							),
 						],
 					],
@@ -319,7 +319,7 @@ Input::output_js_social_data(
 			</th>
 			<td>
 				<?php
-				// phpcs:disable, WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
+				// phpcs:disable WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
 				echo Form::make_single_select_form( [
 					'id'       => 'autodescription-meta[tw_card_type]',
 					'class'    => 'tsf-term-select-wrap',
@@ -330,7 +330,7 @@ Input::output_js_social_data(
 					),
 					'selected' => $meta['tw_card_type'],
 				] );
-				// phpcs:enable, WordPress.Security.EscapeOutput
+				// phpcs:enable WordPress.Security.EscapeOutput
 				?>
 			</td>
 		</tr>
@@ -353,9 +353,9 @@ Input::output_js_social_data(
 				<input type=hidden name="autodescription-meta[social_image_id]" id=autodescription_meta_socialimage-id value="<?= \absint( $meta['social_image_id'] ) ?>" disabled class=tsf-enable-media-if-js>
 				<div class="hide-if-no-tsf-js tsf-term-button-wrap">
 					<?php
-					// phpcs:disable, WordPress.Security.EscapeOutput -- get_image_uploader_form escapes. (phpcs breaks here, so we use disable)
+					// phpcs:disable WordPress.Security.EscapeOutput -- get_image_uploader_form escapes. (phpcs breaks here, so we use disable)
 					echo Form::get_image_uploader_form( [ 'id' => 'autodescription_meta_socialimage' ] );
-					// phpcs:enable, WordPress.Security.EscapeOutput
+					// phpcs:enable WordPress.Security.EscapeOutput
 					?>
 				</div>
 			</td>
@@ -431,7 +431,7 @@ Input::output_js_social_data(
 			<td>
 				<?php
 				foreach ( $robots_settings as $_s ) {
-					// phpcs:disable, WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
+					// phpcs:disable WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
 					echo Form::make_single_select_form( [
 						'id'       => $_s['id'],
 						'class'    => 'tsf-term-select-wrap',
@@ -449,7 +449,7 @@ Input::output_js_social_data(
 							'defaultI18n'        => $_default_i18n,
 						],
 					] );
-					// phpcs:enable, WordPress.Security.EscapeOutput
+					// phpcs:enable WordPress.Security.EscapeOutput
 				}
 				?>
 			</td>

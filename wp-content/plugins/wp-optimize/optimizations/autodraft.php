@@ -31,10 +31,12 @@ class WP_Optimization_autodraft extends WP_Optimization {
 
 		$retention_subquery = '';
 
-		if ('true' == $this->retention_enabled) {
+		if ('true' === $this->retention_enabled) {
 			$retention_subquery = ' and post_modified < NOW() - INTERVAL ' . $this->retention_period . ' WEEK';
 		}
 
+		// Suppress WordPress.DB.PreparedSQL.NotPrepared errors, these are safe and prepared. `$this->wpdb` is $wpdb`
+		// phpcs:disable
 		$sql = $this->wpdb->prepare(
 			"SELECT `ID`, `post_title`, `post_date` FROM `" . $this->wpdb->posts . "`".
 			" WHERE post_status = 'auto-draft'".
@@ -47,18 +49,19 @@ class WP_Optimization_autodraft extends WP_Optimization {
 		);
 
 		$posts = $this->wpdb->get_results($sql, ARRAY_A);
+		// phpcs:enable
 
 		// fix empty revision titles.
 		if (!empty($posts)) {
 			foreach ($posts as $key => $post) {
-				$posts[$key]['post_title'] = '' == $post['post_title'] ? '('.__('no title', 'wp-optimize').')' : $post['post_title'];
+				$posts[$key]['post_title'] = '' === $post['post_title'] ? '('.__('no title', 'wp-optimize').')' : $post['post_title'];
 			}
 		}
 
 		// get total count auto-draft for optimization.
 		$sql = "SELECT COUNT(*) FROM `" . $this->wpdb->posts . "` WHERE post_status = 'auto-draft' ".$retention_subquery.";";
 
-		$total = $this->wpdb->get_var($sql);
+		$total = $this->wpdb->get_var($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is safe, no user input used
 
 		return array(
 			'id_key' => 'ID',
@@ -79,9 +82,11 @@ class WP_Optimization_autodraft extends WP_Optimization {
 	 * Do actions after optimize() function.
 	 */
 	public function after_optimize() {
+		// translators: %s is the number of auto-drafts deleted
 		$info_message = sprintf(_n('%s auto draft deleted', '%s auto drafts deleted', $this->processed_count, 'wp-optimize'), number_format_i18n($this->processed_count));
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s is the number of sites
 			$info_message .= ' ' . sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
@@ -96,7 +101,7 @@ class WP_Optimization_autodraft extends WP_Optimization {
 	public function optimize() {
 		$clean = "DELETE FROM `" . $this->wpdb->posts . "` WHERE post_status = 'auto-draft'";
 
-		if ('true' == $this->retention_enabled) {
+		if ('true' === $this->retention_enabled) {
 			$clean .= ' AND post_modified < NOW() - INTERVAL ' . $this->retention_period . ' WEEK';
 		}
 
@@ -120,18 +125,20 @@ class WP_Optimization_autodraft extends WP_Optimization {
 	 */
 	public function after_get_info() {
 
-		if (0 != $this->found_count && null != $this->found_count) {
+		if (0 !== $this->found_count && null !== $this->found_count) {
+			// translators: %s is the number of auto-drafts
 			$message = sprintf(_n('%s auto draft post in your database', '%s auto draft posts in your database', $this->found_count, 'wp-optimize'), number_format_i18n($this->found_count));
 		} else {
 			$message = __('No auto draft posts found', 'wp-optimize');
 		}
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s is the number of sites
 			$message .= ' ' . sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
 		// add preview link for output.
-		if (0 != $this->found_count && null != $this->found_count) {
+		if (0 !== $this->found_count && null !== $this->found_count) {
 			$message = $this->get_preview_link($message);
 		}
 
@@ -145,22 +152,23 @@ class WP_Optimization_autodraft extends WP_Optimization {
 	public function get_info() {
 		$sql = "SELECT COUNT(*) FROM `" . $this->wpdb->posts . "` WHERE post_status = 'auto-draft'";
 
-		if ('true' == $this->retention_enabled) {
+		if ('true' === $this->retention_enabled) {
 			$sql .= ' and post_modified < NOW() - INTERVAL ' . $this->retention_period . ' WEEK';
 		}
 		$sql .= ';';
 
-		$this->found_count += $this->wpdb->get_var($sql);
+		$this->found_count += $this->wpdb->get_var($sql);  // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is safe, no user input used
 	}
 
 	/**
 	 * Return settings label
 	 *
-	 * @return string|void
+	 * @return string
 	 */
 	public function settings_label() {
 
-		if ('true' == $this->retention_enabled) {
+		if ('true' === $this->retention_enabled) {
+			// translators: %s is the retention period in weeks
 			return sprintf(__('Clean auto draft posts which are older than %s weeks', 'wp-optimize'), $this->retention_period);
 		} else {
 			return __('Clean all auto-draft posts', 'wp-optimize');
@@ -171,7 +179,7 @@ class WP_Optimization_autodraft extends WP_Optimization {
 	/**
 	 * Return description
 	 *
-	 * @return string|void
+	 * @return string
 	 */
 	public function get_auto_option_description() {
 		return __('Remove auto-draft posts', 'wp-optimize');

@@ -36,7 +36,6 @@ if (!empty($email_subtitle)) {
     $email_subtitle = RP_Decorator_Customizer::wt_subtitle_shortcode_replace($email_subtitle, $wt_template_object);
 }
 $subtitle_placement = RP_Decorator_Customizer::opt('subtitle_placement');
-
 $header_placement = RP_Decorator_Customizer::opt( 'header_image_placement' );
 if ( empty( $header_placement ) ) {
 	$header_placement = 'outside';
@@ -44,12 +43,14 @@ if ( empty( $header_placement ) ) {
 if (!empty($email_heading)) {
     $email_heading = RP_Decorator_Customizer::wt_subtitle_shortcode_replace($email_heading, $wt_template_object);
 }
+$header_img_src = apply_filters('wbte_dec_header_image', get_option('woocommerce_email_header_image',''), $wt_custom_style);
+
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=<?php bloginfo('charset'); ?>" />
-        <title><?php echo get_bloginfo('name', 'display'); ?></title>
+        <title><?php echo esc_html( get_bloginfo('name', 'display') ); ?></title>
     </head>
     <body <?php echo is_rtl() ? 'rightmargin' : 'leftmargin'; ?>="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
         <div id="wrapper" dir="<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>">
@@ -59,12 +60,12 @@ if (!empty($email_heading)) {
                     <td align="center" valign="top">
                         <div id="template_header_image"  style="overflow: hidden;">
                             <?php
-                            if ($img = get_option('woocommerce_email_header_image')) {
+                            if (!empty($header_img_src)) {
                                 echo '<p style="margin-top:0;margin-bottom: 0;">';
                                 if (isset($image_link_btn) && $image_link_btn) {
                                     echo '<a href="' . esc_url(get_home_url()) . '" target="_blank" style="display:inline-block;text-decoration: none;">';
                                 }
-                                echo '<img src="' . esc_url($img) . '" alt="' . get_bloginfo('name', 'display') . '" />';
+                                echo '<img src="' . esc_url($header_img_src) . '" alt="' . esc_attr( get_bloginfo('name', 'display') ) . '" />';
                                 if (isset($image_link_btn) && $image_link_btn) {
                                     echo '</a>';
                                 }
@@ -82,12 +83,12 @@ if (!empty($email_heading)) {
                     <td align="center" valign="top">
                         <div id="template_header_image"  style="overflow: hidden;">
                             <?php
-                            if ($img = get_option('woocommerce_email_header_image')) {
+                            if (!empty($header_img_src)) {
                                 echo '<p style="margin-top:0;margin-bottom: 0;">';
                                 if (isset($image_link_btn) && $image_link_btn) {
                                     echo '<a href="' . esc_url(get_home_url()) . '" target="_blank" style="display:inline-block;text-decoration: none;">';
                                 }
-                                echo '<img src="' . esc_url($img) . '" alt="' . get_bloginfo('name', 'display') . '" />';
+                                echo '<img src="' . esc_url($header_img_src) . '" alt="' . esc_attr( get_bloginfo('name', 'display') ) . '" />';
                                 if (isset($image_link_btn) && $image_link_btn) {
                                     echo '</a>';
                                 }
@@ -115,7 +116,7 @@ if (!empty($email_heading)) {
                                                     <?php if ('above' === $subtitle_placement && !empty($email_subtitle)) { ?>
                                                         <div class="subtitle" style="padding-bottom: 10px;margin-left: 0px;padding-right: 0px"><?php echo wp_kses_post($email_subtitle); ?></div>
                                                     <?php } ?>
-                                                    <h1><?php echo $email_heading; ?></h1>
+                                                    <h1><?php echo esc_html( $email_heading ); ?></h1>
                                                     <?php if ('below' === $subtitle_placement && !empty($email_subtitle)) { ?>
                                                         <div class="subtitle" style="padding-top: 10px;padding-left: 0px;padding-right: 0px"><?php echo wp_kses_post($email_subtitle); ?></div>
                                                     <?php } ?>

@@ -8,16 +8,16 @@ namespace The_SEO_Framework\Suggestion;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Admin,
 	Helper\Format\Markdown,
 };
 
-// phpcs:disable, VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable -- includes.
+// phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable -- includes.
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2018 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2018 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -41,7 +41,7 @@ use \The_SEO_Framework\{
  * @access private
  */
 
-// phpcs:ignore, TSF.Performance.Opcodes.ShouldHaveNamespaceEscape
+// phpcs:ignore TSF.Performance.Opcodes.ShouldHaveNamespaceEscape
 _prepare( $previous_version, $current_version );
 /**
  * Prepares a suggestion notification to ALL applicable plugin users on upgrade;
@@ -66,7 +66,7 @@ _prepare( $previous_version, $current_version );
 function _prepare( $previous_version, $current_version ) {
 
 	// 0
-	// phpcs:ignore, WordPress.PHP.StrictComparisons.LooseComparison -- might be mixed types.
+	// phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- might be mixed types.
 	if ( $previous_version == $current_version ) return;
 	// 1
 	if ( \defined( 'TSF_DISABLE_SUGGESTIONS' ) && \TSF_DISABLE_SUGGESTIONS ) return;
@@ -78,7 +78,7 @@ function _prepare( $previous_version, $current_version ) {
 		$show_sale = ! \tsf_extension_manager()->is_connected_user();
 	}
 	if ( $show_sale ) {
-		// phpcs:ignore, TSF.Performance.Opcodes.ShouldHaveNamespaceEscape
+		// phpcs:ignore TSF.Performance.Opcodes.ShouldHaveNamespaceEscape
 		_suggest_temp_sale( $previous_version, $current_version );
 	}
 }
@@ -98,11 +98,12 @@ function _prepare( $previous_version, $current_version ) {
  */
 function _suggest_temp_sale( $previous_version, $current_version ) {
 
-	if ( $previous_version < '5100' && $current_version < '5110' ) {
+	if ( $previous_version < '5140' && $current_version < '5150' ) {
 		Admin\Notice\Persistent::register_notice(
 			Markdown::convert(
 				\sprintf(
-					'<p>For The SEO Framework v5.1, we added over 150 improvements in the past 7 months.</p><p>To celebrate this update (and Black Friday), we are offering a [50%% lifetime discount on our extensions](%s).</p><p>This notification will vanish December 6th or when you dismiss it.</p>',
+					'<p>You\'re now on The SEO Framework v5.1.4 &mdash; thanks for sticking with us!</p><p>We spent the year [rethinking plugin distribution](%s). Because we\'re late, our BFCM sale runs 2 extra weeks: [50%% off extensions for life](%s).</p><p>This notice disappears December 16th or when dismissed.</p>',
+					'https://deploytroy.org/blog/official-release/',
 					'https://theseoframework.com/?p=3527',
 				),
 				[ 'a' ],
@@ -120,7 +121,7 @@ function _suggest_temp_sale( $previous_version, $current_version ) {
 				'capability'   => 'install_plugins',
 				'user'         => 0,
 				'count'        => 42,
-				'timeout'      => strtotime( 'December 6th, 2024, 23:00GMT+1' ) - time(),
+				'timeout'      => strtotime( 'December 16th, 2025, 23:00GMT+1' ) - time(),
 			],
 		);
 	}

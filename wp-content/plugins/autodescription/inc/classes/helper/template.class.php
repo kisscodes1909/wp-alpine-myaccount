@@ -9,7 +9,7 @@ namespace The_SEO_Framework\Helper;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -50,13 +50,12 @@ final class Template {
 	 * @param string $file         The relative view file name.
 	 * @param array  ...$view_args The arguments to be supplied to the file.
 	 */
-	public static function output_view( $file, ...$view_args ) { // phpcs:ignore, VariableAnalysis.CodeAnalysis -- includes.
+	public static function output_view( $file, ...$view_args ) { // phpcs:ignore Generic.CodeAnalysis -- includes.
 
-		// phpcs:ignore, VariableAnalysis.CodeAnalysis -- includes.
-		$secret = static::$secret = uniqid( '', true );
+		$secret = self::$secret = uniqid( '', true );
 
 		// This will crash on PHP 8+ if the view isn't resolved. That's good.
-		require static::get_view_location( $file );
+		require self::get_view_location( $file );
 	}
 
 	/**
@@ -72,10 +71,9 @@ final class Template {
 	 * @param string $file         The absolute view file name.
 	 * @param array  ...$view_args The arguments to be supplied to the file.
 	 */
-	public static function output_absolute_view( $file, ...$view_args ) { // phpcs:ignore, VariableAnalysis.CodeAnalysis -- includes.
+	public static function output_absolute_view( $file, ...$view_args ) { // phpcs:ignore Generic.CodeAnalysis -- includes.
 
-		// phpcs:ignore, VariableAnalysis.CodeAnalysis -- includes.
-		$secret = static::$secret = uniqid( '', true );
+		$secret = self::$secret = uniqid( '', true );
 
 		require $file;
 	}
@@ -113,6 +111,6 @@ final class Template {
 	 * @return bool
 	 */
 	public static function verify_secret( $value ) {
-		return isset( $value ) && static::$secret === $value;
+		return isset( $value ) && self::$secret === $value;
 	}
 }

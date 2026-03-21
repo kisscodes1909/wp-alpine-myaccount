@@ -39,12 +39,13 @@ class CartEventsManagers
 
         $tracking_email = sanitize_text_field($_POST['tracking_email']);
         $email_id = $this->get_email_id($tracking_email);
-
+        $subscription_location = isset($_POST['subscription_location']) ? sanitize_text_field($_POST['subscription_location']) : '';
         $client = new SendinblueClient();
         $client->eventsSync(SendinblueClient::CONTACT_CREATED, [
             "subscribed"=>"false",
             "email"=>$email_id,
             "is_anonymous_user"=>true,
+            "subscription_location" => $subscription_location,
         ]);
     }
 
@@ -276,6 +277,7 @@ class CartEventsManagers
     public function get_tracking_data_cart($cart_id, $email = "")
     {
         $data = array();
+        WC()->cart->calculate_totals(); //Force WC to recalculate the cart to avoid discrepancies
         $cartitems = WC()->cart->get_cart();
         $totals = WC()->cart->get_totals();
 
@@ -294,6 +296,13 @@ class CartEventsManagers
         $data['total_before_tax'] = (!empty( $totals['cart_contents_total']) && is_numeric($totals['cart_contents_total']) && !is_nan($totals['cart_contents_total'])) ? $totals['cart_contents_total'] : 0;
         $data['tax'] = (!empty($totals['total_tax']) && is_numeric($totals['total_tax']) && !is_nan($totals['total_tax'])) ? $totals['total_tax'] : 0;
         $data['total'] = (!empty( $totals['total']) && is_numeric($totals['total']) && !is_nan($totals['total'])) ? $totals['total'] : 0;
+        
+        $data['subtotal_parsed'] = self::parsePrice($data['subtotal']);
+        $data['discount_parsed'] = self::parsePrice($data['discount']);
+        $data['shipping_parsed'] = self::parsePrice($data['shipping']);
+        $data['total_before_tax_parsed'] = self::parsePrice($data['total_before_tax']);
+        $data['tax_parsed'] = self::parsePrice($data['tax']);
+        $data['total_parsed'] = self::parsePrice($data['total']);
         $data['currency'] = is_string(get_woocommerce_currency()) ? get_woocommerce_currency() : '';
         $data['url'] = is_string(wc_get_cart_url()) ? wc_get_cart_url() : '';
         $data['checkouturl'] = is_string(wc_get_checkout_url()) ? wc_get_checkout_url() : '';
@@ -316,6 +325,16 @@ class CartEventsManagers
             $unit_price = $cartitem['data']->is_on_sale() ? $cartitem['data']->get_sale_price() : $cartitem['data']->get_regular_price();
             $final_price = round((float) $unit_price * (float) $item['quantity'], 2);
             $item['price'] = (is_numeric($final_price) && !is_nan($final_price)) ? $final_price : 0;
+
+            $price_taxinc = 0.0;
+            if (!empty($cartitem['data'])) {
+                $raw_price_taxinc = wc_get_price_including_tax($cartitem['data'], ['qty' => $item['quantity']]);
+                $price_taxinc = (is_numeric($raw_price_taxinc) && !is_nan($raw_price_taxinc)) ? round((float) $raw_price_taxinc, 2) : 0.0;
+            }
+            $item['price_taxinc'] = $price_taxinc;
+            
+            $item['price_parsed'] = self::parsePrice($item['price']);
+            $item['price_taxinc_parsed'] = self::parsePrice($item['price_taxinc']);
 
             $product = wc_get_product($cartitem['product_id']);
             $image_id = $variation->get_image_id() ? $variation->get_image_id() : $product->get_image_id();
@@ -366,6 +385,14 @@ class CartEventsManagers
         $data['total_before_tax'] = (float) ($data['subtotal'] - $data['discount']);
         $data['tax'] = (!empty($order->get_total_tax()) && is_numeric($order->get_total_tax()) && !is_nan($order->get_total_tax())) ? round($order->get_total_tax(), 2) : 0;
         $data['revenue'] = (!empty($order->get_total()) && is_numeric($order->get_total()) && !is_nan($order->get_total())) ? (float) $order->get_total() : 0;
+        
+        $data['subtotal_parsed'] = self::parsePrice($data['subtotal']);
+        $data['total_parsed'] = self::parsePrice($data['total']);
+        $data['discount_parsed'] = self::parsePrice($data['discount']);
+        $data['shipping_parsed'] = self::parsePrice($data['shipping']);
+        $data['total_before_tax_parsed'] = self::parsePrice($data['total_before_tax']);
+        $data['tax_parsed'] = self::parsePrice($data['tax']);
+        $data['revenue_parsed'] = self::parsePrice($data['revenue']);
         $data['currency'] = (!empty($order->get_currency()) && is_string($order->get_currency())) ? $order->get_currency() : '';
         $data['url'] = (!empty($order->get_checkout_order_received_url()) && is_string($order->get_checkout_order_received_url())) ? $order->get_checkout_order_received_url() : '';
 
@@ -387,6 +414,11 @@ class CartEventsManagers
             $item['variant_name'] = is_array($attributes) ? implode(',', $attributes) : '';
             $item['price'] = (!empty($orderitem->get_total()) && is_numeric($orderitem->get_total()) && ! is_nan($orderitem->get_total())) ? round($orderitem->get_total(), 2) : '';
             $item['tax'] = (!empty($orderitem->get_total_tax()) && is_numeric($orderitem->get_total_tax()) && ! is_nan($orderitem->get_total_tax())) ? round($orderitem->get_total_tax(), 2) : '';
+            $item['price_taxinc'] = round((float) $item['price'] + (float) $item['tax'], 2);
+            
+            $item['price_parsed'] = self::parsePrice($item['price']);
+            $item['tax_parsed'] = self::parsePrice($item['tax']);
+            $item['price_taxinc_parsed'] = self::parsePrice($item['price_taxinc']);
             $item['quantity'] = (!empty($orderitem->get_quantity()) && is_numeric($orderitem->get_quantity()) && !is_nan($orderitem->get_quantity())) ? (int) $orderitem->get_quantity() : '';
             $product = wc_get_product($orderitem['product_id']);
             $image_id = $variation->get_image_id() ? $variation->get_image_id() : $product->get_image_id();
@@ -432,15 +464,24 @@ class CartEventsManagers
 
         $data['shipping_tax'] = $order->get_shipping_tax() ?? "";
         $data['discount_tax'] = $order->get_discount_tax() ?? "";
+        
+        $data['shipping_tax_parsed'] = self::parsePrice($data['shipping_tax']);
+        $data['discount_tax_parsed'] = self::parsePrice($data['discount_tax']);
         $data['discount_code'] = $order->get_coupon_codes() ?? "";
         $data['fee_lines'] = [];
-        $fees = $order->get_fees() ?? "";
+        $fees = $order->get_fees();
 
         if (!empty($fees)) {
             foreach ($fees as $key => $fee) {
-                $data['fee_lines'][$key]['fee_name'] = $fee->get_name() ?? "";
-                $data['fee_lines'][$key]['fee_total'] = $fee->get_total() ?? "";
-                $data['fee_lines'][$key]['fee_tax'] = $fee->get_total_tax() ?? "";
+                $item = array();
+                $item['fee_name'] = $fee->get_name() ?? "";
+                $item['fee_total'] = $fee->get_total() ?? "";
+                $item['fee_tax'] = $fee->get_total_tax() ?? "";
+                
+                $item['fee_total_parsed'] = self::parsePrice($item['fee_total']);
+                $item['fee_tax_parsed'] = self::parsePrice($item['fee_tax']);
+                
+                array_push($data['fee_lines'], $item);
             }
         }
 
@@ -526,6 +567,43 @@ class CartEventsManagers
         update_post_meta($order_id, 'ws_opt_in', $opt_in);
     }
 
+    public function add_optin_wc_checkout_block() 
+    {
+        $settings = $this->api_manager->get_settings();
+        $checkout_label = $this->checkout_label($settings);
+        $location = "";
+
+        //Mapping of old Under billing & Under T & C to Under contact info
+        if (
+            !empty($settings[SendinblueClient::IS_DISPLAY_OPT_IN_ENABLED]) && (
+            $settings[SendinblueClient::DISPLAY_OPT_IN_LOCATION] == 1 || $settings[SendinblueClient::DISPLAY_OPT_IN_LOCATION] == 3 )
+        ) {
+            $location = "contact";
+            $this->register_checkout_fields($checkout_label, $location);
+        }
+
+        //Mapping of Under Order Info to Under Order Info
+        if (
+            !empty($settings[SendinblueClient::IS_DISPLAY_OPT_IN_ENABLED]) &&
+            $settings[SendinblueClient::DISPLAY_OPT_IN_LOCATION] == 2
+        ) {
+            $location = "order";
+            $this->register_checkout_fields($checkout_label, $location);
+        }
+    }
+
+    public function register_checkout_fields($checkout_label, $location) {
+        woocommerce_register_additional_checkout_field(
+            array(
+                'id'            => 'SendinblueWoocommerce/newsletter_opt_in',
+                'label'         => $checkout_label,
+                'location'      => $location,
+                'required'      => false,
+                    'type'     => 'checkbox',
+            ),
+        );
+    }
+
     private function get_dynamic_img($html_tags)
     {
         if (!class_exists("DOMDocument") || empty($html_tags)) {
@@ -540,5 +618,51 @@ class CartEventsManagers
         }
 
         return null;
+    }
+    public static function parsePrice($priceInput) {
+        // If input is already numeric, convert to float directly
+        if (is_numeric($priceInput)) {
+            return round((float)$priceInput, 2);
+        }
+        
+        // If input is null or empty, return 0.0
+        if ($priceInput === null || $priceInput === '') {
+            return 0.0;
+        }
+        
+        // Convert to string and process
+        $priceStr = trim((string) $priceInput);
+
+        $priceStr = preg_replace('/[^\d.,\s]/u', '', $priceStr);
+
+        $priceStr = preg_replace('/\s+/u', '', $priceStr);
+
+        $hasComma = strpos($priceStr, ',') !== false;
+        $hasDot = strpos($priceStr, '.') !== false;
+
+        if ($hasComma && $hasDot) {
+            $lastComma = strrpos($priceStr, ',');
+            $lastDot = strrpos($priceStr, '.');
+
+            if ($lastComma > $lastDot) {
+                // Format: 1.234,56 → dot is thousands, comma is decimal
+                $priceStr = str_replace('.', '', $priceStr);
+                $priceStr = str_replace(',', '.', $priceStr);
+            } else {
+                // Format: 1,234.56 → comma is thousands, dot is decimal
+                $priceStr = str_replace(',', '', $priceStr);
+            }
+        } elseif ($hasComma) {
+            // Format: 1000,50 → comma is decimal
+            $priceStr = str_replace(',', '.', $priceStr);
+        }
+        // If only dot or none, assume dot is decimal and proceed
+        if (is_numeric($priceStr)) {
+            $normalized = str_replace(',', '.', $priceStr);
+            $floatVal = (float)$normalized;
+            return round($floatVal, 2);
+        }
+
+        return 0.0;
     }
 }

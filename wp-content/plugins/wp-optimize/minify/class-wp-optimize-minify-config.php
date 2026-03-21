@@ -28,7 +28,7 @@ class WP_Optimize_Minify_Config {
 	 * @return bool
 	 */
 	public function is_enabled() {
-		return $this->get('enabled');
+		return (bool) $this->get('enabled');
 	}
 
 	/**
@@ -49,7 +49,7 @@ class WP_Optimize_Minify_Config {
 	/**
 	 * Get config from file or cache
 	 *
-	 * @param string $option  - An option name
+	 * @param ?string $option  - An option name
 	 * @param mixed  $default - A default for the option
 	 * @return array|string
 	 */
@@ -119,17 +119,18 @@ class WP_Optimize_Minify_Config {
 			'merge_google_fonts' => true,
 			'enable_display_swap' => true,
 			'remove_googlefonts' => false,
+			'host_local_google_fonts' => false,
 			'disable_google_fonts_processing' => false,
 			'gfonts_method' => 'inherit', // inline, async, exclude
 			'fawesome_method' => 'inherit', // inline, async, exclude
 			'enable_css' => true,
 			'enable_css_minification' => true,
-			'enable_merging_of_css' => true,
+			'enable_merging_of_css' => false,
 			'remove_print_mediatypes' => false,
 			'inline_css' => false,
 			'enable_js' => true,
 			'enable_js_minification' => true,
-			'enable_merging_of_js' => true,
+			'enable_merging_of_js' => false,
 			'enable_defer_js' => 'individual',
 			'defer_js_type' => 'defer',
 			'defer_jquery' => true,
@@ -137,6 +138,10 @@ class WP_Optimize_Minify_Config {
 			'exclude_defer_login' => true,
 			'cdn_url' => '',
 			'cdn_force' => false,
+
+			'enable_delay_js' => false,
+			'enable_preload_js' => false,
+			'exclude_delay_js' => '',
 
 			'async_css' => '',
 			'async_js' => '',
@@ -170,6 +175,8 @@ class WP_Optimize_Minify_Config {
 			'enable_analytics' => false,
 			'analytics_method' => 'gtagv4',
 			'tracking_id' => '',
+
+			'enable_unused_css' => false,
 		);
 		return apply_filters('wpo_minify_defaults', $defaults);
 	}
@@ -185,7 +192,8 @@ class WP_Optimize_Minify_Config {
 		 *
 		 * @return boolean
 		 */
-		return apply_filters('wpo_minify_always_purge_everything', 0 === intval($this->get('cache_lifespan')) || (defined('WPO_ADVANCED_CACHE') && defined('WP_CACHE') && WP_CACHE));
+		$filtered_value = apply_filters('wpo_minify_always_purge_everything', 0 === intval($this->get('cache_lifespan')) || (defined('WPO_ADVANCED_CACHE') && defined('WP_CACHE') && WP_CACHE));
+		return is_bool($filtered_value) ? $filtered_value : false;
 	}
 
 	/**

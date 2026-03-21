@@ -46,9 +46,6 @@ class ApiManager
         $products_events_manager = new ProductsManager();
         $category_events_manager = new CategoryManager();
         $order_events_manager = new OrdersManager();
-        add_action('woocommerce_checkout_after_terms_and_conditions', array($cart_events_manager, 'add_optin_terms'));
-        add_filter('woocommerce_checkout_fields', array($cart_events_manager, 'add_optin_billing'));
-        add_action('woocommerce_checkout_update_order_meta', array($cart_events_manager, 'add_optin_order'));
         add_action('wp_login', array($cart_events_manager, 'wp_login_action'), 11, 2);
         add_action('wp_footer', array($cart_events_manager, 'ws_cart_custom_fragment_load'));
         add_filter('woocommerce_add_to_cart_fragments', array($cart_events_manager, 'ws_cart_custom_fragment'), 10, 1);
@@ -70,7 +67,23 @@ class ApiManager
         add_filter('woocommerce_update_cart_action_cart_updated', array($cart_events_manager, 'handle_cart_update_event' ), 10, 1);
         add_filter('woocommerce_add_to_cart', array($cart_events_manager, 'handle_cart_update_event' ), 10, 1);
         add_action('woocommerce_cart_item_removed', array($cart_events_manager, 'handle_cart_update_event' ), 10, 1 );
-        add_action( 'woocommerce_before_single_product_summary', array($products_events_manager, 'product_viewed'), 10);
+        add_action('woocommerce_before_single_product_summary', array($products_events_manager, 'product_viewed'), 10);
+        add_action('woocommerce_product_set_stock_status', array($products_events_manager, 'product_stock_events'), 10, 1);
+        add_action('woocommerce_variation_set_stock_status', array($products_events_manager, 'product_stock_events'), 10, 1);
+        add_action('woocommerce_reduce_order_stock', array($products_events_manager, 'product_stock_update_on_order'), 10, 1);
+        add_action('woocommerce_single_product_summary', array($products_events_manager, 'show_back_in_stock_form'), 39, 1);
+        add_action('wp_ajax_sib_back_in_stock', [$products_events_manager, 'sib_back_in_stock_ajax_handler']);
+        add_action('wp_ajax_nopriv_sib_back_in_stock', [$products_events_manager, 'sib_back_in_stock_ajax_handler']);
+        add_action('woocommerce_after_variations_form', [$products_events_manager, 'render_back_in_stock_placeholder']);
+        add_action('wp_ajax_sib_get_back_in_stock_form', [$products_events_manager, 'sib_get_back_in_stock_form']);
+        add_action('wp_ajax_nopriv_sib_get_back_in_stock_form', [$products_events_manager, 'sib_get_back_in_stock_form']);
+    }
+
+    public function add_conditional_hooks() {
+        $cart_events_manager = new CartEventsManagers();
+        add_action('woocommerce_checkout_after_terms_and_conditions', array($cart_events_manager, 'add_optin_terms'));
+        add_filter('woocommerce_checkout_fields', array($cart_events_manager, 'add_optin_billing'));
+        add_action('woocommerce_checkout_update_order_meta', array($cart_events_manager, 'add_optin_order'));
     }
 
     public function add_rest_endpoints()
@@ -194,7 +207,26 @@ class ApiManager
                 self::ROUTE_CALLBACK   => function ($request) {
                     return $this->modify_response($this->get_categories_url($request));
                 }
-            )
+            ),
+            array(
+                self::ROUTE_PATH       => '/users/guests',
+                self::ROUTE_METHODS    => 'GET',
+                self::ROUTE_CALLBACK   => function ($request) {
+                    return $this->modify_response($this->get_guest_users($request));
+                },
+                'args' => [
+                    'per_page' => [
+                        'type' => 'integer',
+                        'default' => 250,
+                        'sanitize_callback' => 'absint',
+                    ],
+                    'offset' => [
+                        'type' => 'integer',
+                        'default' => 0,
+                        'sanitize_callback' => 'absint',
+                    ],
+                ],
+            ),
         );
 
         foreach ($routes as $route) {
@@ -290,11 +322,13 @@ class ApiManager
     }
 
     private function get_plugin_settings()
-    {
+    {      
         return new WP_REST_Response(
             array(
                 'settings' => $this->get_settings(),
                 'email_settings' => $this->get_email_settings(),
+                'user_connection_id' => get_option(SENDINBLUE_WC_USER_CONNECTION_ID, null),
+                'is_plugin_info_updated' => get_option(SENDINBLUE_IS_PLUGIN_INFO_UPDATED, null),
             ), 200);
     }
 
@@ -461,6 +495,58 @@ class ApiManager
         }
     }
 
+    private function get_guest_users($request)
+    {
+        global $wpdb;
+
+        $limit  = (int) $request->get_param('per_page');
+        $offset = (int) $request->get_param('offset');
+
+        $table = $wpdb->prefix . 'wc_customer_lookup';
+
+        try {
+            $results = $wpdb->get_results(
+                $wpdb->prepare("
+                    SELECT email, first_name, last_name, country, postcode, city, state
+                    FROM $table
+                    WHERE user_id IS NULL
+                    ORDER BY customer_id ASC
+                    LIMIT %d OFFSET %d
+                ", $limit, $offset),
+                ARRAY_A
+            );
+
+            $guests = [];
+
+            foreach ($results as $row) {
+                $user = [
+                    'email'      => $row['email'],
+                    'first_name' => $row['first_name'],
+                    'last_name'  => $row['last_name'],
+                    'billing'    => [
+                        'country'  => $row['country'],
+                        'postcode' => $row['postcode'],
+                        'city'     => $row['city'],
+                        'state'    => $row['state'],
+                    ],
+                    'shipping'  => [],
+                ];
+
+                $guests[] = $user;
+            }
+
+            return new WP_REST_Response($guests, 200);
+        } catch (\Throwable $t) {
+            return new WP_REST_Response(
+                [
+                    'message' => $t->getMessage() . ' in file: ' . $t->getFile() . ' at line no: ' . $t->getLine()
+                ],
+                500
+            );
+        }
+    }
+
+
     private function get_categories_url($request)
     {
         try {
@@ -488,9 +574,16 @@ class ApiManager
     private function set_connection($request)
     {
         $data = empty($request->get_body()) ? array() : json_decode($request->get_body(), true);
-
+        
         if (!empty($data['userconnection'])) {
-            (get_option(SENDINBLUE_WC_USER_CONNECTION_ID, null) !== null) ? update_option(SENDINBLUE_WC_USER_CONNECTION_ID, $data['userconnection']) : add_option(SENDINBLUE_WC_USER_CONNECTION_ID, $data['userconnection']);
+            //check if the value being saved contains only alpha numeric
+            if (!preg_match('/^[a-zA-Z0-9]+$/', $data['userconnection'])) {
+                return new WP_REST_Response(array('invalid_data' => "Invalid Data"), 400);
+            }
+            
+            $userconnection = $data['userconnection'];
+            
+            update_option(SENDINBLUE_WC_USER_CONNECTION_ID, $userconnection);
 
             return new WP_REST_Response(array('success' => true), 201);
         }
@@ -561,14 +654,28 @@ class ApiManager
 
     private function save_settings($request)
     {
-        (get_option(SENDINBLUE_WC_SETTINGS, null) !== null) ? update_option(SENDINBLUE_WC_SETTINGS, $request->get_body()) : add_option(SENDINBLUE_WC_SETTINGS, $request->get_body());
+        $body = $request->get_body();
+        $data = json_decode($body, true);
+
+        if (!is_array($data)) {
+            return new WP_REST_Response(array('invalid_json' => "Invalid JSON body"), 400);
+        }
+
+        (get_option(SENDINBLUE_WC_SETTINGS, null) !== null) ? update_option(SENDINBLUE_WC_SETTINGS, $body) : add_option(SENDINBLUE_WC_SETTINGS, $body);
 
         return new WP_REST_Response(array('success' => true), 201);
     }
 
     private function email_settings($request)
     {
-        (get_option(SENDINBLUE_WC_EMAIL_SETTINGS, null) !== null) ? update_option(SENDINBLUE_WC_EMAIL_SETTINGS, $request->get_body()) : add_option(SENDINBLUE_WC_EMAIL_SETTINGS, $request->get_body());
+        $body = $request->get_body();
+        $data = json_decode($body, true);
+
+        if (!is_array($data)) {
+            return new WP_REST_Response(array('invalid_json' => "Invalid JSON body"), 400);
+        }
+
+        update_option(SENDINBLUE_WC_EMAIL_SETTINGS, $body);
 
         return new WP_REST_Response(array('success' => true), 201);
     }
@@ -612,22 +719,30 @@ class ApiManager
             return;
         }
 
-        $opt_in_checked = "false";
+        $opt_in_checked = false;
+        $opt_in_enabled = false;
 
-        if (empty($settings[SendinblueClient::IS_DISPLAY_OPT_IN_ENABLED]) || get_post_meta($id, 'ws_opt_in', true)) {
-            $opt_in_checked = "true";
+        $oldPluginOptInValue = get_post_meta($id, 'ws_opt_in', true);
+        $newPluginOptInValue = $order->get_meta('_wc_other/SendinblueWoocommerce/newsletter_opt_in'); //new optin field for checkout blocks
+
+        if (!empty($settings[SendinblueClient::IS_DISPLAY_OPT_IN_ENABLED])) {
+            $opt_in_enabled = true;
+        }
+
+        if ($opt_in_enabled && ($oldPluginOptInValue || $newPluginOptInValue)) {
+            $opt_in_checked = true;
         }
 
         if (!empty($settings[SendinblueClient::IS_SUBSCRIBE_EVENT_ENABLED])
             && $settings[SendinblueClient::IS_SUBSCRIBE_EVENT_ENABLED] == 1
             && (strpos(SendinblueClient::NEW_ORDER_STATUS, $new_status) !== false)
         ) {
-            $this->trigger_event_customer_sync($order, $opt_in_checked);
+            $this->trigger_event_customer_sync($order, $opt_in_enabled, $opt_in_checked);
         } elseif (!empty($settings[SendinblueClient::IS_SUBSCRIBE_EVENT_ENABLED])
             && $settings[SendinblueClient::IS_SUBSCRIBE_EVENT_ENABLED] == 2
             && (strpos(SendinblueClient::COMPLETED_ORDER_STATUS, $new_status) !== false)
         ) {
-            $this->trigger_event_customer_sync($order, $opt_in_checked);
+            $this->trigger_event_customer_sync($order, $opt_in_enabled, $opt_in_checked);
         }
 
         if (!empty($settings[SendinblueClient::IS_ORDER_CONFIRMATION_SMS])
@@ -645,18 +760,17 @@ class ApiManager
         }
     }
 
-    private function trigger_event_customer_sync($data, $opt_in_checked)
+    private function trigger_event_customer_sync($data, $opt_in_enabled, $opt_in_checked)
     {
-        $data = $this->prepare_customer_payload($data, $opt_in_checked);
+        $data = $this->prepare_customer_payload($data, $opt_in_enabled, $opt_in_checked);
         $client = new SendinblueClient();
         $client->eventsSync(SendinblueClient::ORDER_CREATED, $data);
         $client->eventsSync(SendinblueClient::CONTACT_CREATED, $data);
     }
 
-    private function prepare_customer_payload($order, $opt_in_checked)
+    private function prepare_customer_payload($order, $opt_in_enabled, $opt_in_checked)
     {
         $customer_data = $order->get_data();
-        $order_info = array();
 
         $customer_data['id'] = $customer_data['customer_id'];
         $customer_data['first_name'] = $customer_data['billing']['first_name'];
@@ -664,16 +778,20 @@ class ApiManager
         $customer_data['email'] = $customer_data['billing']['email'];
         $customer_data['subscribed'] = "false";
         $customer_data['is_customer'] = "false";
-        if (!empty($customer_data['customer_id'])) {
-            $main_customer = get_userdata($customer_data['customer_id']);
-            $customer_data['date_created_gmt'] = $main_customer->user_registered;
-            $customer_data['email'] = $main_customer->user_email;
+        $customer_data['subscription_location'] = "order-checkout";
+
+        if (empty($opt_in_enabled)) {
             $customer_data['subscribed'] = "true";
-            $customer_data['is_customer'] = "true";
-        } elseif ($opt_in_checked == "true") {
+        } elseif ($opt_in_checked) {
             $customer_data['subscribed'] = "true";
+            if (!empty($customer_data['customer_id'])) {
+                $main_customer = get_userdata($customer_data['customer_id']);
+                $customer_data['date_created_gmt'] = $main_customer->user_registered;
+                $customer_data['email'] = $main_customer->user_email;
+                $customer_data['is_customer'] = "true";
+            }
         }
-        $customer_data['opt_in_checked'] = $opt_in_checked; //true when either no optin box or optin box is checked
+        $customer_data['opt_in_checked'] = $opt_in_enabled && $opt_in_checked ? "true" : "false"; //true when either no optin box or optin box is checked
         $customer_data['order_id'] = $order->get_order_number();
         $customer_data['order_date'] = gmdate('Y-m-d', strtotime($order->get_date_created()));
         $customer_data['order_price'] = $order->get_total();
@@ -1004,6 +1122,12 @@ class ApiManager
             $reply_to =  $this->get_admin_details()['email']; //Admin email address
 
             if ($settings[SendinblueClient::IS_CUSTOMER_NOTE_TEMPLATE_ENABLED] && !empty($settings[SendinblueClient::CUSTOMER_NOTE_TEMPLATE_ID])) {
+                $customer_note = isset($all_customer_notes[0]->content)  ? $all_customer_notes[0]->content : "";
+                if (empty($customer_note)) {
+                    $customer_note = get_comment($note_id);
+                }
+                $order_details["CUSTOMER_NOTE"] = $customer_note;
+
                 $this->trigger_event_email_sib($order_details['BILLING_EMAIL'], $order_details, $settings[SendinblueClient::CUSTOMER_NOTE_TEMPLATE_ID],  self::EVENT_GROUP_SIB, $attachment_path, $tags, $reply_to);
             } else {
                 $order = $this->wc_get_order($order->get_order_number());

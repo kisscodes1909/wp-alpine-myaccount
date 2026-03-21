@@ -8,11 +8,11 @@ namespace The_SEO_Framework\Data\Admin;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\Data;
+use The_SEO_Framework\Data;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -33,7 +33,27 @@ use \The_SEO_Framework\Data;
  * @since 5.0.0
  * @access private
  */
-class Term {
+final class Term {
+
+	/**
+	 * @since 5.1.3
+	 * @var array[] {
+	 *     The nonce data per save context.
+	 *
+	 *     @type string $name   The nonce field name.
+	 *     @type string $action The nonce action.
+	 * }
+	 */
+	public const SAVE_NONCES = [
+		'term-edit'  => [
+			'name'   => 'tsf_term_nonce_name',
+			'action' => 'tsf_term_nonce_action',
+		],
+		'quick-edit' => [
+			'name'   => 'tsf_term_nonce_name',
+			'action' => 'tsf_term_nonce_action',
+		],
+	];
 
 	/**
 	 * Sanitizes and saves term meta data when a term is altered.
@@ -59,13 +79,13 @@ class Term {
 	 * @param string $taxonomy Taxonomy slug.
 	 */
 	public static function update_meta( $term_id, $tt_id, $taxonomy ) {
-		// phpcs:disable, WordPress.Security.NonceVerification -- deferred.
+		// phpcs:disable WordPress.Security.NonceVerification -- deferred.
 		if ( ! empty( $_POST['autodescription-quick'] ) ) {
-			static::update_via_quick_edit( $term_id, $taxonomy );
+			self::update_via_quick_edit( $term_id, $taxonomy );
 		} elseif ( ! empty( $_POST['autodescription-meta'] ) ) {
-			static::update_via_term_edit( $term_id, $taxonomy );
+			self::update_via_term_edit( $term_id, $taxonomy );
 		}
-		// phpcs:enable, WordPress.Security.NonceVerification
+		// phpcs:enable WordPress.Security.NonceVerification
 	}
 
 	/**
@@ -92,6 +112,8 @@ class Term {
 			   empty( $term->term_id ) // We could test for is_wp_error( $term ), but this is more to the point.
 			|| ! \current_user_can( 'edit_term', $term->term_id )
 			|| ! \check_ajax_referer( 'taxinlineeditnonce', '_inline_edit', false )
+			|| ! isset( $_POST[ self::SAVE_NONCES['quick-edit']['name'] ] )
+			|| ! \wp_verify_nonce( $_POST[ self::SAVE_NONCES['quick-edit']['name'] ], self::SAVE_NONCES['quick-edit']['action'] )
 		) return;
 
 		// Unlike the term-edit saving, we don't reset the data, just overwrite what's given.
@@ -128,8 +150,8 @@ class Term {
 		if (
 			   empty( $term->term_id ) // We could test for is_wp_error( $term ), but this is more to the point.
 			|| ! \current_user_can( 'edit_term', $term->term_id )
-			|| ! isset( $_POST['_wpnonce'] )
-			|| ! \wp_verify_nonce( $_POST['_wpnonce'], "update-tag_{$term->term_id}" )
+			|| ! isset( $_POST[ self::SAVE_NONCES['term-edit']['name'] ] )
+			|| ! \wp_verify_nonce( $_POST[ self::SAVE_NONCES['term-edit']['name'] ], self::SAVE_NONCES['term-edit']['action'] )
 		) return;
 
 		// Trim, sanitize, and save the metadata.

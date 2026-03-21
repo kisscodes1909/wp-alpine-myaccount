@@ -6,9 +6,15 @@ if (!defined('ABSPATH')) die('No direct access allowed');
  * All cache commands that are intended to be available for calling from any sort of control interface (e.g. wp-admin, UpdraftCentral) go in here. All public methods should either return the data to be returned, or a WP_Error with associated error code, message and error data.
  */
 class WP_Optimize_Cache_Commands {
-
+	
+	/**
+	 * @var WP_Optimizer
+	 */
 	private $optimizer;
-
+	
+	/**
+	 * @var WP_Optimize_Options
+	 */
 	private $options;
 
 	/**
@@ -42,11 +48,11 @@ class WP_Optimize_Cache_Commands {
 
 		$enabled = false;
 		$disabled = false;
-		$return = !empty($validation) ? $validation : array();
+		$return = empty($validation) ? array() : $validation;
 		$previous_settings = WPO_Cache_Config::instance()->get();
 
 		// Attempt to change current status if required
-		if (isset($previous_settings['enable_page_caching']) && $previous_settings['enable_page_caching'] != $data['cache-settings']['enable_page_caching']) {
+		if (isset($previous_settings['enable_page_caching']) && (bool) $previous_settings['enable_page_caching'] !== (bool) $data['cache-settings']['enable_page_caching']) {
 			// Disable cache.
 			if (empty($data['cache-settings']['enable_page_caching'])) {
 				$disabled = WPO_Page_Cache::instance()->disable();
@@ -115,6 +121,38 @@ class WP_Optimize_Cache_Commands {
 
 		$return['enabled'] = ($enabled && !is_wp_error($enabled)) || ($previous_settings['enable_page_caching'] && is_wp_error($disabled));
 
+		if ($enabled && !is_wp_error($enabled)) {
+			$options_needs_purge = array_flip(array(
+				'enable_mobile_caching',
+				'enable_user_caching',
+				'enable_per_role_cache',
+				'enable_user_specific_cache',
+				'enable_rest_caching',
+				'show_avatars',
+				'host_gravatars_locally',
+				'cache_exception_urls',
+				'cache_ignore_query_variables',
+				'cache_exception_cookies',
+				'cache_exception_conditional_tags',
+				'cache_exception_browser_agents',
+			));
+			$previous_settings = array_intersect_key($previous_settings, $options_needs_purge);
+			$current_settings = wp_parse_args($data['cache-settings'], WPO_Cache_Config::instance()->defaults);
+			$current_settings = array_intersect_key($current_settings, $options_needs_purge);
+			ksort($previous_settings);
+			ksort($current_settings);
+			if ($current_settings !== $previous_settings) {
+				$cache = WPO_Page_Cache::instance();
+				$cache->file_log('Setting changed, purging cache');
+				$cache->purge();
+			}
+		}
+		// $disable can either be boolean or WP_Error
+		if (!is_wp_error($disabled) && $disabled) {
+			WPO_Page_Cache::instance()->prune_cache_logs();
+			wp_clear_scheduled_hook('wpo_prune_cache_logs');
+		}
+		
 		return $return;
 	}
 
@@ -129,7 +167,9 @@ class WP_Optimize_Cache_Commands {
 		$status[] = WPO_Page_Cache::instance()->is_enabled() ? __('Caching is enabled', 'wp-optimize') : __('Caching is disabled', 'wp-optimize');
 
 		$preloader_status = WP_Optimize_Page_Cache_Preloader::instance()->get_status_info();
+		// translators: %s: The current cache size
 		$status[] = sprintf(__('Current cache size: %s', 'wp-optimize'), $preloader_status['size']);
+		// translators: %s: The number of files in the cache
 		$status[] = sprintf(__('Number of files: %s', 'wp-optimize'), $preloader_status['file_count']);
 
 		if (array_key_exists('message', $preloader_status)) $status[] = $preloader_status['message'];
@@ -180,8 +220,9 @@ class WP_Optimize_Cache_Commands {
 			);
 		}
 
-		$purged = $wpo_page_cache->purge();
-		$cache_size = $wpo_page_cache->get_cache_size();
+		$purged = WP_Optimize()->get_page_cache()->purge();
+		if ($purged) WP_Optimize()->get_page_cache()->file_log("Full Cache Purge triggered by: " . __METHOD__);
+		$cache_size = WP_Optimize()->get_page_cache()->get_cache_size();
 		$wpo_page_cache_preloader = WP_Optimize_Page_Cache_Preloader::instance();
 
 		$response = array(

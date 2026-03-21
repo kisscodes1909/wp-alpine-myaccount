@@ -8,11 +8,11 @@ namespace The_SEO_Framework\Admin\Settings\Layout;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\Data\Filter\Escape;
+use The_SEO_Framework\Data\Filter\Escape;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2021 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2021 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -60,8 +60,8 @@ class HTML {
 	 * @param string $title The header title.
 	 */
 	public static function header_title( $title ) {
-		// phpcs:ignore, WordPress.Security.EscapeOutput.OutputNotEscaped -- it is.
-		echo static::get_header_title( \esc_html( $title ) );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- it is.
+		echo self::get_header_title( \esc_html( $title ) );
 	}
 
 	/**
@@ -74,7 +74,7 @@ class HTML {
 	 * @return string Content wrapped in code tags.
 	 */
 	public static function code_wrap( $content ) {
-		return static::code_wrap_noesc( \esc_html( $content ) );
+		return self::code_wrap_noesc( \esc_html( $content ) );
 	}
 
 	/**
@@ -100,7 +100,7 @@ class HTML {
 	 * @param bool   $block Whether to wrap the content in <p> tags.
 	 */
 	public static function description( $content, $block = true ) {
-		static::description_noesc( \esc_html( $content ), $block );
+		self::description_noesc( \esc_html( $content ), $block );
 	}
 
 	/**
@@ -114,7 +114,7 @@ class HTML {
 	public static function description_noesc( $content, $block = true ) {
 		printf(
 			( $block ? '<p>%s</p>' : '%s' ),
-			// phpcs:ignore, WordPress.Security.EscapeOutput -- Method clearly states it's not escaped.
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Method clearly states it's not escaped.
 			"<span class=description>$content</span>",
 		);
 	}
@@ -129,7 +129,7 @@ class HTML {
 	 * @param bool   $block Whether to wrap the content in <p> tags.
 	 */
 	public static function attention( $content, $block = true ) {
-		static::attention_noesc( \esc_html( $content ), $block );
+		self::attention_noesc( \esc_html( $content ), $block );
 	}
 
 	/**
@@ -143,7 +143,7 @@ class HTML {
 	public static function attention_noesc( $content, $block = true ) {
 		printf(
 			( $block ? '<p>%s</p>' : '%s' ),
-			// phpcs:ignore, WordPress.Security.EscapeOutput -- Method clearly states it's not escaped.
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Method clearly states it's not escaped.
 			"<span class=attention>$content</span>",
 		);
 	}
@@ -158,7 +158,7 @@ class HTML {
 	 * @param bool   $block Whether to wrap the content in <p> tags.
 	 */
 	public static function attention_description( $content, $block = true ) {
-		static::attention_description_noesc( \esc_html( $content ), $block );
+		self::attention_description_noesc( \esc_html( $content ), $block );
 	}
 
 	/**
@@ -172,7 +172,7 @@ class HTML {
 	public static function attention_description_noesc( $content, $block = true ) {
 		printf(
 			( $block ? '<p>%s</p>' : '%s' ),
-			// phpcs:ignore, WordPress.Security.EscapeOutput -- Method clearly states it's not escaped.
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Method clearly states it's not escaped.
 			"<span class=\"description attention\">$content</span>",
 		);
 	}
@@ -196,7 +196,7 @@ class HTML {
 		$output = "<div class=tsf-fields>$input</div>";
 
 		if ( $echo ) {
-			// phpcs:ignore, WordPress.Security.EscapeOutput -- Escape your $input prior!
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Escape your $input prior!
 			echo $output;
 		} else {
 			return $output;
@@ -226,14 +226,14 @@ class HTML {
 		} else {
 			$output = \sprintf(
 				'<span class="tsf-tooltip-item tsf-help" title="%1$s" data-desc="%1$s" tabindex=0>[?]</span>',
-				\esc_attr( $description )
+				\esc_attr( $description ),
 			);
 		}
 
 		$output = \sprintf( '<span class=tsf-tooltip-wrap>%s</span>', $output );
 
 		if ( $echo ) {
-			// phpcs:ignore, WordPress.Security.EscapeOutput
+			// phpcs:ignore WordPress.Security.EscapeOutput
 			echo $output;
 		} else {
 			return $output;
@@ -263,11 +263,11 @@ class HTML {
 				strtolower( preg_replace(
 					'/([A-Z])/',
 					'-$1',
-					preg_replace( '/[^a-z\d_-]/i', '', $k )
+					preg_replace( '/[^a-z\d_-]/i', '', $k ),
 				) ), // dash case.
 				\is_scalar( $v )
 					? \esc_attr( $v )
-					: Escape::json_encode_attribute( $v )
+					: Escape::json_encode_attribute( $v ),
 			);
 		}
 

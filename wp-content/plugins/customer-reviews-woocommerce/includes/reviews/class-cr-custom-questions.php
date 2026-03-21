@@ -149,15 +149,13 @@ if ( ! class_exists( 'CR_Custom_Questions' ) ) :
 									if( $f ) {
 										if ( 2 === $f ) {
 											// slider layout
-											$output .= '<div class="cr-sldr-custom-question"><div class="rating">';
-											$output .= '<div class="crstar-rating">';
-											$output .= '<span style="width:' . esc_attr( ( $this->questions[$i]->value / 5 ) * 100 ) . '%;"></span>';
-											$output .= '</div></div>';
+											$output .= '<div class="cr-sldr-custom-question">';
+											$output .= '<div class="crstar-rating-svg" role="img" aria-label="' . esc_attr( sprintf( __( 'Rated %s out of 5', 'woocommerce' ), $this->questions[$i]->value ) ) . '">' . CR_Reviews::get_star_rating_svg( $this->questions[$i]->value, 0, '' ) . '</div>';
 											$output .= '<div class="cr' . $fr . '-custom-question-rating">' . $title . '</div></div>';
 										} else {
 											// list layout
 											$output .= '<div class="cr' . $fr . '-custom-question-rating-cont"><div class="cr' . $fr . '-custom-question-rating">' . $title . ' :</div>';
-											$output .= wc_get_rating_html( $this->questions[$i]->value ) . '</div>';
+											$output .= '<div class="crstar-rating-svg" role="img" aria-label="' . esc_attr( sprintf( __( 'Rated %s out of 5', 'woocommerce' ), $this->questions[$i]->value ) ) . '">' . CR_Reviews::get_star_rating_svg( $this->questions[$i]->value, 0, '' ) . '</div></div>';
 										}
 									} else {
 										$output .= '<div class="cr' . $fr . '-custom-question-rating-cont"><span class="cr' . $fr . '-custom-question-rating">' . $title . ' :</span>';
@@ -219,7 +217,7 @@ if ( ! class_exists( 'CR_Custom_Questions' ) ) :
 			delete_comment_meta( $review_id, self::$meta_id );
 		}
 
-		public static function review_form_questions( $comment_form ) {
+		public static function review_form_questions( $comment_form, $hash ) {
 			$onsite_form = CR_Forms_Settings::get_default_form_settings();
 			$rs = '';
 			$qs = '';
@@ -227,7 +225,6 @@ if ( ! class_exists( 'CR_Custom_Questions' ) ) :
 				$onsite_form &&
 				is_array( $onsite_form )
 			) {
-				$hash = random_int( 0, 99 ) . '_';
 				$shared_index = 0;
 				// if there are any custom ratings, display them
 				if (
@@ -446,8 +443,7 @@ if ( ! class_exists( 'CR_Custom_Questions' ) ) :
 		}
 
 		// display a rating block on a review form
-		public static function review_form_rating( $item_id ) {
-			$hash = random_int( 0, 99 ) . '_';
+		public static function review_form_rating( $item_id, $hash ) {
 			$out = self::display_rating(
 				__( 'Rating', 'customer-reviews-woocommerce' ),
 				true,
@@ -460,7 +456,7 @@ if ( ! class_exists( 'CR_Custom_Questions' ) ) :
 			);
 			//
 			if ( 0 < $item_id ) {
-				$out = self::review_form_questions( $out );
+				$out = self::review_form_questions( $out, $hash );
 			}
 			echo $out;
 		}

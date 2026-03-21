@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -41,7 +41,7 @@ window.tsfSettings = function( $ ) {
 	 *
 	 * @since 4.0.0
 	 * @access public
-	 * @type {(Object<string,*>)|boolean|null} l10n Localized strings
+	 * @type {(Object<string,*>)|Boolean|null} l10n Localized strings
 	 */
 	const l10n = tsfSettingsL10n;
 
@@ -402,7 +402,7 @@ window.tsfSettings = function( $ ) {
 			tsfTitle.updateStateAll(
 				'additionPlacement',
 				showLeft ? 'before' : 'after',
-				_getSettingsId( 'homepage_title' )
+				_getSettingsId( 'homepage_title' ),
 			);
 		}
 		document.querySelectorAll( '#tsf-title-location input' ).forEach( el => {
@@ -972,7 +972,7 @@ window.tsfSettings = function( $ ) {
 	 * @access private
 	 *
 	 * @param {string|undefined} postType
-	 * @return {{label:string,url:string,hasPosts:boolean}}
+	 * @return {{label:string,url:string,hasPosts:Boolean}}
 	 */
 	function _getPtaData() {
 		return _cachedPtaData ||= JSON.parse(
@@ -1072,8 +1072,8 @@ window.tsfSettings = function( $ ) {
 							detail: {
 								postType:                      event.target.value,
 								hasKompaanChocolateBananaBeer: false, // sad day.
-							}
-						} )
+							},
+						} ),
 					);
 				},
 				1000/60, // 60fps.

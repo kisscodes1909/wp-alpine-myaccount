@@ -8,11 +8,11 @@ namespace The_SEO_Framework\Admin\SEOBar;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\Admin;
+use The_SEO_Framework\Admin;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -112,7 +112,7 @@ final class ListTable extends Admin\Lists\Table {
 			$columns = array_merge(
 				array_splice( $columns, 0, $offset ),
 				$seocolumn,
-				array_splice( $columns_before, $offset )
+				array_splice( $columns_before, $offset ),
 			);
 		}
 
@@ -135,14 +135,15 @@ final class ListTable extends Admin\Lists\Table {
 
 		if ( $this->column_name !== $column_name ) return;
 
-		// phpcs:ignore, WordPress.Security.EscapeOutput -- generate_bar escapes.
+		// phpcs:disable WordPress.Security.EscapeOutput -- generate_bar escapes.
 		echo Builder::generate_bar( [
 			'id'        => $post_id,
 			'post_type' => $this->post_type,
 		] );
+		// phpcs:enable WordPress.Security.EscapeOutput
 
 		if ( $this->doing_ajax )
-			echo $this->get_ajax_dispatch_updated_event(); // phpcs:ignore, WordPress.Security.EscapeOutput
+			echo $this->get_ajax_dispatch_updated_event(); // phpcs:ignore WordPress.Security.EscapeOutput
 	}
 
 	/**

@@ -197,7 +197,7 @@ class Printful_Client {
 		}
 		$status = (int) $response['code'];
 		if ( $status < 200 || $status >= 300 ) {
-			throw new PrintfulApiException(  $response['result'], esc_html($status));
+			throw new PrintfulApiException(  esc_html($response['result']), esc_html($status));
 		}
 
 		return $response['result'];

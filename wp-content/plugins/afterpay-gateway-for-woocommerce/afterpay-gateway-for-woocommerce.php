@@ -4,12 +4,12 @@
  * Description: Provide Afterpay as a payment option for WooCommerce orders.
  * Author: Afterpay
  * Author URI: https://www.afterpay.com/
- * Version: 3.8.7
+ * Version: 3.8.8
  * Text Domain: afterpay-gateway-for-woocommerce
  * Requires PHP: 7.4
  * Requires Plugins: woocommerce
  * WC requires at least: 7.4.1
- * WC tested up to: 9.3.3
+ * WC tested up to: 9.7.1
  *
  * Copyright: (c) 2020 Afterpay
  *
@@ -51,7 +51,7 @@ if ( ! class_exists( 'Afterpay_Plugin' ) ) {
 		 *
 		 * @var string
 		 */
-		public static $version = '3.8.7';
+		public static $version = '3.8.8';
 
 		/**
 		 * Import required classes.
@@ -321,8 +321,25 @@ if ( ! class_exists( 'Afterpay_Plugin' ) ) {
 
 			$gateway_instance = WC_Gateway_Afterpay::getInstance();
 			$static_url       = $gateway_instance->get_static_url();
-			$image_path       = "integration/product-page/logo-afterpay-{$atts['theme']}";
-			$logo             = $gateway_instance->generate_source_sets( $static_url, $image_path, 'png' );
+			$country_code     = $gateway_instance->get_country_code();
+			$caa_is_available = $gateway_instance->feature_is_available( 'caa' );
+			if ( $country_code == 'US' && $caa_is_available ) {
+				$map_theme_to_file_name = array(
+					'colour' => 'new-color-black-22',
+					'black'  => 'new-mono-black-22',
+					'white'  => 'new-mono-white-22',
+				);
+
+				$file_name  = $map_theme_to_file_name[ $atts['theme'] ];
+				$image_path = "en-US/integration/logo/lockup/{$file_name}";
+				$img_width  = 90;
+				$img_height = 22;
+			} else {
+				$image_path = "integration/product-page/logo-afterpay-{$atts['theme']}";
+				$img_width  = 100;
+				$img_height = 21;
+			}
+			$logo = $gateway_instance->generate_source_sets( $static_url, $image_path, 'png' );
 
 			ob_start();
 
@@ -333,8 +350,8 @@ if ( ! class_exists( 'Afterpay_Plugin' ) ) {
 					<?php echo esc_url( $logo->x1 ); ?> 1x,
 					<?php echo esc_url( $logo->x2 ); ?> 2x,
 					<?php echo esc_url( $logo->x3 ); ?> 3x"
-				width="100"
-				height="21"
+				width="<?php echo $img_width; ?>"
+				height="<?php echo $img_height; ?>"
 				alt="Afterpay" />
 				<?php
 

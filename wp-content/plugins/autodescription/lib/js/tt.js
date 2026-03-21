@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -430,8 +430,6 @@ window.tsfTT = function () {
 		}
 		window.addEventListener( 'tsf-tooltip-reset', init );
 		triggerReset();
-
-		addBoundary( '#wpwrap' ); //! All pages, but Gutenberg destroys the boundaries.. @see tsfGBC.
 	}
 
 	/**
@@ -460,9 +458,10 @@ window.tsfTT = function () {
 
 		element.prepend( tooltip );
 
-		const boundary = element.closest( ttSelectors.boundary )
-			|| element.closest( '.edit-post-sidebar' ) // Gutenberg Sidebar
-			// || element.closest( '.postbox-container' ) // Gutenberg Bottom (doesn't seem necessary)
+		const boundary =
+			   element.closest( ttSelectors.boundary )
+			|| element.closest( '#tabs-0-edit-post\\/document-view' ) // Gutenberg sidebar WP 6.9+
+			|| element.closest( '#tabs-1-edit-post\\/document-view' ) // Gutenberg sidebar WP 6.6+
 			|| document.getElementById( 'wpcontent' )
 			|| document.body;
 
@@ -485,7 +484,7 @@ window.tsfTT = function () {
 		resetTextRects();
 
 		let appeal    = 12, // equals parseInt( getComputedStyle( textWrap ).paddingRight ),
-		    horIndent = 0;
+			horIndent = 0;
 
 		// Calculate the appeal with the spacing.
 		if ( textWrapRect.width > ( boundaryWidth - ( appeal / 2 ) ) ) {
@@ -631,7 +630,7 @@ window.tsfTT = function () {
 	 *                 Careful, however, as some CSS queries may be subjected differently.
 	 *              2. Now calculates up/down overflow at the end, so it accounts for squashing and stretching.
 	 * @since 4.2.0 1. Is now asynchronous.
-	 *              2. Now returns boolean whether the tooltip was entered successfully.
+	 *              2. Now returns Boolean whether the tooltip was entered successfully.
 	 *              3. Now removes all other tooltips. Only one may prevail!
 	 * @access public
 	 *
@@ -662,13 +661,14 @@ window.tsfTT = function () {
 	 * Adds tooltip boundaries.
 	 *
 	 * @since 3.1.0
+	 * @since 4.1.1 Now only accepts Element, not jQuery or string.
 	 * @access public
 	 *
-	 * @param {!jQuery|Element|string} element The jQuery element, DOM Element or query selector.
+	 * @param {Element} element The DOM Element to add the boundary to.
 	 */
 	function addBoundary( element ) {
 		element instanceof Element && element.classList.add( ttNames.boundary );
-	};
+	}
 
 	/**
 	 * Removes the description balloon and arrow from element.

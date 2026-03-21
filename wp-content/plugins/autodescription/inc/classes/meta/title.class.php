@@ -8,18 +8,18 @@ namespace The_SEO_Framework\Meta;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\{
+use function The_SEO_Framework\{
 	coalesce_strlen,
 	get_query_type_from_args,
 	memo,
 	normalize_generation_args,
 };
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Data,
 	Data\Filter\Sanitize,
 };
-use \The_SEO_Framework\Helper\{
+use The_SEO_Framework\Helper\{
 	Post_Type,
 	Query,
 	Taxonomy,
@@ -27,7 +27,7 @@ use \The_SEO_Framework\Helper\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -61,8 +61,8 @@ class Title {
 	 * @return string The real title output.
 	 */
 	public static function get_title( $args = null ) {
-		return coalesce_strlen( static::get_custom_title( $args ) )
-			?? static::get_generated_title( $args );
+		return coalesce_strlen( self::get_custom_title( $args ) )
+			?? self::get_generated_title( $args );
 	}
 
 	/**
@@ -76,8 +76,8 @@ class Title {
 	 * @return string The unmodified title output.
 	 */
 	public static function get_bare_title( $args = null ) {
-		return coalesce_strlen( static::get_bare_custom_title( $args ) )
-			?? static::get_bare_generated_title( $args );
+		return coalesce_strlen( self::get_bare_custom_title( $args ) )
+			?? self::get_bare_generated_title( $args );
 	}
 
 	/**
@@ -90,6 +90,7 @@ class Title {
 	 * @since 5.0.0 1. Moved from `\The_SEO_Framework\Load`.
 	 *              2. Removed the second `$escape` parameter.
 	 *              3. Moved the third parameter to the second.
+	 * @since 5.1.3 Now runs the title through `Sanitize::metadata_content()`.
 	 *
 	 * @param array|null $args   The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
 	 *                           Leave null to autodetermine query.
@@ -98,21 +99,21 @@ class Title {
 	 */
 	public static function get_custom_title( $args = null, $social = false ) {
 
-		$title = static::get_bare_custom_title( $args );
+		$title = self::get_bare_custom_title( $args );
 
 		// Allow 0 to be the title.
 		if ( ! \strlen( $title ) ) return '';
 
 		if ( Title\Conditions::use_protection_status( $args ) )
-			$title = static::add_protection_status( $title, $args );
+			$title = self::add_protection_status( $title, $args );
 
 		if ( Title\Conditions::use_pagination( $args ) )
-			$title = static::add_pagination( $title );
+			$title = self::add_pagination( $title );
 
 		if ( Title\Conditions::use_branding( $args, $social ) )
-			$title = static::add_branding( $title, $args );
+			$title = self::add_branding( $title, $args );
 
-		return $title;
+		return Sanitize::metadata_content( $title );
 	}
 
 	/**
@@ -127,6 +128,7 @@ class Title {
 	 * @since 5.0.0 1. Moved from `\The_SEO_Framework\Load`.
 	 *              2. Removed the second `$escape` parameter.
 	 *              3. Moved the third parameter to the second.
+	 * @since 5.1.3 Now runs the title through `Sanitize::metadata_content()`.
 	 *
 	 * @param array|null $args   The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
 	 *                           Leave null to autodetermine query.
@@ -136,18 +138,18 @@ class Title {
 	public static function get_generated_title( $args = null, $social = false ) {
 
 		// We should always get something from here.
-		$title = static::get_bare_generated_title( $args );
+		$title = self::get_bare_generated_title( $args );
 
 		if ( Title\Conditions::use_protection_status( $args ) )
-			$title = static::add_protection_status( $title, $args );
+			$title = self::add_protection_status( $title, $args );
 
 		if ( Title\Conditions::use_pagination( $args ) )
-			$title = static::add_pagination( $title );
+			$title = self::add_pagination( $title );
 
 		if ( Title\Conditions::use_branding( $args, $social ) )
-			$title = static::add_branding( $title, $args );
+			$title = self::add_branding( $title, $args );
 
-		return $title;
+		return Sanitize::metadata_content( $title );
 	}
 
 	/**
@@ -167,9 +169,9 @@ class Title {
 
 		if ( isset( $args ) ) {
 			normalize_generation_args( $args );
-			$title = static::get_custom_title_from_args( $args );
+			$title = self::get_custom_title_from_args( $args );
 		} else {
-			$title = static::get_custom_title_from_query();
+			$title = self::get_custom_title_from_query();
 		}
 
 		/**
@@ -206,14 +208,14 @@ class Title {
 
 		isset( $args ) and normalize_generation_args( $args );
 
-		// phpcs:ignore, WordPress.CodeAnalysis.AssignmentInCondition -- I know.
+		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
 		if ( null !== $memo = memo( null, $args ) ) return $memo;
 
 		Title\Utils::remove_default_title_filters( false, $args );
 
 		$title = isset( $args )
-			? static::generate_title_from_args( $args )
-			: static::generate_title_from_query();
+			? self::generate_title_from_args( $args )
+			: self::generate_title_from_query();
 
 		Title\Utils::reset_default_title_filters();
 
@@ -230,7 +232,7 @@ class Title {
 		 */
 		$title = (string) \apply_filters(
 			'the_seo_framework_title_from_generation',
-			$title ?: static::get_untitled_title(),
+			$title ?: self::get_untitled_title(),
 			$args,
 		);
 
@@ -253,8 +255,8 @@ class Title {
 	 */
 	public static function get_bare_unfiltered_custom_title( $args = null ) {
 		return isset( $args )
-			? static::get_custom_title_from_args( $args )
-			: static::get_custom_title_from_query();
+			? self::get_custom_title_from_args( $args )
+			: self::get_custom_title_from_query();
 	}
 
 	/**
@@ -337,15 +339,15 @@ class Title {
 	public static function generate_title_from_query() {
 
 		if ( Query::is_real_front_page() ) {
-			$title = static::get_front_page_title();
+			$title = self::get_front_page_title();
 		} elseif ( Query::is_singular() ) {
-			$title = static::get_post_title();
+			$title = self::get_post_title();
 		} elseif ( Query::is_archive() ) {
-			$title = static::get_archive_title();
+			$title = self::get_archive_title();
 		} elseif ( Query::is_search() ) {
-			$title = static::get_search_query_title();
+			$title = self::get_search_query_title();
 		} elseif ( \is_404() ) {
-			$title = static::get_404_title();
+			$title = self::get_404_title();
 		}
 
 		return $title ?? '';
@@ -355,6 +357,7 @@ class Title {
 	 * Generates a title, based on expected query, without additions or prefixes.
 	 *
 	 * @since 5.0.0
+	 * @since 5.1.3 Now uses the memoized version of `get_userdata()`.
 	 *
 	 * @param array $args The query arguments. Required. Accepts 'id', 'tax', 'pta', and 'uid'.
 	 * @return string The generated title. Empty if query can't be replicated.
@@ -366,22 +369,22 @@ class Title {
 		switch ( get_query_type_from_args( $args ) ) {
 			case 'single':
 				if ( Query::is_static_front_page( $args['id'] ) ) {
-					$title = static::get_front_page_title();
+					$title = self::get_front_page_title();
 				} else {
-					$title = static::get_post_title( $args['id'] );
+					$title = self::get_post_title( $args['id'] );
 				}
 				break;
 			case 'term':
-				$title = static::get_archive_title( \get_term( $args['id'], $args['tax'] ) );
+				$title = self::get_archive_title( \get_term( $args['id'], $args['tax'] ) );
 				break;
 			case 'homeblog':
-				$title = static::get_front_page_title();
+				$title = self::get_front_page_title();
 				break;
 			case 'pta':
-				$title = static::get_archive_title( \get_post_type_object( $args['pta'] ) );
+				$title = self::get_archive_title( \get_post_type_object( $args['pta'] ) );
 				break;
 			case 'user':
-				$title = static::get_archive_title( \get_userdata( $args['uid'] ) );
+				$title = self::get_archive_title( Data\User::get_userdata( $args['uid'] ) );
 		}
 
 		return $title ?? '';
@@ -404,7 +407,7 @@ class Title {
 		if ( $object && \is_wp_error( $object ) )
 			return '';
 
-		return static::get_archive_title_list( $object )[0];
+		return self::get_archive_title_list( $object )[0];
 	}
 
 	/**
@@ -422,8 +425,8 @@ class Title {
 	public static function get_archive_title_list( $object = null ) {
 
 		[ $title, $prefix ] = $object
-			? static::get_archive_title_from_object( $object )
-			: static::get_archive_title_from_query();
+			? self::get_archive_title_from_object( $object )
+			: self::get_archive_title_from_query();
 
 		$title_without_prefix = $title;
 
@@ -439,40 +442,13 @@ class Title {
 		}
 
 		/**
-		 * Filters the archive title.
-		 * This is a sibling of WordPress's `get_the_archive_title`,
-		 * but then without the HTML.
-		 *
-		 * @since 3.0.4
-		 * @since 4.2.0 Added the `$prefix` and `$origintitle_without_prefixal_title` parameters.
-		 * @since 5.0.0 Deprecated
-		 * @deprecated
-		 *
-		 * @param string                               $title                Archive title to be displayed.
-		 * @param \WP_Term|\WP_User|\WP_Post_Type|null $object               The archive object.
-		 *                                                                   Is null when query is autodetermined.
-		 * @param string                               $title_without_prefix Archive title without prefix.
-		 * @param string                               $prefix               Archive title prefix.
-		 */
-		$title = (string) \apply_filters_deprecated(
-			'the_seo_framework_generated_archive_title',
-			[
-				$title,
-				$object,
-				$title_without_prefix,
-				$prefix,
-			],
-			'5.0.0 of The SEO Framework',
-			'the_seo_framework_generated_archive_title_items'
-		);
-
-		/**
 		 * @since 5.0.0
 		 * @param String[title,prefix,title_without_prefix] $items                The generated archive title items.
 		 * @param \WP_Term|\WP_User|\WP_Post_Type|null      $object               The archive object.
 		 *                                                                        Is null when query is autodetermined.
-		 * @param string                                    $title_without_prefix Archive title without prefix.
-		 * @param string                                    $prefix               Archive title prefix.
+		 * @param string                                    $title                The unmodified generated artive title.
+		 * @param string                                    $title_without_prefix The unmodified archive title without prefix.
+		 * @param string                                    $prefix               The unmodified archive title prefix.
 		 */
 		return \apply_filters(
 			'the_seo_framework_generated_archive_title_items',
@@ -501,13 +477,13 @@ class Title {
 		$prefix = '';
 
 		if ( Query::is_category() ) {
-			$title  = static::get_term_title();
+			$title  = self::get_term_title();
 			$prefix = \_x( 'Category:', 'category archive title prefix', 'default' );
 		} elseif ( Query::is_tag() ) {
-			$title  = static::get_term_title();
+			$title  = self::get_term_title();
 			$prefix = \_x( 'Tag:', 'tag archive title prefix', 'default' );
 		} elseif ( Query::is_author() ) {
-			$title  = static::get_user_title();
+			$title  = self::get_user_title();
 			$prefix = \_x( 'Author:', 'author archive title prefix', 'default' );
 		} elseif ( \is_date() ) {
 			if ( \is_year() ) {
@@ -541,13 +517,13 @@ class Title {
 				$title = \_x( 'Chats', 'post format archive title', 'default' );
 			}
 		} elseif ( \is_post_type_archive() ) {
-			$title  = static::get_post_type_archive_title();
+			$title  = self::get_post_type_archive_title();
 			$prefix = \_x( 'Archives:', 'post type archive title prefix', 'default' );
 		} elseif ( Query::is_tax() ) {
 			$term = \get_queried_object();
 
 			if ( $term ) {
-				$title  = static::get_term_title( $term );
+				$title  = self::get_term_title( $term );
 				$prefix = \sprintf(
 					/* translators: %s: Taxonomy singular name. */
 					\_x( '%s:', 'taxonomy term archive title prefix', 'default' ),
@@ -573,7 +549,7 @@ class Title {
 		$prefix = '';
 
 		if ( ! empty( $object->taxonomy ) ) {
-			$title = static::get_term_title( $object );
+			$title = self::get_term_title( $object );
 
 			switch ( $object->taxonomy ) {
 				case 'category':
@@ -590,10 +566,10 @@ class Title {
 					);
 			}
 		} elseif ( $object instanceof \WP_Post_Type ) {
-			$title  = static::get_post_type_archive_title( $object->name );
+			$title  = self::get_post_type_archive_title( $object->name );
 			$prefix = \_x( 'Archives:', 'post type archive title prefix', 'default' );
 		} elseif ( $object instanceof \WP_User ) {
-			$title  = static::get_user_title( $object->ID );
+			$title  = self::get_user_title( $object->ID );
 			$prefix = \_x( 'Author:', 'author archive title prefix', 'default' );
 		}
 
@@ -694,13 +670,18 @@ class Title {
 	 * Fetches user title.
 	 *
 	 * @since 5.0.0
+	 * @since 5.1.3 Now uses the memoized version of `get_userdata()`.
 	 *
 	 * @param int $user_id The user ID.
 	 * @return string The generated post type archive title.
 	 */
 	public static function get_user_title( $user_id = 0 ) {
 		return Sanitize::metadata_content(
-			\get_userdata( $user_id ?: Query::get_the_real_id() )->display_name ?? ''
+			Data\User::get_userdata(
+				$user_id ?: Query::get_the_real_id(),
+				'display_name',
+			)
+			?? '',
 		);
 	}
 
@@ -764,8 +745,11 @@ class Title {
 	 */
 	public static function get_search_query_title() {
 		return Sanitize::metadata_content(
-			/* translators: %s: search phrase */
-			\sprintf( \__( 'Search Results for &#8220;%s&#8221;', 'default' ), \get_search_query( true ) )
+			\sprintf(
+				/* translators: %s: search phrase */
+				\__( 'Search Results for &#8220;%s&#8221;', 'default' ),
+				\get_search_query( true ),
+			),
 		);
 	}
 
@@ -785,7 +769,7 @@ class Title {
 			 */
 			(string) \apply_filters(
 				'the_seo_framework_404_title',
-				\__( 'Page not found', 'default' )
+				\__( 'Page not found', 'default' ),
 			)
 		);
 	}
@@ -808,28 +792,28 @@ class Title {
 			switch ( get_query_type_from_args( $args ) ) {
 				case 'single':
 					if ( Query::is_static_front_page( $args['id'] ) ) {
-						$addition    = static::get_addition_for_front_page();
-						$seplocation = static::get_addition_location_for_front_page();
+						$addition    = self::get_addition_for_front_page();
+						$seplocation = self::get_addition_location_for_front_page();
 					} else {
-						$addition    = static::get_addition();
-						$seplocation = static::get_addition_location();
+						$addition    = self::get_addition();
+						$seplocation = self::get_addition_location();
 					}
 					break;
 				case 'homeblog':
-					$addition    = static::get_addition_for_front_page();
-					$seplocation = static::get_addition_location_for_front_page();
+					$addition    = self::get_addition_for_front_page();
+					$seplocation = self::get_addition_location_for_front_page();
 					break;
 				default:
-					$addition    = static::get_addition();
-					$seplocation = static::get_addition_location();
+					$addition    = self::get_addition();
+					$seplocation = self::get_addition_location();
 			}
 		} else {
 			if ( Query::is_real_front_page() ) {
-				$addition    = static::get_addition_for_front_page();
-				$seplocation = static::get_addition_location_for_front_page();
+				$addition    = self::get_addition_for_front_page();
+				$seplocation = self::get_addition_location_for_front_page();
 			} else {
-				$addition    = static::get_addition();
-				$seplocation = static::get_addition_location();
+				$addition    = self::get_addition();
+				$seplocation = self::get_addition_location();
 			}
 		}
 
@@ -837,7 +821,7 @@ class Title {
 		$addition = trim( $addition );
 
 		if ( \strlen( $addition ) && \strlen( $title ) ) {
-			$sep = static::get_separator();
+			$sep = self::get_separator();
 
 			if ( 'left' === $seplocation )
 				return "$addition $sep $title";
@@ -861,10 +845,13 @@ class Title {
 		$page = max( Query::paged(), Query::page() );
 
 		if ( $page >= 2 ) {
-			$sep = static::get_separator();
+			$sep = self::get_separator();
 
-			/* translators: %s: Page number. */
-			$paging = \sprintf( \__( 'Page %s', 'default' ), $page );
+			$paging = \sprintf(
+				/* translators: %s: Page number. */
+				\__( 'Page %s', 'default' ),
+				$page,
+			);
 
 			return \is_rtl() ? "$paging $sep $title" : "$title $sep $paging";
 		}
@@ -877,7 +864,7 @@ class Title {
 	 *
 	 * @since 5.0.0
 	 *
-	 * @param string     $title The title. Passed by reference.
+	 * @param string     $title The title.
 	 * @param array|null $args  The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
 	 *                          Leave null to autodetermine query.
 	 * @return string The title with possible protection status.
@@ -982,7 +969,7 @@ class Title {
 	public static function get_addition_for_front_page() {
 		return memo()
 			?? memo( Sanitize::metadata_content(
-				coalesce_strlen( Data\Plugin::get_option( 'homepage_title_tagline' ) )
+				   coalesce_strlen( Data\Plugin::get_option( 'homepage_title_tagline' ) )
 				?? Data\Blog::get_filtered_blog_description()
 			) );
 	}
@@ -1021,15 +1008,18 @@ class Title {
 	 * @return string The Separator.
 	 */
 	public static function get_separator() {
-		/**
-		 * @since 2.3.9
-		 * @param string $eparator The title separator
-		 */
 		return memo() ?? memo(
+			/**
+			 * @since 2.3.9
+			 * @param string $eparator The title separator
+			 */
 			(string) \apply_filters(
 				'the_seo_framework_title_separator',
-				Title\Utils::get_separator_list()[ Data\Plugin::get_option( 'title_separator' ) ] ?? '&#x2d;',
-			)
+				(
+					Title\Utils::get_separator_list()[ Data\Plugin::get_option( 'title_separator' ) ]
+					?? '&#x2d;'
+				),
+			),
 		);
 	}
 }

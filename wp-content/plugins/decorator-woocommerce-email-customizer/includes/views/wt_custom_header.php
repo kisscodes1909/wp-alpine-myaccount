@@ -1,4 +1,9 @@
 <?php
+// Exit if accessed directly
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 $recipients = get_option('wt_test_mail_recipients');
 $recipients_mail = isset($recipients) && !empty($recipients) ? $recipients : '';
 if (!is_rtl()) {
@@ -564,7 +569,7 @@ if (!is_rtl()) {
                     </td> 
                      <td style="width: 5%;padding-left: 15px; padding-bottom: 10px;">
                         <div id="wt_header_right_action_div">
-                            <table style="margin-bottom: 3px;"><tr><td><input type="checkbox" name="wt_apply_to_all_template" id="wt_apply_to_all_template"></td><td style="text-align:left"><label><?php _e('Apply changes to all email type', 'decorator-woocommerce-email-customizer'); ?></label></td></tr></table>
+                            <table style="margin-bottom: 3px;"><tr><td><input type="checkbox" name="wt_apply_to_all_template" id="wt_apply_to_all_template"></td><td style="text-align:left"><label><?php esc_html_e('Apply changes to all email type', 'decorator-woocommerce-email-customizer'); ?></label></td></tr></table>
                             <button class="btn_publish_settings" id="wt_btn_settings">
                                 <span class="dashicons dashicons-arrow-down" style="margin: 0px 0px 0px 0px;color: #FFFFFF"></span></button>
 
@@ -577,17 +582,17 @@ if (!is_rtl()) {
 
 <div class="wt_send_mail_box">
     <div class="wt_warn_box">
-        <span><?php _e('Save the settings prior to sending the test email.', 'decorator-woocommerce-email-customizer'); ?></span></div>
+        <span><?php esc_html_e('Save the settings prior to sending the test email.', 'decorator-woocommerce-email-customizer'); ?></span></div>
     <div class="wt-feedback-form wt-feedback-form-shadow">
         <div style="width: 100%">            
             <label style="font-size: 17px">
-                <?php _e('Enter recipient email ID:', 'decorator-woocommerce-email-customizer'); ?>
+                <?php esc_html_e('Enter recipient email ID:', 'decorator-woocommerce-email-customizer'); ?>
             </label>
-            <input placeholder="<?php _e('samplemail@gmail.com', 'decorator-woocommerce-email-customizer'); ?>" type="text" name="wt_recipient_email" id="wt_recipient_email" class="wt-feedback-email" value="<?php echo $recipients_mail; ?>" style="margin-top: 12px;" required/><span><img id="wt_mail_image" src="<?php echo RP_DECORATOR_PLUGIN_URL . '/assets/images/red-cross.svg' ?>" style="height:20px;width: 45px;margin-bottom: -4px;"> </span>
+            <input placeholder="<?php esc_html_e('samplemail@gmail.com', 'decorator-woocommerce-email-customizer'); ?>" type="text" name="wt_recipient_email" id="wt_recipient_email" class="wt-feedback-email" value="<?php echo esc_attr( $recipients_mail ); ?>" style="margin-top: 12px;" required/><span><img id="wt_mail_image" src="<?php echo esc_url( RP_DECORATOR_PLUGIN_URL . '/assets/images/red-cross.svg' ) ?>" style="height:20px;width: 45px;margin-bottom: -4px;"> </span>
         </div>
         <div class="wt-feedback-terms-segment">
             <label >
-                <?php _e('Enter valid email IDs separated by comma. Then, click on ‘Test email’ to get a preview of the customized email in your inbox ', 'decorator-woocommerce-email-customizer'); ?>
+                <?php esc_html_e('Enter valid email IDs separated by comma. Then, click on ‘Test email’ to get a preview of the customized email in your inbox ', 'decorator-woocommerce-email-customizer'); ?>
             </label>
         </div>
 
@@ -596,21 +601,21 @@ if (!is_rtl()) {
 
 <div class="button_actions" id="wt_button_actions">
     <ul class="wt_dc_dropdown" style="margin: 1px;color: #FFFFFF;padding: 3px 3px 0px 3px;" >
-        <li id="wt_btn_publish"> <?php _e('Publish', 'decorator-woocommerce-email-customizer'); ?></li>
-        <li id="wt_btn_draft"> <?php _e('Save draft', 'decorator-woocommerce-email-customizer'); ?></li>
-        <li id="wt_btn_schedule" class="wt_btn_schedule"> <?php _e('Schedule', 'decorator-woocommerce-email-customizer'); ?></li>
-        <!--<li style="background: #FFF;color: black;padding: 0px" id="wt_btn_apply_to_all" class="wt_btn_apply_to_all"> <table><tr><td><input type="checkbox" name="wt_apply_to_all_template" id="wt_apply_to_all_template">&nbsp;&nbsp;</td><td style="text-align:left"><?php _e('Apply changes to all email type', 'decorator-woocommerce-email-customizer'); ?></td></tr></table></li>-->
+        <li id="wt_btn_publish"> <?php esc_html_e('Publish', 'decorator-woocommerce-email-customizer'); ?></li>
+        <li id="wt_btn_draft"> <?php esc_html_e('Save draft', 'decorator-woocommerce-email-customizer'); ?></li>
+        <li id="wt_btn_schedule" class="wt_btn_schedule"> <?php esc_html_e('Schedule', 'decorator-woocommerce-email-customizer'); ?></li>
+        <!--<li style="background: #FFF;color: black;padding: 0px" id="wt_btn_apply_to_all" class="wt_btn_apply_to_all"> <table><tr><td><input type="checkbox" name="wt_apply_to_all_template" id="wt_apply_to_all_template">&nbsp;&nbsp;</td><td style="text-align:left"><?php esc_html_e('Apply changes to all email type', 'decorator-woocommerce-email-customizer'); ?></td></tr></table></li>-->
     </ul>
 </div>
 
 <div class="wt_schedule_box" id="wt_schedule_box">
-    <span><?php _e('Select a date to publish your customized email.', 'decorator-woocommerce-email-customizer'); ?></span>
+    <span><?php esc_html_e('Select a date to publish your customized email.', 'decorator-woocommerce-email-customizer'); ?></span>
     <div class="wt-feedback-form-shadow" id="wt_dc_dropdown_test">
     </div>
 </div>
 
 <div class="wt_scheduled_data" id="wt_scheduled_data">
-    <p><?php _e('Scheduled to go live at ', 'decorator-woocommerce-email-customizer'); ?><span id="wt_schedule_date"></span></p>
+    <p><?php esc_html_e('Scheduled to go live at ', 'decorator-woocommerce-email-customizer'); ?><span id="wt_schedule_date"></span></p>
     <button class="button btn_schedule" id="wt_schedule_ok_btn">
         Ok <span class="dashicons dashicons-yes" style="font-size: 25px;"></span> </button>
     <button class="button btn_schedule" id="wt_schedule_edit_btn">

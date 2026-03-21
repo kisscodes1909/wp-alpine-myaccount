@@ -8,7 +8,7 @@
                     action: wtso_bfcm_twenty_twenty_four_banner_js_params.action,
                     wtso_bfcm_twenty_twenty_four_banner_action_type: '',
                 };
-                $(document).on('click', 'weht-bfcm-banner-2024 .bfcm_cta_button', function (e) { 
+                $(document).on('click', '.wtso-bfcm-banner-2024 .bfcm_cta_button', function (e) { 
                     e.preventDefault(); 
                     var elm = $(this);
                     window.open(wtso_bfcm_twenty_twenty_four_banner_js_params.cta_link, '_blank'); 

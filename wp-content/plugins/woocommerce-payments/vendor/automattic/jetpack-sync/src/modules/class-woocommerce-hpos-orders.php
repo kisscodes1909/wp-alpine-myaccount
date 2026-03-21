@@ -9,10 +9,19 @@ namespace Automattic\Jetpack\Sync\Modules;
 
 use Automattic\WooCommerce\Internal\DataStores\Orders\OrdersTableDataStore;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit( 0 );
+}
+
 /**
  * Adds WooCommerce HPOS specific data to sync when HPOS is enabled on the site.
  */
 class WooCommerce_HPOS_Orders extends Module {
+
+	/**
+	 * The slug of WooCommerce Subscriptions plugin.
+	 */
+	const WOOCOMMERCE_SUBSCRIPTIONS_PATH = 'woocommerce-subscriptions/woocommerce-subscriptions.php';
 
 	/**
 	 * Order table name. There are four order tables (order, addresses, operational_data and meta), but for sync purposes we only care about the main table since it has the order ID.
@@ -40,8 +49,21 @@ class WooCommerce_HPOS_Orders extends Module {
 	 * @access public
 	 *
 	 * @return string
+	 * @deprecated since 3.11.0 Use table() instead.
 	 */
 	public function table_name() {
+		_deprecated_function( __METHOD__, '3.11.0', 'Automattic\\Jetpack\\Sync\\WooCommerce_HPOS_Orders->table' );
+		return $this->order_table_name;
+	}
+
+	/**
+	 * The table in the database with the prefix.
+	 *
+	 * @access public
+	 *
+	 * @return string|bool
+	 */
+	public function table() {
 		return $this->order_table_name;
 	}
 
@@ -65,7 +87,17 @@ class WooCommerce_HPOS_Orders extends Module {
 	 * @return array Order types to sync.
 	 */
 	public static function get_order_types_to_sync( $prefixed = false ) {
-		$types = array( 'order', 'order_refund', 'subscription' );
+		$types = array( 'order', 'order_refund' );
+
+		// Ensure this is available.
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		if ( is_plugin_active( self::WOOCOMMERCE_SUBSCRIPTIONS_PATH ) ) {
+			$types[] = 'subscription';
+		}
+
 		if ( $prefixed ) {
 			$types = array_map(
 				function ( $type ) {
@@ -87,12 +119,16 @@ class WooCommerce_HPOS_Orders extends Module {
 	public function init_listeners( $callable ) {
 		foreach ( self::get_order_types_to_sync() as $type ) {
 			add_action( "woocommerce_after_{$type}_object_save", $callable );
-			add_filter( "jetpack_sync_before_enqueue_woocommerce_after_{$type}_object_save", array( $this, 'expand_order_object' ) );
+			add_filter( "jetpack_sync_before_enqueue_woocommerce_after_{$type}_object_save", array( $this, 'on_before_enqueue_order_save' ) );
 		}
 		add_action( 'woocommerce_delete_order', $callable );
-		add_filter( 'jetpack_sync_before_enqueue_woocommerce_delete_order', array( $this, 'expand_order_object' ) );
+		add_action( 'woocommerce_delete_subscription', $callable );
+		add_filter( 'jetpack_sync_before_enqueue_woocommerce_delete_order', array( $this, 'on_before_enqueue_order_trash_delete' ) );
+		add_filter( 'jetpack_sync_before_enqueue_woocommerce_delete_subscription', array( $this, 'on_before_enqueue_order_trash_delete' ) );
 		add_action( 'woocommerce_trash_order', $callable );
-		add_filter( 'jetpack_sync_before_enqueue_woocommerce_trash_order', array( $this, 'expand_order_object' ) );
+		add_action( 'woocommerce_trash_subscription', $callable );
+		add_filter( 'jetpack_sync_before_enqueue_woocommerce_trash_order', array( $this, 'on_before_enqueue_order_trash_delete' ) );
+		add_filter( 'jetpack_sync_before_enqueue_woocommerce_trash_subscription', array( $this, 'on_before_enqueue_order_trash_delete' ) );
 	}
 
 	/**
@@ -104,7 +140,20 @@ class WooCommerce_HPOS_Orders extends Module {
 	 */
 	public function init_full_sync_listeners( $callable ) {
 		add_action( 'jetpack_full_sync_orders', $callable );
-		add_filter( 'jetpack_sync_before_enqueue_full_sync_orders', array( $this, 'expand_order_objects' ) );
+	}
+
+	/**
+	 * Initialize the module in the sender.
+	 *
+	 * @access public
+	 */
+	public function init_before_send() {
+		// Incremental Sync
+		foreach ( self::get_order_types_to_sync() as $type ) {
+			add_filter( "jetpack_sync_before_send_woocommerce_after_{$type}_object_save", array( $this, 'expand_order_object' ) );
+		}
+		// Full sync.
+		add_filter( 'jetpack_sync_before_send_jetpack_full_sync_woocommerce_hpos_orders', array( $this, 'build_full_sync_action_array' ) );
 	}
 
 	/**
@@ -148,7 +197,7 @@ class WooCommerce_HPOS_Orders extends Module {
 	}
 
 	/**
-	 * Retrieves multiple orders data by their ID.
+	 * Retrieves multiple orders data by their ID. Sorted by ID in descending order.
 	 *
 	 * @access public
 	 *
@@ -168,6 +217,8 @@ class WooCommerce_HPOS_Orders extends Module {
 				'type'        => self::get_order_types_to_sync( true ),
 				'post_status' => self::get_all_possible_order_status_keys(),
 				'limit'       => -1,
+				'orderby'     => 'ID',
+				'order'       => 'DESC',
 			)
 		);
 
@@ -187,11 +238,55 @@ class WooCommerce_HPOS_Orders extends Module {
 	 * @param array $args List of order IDs.
 	 *
 	 * @return array
+	 * @deprecated since 4.7.0
 	 */
 	public function expand_order_objects( $args ) {
-		$order_ids = $args;
+		_deprecated_function( __METHOD__, '4.7.0' );
+		list( $order_ids, $previous_end ) = $args;
+		return array(
+			'orders'       => $this->get_objects_by_id( 'order', $order_ids ),
+			'previous_end' => $previous_end,
+		);
+	}
 
-		return $this->get_objects_by_id( 'order', $order_ids );
+	/**
+	 * Build the full sync action object.
+	 *
+	 * @access public
+	 *
+	 * @param array $args An array with filtered objects and previous end.
+	 *
+	 * @return array An array with orders and previous end.
+	 */
+	public function build_full_sync_action_array( $args ) {
+		list( $filtered_orders, $previous_end ) = $args;
+		return array(
+			'orders'       => $filtered_orders['objects'],
+			'previous_end' => $previous_end,
+		);
+	}
+
+	/**
+	 * Retrieve filtered order data before sending.
+	 *
+	 * @access public
+	 *
+	 * @param array $args An array with order data.
+	 *
+	 * @return array|false
+	 */
+	public function expand_order_object( $args ) {
+		if ( empty( $args['id'] ) ) {
+			return false;
+		}
+
+		$order_object = wc_get_order( $args['id'] );
+
+		if ( ! $order_object instanceof \WC_Abstract_Order ) {
+			return false;
+		}
+
+		return $this->filter_order_data( $order_object );
 	}
 
 	/**
@@ -201,9 +296,12 @@ class WooCommerce_HPOS_Orders extends Module {
 	 *
 	 * @param array $args Order ID.
 	 *
-	 * @return array
+	 * @return array|false
 	 */
-	public function expand_order_object( $args ) {
+	public function on_before_enqueue_order_save( $args ) {
+		// Prevent multiple triggers on a single request.
+		static $processed = array();
+
 		if ( ! is_array( $args ) || ! isset( $args[0] ) ) {
 			return false;
 		}
@@ -217,7 +315,41 @@ class WooCommerce_HPOS_Orders extends Module {
 			return false;
 		}
 
-		return $this->filter_order_data( $order_object );
+		$order_id = $order_object->get_id();
+
+		if ( empty( $order_id ) ) {
+			return false;
+		}
+
+		if ( isset( $processed[ $order_id ] ) ) {
+			return false;
+		}
+
+		$processed[ $order_id ] = true;
+
+		return array( 'id' => $order_id );
+	}
+
+	/**
+	 * Convert order ID to array.
+	 *
+	 * @access public
+	 *
+	 * @param array $args Order ID.
+	 *
+	 * @return array
+	 */
+	public function on_before_enqueue_order_trash_delete( $args ) {
+		if ( ! is_array( $args ) || ! isset( $args[0] ) ) {
+			return false;
+		}
+		$order_id = $args[0];
+
+		if ( ! is_int( $order_id ) ) {
+			return false;
+		}
+
+		return array( 'id' => $order_id );
 	}
 
 	/**
@@ -364,6 +496,12 @@ class WooCommerce_HPOS_Orders extends Module {
 			);
 		}
 
+		if ( function_exists( 'wcs_get_subscription_statuses' ) ) {
+			// @phan-suppress-next-line PhanUndeclaredFunction -- Checked above. See also https://github.com/phan/phan/issues/1204.
+			$wc_subscription_statuses = array_keys( wcs_get_subscription_statuses() );
+			$wc_order_statuses        = array_merge( $wc_order_statuses, $wc_subscription_statuses );
+		}
+
 		return array_unique( $wc_order_statuses );
 	}
 
@@ -388,12 +526,12 @@ class WooCommerce_HPOS_Orders extends Module {
 	 * @access public
 	 *
 	 * @param array $config Full sync configuration for this sync module.
-	 * @return array Number of items yet to be enqueued.
+	 * @return int Number of items yet to be enqueued.
 	 */
 	public function estimate_full_sync_actions( $config ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- We return all order count for full sync, so confit is not required.
 		global $wpdb;
 
-		$query = "SELECT count(*) FROM {$this->table_name()} WHERE {$this->get_where_sql( $config ) }";
+		$query = "SELECT count(*) FROM {$this->table()} WHERE {$this->get_where_sql( $config ) }";
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Hardcoded query, no user variable
 		$count = (int) $wpdb->get_var( $query );
 
@@ -411,7 +549,7 @@ class WooCommerce_HPOS_Orders extends Module {
 	 * @return array Number of actions enqueued, and next module state.
 	 */
 	public function enqueue_full_sync_actions( $config, $max_items_to_enqueue, $state ) {
-		return $this->enqueue_all_ids_as_action( 'full_sync_orders', $this->table_name(), 'id', $this->get_where_sql( $config ), $max_items_to_enqueue, $state );
+		return $this->enqueue_all_ids_as_action( 'full_sync_orders', $this->table(), 'id', $this->get_where_sql( $config ), $max_items_to_enqueue, $state );
 	}
 
 	/**
@@ -431,5 +569,48 @@ class WooCommerce_HPOS_Orders extends Module {
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Query is prepared.
 		$where_sql = $wpdb->prepare( "type IN ( $order_type_placeholder )", $order_types );
 		return "{$parent_where} AND {$where_sql}";
+	}
+
+	/**
+	 * Given the Module Configuration and Status return the next chunk of items to send.
+	 * This function also expands the posts and metadata and filters them based on the maximum size constraints.
+	 *
+	 * @param array $config This module Full Sync configuration.
+	 * @param array $status This module Full Sync status.
+	 * @param int   $chunk_size Chunk size.
+	 *
+	 * @return array
+	 */
+	public function get_next_chunk( $config, $status, $chunk_size ) {
+
+		$order_ids = parent::get_next_chunk( $config, $status, $chunk_size );
+
+		if ( empty( $order_ids ) ) {
+			return array();
+		}
+
+		$orders = $this->get_objects_by_id( 'order', $order_ids );
+
+		// If no orders were fetched, make sure to return the expected structure so that status is updated correctly.
+		if ( empty( $orders ) ) {
+			return array(
+				'object_ids' => $order_ids,
+				'objects'    => array(),
+			);
+		}
+
+		// Filter the orders based on the maximum size constraints. We don't need to filter metadata here since we don't sync it for hpos.
+		list( $filtered_order_ids, $filtered_orders, ) = $this->filter_objects_and_metadata_by_size(
+			'order',
+			$orders,
+			array(),
+			0,
+			self::MAX_SIZE_FULL_SYNC
+		);
+
+		return array(
+			'object_ids' => $filtered_order_ids,
+			'objects'    => $filtered_orders,
+		);
 	}
 }

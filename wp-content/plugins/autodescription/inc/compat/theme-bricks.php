@@ -2,14 +2,15 @@
 /**
  * @package The_SEO_Framework\Compat\Theme\Bricks
  * @subpackage The_SEO_Framework\Compatibility
+ * @access private
  */
 
 namespace The_SEO_Framework;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-\add_filter( 'the_seo_framework_public_post_types', __NAMESPACE__ . '\\_bricks_fix_public_post_types' );
-\add_filter( 'the_seo_framework_public_taxonomies', __NAMESPACE__ . '\\_bricks_fix_public_taxonomies' );
+\add_filter( 'the_seo_framework_public_post_types', __NAMESPACE__ . '\_bricks_fix_public_post_types' );
+\add_filter( 'the_seo_framework_public_taxonomies', __NAMESPACE__ . '\_bricks_fix_public_taxonomies' );
 
 /**
  * Removes support for Bricks' non-public post types conditionally.
@@ -24,7 +25,7 @@ namespace The_SEO_Framework;
  */
 function _bricks_fix_public_post_types( $post_types ) {
 
-	// phpcs:ignore, TSF.Performance.Functions.PHP -- this method is memoized via filter, autoload is false.
+	// phpcs:ignore TSF.Performance.Functions.PHP -- this method is memoized via filter, autoload is false.
 	if ( \defined( 'BRICKS_DB_TEMPLATE_SLUG' ) && class_exists( \Bricks\Database::class, false ) )
 		if ( ! \Bricks\Database::get_setting( 'publicTemplates' ) )
 			$post_types = array_diff( $post_types, [ BRICKS_DB_TEMPLATE_SLUG ] );

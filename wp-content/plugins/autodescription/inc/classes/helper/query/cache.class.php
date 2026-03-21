@@ -8,11 +8,11 @@ namespace The_SEO_Framework\Helper\Query;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\Helper\Query; // Yes, it is legal to share class and namespaces.
+use The_SEO_Framework\Helper\Query; // Yes, it is legal to share class and namespaces.
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -66,23 +66,23 @@ class Cache {
 	public static function memo( $value_to_set = null, ...$args ) {
 
 		if (
-			   ! static::$can_cache_query
-			&& ! static::can_cache_query() // If not set, (re)determine.
+			   ! self::$can_cache_query
+			&& ! self::can_cache_query() // If not set, (re)determine.
 		) {
 			return $value_to_set;
 		}
 
-		// phpcs:ignore, WordPress.PHP.DevelopmentFunctions -- This is the only efficient way.
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions -- This is the only efficient way.
 		$caller = debug_backtrace( \DEBUG_BACKTRACE_IGNORE_ARGS, 2 )[1]['function'] ?? '';
 
 		// We need not seralize the caller; waste of processing if we'd merge with $args.
-		// phpcs:ignore, WordPress.PHP.DiscouragedPHPFunctions -- No objects are inserted, nor is this ever unserialized.
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions -- No objects are inserted, nor is this ever unserialized.
 		$hash = "$caller/" . serialize( $args );
 
 		if ( isset( $value_to_set ) )
-			return static::$memo[ $hash ] = $value_to_set;
+			return self::$memo[ $hash ] = $value_to_set;
 
-		return static::$memo[ $hash ] ?? null;
+		return self::$memo[ $hash ] ?? null;
 	}
 
 	/**
@@ -104,17 +104,17 @@ class Cache {
 	 */
 	public static function can_cache_query() {
 
-		if ( isset( static::$can_cache_query ) )
-			return static::$can_cache_query;
+		if ( isset( self::$can_cache_query ) )
+			return self::$can_cache_query;
 
 		if ( \defined( 'WP_CLI' ) && \WP_CLI )
-			return static::$can_cache_query = false;
+			return self::$can_cache_query = false;
 
 		if ( isset( $GLOBALS['wp_query']->query ) || isset( $GLOBALS['current_screen'] ) )
-			return static::$can_cache_query = true;
+			return self::$can_cache_query = true;
 
 		if ( \THE_SEO_FRAMEWORK_DEBUG )
-			static::do_query_error_notice();
+			self::do_query_error_notice();
 
 		// Don't set yet.
 		return false;

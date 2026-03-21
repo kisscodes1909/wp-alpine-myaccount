@@ -30,6 +30,82 @@ let aafw_map_zoom = parseInt(aafw_autocomplete.aafw_map_zoom);
     'use strict';
 })(jQuery);
 
+function aafw_collect_field_value(selector) {
+    const field = document.querySelector(selector);
+    if (!field) {
+        return '';
+    }
+    if (field.tagName === 'SELECT') {
+        return field.value || '';
+    }
+    return field.value || '';
+}
+
+function aafw_getInitialPosition(address_type) {
+    return new Promise((resolve) => {
+        const latInput = document.querySelector(`#aafw_${address_type}_lat_input`);
+        const lngInput = document.querySelector(`#aafw_${address_type}_lng_input`);
+        if (latInput && lngInput && latInput.value && lngInput.value) {
+            const lat = parseFloat(latInput.value);
+            const lng = parseFloat(lngInput.value);
+            if (!isNaN(lat) && !isNaN(lng)) {
+                resolve({ position: { lat: lat, lng: lng }, place: null });
+                return;
+            }
+        }
+
+        const parts = [
+            aafw_collect_field_value(`#${address_type}_address_1`),
+            aafw_collect_field_value(`#${address_type}_address_2`),
+            aafw_collect_field_value(`#${address_type}_city`),
+            aafw_collect_field_value(`#${address_type}_state`),
+            aafw_collect_field_value(`#${address_type}_postcode`),
+            aafw_collect_field_value(`#${address_type}_country`)
+        ].map((part) => (part || '').trim()).filter((part) => part.length > 0);
+
+        if (!parts.length || !aafw_geocoder) {
+            resolve(null);
+            return;
+        }
+
+        aafw_geocoder.geocode({ address: parts.join(', ') })
+            .then((response) => {
+                if (response.results && response.results[0]) {
+                    const location = response.results[0].geometry.location;
+                    const position = {
+                        lat: typeof location.lat === 'function' ? location.lat() : location.lat,
+                        lng: typeof location.lng === 'function' ? location.lng() : location.lng
+                    };
+                    resolve({ position: position, place: response.results[0] });
+                } else {
+                    resolve(null);
+                }
+            })
+            .catch((error) => {
+                aafw_console_log('[AAFW] Failed to geocode existing ' + address_type + ' address', error);
+                resolve(null);
+            });
+    });
+}
+
+function aafw_applyPrefilledLocation(initialData, map, address_type) {
+    if (!initialData || !initialData.position || !map || typeof google === 'undefined') {
+        return;
+    }
+
+    const latLng = new google.maps.LatLng(initialData.position.lat, initialData.position.lng);
+    const fallbackPlace = {
+        formatted_address: jQuery(`#${address_type}_address_1`).val() || '',
+        geometry: {
+            location: latLng
+        },
+        address_components: []
+    };
+
+    const place = initialData.place || fallbackPlace;
+    aafw_show_marker_on_map(latLng, place, map, address_type, '', true);
+}
+
     function aafw_initMap() {
 
         if (jQuery("#aafw_pickup_map").length) {
@@ -46,37 +122,114 @@ let aafw_map_zoom = parseInt(aafw_autocomplete.aafw_map_zoom);
 
         aafw_console_log("aafw_initMap");
         aafw_geocoder = new google.maps.Geocoder();
+        
+        // Get center coordinates
+        var centerLat = parseFloat(aafw_autocomplete.aafw_center_map_latitude);
+        var centerLng = parseFloat(aafw_autocomplete.aafw_center_map_longitude);
+        var centerPos = { lat: centerLat, lng: centerLng };
+
+        var initializeMapsWithPrefill = function(billingInitial, shippingInitial, pickupInitial) {
+        
+        // Determine if markers should be draggable
+        var aafw_draggable = false;
+        
+        
         if (aafw_shipping_map_exist) {
+            var shippingStartPos = (shippingInitial && shippingInitial.position) ? shippingInitial.position : centerPos;
             aafw_shipping_map = new google.maps.Map(document.getElementById("aafw_shipping_map"), {
-                center: { lat: parseFloat(aafw_autocomplete.aafw_center_map_latitude), lng: parseFloat(aafw_autocomplete.aafw_center_map_longitude) },
+                center: shippingStartPos,
                 zoom: aafw_map_zoom,
             });
             aafw_shipping_infowindow = new google.maps.InfoWindow({ size: new google.maps.Size(150, 50) });
+            
+            // Create initial marker immediately
+            aafw_shipping_marker = new google.maps.Marker({
+                position: shippingStartPos,
+                map: aafw_shipping_map,
+                draggable: aafw_draggable
+            });
+            
         }
 
         if (aafw_billing_map_exist) {
+            var billingStartPos = (billingInitial && billingInitial.position) ? billingInitial.position : centerPos;
             aafw_billing_map = new google.maps.Map(document.getElementById("aafw_billing_map"), {
-                center: { lat: parseFloat(aafw_autocomplete.aafw_center_map_latitude), lng: parseFloat(aafw_autocomplete.aafw_center_map_longitude) },
+                center: billingStartPos,
                 zoom: aafw_map_zoom,
             });
             aafw_billing_infowindow = new google.maps.InfoWindow({ size: new google.maps.Size(150, 50) });
+            
+            // Create initial marker immediately
+            aafw_billing_marker = new google.maps.Marker({
+                position: billingStartPos,
+                map: aafw_billing_map,
+                draggable: aafw_draggable
+            });
+            
         }
 
         if (aafw_pickup_map_exist) {
+            var pickupStartPos = (pickupInitial && pickupInitial.position) ? pickupInitial.position : centerPos;
             aafw_pickup_map = new google.maps.Map(document.getElementById("aafw_pickup_map"), {
-                center: { lat: parseFloat(aafw_autocomplete.aafw_center_map_latitude), lng: parseFloat(aafw_autocomplete.aafw_center_map_longitude) },
+                center: pickupStartPos,
                 zoom: aafw_map_zoom,
             });
             aafw_pickup_infowindow = new google.maps.InfoWindow({ size: new google.maps.Size(150, 50) });
+            
+            // Create initial marker immediately
+            aafw_pickup_marker = new google.maps.Marker({
+                position: pickupStartPos,
+                map: aafw_pickup_map,
+                draggable: aafw_draggable
+            });
+            
         }
 
         var set_marker_customer_location = false;
         
 
-        if (set_marker_customer_location == false) {
-            var marker_latlng = parseFloat(aafw_autocomplete.aafw_center_map_latitude) + "," + parseFloat(aafw_autocomplete.aafw_center_map_longitude);
-            aafw_geocodeLatLng(aafw_geocoder, aafw_billing_map, aafw_billing_infowindow, marker_latlng, 'all', 'dragend', false);
+        if (aafw_billing_map_exist && billingInitial) {
+            aafw_applyPrefilledLocation(billingInitial, aafw_billing_map, 'billing');
         }
+        if (aafw_shipping_map_exist && shippingInitial) {
+            aafw_applyPrefilledLocation(shippingInitial, aafw_shipping_map, 'shipping');
+        }
+        if (aafw_pickup_map_exist && pickupInitial) {
+            aafw_applyPrefilledLocation(pickupInitial, aafw_pickup_map, 'pickup');
+        }
+
+        // Still geocode to get address info and update marker if needed
+        if (set_marker_customer_location == false) {
+            var marker_latlng = centerLat + "," + centerLng;
+            if (!billingInitial && !shippingInitial && !pickupInitial) {
+                aafw_geocodeLatLng(aafw_geocoder, aafw_billing_map, aafw_billing_infowindow, marker_latlng, 'all', 'dragend', false);
+            } else {
+                if (aafw_billing_map_exist && !billingInitial) {
+                    aafw_geocodeLatLng(aafw_geocoder, aafw_billing_map, aafw_billing_infowindow, marker_latlng, 'billing', 'dragend', false);
+                }
+                if (aafw_shipping_map_exist && !shippingInitial) {
+                    aafw_geocodeLatLng(aafw_geocoder, aafw_shipping_map, aafw_shipping_infowindow, marker_latlng, 'shipping', 'dragend', false);
+                }
+                if (aafw_pickup_map_exist && !pickupInitial) {
+                    aafw_geocodeLatLng(aafw_geocoder, aafw_pickup_map, aafw_pickup_infowindow, marker_latlng, 'pickup', 'dragend', false);
+                }
+            }
+        }
+
+        }; // end initializeMapsWithPrefill
+
+        Promise.all([
+            aafw_getInitialPosition('billing'),
+            aafw_getInitialPosition('shipping'),
+            aafw_getInitialPosition('pickup')
+        ])
+        .then(function(results) {
+            initializeMapsWithPrefill(results[0], results[1], results[2]);
+        })
+        .catch(function(error) {
+            aafw_console_log('[AAFW] Error resolving prefilled positions', error);
+            initializeMapsWithPrefill(null, null, null);
+        });
     }
 
     function aafw_initAutocomplete() {
@@ -326,8 +479,16 @@ let aafw_map_zoom = parseInt(aafw_autocomplete.aafw_map_zoom);
 
 
 
-function aafw_console_log(data) {
-   // console.log(data);
+function aafw_console_log() {
+   if (typeof window === 'undefined' || typeof aafw_autocomplete === 'undefined') {
+      return;
+   }
+   if (String(aafw_autocomplete.aafw_debug_logs) !== '1') {
+      return;
+   }
+   if (typeof console !== 'undefined' && typeof console.log === 'function') {
+      console.log.apply(console, arguments);
+   }
 }
 
 function aafw_set_address_from_marker(address_type) {

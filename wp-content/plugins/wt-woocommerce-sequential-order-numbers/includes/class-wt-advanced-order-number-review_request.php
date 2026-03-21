@@ -59,11 +59,12 @@ class Wt_Advanced_Order_Number_Review_Request
 
 	public function load_messages()
 	{
-			$this->banner_message = sprintf(__("Hey, we at %sWebToffee%s would like to thank you for using our plugin. We would really appreciate if you could take a moment to drop a quick review that will inspire us to keep going.", 'wt-woocommerce-sequential-order-numbers'), '<b>', '</b>');
+			// translators: %1$s: WebToffee link, %2$s: WebToffee link
+			$this->banner_message = sprintf(__('Hey, we at %1$s WebToffee %2$s would like to thank you for using our plugin. We would really appreciate if you could take a moment to drop a quick review that will inspire us to keep going.', 'wt-woocommerce-sequential-order-numbers'), '<a href="https://www.webtoffee.com/" target="_blank">', '</a>');
 			/* button texts */
-			$this->later_btn_text=__("Remind me later", 'wt-woocommerce-sequential-order-numbers');
-			$this->never_btn_text=__("Not interested", 'wt-woocommerce-sequential-order-numbers');
-			$this->review_btn_text=__("Review now", 'wt-woocommerce-sequential-order-numbers');
+			$this->later_btn_text=__('Remind me later', 'wt-woocommerce-sequential-order-numbers');
+			$this->never_btn_text=__('Not interested', 'wt-woocommerce-sequential-order-numbers');
+			$this->review_btn_text=__('Review now', 'wt-woocommerce-sequential-order-numbers');
 	}
 	
 	/**
@@ -134,7 +135,7 @@ class Wt_Advanced_Order_Number_Review_Request
             }
             ?>
             <p>
-                <?php echo $this->banner_message; ?>
+                <?php echo wp_kses_post($this->banner_message); ?>
             </p>
             <p>
                 <a class="button button-secondary" style="color:#333; border-color:#ccc; background:#efefef;" data-type="later"><?php echo esc_html($this->later_btn_text); ?></a>
@@ -155,7 +156,7 @@ class Wt_Advanced_Order_Number_Review_Request
 		check_ajax_referer($this->plugin_prefix);
 		if(isset($_POST['wt_review_action_type']))
 		{
-			$action_type=sanitize_text_field($_POST['wt_review_action_type']);
+			$action_type=sanitize_text_field(wp_unslash($_POST['wt_review_action_type']));
 			
 			/* current action is in allowed action list */
 			if(in_array($action_type, $this->allowed_action_type_arr))
@@ -193,35 +194,35 @@ class Wt_Advanced_Order_Number_Review_Request
 
 		        /* prepare data object */
 	            var data_obj={
-	            	_wpnonce: '<?php echo $nonce;?>',
-            		action: '<?php echo $this->ajax_action_name;?>',
+	            	_wpnonce: '<?php echo esc_attr($nonce);?>',
+            		action: '<?php echo esc_attr($this->ajax_action_name);?>',
             		wt_review_action_type: ''
 	            };
 
-		        $(document).on('click', '.<?php echo $this->banner_css_class;?> a.button', function(e)
+		        $(document).on('click', '.<?php echo esc_attr($this->banner_css_class);?> a.button', function(e)
 		        {
 		            e.preventDefault();
 		            var elm=$(this);
 		            var btn_type=elm.attr('data-type');
 		            if(btn_type=='review')
 		            {
-		            	window.open('<?php echo $this->review_url;?>');
+		            	window.open('<?php echo esc_url($this->review_url);?>');
 		            }
-		            elm.parents('.<?php echo $this->banner_css_class;?>').hide();
+		            elm.parents('.<?php echo esc_attr($this->banner_css_class);?>').hide();
 
 		            data_obj['wt_review_action_type']=btn_type;
 		            $.ajax({
-		            	url:'<?php echo $ajax_url;?>',
+		            	url:'<?php echo esc_url($ajax_url);?>',
 		            	data:data_obj,
 		            	type: 'POST'
 		            });
 
-		        }).on('click', '.<?php echo $this->banner_css_class;?> .notice-dismiss', function(e)
+		        }).on('click', '.<?php echo esc_attr($this->banner_css_class);?> .notice-dismiss', function(e)
 		        {
 	                e.preventDefault();
 		            data_obj['wt_review_action_type']='closed';
 		            $.ajax({
-		            	url:'<?php echo $ajax_url;?>',
+		            	url:'<?php echo esc_url($ajax_url);?>',
 		            	data:data_obj,
 		            	type: 'POST',
 		            });

@@ -6,13 +6,13 @@
 
 namespace The_SEO_Framework;
 
-\defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) or die;
+( \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) ) or die;
 
-// phpcs:disable, WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
+// phpcs:disable WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -39,7 +39,7 @@ namespace The_SEO_Framework;
 						echo ' &mdash; ';
 						printf(
 							'<a href="%s" target=_blank>%s</a>',
-							// phpcs:ignore, WordPress.Security.EscapeOutput -- menu_page_url() escapes
+							// phpcs:ignore WordPress.Security.EscapeOutput -- menu_page_url() escapes
 							\menu_page_url( \THE_SEO_FRAMEWORK_SITE_OPTIONS_SLUG, false ) . '#autodescription-homepage-settings',
 							\esc_html__( 'Edit those settings instead.', 'autodescription' ),
 						);

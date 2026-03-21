@@ -7,7 +7,7 @@ namespace The_SEO_Framework\Admin\Lists;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\Helper\{
+use The_SEO_Framework\Helper\{
 	Post_Type,
 	Query,
 	Taxonomy,
@@ -15,7 +15,7 @@ use \The_SEO_Framework\Helper\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -137,7 +137,7 @@ abstract class Table {
 			|| empty( $_POST['post_type'] )
 			|| ! \current_user_can(
 				'page' === $_POST['post_type'] ? 'edit_page' : 'edit_post',
-				(int) $_POST['post_ID']
+				(int) $_POST['post_ID'],
 			)
 		) return;
 
@@ -214,7 +214,7 @@ abstract class Table {
 	 *    `_prepare_columns_wp_ajax_inline_save_tax()`
 	 */
 	private function init_columns_ajax() {
-		// phpcs:disable, WordPress.Security.NonceVerification -- _prepare_columns_wp_ajax_* verifies this.
+		// phpcs:disable WordPress.Security.NonceVerification -- _prepare_columns_wp_ajax_* verifies this.
 
 		$taxonomy  = isset( $_POST['taxonomy'] ) ? stripslashes( $_POST['taxonomy'] ) : '';
 		$post_type = isset( $_POST['post_type'] ) ? stripslashes( $_POST['post_type'] ) : '';
@@ -260,7 +260,7 @@ abstract class Table {
 			 */
 			\add_filter( "manage_edit-{$taxonomy}_columns", [ $this, 'add_column' ] );
 		}
-		// phpcs:enable, WordPress.Security.NonceVerification
+		// phpcs:enable WordPress.Security.NonceVerification
 	}
 
 	/**

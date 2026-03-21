@@ -6,32 +6,32 @@
 
 namespace The_SEO_Framework;
 
-\defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) or die;
+( \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) ) or die;
 
-use const \The_SEO_Framework\{
+use const The_SEO_Framework\{
 	ROBOTS_IGNORE_SETTINGS,
 	ROBOTS_IGNORE_PROTECTION,
 };
 
-use function \The_SEO_Framework\coalesce_strlen;
+use function The_SEO_Framework\coalesce_strlen;
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Data\Filter\Sanitize,
 	Helper\Post_Type,
 	Helper\Query,
 	Helper\Taxonomy,
 };
-use \The_SEO_Framework\Admin\Settings\Layout\{
+use The_SEO_Framework\Admin\Settings\Layout\{
 	Form,
 	HTML,
 	Input,
 };
 
-// phpcs:disable, WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
+// phpcs:disable WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2017 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2017 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -48,8 +48,6 @@ use \The_SEO_Framework\Admin\Settings\Layout\{
 
 // See meta_box et al.
 [ $instance ] = $view_args;
-
-// phpcs:disable, WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
 
 // Setup default vars.
 $post_id = Query::get_the_real_id(); // We also have access to object $post at the main call...
@@ -109,7 +107,7 @@ switch ( $instance ) :
 				</div>
 				<div class="tsf-flex-setting-input tsf-flex">
 					<?php
-					// phpcs:ignore, WordPress.Security.EscapeOutput -- generate_bar() escapes.
+					// phpcs:ignore WordPress.Security.EscapeOutput -- generate_bar() escapes.
 					echo Admin\SEOBar\Builder::generate_bar( $generator_args );
 					?>
 				</div>
@@ -387,10 +385,10 @@ switch ( $instance ) :
 				</div>
 			</div>
 			<div class="tsf-flex-setting-input tsf-flex">
-				<textarea class=large-text name="autodescription[_twitter_description]" id=autodescription_twitter_description rows=3 cols=4 autocomplete=off data-tsf-social-group=autodescription_social_singular data-tsf-social-type=twDesc><?php // phpcs:ignore, Squiz.PHP.EmbeddedPhp -- textarea element's content is input. Do not add spaces/tabs/lines: the php tag should stick to >.
+				<textarea class=large-text name="autodescription[_twitter_description]" id=autodescription_twitter_description rows=3 cols=4 autocomplete=off data-tsf-social-group=autodescription_social_singular data-tsf-social-type=twDesc><?php // phpcs:ignore Squiz.PHP.EmbeddedPhp -- textarea element's content is input. Do not add spaces/tabs/lines: the php tag should stick to >.
 					// Textareas don't require sanitization in HTML5... other than removing the closing </textarea> tag...?
 					echo \esc_html( Sanitize::metadata_content( $meta['_twitter_description'] ) );
-				// phpcs:ignore, Squiz.PHP.EmbeddedPhp
+				// phpcs:ignore Squiz.PHP.EmbeddedPhp
 				?></textarea>
 			</div>
 		</div>
@@ -417,7 +415,7 @@ switch ( $instance ) :
 				$_default_i18n     = \__( 'Default (%s)', 'autodescription' );
 				$tw_suported_cards = Meta\Twitter::get_supported_cards();
 
-				// phpcs:disable, WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
+				// phpcs:disable WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
 				echo Form::make_single_select_form( [
 					'id'       => 'autodescription_twitter_card_type',
 					'class'    => 'tsf-select-block',
@@ -429,7 +427,7 @@ switch ( $instance ) :
 					),
 					'selected' => $meta['_tsf_twitter_card_type'],
 				] );
-				// phpcs:enable, WordPress.Security.EscapeOutput
+				// phpcs:enable WordPress.Security.EscapeOutput
 				?>
 			</div>
 		</div>
@@ -465,9 +463,9 @@ switch ( $instance ) :
 				<input type=hidden name="autodescription[_social_image_id]" id=autodescription_socialimage-id value="<?= \absint( $meta['_social_image_id'] ) ?>" disabled class=tsf-enable-media-if-js>
 				<div class="hide-if-no-tsf-js tsf-social-image-buttons">
 					<?php
-					// phpcs:disable, WordPress.Security.EscapeOutput -- get_image_uploader_form escapes. (phpcs breaks here, so we use disable)
+					// phpcs:disable WordPress.Security.EscapeOutput -- get_image_uploader_form escapes. (phpcs breaks here, so we use disable)
 					echo Form::get_image_uploader_form( [ 'id' => 'autodescription_socialimage' ] );
-					// phpcs:enable, WordPress.Security.EscapeOutput
+					// phpcs:enable WordPress.Security.EscapeOutput
 					?>
 				</div>
 			</div>
@@ -561,15 +559,16 @@ switch ( $instance ) :
 				}
 
 				// Only hierarchical taxonomies can be used in the URL.
-				// TODO filter post_tag here.
-				$taxonomies               = $post_type ? Taxonomy::get_hierarchical( 'names', $post_type ) : [];
+				$taxonomies = array_diff(
+					$post_type ? Taxonomy::get_hierarchical( 'names', $post_type ) : [],
+					// post_tag isn't hierarchical by default, but it can be filtered to be.
+					// It's broken in Core when used in the permastruct. Nobody should be using %post_tag%.
+					[ 'post_tag' ],
+				);
 				$parent_term_slugs_by_tax = [];
 
 				foreach ( $taxonomies as $taxonomy ) {
 					if ( str_contains( $permastruct, "%$taxonomy%" ) ) {
-						// Broken in Core. Skip.
-						if ( 'post_tag' === $taxonomy ) continue;
-
 						// There's no need to test for hierarchy, because we want the full structure anyway (third parameter).
 						foreach (
 							Data\Term::get_term_parents(
@@ -614,7 +613,7 @@ switch ( $instance ) :
 							'supportedTaxonomies' => $taxonomies,
 							'authorSlugs'         => $author_slugs ?? [],
 							'isHierarchical'      => $is_post_type_hierarchical,
-							// phpcs:ignore, WordPress.DateTime.RestrictedFunctions -- date() is used for URL generation. See `get_permalink()`.
+							// phpcs:ignore WordPress.DateTime.RestrictedFunctions -- date() is used for URL generation. See `get_permalink()`.
 							'publishDate'         => date( 'c', strtotime( \get_post( $post_id )->post_date ?? 'now' ) ),
 						],
 					],
@@ -641,11 +640,11 @@ switch ( $instance ) :
 					if ( $is_static_front_page ) {
 						printf(
 							'<div class=tsf-flex-setting-label-sub-item><span class="description attention">%s</span></div>',
-							\esc_html__( 'Warning: No public site should ever apply "noindex" or "nofollow" to the homepage.', 'autodescription' )
+							\esc_html__( 'Warning: No public site should ever apply "noindex" or "nofollow" to the homepage.', 'autodescription' ),
 						);
 						printf(
 							'<div class=tsf-flex-setting-label-sub-item><span class=description>%s</span></div>',
-							\esc_html__( 'Note: A non-default selection here will overwrite the global homepage SEO settings.', 'autodescription' )
+							\esc_html__( 'Note: A non-default selection here will overwrite the global homepage SEO settings.', 'autodescription' ),
 						);
 					}
 					?>
@@ -668,7 +667,7 @@ switch ( $instance ) :
 							/* translators: %s = default option value */
 							$_default_i18n = \__( 'Default (%s)', 'autodescription' );
 
-							// phpcs:disable, WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
+							// phpcs:disable WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
 							echo Form::make_single_select_form( [
 								'id'       => $_s['id'],
 								'class'    => 'tsf-select-block',
@@ -685,7 +684,7 @@ switch ( $instance ) :
 									'defaultI18n'        => $_default_i18n,
 								],
 							] );
-							// phpcs:enable, WordPress.Security.EscapeOutput
+							// phpcs:enable WordPress.Security.EscapeOutput
 						?>
 						</div>
 					</div>

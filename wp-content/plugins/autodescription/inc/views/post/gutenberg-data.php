@@ -6,15 +6,15 @@
 
 namespace The_SEO_Framework;
 
-\defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) or die;
+( \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) and Helper\Template::verify_secret( $secret ) ) or die;
 
-use \The_SEO_Framework\Helper\Query;
+use The_SEO_Framework\Helper\Query;
 
-// phpcs:disable, WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
+// phpcs:disable WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2018 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2018 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -32,5 +32,5 @@ use \The_SEO_Framework\Helper\Query;
 printf(
 	'<div id=%s data-post-id=%d class=hidden></div>',
 	'tsf-gutenberg-data-holder',
-	Query::get_the_real_id(), // phpcs:ignore, WordPress.Security.EscapeOutput -- printf casts to int.
+	Query::get_the_real_id(), // phpcs:ignore WordPress.Security.EscapeOutput -- printf casts to int.
 );

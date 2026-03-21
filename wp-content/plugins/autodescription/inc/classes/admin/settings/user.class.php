@@ -8,14 +8,14 @@ namespace The_SEO_Framework\Admin\Settings;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Data,
 	Helper\Template,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2021 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2021 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -56,7 +56,7 @@ final class User {
 		if ( ! Data\User::user_has_author_info_cap_on_network( $user ) )
 			return;
 
-		static::output_setting_fields( $user );
+		self::output_setting_fields( $user );
 	}
 
 	/**
@@ -67,11 +67,19 @@ final class User {
 	 * @param \WP_User $user WP_User object.
 	 */
 	private static function output_setting_fields( $user ) {
+
+		\wp_nonce_field(
+			Data\Admin\User::SAVE_NONCES['user-edit']['action'],
+			Data\Admin\User::SAVE_NONCES['user-edit']['name'],
+		);
+
 		/**
 		 * @since 4.1.4
 		 */
 		\do_action( 'the_seo_framework_before_author_fields' );
+
 		Template::output_view( 'profile/settings', $user );
+
 		/**
 		 * @since 4.1.4
 		 */

@@ -8,14 +8,14 @@ namespace The_SEO_Framework\Data\Plugin;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Data,
 	Traits\Property_Refresher,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -36,6 +36,8 @@ use \The_SEO_Framework\{
  * @since 5.0.0
  * @access protected
  *         Use tsf()->data()->plugin()->setup() instead.
+ *
+ * @NOTE: All static:: calls within this class are intentional due to Property_Refresher trait.
  */
 class Setup {
 	use Property_Refresher;
@@ -134,7 +136,7 @@ class Setup {
 
 		$titleloc = \is_rtl() ? 'left' : 'right';
 
-		// phpcs:disable, WordPress.Arrays.MultipleStatementAlignment -- precision alignment OK.
+		// phpcs:disable WordPress.Arrays.MultipleStatementAlignment -- precision alignment OK.
 		/**
 		 * @since 2.2.7
 		 * @param array $options The default site options.
@@ -150,10 +152,14 @@ class Setup {
 				'alter_search_query_type'  => 'in_query', // Search query type.
 
 				// General. Layout.
-				'display_seo_bar_tables'  => 1, // SEO Bar post-list tables.
-				'display_seo_bar_metabox' => 0, // SEO Bar post SEO Settings.
-				'seo_bar_low_contrast'    => 0, // SEO Bar contrast display settings.
-				'seo_bar_symbols'         => 0, // SEO Bar symbol display settings.
+				'display_seo_bar_tables'   => 1, // SEO Bar post-list tables.
+				'display_seo_bar_metabox'  => 0, // SEO Bar post SEO Settings.
+				'seo_bar_low_contrast'     => 0, // SEO Bar contrast display settings.
+				'seo_bar_symbols'          => 0, // SEO Bar symbol display settings.
+
+				'display_list_edit_options' => 1, // Quick/bulk edit fields in tables.
+				'display_term_edit_options' => 1, // Term edit fields.
+				'display_user_edit_options' => 1, // User edit fields.
 
 				'display_pixel_counter'     => 1, // Pixel counter.
 				'display_character_counter' => 1, // Character counter.
@@ -304,10 +310,11 @@ class Setup {
 				'pint_verification'   => '', // Pinterest Verification Code.
 
 				// Schema.org.
-				'ld_json_enabled'        => 1, // LD+Json toggle for Schema.
-				'ld_json_searchbox'      => 1, // LD+Json Sitelinks Search Box.
-				'ld_json_breadcrumbs'    => 1, // LD+Json Breadcrumbs.
-				'knowledge_output'       => 1, // Default for outputting the Knowledge SEO.
+				'ld_json_enabled'           => 1, // LD+Json toggle for Schema.
+				'ld_json_searchbox'         => 1, // LD+Json Sitelinks Search Box.
+				'ld_json_breadcrumbs'       => 1, // LD+Json Breadcrumbs.
+				'breadcrumb_use_meta_title' => 0, // Whether to consider meta titles for breadcrumbs.
+				'knowledge_output'          => 1, // Default for outputting the Knowledge SEO.
 
 				// Knowledge general <https://developers.google.com/structured-data/customize/contact-points> - This is extremely extended and valuable. Expect a premium version.
 				'knowledge_type'   => 'organization', // Organization or Person, dropdown.
@@ -331,10 +338,10 @@ class Setup {
 				'knowledge_tumblr'     => '', // Tumblr Account.
 
 				// Sitemaps.
-				'sitemaps_output'         => 1,    // Output of sitemap.
+				'sitemaps_output'         => 1,   // Output of sitemap.
 				'sitemap_query_limit'     => 250, // Sitemap post limit.
-				'cache_sitemap'           => 1, // Sitemap transient cache.
-				'sitemap_cron_prerender'  => 0, // Sitemap cron-ping prerender.
+				'cache_sitemap'           => 1,   // Sitemap transient cache.
+				'sitemap_cron_prerender'  => 0,   // Sitemap cron-ping prerender.
 
 				'sitemaps_modified' => 1, // Add sitemap modified time.
 
@@ -353,7 +360,7 @@ class Setup {
 				'index_the_feed'   => 0, // Add backlink to the end of the feed.
 			],
 		);
-		// phpcs:enable, WordPress.Arrays.MultipleStatementAlignment
+		// phpcs:enable WordPress.Arrays.MultipleStatementAlignment
 	}
 
 	/**

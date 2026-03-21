@@ -8,16 +8,16 @@ namespace The_SEO_Framework\Helper;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\{
+use function The_SEO_Framework\{
 	memo,
 	umemo,
 };
 
-use \The_SEO_Framework\Data;
+use The_SEO_Framework\Data;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -88,15 +88,15 @@ class Post_Type {
 
 		/**
 		 * @since 2.6.2
-		 * @since 3.1.0 The first parameter is always a boolean now.
+		 * @since 3.1.0 The first parameter is always a Boolean now.
 		 * @param bool   $supported           Whether the post type is supported.
 		 * @param string $post_type_evaluated The evaluated post type.
 		 */
 		return (bool) \apply_filters(
 			'the_seo_framework_supported_post_type',
 			$post_type
-				&& ! static::is_disabled( $post_type )
-				&& \in_array( $post_type, static::get_all_public(), true ),
+				&& ! self::is_disabled( $post_type )
+				&& \in_array( $post_type, self::get_all_public(), true ),
 			$post_type,
 		);
 	}
@@ -122,9 +122,11 @@ class Post_Type {
 		 */
 		return (bool) \apply_filters(
 			'the_seo_framework_supported_post_type_archive',
-			$post_type
-				&& static::is_supported( $post_type )
-				&& \in_array( $post_type, static::get_public_pta(), true ),
+			(
+				   $post_type
+				&& self::is_supported( $post_type )
+				&& \in_array( $post_type, self::get_public_pta(), true )
+			),
 			$post_type,
 		);
 	}
@@ -145,7 +147,7 @@ class Post_Type {
 	 */
 	public static function supports_taxonomies( $post_type = '' ) {
 
-		// phpcs:ignore, WordPress.CodeAnalysis.AssignmentInCondition -- I know.
+		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
 		if ( null !== $memo = memo( null, $post_type ) ) return $memo;
 
 		$post_type = $post_type ?: Query::get_current_post_type();
@@ -159,7 +161,7 @@ class Post_Type {
 	 * Memoizes the return value.
 	 *
 	 * @since 4.2.0
-	 * @since 4.2.8 Now filters via `static::is_post_type_archive_supported()`.
+	 * @since 4.2.8 Now filters via `self::is_post_type_archive_supported()`.
 	 * @since 5.0.0 1. Moved from `\The_SEO_Framework\Load`.
 	 *              2. Renamed from `get_supported_post_type_archives`.
 	 *
@@ -168,8 +170,8 @@ class Post_Type {
 	public static function get_all_supported_pta() {
 		return memo() ?? memo( array_values(
 			array_filter(
-				static::get_public_pta(),
-				[ static::class, 'is_pta_supported' ],
+				self::get_public_pta(),
+				[ self::class, 'is_pta_supported' ],
 			)
 		) );
 	}
@@ -199,7 +201,7 @@ class Post_Type {
 					'the_seo_framework_public_post_type_archives',
 					array_values(
 						array_filter(
-							static::get_all_public(),
+							self::get_all_public(),
 							fn( $post_type ) => \get_post_type_object( $post_type )->has_archive ?? false,
 						)
 					)
@@ -219,8 +221,8 @@ class Post_Type {
 	public static function get_all_supported() {
 		return memo() ?? memo( array_values(
 			array_filter(
-				static::get_all_public(),
-				[ static::class, 'is_supported' ],
+				self::get_all_public(),
+				[ self::class, 'is_supported' ],
 			)
 		) );
 	}
@@ -251,13 +253,13 @@ class Post_Type {
 					'the_seo_framework_public_post_types',
 					array_values( array_filter(
 						array_unique( array_merge(
-							static::get_all_forced_supported(),
+							self::get_all_forced_supported(),
 							// array_keys() because get_post_types() gives a sequential array.
-							array_keys( (array) \get_post_types( [ 'public' => true ] ) )
+							array_keys( (array) \get_post_types( [ 'public' => true ] ) ),
 						) ),
 						'is_post_type_viewable',
-					) )
-				)
+					) ),
+				),
 			);
 	}
 

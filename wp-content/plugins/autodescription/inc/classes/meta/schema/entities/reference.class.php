@@ -8,11 +8,11 @@ namespace The_SEO_Framework\Meta\Schema\Entities;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\Meta;
+use The_SEO_Framework\Meta;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -32,6 +32,8 @@ use \The_SEO_Framework\Meta;
  *
  * @since 5.0.0
  * @access private
+ *
+ * @NOTE: All static:: calls within this class are intentional to allow overrides in subclasses.
  *
  * @property string|string[] $type The Schema @type.
  * @property array[] $references
@@ -56,7 +58,7 @@ abstract class Reference {
 	 *                         Leave null to autodetermine query.
 	 * @return string The entity ID for $args.
 	 */
-	public static function get_id( $args = null ) { // phpcs:ignore, VariableAnalysis.CodeAnalysis.VariableAnalysis -- abstract ref.
+	public static function get_id( $args = null ) { // phpcs:ignore Generic.CodeAnalysis -- abstract ref.
 		return Meta\URI::get_bare_front_page_url() . '#/schema/' . current( (array) static::$type );
 	}
 

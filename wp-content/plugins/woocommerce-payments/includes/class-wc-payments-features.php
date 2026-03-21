@@ -21,16 +21,17 @@ class WC_Payments_Features {
 	 *   - The next version of WooPayments.
 	 *   - The flag to be deleted.
 	 */
-	const WCPAY_SUBSCRIPTIONS_FLAG_NAME         = '_wcpay_feature_subscriptions';
-	const STRIPE_BILLING_FLAG_NAME              = '_wcpay_feature_stripe_billing';
-	const WOOPAY_EXPRESS_CHECKOUT_FLAG_NAME     = '_wcpay_feature_woopay_express_checkout';
-	const WOOPAY_FIRST_PARTY_AUTH_FLAG_NAME     = '_wcpay_feature_woopay_first_party_auth';
-	const WOOPAY_DIRECT_CHECKOUT_FLAG_NAME      = '_wcpay_feature_woopay_direct_checkout';
-	const AUTH_AND_CAPTURE_FLAG_NAME            = '_wcpay_feature_auth_and_capture';
-	const DISPUTE_ISSUER_EVIDENCE               = '_wcpay_feature_dispute_issuer_evidence';
-	const TOKENIZED_CART_ECE_FLAG_NAME          = '_wcpay_feature_tokenized_cart_ece';
-	const PAYMENT_OVERVIEW_WIDGET_FLAG_NAME     = '_wcpay_feature_payment_overview_widget';
-	const WOOPAY_GLOBAL_THEME_SUPPORT_FLAG_NAME = '_wcpay_feature_woopay_global_theme_support';
+	const WCPAY_SUBSCRIPTIONS_FLAG_NAME                       = '_wcpay_feature_subscriptions';
+	const STRIPE_BILLING_FLAG_NAME                            = '_wcpay_feature_stripe_billing';
+	const WOOPAY_EXPRESS_CHECKOUT_FLAG_NAME                   = '_wcpay_feature_woopay_express_checkout';
+	const WOOPAY_FIRST_PARTY_AUTH_FLAG_NAME                   = '_wcpay_feature_woopay_first_party_auth';
+	const WOOPAY_DIRECT_CHECKOUT_FLAG_NAME                    = '_wcpay_feature_woopay_direct_checkout';
+	const DISPUTE_ISSUER_EVIDENCE                             = '_wcpay_feature_dispute_issuer_evidence';
+	const DISPUTE_ADDITIONAL_EVIDENCE_TYPES                   = '_wcpay_feature_dispute_additional_evidence_types';
+	const WOOPAY_GLOBAL_THEME_SUPPORT_FLAG_NAME               = '_wcpay_feature_woopay_global_theme_support';
+	const WCPAY_DYNAMIC_CHECKOUT_PLACE_ORDER_BUTTON_FLAG_NAME = '_wcpay_feature_dynamic_checkout_place_order_button';
+	const AMAZON_PAY_FLAG_NAME                                = '_wcpay_feature_amazon_pay';
+	const MC_CACHE_OPTIMIZED_FLAG_NAME                        = '_wcpay_feature_mc_cache_optimized';
 
 	/**
 	 * Indicates whether card payments are enabled for this (Stripe) account.
@@ -41,15 +42,6 @@ class WC_Payments_Features {
 		$account = WC_Payments::get_database_cache()->get( WCPay\Database_Cache::ACCOUNT_KEY, true );
 
 		return is_array( $account ) && ( $account['payments_enabled'] ?? false );
-	}
-
-	/**
-	 * Checks whether the "tokenized cart" feature for PRBs is enabled.
-	 *
-	 * @return bool
-	 */
-	public static function is_tokenized_cart_ece_enabled(): bool {
-		return '1' === get_option( self::TOKENIZED_CART_ECE_FLAG_NAME, '0' );
 	}
 
 	/**
@@ -214,9 +206,8 @@ class WC_Payments_Features {
 	 * @return bool
 	 */
 	public static function is_documents_section_enabled() {
-		$account              = WC_Payments::get_database_cache()->get( WCPay\Database_Cache::ACCOUNT_KEY );
-		$is_documents_enabled = is_array( $account ) && ( $account['is_documents_enabled'] ?? false );
-		return '1' === get_option( '_wcpay_feature_documents', $is_documents_enabled ? '1' : '0' );
+		$account = WC_Payments::get_database_cache()->get( WCPay\Database_Cache::ACCOUNT_KEY, true );
+		return is_array( $account ) && ( $account['is_documents_enabled'] ?? false );
 	}
 
 	/**
@@ -236,15 +227,6 @@ class WC_Payments_Features {
 	 */
 	public static function is_woopay_first_party_auth_enabled() {
 		return '1' === get_option( self::WOOPAY_FIRST_PARTY_AUTH_FLAG_NAME, '1' ) && self::is_woopay_express_checkout_enabled();
-	}
-
-	/**
-	 * Checks whether Payment Overview Widget is enabled.
-	 *
-	 * @return bool
-	 */
-	public static function is_payment_overview_widget_ui_enabled(): bool {
-		return '1' === get_option( self::PAYMENT_OVERVIEW_WIDGET_FLAG_NAME, '0' );
 	}
 
 	/**
@@ -272,15 +254,6 @@ class WC_Payments_Features {
 	}
 
 	/**
-	 * Checks whether Auth & Capture (uncaptured transactions tab, capture from payment details page) is enabled.
-	 *
-	 * @return bool
-	 */
-	public static function is_auth_and_capture_enabled() {
-		return '1' === get_option( self::AUTH_AND_CAPTURE_FLAG_NAME, '1' );
-	}
-
-	/**
 	 * Checks whether the Fraud and Risk Tools feature flag is enabled.
 	 *
 	 * @return  bool
@@ -296,15 +269,6 @@ class WC_Payments_Features {
 	 */
 	public static function is_fraud_protection_welcome_tour_dismissed(): bool {
 		return '1' === get_option( 'wcpay_fraud_protection_welcome_tour_dismissed', '0' );
-	}
-
-	/**
-	 * Checks whether the Payouts Rename Spotlight notice was dismissed.
-	 *
-	 * @return bool
-	 */
-	public static function is_payouts_rename_notice_dismissed(): bool {
-		return '1' === get_option( 'wcpay_payouts_rename_notice_dismissed', '0' );
 	}
 
 	/**
@@ -362,12 +326,73 @@ class WC_Payments_Features {
 	}
 
 	/**
+	 * Checks whether Dispute Additional Evidence Types feature should be enabled. Disabled by default.
+	 *
+	 * This gates the new evidence form types (event, booking_reservation, other) for dispute challenges.
+	 *
+	 * @return bool
+	 */
+	public static function is_dispute_additional_evidence_types_enabled(): bool {
+		return '1' === get_option( self::DISPUTE_ADDITIONAL_EVIDENCE_TYPES, '0' );
+	}
+
+	/**
 	 * Checks whether the next deposit notice on the deposits list screen has been dismissed.
 	 *
 	 * @return bool
 	 */
 	public static function is_next_deposit_notice_dismissed(): bool {
 		return '1' === get_option( 'wcpay_next_deposit_notice_dismissed', '0' );
+	}
+
+	/**
+	 * Checks whether the dynamic checkout place order button feature is enabled.
+	 *
+	 * @return bool
+	 */
+	public static function is_dynamic_checkout_place_order_button_enabled(): bool {
+		if ( '1' !== get_option( self::WCPAY_DYNAMIC_CHECKOUT_PLACE_ORDER_BUTTON_FLAG_NAME, '0' ) ) {
+			return false;
+		}
+
+		// Dev mode bypasses WC version requirements for local testing.
+		if ( WC_Payments::mode()->is_dev() ) {
+			return true;
+		}
+
+		// Requires WooCommerce 10.6.0+ for the Custom Place Order Button API.
+		return defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '10.6.0', '>=' );
+	}
+
+	/**
+	 * Checks whether the multi-currency cache-optimized rendering mode is enabled.
+	 *
+	 * @return bool
+	 */
+	public static function is_mc_cache_optimized_enabled(): bool {
+		return '1' === get_option( self::MC_CACHE_OPTIMIZED_FLAG_NAME, '0' );
+	}
+
+	/**
+	 * Checks whether Amazon Pay is enabled.
+	 *
+	 * @return bool
+	 */
+	public static function is_amazon_pay_enabled(): bool {
+		return '1' === get_option( self::AMAZON_PAY_FLAG_NAME, '1' ) && self::is_ece_confirmation_tokens_enabled();
+	}
+
+	/**
+	 * Checks whether ECE should use confirmation tokens instead of payment methods.
+	 *
+	 * @see https://docs.stripe.com/payments/finalize-payments-on-the-server-migration
+	 *
+	 * @return bool
+	 */
+	public static function is_ece_confirmation_tokens_enabled(): bool {
+		$account = WC_Payments::get_database_cache()->get( WCPay\Database_Cache::ACCOUNT_KEY, true );
+
+		return is_array( $account ) && ! ( $account['ece_confirmation_tokens_disabled'] ?? false );
 	}
 
 	/**
@@ -378,13 +403,16 @@ class WC_Payments_Features {
 	public static function to_array() {
 		return array_filter(
 			[
-				'multiCurrency'                  => self::is_customer_multi_currency_enabled(),
-				'woopay'                         => self::is_woopay_eligible(),
-				'documents'                      => self::is_documents_section_enabled(),
-				'woopayExpressCheckout'          => self::is_woopay_express_checkout_enabled(),
-				'isAuthAndCaptureEnabled'        => self::is_auth_and_capture_enabled(),
-				'isDisputeIssuerEvidenceEnabled' => self::is_dispute_issuer_evidence_enabled(),
-				'isPaymentOverviewWidgetEnabled' => self::is_payment_overview_widget_ui_enabled(),
+				'multiCurrency'                            => self::is_customer_multi_currency_enabled(),
+				'woopay'                                   => self::is_woopay_eligible(),
+				'documents'                                => self::is_documents_section_enabled(),
+				'woopayExpressCheckout'                    => self::is_woopay_express_checkout_enabled(),
+				'isDisputeIssuerEvidenceEnabled'           => self::is_dispute_issuer_evidence_enabled(),
+				'isDisputeAdditionalEvidenceTypesEnabled'  => self::is_dispute_additional_evidence_types_enabled(),
+				'isFRTReviewFeatureActive'                 => self::is_frt_review_feature_active(),
+				'isDynamicCheckoutPlaceOrderButtonEnabled' => self::is_dynamic_checkout_place_order_button_enabled(),
+				'amazonPay'                                => self::is_amazon_pay_enabled(),
+				'isEceUsingConfirmationTokens'             => self::is_ece_confirmation_tokens_enabled(),
 			]
 		);
 	}

@@ -8,12 +8,13 @@ namespace The_SEO_Framework\Meta\Description;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function \The_SEO_Framework\{
+use function The_SEO_Framework\{
+	get_query_type_from_args,
 	memo,
 	normalize_generation_args,
 };
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Data,
 	Helper\Query,
 	Helper\Format,
@@ -21,7 +22,7 @@ use \The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -57,7 +58,7 @@ class Excerpt {
 	public static function get_excerpt( $args = null ) {
 		/**
 		 * @since 5.1.0
-		 * @param string     $excerpt The generated excerpt.
+		 * @param string     $excerpt The obtained excerpt.
 		 * @param array|null $args    The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
 		 *                            Leave null to autodetermine query.
 		 * @return string The post, term, pta, or user excerpt.
@@ -65,8 +66,8 @@ class Excerpt {
 		return \apply_filters(
 			'the_seo_framework_get_excerpt',
 			isset( $args )
-				? static::get_excerpt_from_args( $args )
-				: static::get_excerpt_from_query(),
+				? self::get_excerpt_from_args( $args )
+				: self::get_excerpt_from_query(),
 			$args,
 		);
 	}
@@ -83,7 +84,7 @@ class Excerpt {
 	 * @return string
 	 */
 	public static function get_post_excerpt( $args = null ) {
-		return static::get_excerpt( $args );
+		return self::get_excerpt( $args );
 	}
 
 	/**
@@ -95,17 +96,15 @@ class Excerpt {
 	 */
 	public static function get_excerpt_from_query() {
 
-		// phpcs:ignore, WordPress.CodeAnalysis.AssignmentInCondition -- I know.
+		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
 		if ( null !== $memo = memo() ) return $memo;
 
-		if ( Query::is_static_front_page() ) {
-			$excerpt = static::get_singular_excerpt();
-		} elseif ( Query::is_blog_as_page() ) {
-			$excerpt = static::get_blog_page_excerpt();
+		if ( Query::is_blog_as_page() ) {
+			$excerpt = self::get_blog_page_excerpt();
 		} elseif ( Query::is_singular() ) {
-			$excerpt = static::get_singular_excerpt();
+			$excerpt = self::get_singular_excerpt();
 		} elseif ( Query::is_archive() ) {
-			$excerpt = static::get_archive_excerpt();
+			$excerpt = self::get_archive_excerpt();
 		}
 
 		return memo( $excerpt ?? '' ?: '' );
@@ -123,16 +122,25 @@ class Excerpt {
 
 		normalize_generation_args( $args );
 
-		if ( $args['tax'] ) {
-			$excerpt = static::get_archive_excerpt( \get_term( $args['id'], $args['tax'] ) );
-		} elseif ( $args['pta'] ) {
-			$excerpt = static::get_archive_excerpt( \get_post_type_object( $args['pta'] ) );
-		} elseif ( $args['uid'] ) {
-			$excerpt = static::get_archive_excerpt( \get_userdata( $args['uid'] ) );
-		} elseif ( Query::is_blog_as_page( $args['id'] ) ) {
-			$excerpt = static::get_blog_page_excerpt();
-		} elseif ( $args['id'] ) {
-			$excerpt = static::get_singular_excerpt( $args['id'] );
+		switch ( get_query_type_from_args( $args ) ) {
+			case 'single':
+				if ( Query::is_blog_as_page( $args['id'] ) ) {
+					$excerpt = self::get_blog_page_excerpt();
+				} else {
+					$excerpt = self::get_singular_excerpt( $args['id'] );
+				}
+				break;
+			case 'term':
+				$excerpt = self::get_archive_excerpt( \get_term( $args['id'], $args['tax'] ) );
+				break;
+			case 'homeblog':
+				$excerpt = self::get_blog_page_excerpt();
+				break;
+			case 'pta':
+				$excerpt = self::get_archive_excerpt( \get_post_type_object( $args['pta'] ) );
+				break;
+			case 'user':
+				$excerpt = self::get_archive_excerpt( Data\User::get_userdata( $args['uid'] ) );
 		}
 
 		return $excerpt ?? '';

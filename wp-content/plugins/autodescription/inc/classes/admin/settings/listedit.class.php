@@ -8,7 +8,7 @@ namespace The_SEO_Framework\Admin\Settings;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use \The_SEO_Framework\{
+use The_SEO_Framework\{
 	Admin,
 	Admin\Settings\Layout\HTML,
 	Data,
@@ -21,7 +21,7 @@ use \The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -135,7 +135,7 @@ final class ListEdit extends Admin\Lists\Table {
 
 		if ( $this->column_name !== $column_name ) return;
 
-		// phpcs:ignore, Generic.CodeAnalysis.EmptyStatement -- For the future, when WordPress Core decides.
+		// phpcs:ignore Generic.CodeAnalysis.EmptyStatement -- For the future, when WordPress Core decides.
 		if ( $taxonomy ) {
 			// Not yet.
 		} else {
@@ -252,9 +252,11 @@ final class ListEdit extends Admin\Lists\Table {
 			// '<span class=hidden id=%s data-le="%s"></span>',
 			'<span class=hidden id=%s %s></span>',
 			\sprintf( 'tsfLeData[%s]', (int) $post_id ),
-			// phpcs:ignore, WordPress.Security.EscapeOutput -- make_data_attributes escapes.
-			HTML::make_data_attributes( [ 'le' => $data ] )
+			// phpcs:ignore WordPress.Security.EscapeOutput -- make_data_attributes escapes.
+			HTML::make_data_attributes( [ 'le' => $data ] ),
 		);
+
+		$primary_terms = [];
 
 		if ( $is_homepage ) {
 			// When the homepage title is set, we can safely get the custom field.
@@ -281,6 +283,8 @@ final class ListEdit extends Admin\Lists\Table {
 
 			$permastruct               = Meta\URI\Utils::get_url_permastruct( $generator_args );
 			$is_post_type_hierarchical = false; // Homepage cannot have a parent page.
+
+			$primary_terms = []; // Homepage cannot have terms -- at least... why would anyone.
 		} else {
 			static $memo = [];
 
@@ -298,7 +302,7 @@ final class ListEdit extends Admin\Lists\Table {
 			$is_canonical_ref_locked = false;
 			$default_canonical       = Meta\URI::get_generated_url( $generator_args );
 
-			$memo['post_type']                 ??= Query::get_admin_post_type();
+			$memo['post_type']                 ??= Query::get_post_type_real_id( $post_id );
 			$memo['permastruct']               ??= Meta\URI\Utils::get_url_permastruct( $generator_args );
 			$memo['is_post_type_hierarchical'] ??= \is_post_type_hierarchical( $memo['post_type'] );
 
@@ -321,25 +325,30 @@ final class ListEdit extends Admin\Lists\Table {
 			}
 
 			// Only hierarchical taxonomies can be used in the URL.
-			// TODO filter post_tag here.
-			$memo['taxonomies'] ??= $post_type ? Taxonomy::get_hierarchical( 'names', $post_type ) : [];
+			$memo['taxonomies'] ??= array_diff(
+				$post_type ? Taxonomy::get_hierarchical( 'names', $post_type ) : [],
+				// post_tag isn't hierarchical by default, but it can be filtered to be.
+				// It's broken in Core when used in the permastruct. Nobody should be using %post_tag%.
+				[ 'post_tag' ],
+			);
 
 			$taxonomies               = $memo['taxonomies'];
 			$parent_term_slugs_by_tax = [];
+			$primary_term_ids         = [];
+
+			// Store primary term IDs for later use.
+			foreach ( $taxonomies as $taxonomy )
+				$primary_term_ids[ $taxonomy ] = Data\Plugin\Post::get_primary_term_id( $post_id, $taxonomy );
 
 			// Yes, on its surface, this is a very expensive procedure.
 			// However, WordPress needs to walk all the terms already to create the post links.
 			// Hence, it ought to net to zero impact.
 			foreach ( $taxonomies as $taxonomy ) {
 				if ( str_contains( $permastruct, "%$taxonomy%" ) ) {
-					// Broken in Core. Skip writing cache. We may reach this line 200 times, but nobody should be using %post_tag% anyway.
-					if ( 'post_tag' === $taxonomy ) continue;
-
-					$parent_term_slugs_by_tax[ $taxonomy ] = [];
 					// There's no need to test for hierarchy, because we want the full structure anyway (third parameter).
 					foreach (
 						Data\Term::get_term_parents(
-							Data\Plugin\Post::get_primary_term_id( $post_id, $taxonomy ),
+							$primary_term_ids[ $taxonomy ],
 							$taxonomy,
 							true,
 						)
@@ -367,24 +376,34 @@ final class ListEdit extends Admin\Lists\Table {
 					];
 				}
 			}
+
+			foreach ( $taxonomies as $taxonomy ) {
+				$primary_terms[ "primary_term_{$taxonomy}" ] = [
+					'value'    => $primary_term_ids[ $taxonomy ] ?? 0,
+					'isSelect' => true,
+					'taxonomy' => $taxonomy,
+				];
+			}
 		}
 
 		printf(
 			// '<span class=hidden id=%s data-le-post-data="%s"></span>',
 			'<span class=hidden id=%s %s></span>',
 			\sprintf( 'tsfLePostData[%s]', (int) $post_id ),
-			// phpcs:ignore, WordPress.Security.EscapeOutput -- make_data_attributes escapes.
+			// phpcs:disable WordPress.Security.EscapeOutput -- make_data_attributes escapes.
 			HTML::make_data_attributes( [
 				'lePostData' => [
-					'isFront' => Query::is_static_front_page( $generator_args['id'] ),
+					'isFront'      => Query::is_static_front_page( $generator_args['id'] ),
+					'primaryTerms' => $primary_terms,
 				],
 			] ),
+			// phpcs:enable WordPress.Security.EscapeOutput
 		);
 		printf(
 			// '<span class=hidden id=%s data-le-title="%s"></span>',
 			'<span class=hidden id=%s %s></span>',
 			\sprintf( 'tsfLeTitleData[%s]', (int) $post_id ),
-			// phpcs:ignore, WordPress.Security.EscapeOutput -- make_data_attributes escapes.
+			// phpcs:disable WordPress.Security.EscapeOutput -- make_data_attributes escapes.
 			HTML::make_data_attributes( [
 				'leTitle' => [
 					'refTitleLocked'    => $is_title_ref_locked,
@@ -394,24 +413,26 @@ final class ListEdit extends Admin\Lists\Table {
 					'additionPlacement' => 'left' === $seplocation ? 'before' : 'after',
 				],
 			] ),
+			// phpcs:enable WordPress.Security.EscapeOutput
 		);
 		printf(
 			// '<span class=hidden id=%s data-le-description="%s"></span>',
 			'<span class=hidden id=%s %s></span>',
 			\sprintf( 'tsfLeDescriptionData[%s]', (int) $post_id ),
-			// phpcs:ignore, WordPress.Security.EscapeOutput -- make_data_attributes escapes.
+			// phpcs:disable WordPress.Security.EscapeOutput -- make_data_attributes escapes.
 			HTML::make_data_attributes( [
 				'leDescription' => [
 					'refDescriptionLocked' => $is_desc_ref_locked,
 					'defaultDescription'   => $default_description,
 				],
 			] ),
+			// phpcs:enable WordPress.Security.EscapeOutput
 		);
 		printf(
 			// '<span class=hidden id=%s data-le-canonical="%s"></span>',
 			'<span class=hidden id=%s %s></span>',
 			\sprintf( 'tsfLeCanonicalData[%s]', (int) $post_id ),
-			// phpcs:ignore, WordPress.Security.EscapeOutput -- make_data_attributes escapes.
+			// phpcs:disable WordPress.Security.EscapeOutput -- make_data_attributes escapes.
 			HTML::make_data_attributes( [
 				'leCanonical' => [
 					'refCanonicalLocked'  => $is_canonical_ref_locked,
@@ -423,14 +444,15 @@ final class ListEdit extends Admin\Lists\Table {
 					'supportedTaxonomies' => $taxonomies ?? [],
 					'authorSlugs'         => $author_slugs ?? [],
 					'isHierarchical'      => $is_post_type_hierarchical,
-					// phpcs:ignore, WordPress.DateTime.RestrictedFunctions -- date() is used for URL generation. See `get_permalink()`.
+					// phpcs:ignore WordPress.DateTime.RestrictedFunctions -- date() is used for URL generation. See `get_permalink()`.
 					'publishDate'         => date( 'c', strtotime( \get_post( $post_id )->post_date ?? 'now' ) ),
 				],
 			] ),
+			// phpcs:enable WordPress.Security.EscapeOutput
 		);
 
 		if ( $this->doing_ajax )
-			echo $this->get_ajax_dispatch_updated_event(); // phpcs:ignore, WordPress.Security.EscapeOutput
+			echo $this->get_ajax_dispatch_updated_event(); // phpcs:ignore WordPress.Security.EscapeOutput
 	}
 
 	/**
@@ -553,8 +575,8 @@ final class ListEdit extends Admin\Lists\Table {
 		$container .= \sprintf(
 			'<span class=hidden id=%s %s></span>',
 			\sprintf( 'tsfLeData[%s]', (int) $term_id ),
-			// phpcs:ignore, WordPress.Security.EscapeOutput -- make_data_attributes escapes.
-			HTML::make_data_attributes( [ 'le' => $data ] )
+			// phpcs:ignore WordPress.Security.EscapeOutput -- make_data_attributes escapes.
+			HTML::make_data_attributes( [ 'le' => $data ] ),
 		);
 
 		$term_prefix = Meta\Title\Conditions::use_generated_archive_prefix( \get_term( $generator_args['id'], $generator_args['tax'] ) )
@@ -568,7 +590,7 @@ final class ListEdit extends Admin\Lists\Table {
 		$container .= \sprintf(
 			'<span class=hidden id=%s %s></span>',
 			\sprintf( 'tsfLeTitleData[%s]', (int) $term_id ),
-			// phpcs:ignore, WordPress.Security.EscapeOutput -- make_data_attributes escapes.
+			// phpcs:ignore WordPress.Security.EscapeOutput -- make_data_attributes escapes.
 			HTML::make_data_attributes( [
 				'leTitle' => [
 					'refTitleLocked'    => false,
@@ -583,7 +605,7 @@ final class ListEdit extends Admin\Lists\Table {
 		$container .= \sprintf(
 			'<span class=hidden id=%s %s></span>',
 			\sprintf( 'tsfLeDescriptionData[%s]', (int) $term_id ),
-			// phpcs:ignore, WordPress.Security.EscapeOutput -- make_data_attributes escapes.
+			// phpcs:ignore WordPress.Security.EscapeOutput -- make_data_attributes escapes.
 			HTML::make_data_attributes( [
 				'leDescription' => [
 					'refDescriptionLocked' => false,
@@ -594,7 +616,7 @@ final class ListEdit extends Admin\Lists\Table {
 		$container .= \sprintf(
 			'<span class=hidden id=%s %s></span>',
 			\sprintf( 'tsfLeCanonicalData[%s]', (int) $term_id ),
-			// phpcs:ignore, WordPress.Security.EscapeOutput -- make_data_attributes escapes.
+			// phpcs:ignore WordPress.Security.EscapeOutput -- make_data_attributes escapes.
 			HTML::make_data_attributes( [
 				'leCanonical' => [
 					'refCanonicalLocked' => false,

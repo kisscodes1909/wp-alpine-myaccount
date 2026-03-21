@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2020 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2020 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -91,7 +91,7 @@ window.tsfTabs = function () {
 			toggleToInstant(
 				stackId,
 				// Separate queries because :not in closest() will select first only.
-				radio.closest( `.${stack.HTMLClasses.wrapper}` )?.querySelector( `.${stack.HTMLClasses.tabRadio}:not([disabled])` )
+				radio.closest( `.${stack.HTMLClasses.wrapper}` )?.querySelector( `.${stack.HTMLClasses.tabRadio}:not([disabled])` ),
 			);
 		}
 	}

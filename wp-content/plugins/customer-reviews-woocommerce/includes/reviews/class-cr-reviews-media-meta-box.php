@@ -37,10 +37,10 @@ if ( ! class_exists( 'CR_Reviews_Media_Meta_Box' ) ) :
 			$pics_local = get_comment_meta( $comment->comment_ID, CR_Reviews::REVIEWS_META_LCL_IMG );
 			$pics_v = get_comment_meta( $comment->comment_ID, CR_Reviews::REVIEWS_META_VID );
 			$pics_v_local = get_comment_meta( $comment->comment_ID, CR_Reviews::REVIEWS_META_LCL_VID );
-			$pics_n = count( $pics );
-			$pics_local_n = count( $pics_local );
-			$pics_v_n = count( $pics_v );
-			$pics_v_local_n = count( $pics_v_local );
+			$pics_n = ( is_array( $pics ) ? count( $pics ) : 0 );
+			$pics_local_n = ( is_array( $pics_local ) ? count( $pics_local ) : 0 );
+			$pics_v_n = ( is_array( $pics_v ) ? count( $pics_v ) : 0 );
+			$pics_v_local_n = ( is_array( $pics_v_local ) ? count( $pics_v_local ) : 0 );
 			$k_image = 1;
 			$k_video = 1;
 			$cr_query = '?crsrc=wp';
@@ -51,8 +51,10 @@ if ( ! class_exists( 'CR_Reviews_Media_Meta_Box' ) ) :
 					if ( isset( $pics[$i]['url'] ) ) {
 						echo '<div class="cr-comment-image">';
 						echo '<img src="' .
-						$pics[$i]['url'] . $cr_query . '" alt="' . sprintf( __( 'Image #%1$d from ', 'customer-reviews-woocommerce' ), $k_image ) .
-						$comment->comment_author . '">';
+						esc_url( $pics[$i]['url'] . $cr_query ) . '" alt="' .
+						esc_attr(
+							sprintf( __( 'Image #%1$d from %2$s', 'customer-reviews-woocommerce' ), $k_image, $comment->comment_author )
+						) . '">';
 						echo '</div>';
 						$k_image++;
 					}
@@ -64,11 +66,14 @@ if ( ! class_exists( 'CR_Reviews_Media_Meta_Box' ) ) :
 					echo '<div class="cr-comment-video cr-comment-video-' . $k_video . '">';
 					echo '<div class="cr-video-cont">';
 					echo '<video preload="metadata" class="cr-video-a" ';
-					echo 'src="' . $pics_v[$i]['url'] . $cr_query;
+					echo 'src="' . esc_url( $pics_v[$i]['url'] . $cr_query . '#t=0.1' );
 					echo '"></video>';
 					echo '<img class="cr-comment-videoicon" src="' . plugin_dir_url( dirname( dirname( __FILE__ ) ) ) . 'img/video.svg" ';
-					echo 'alt="' . sprintf( __( 'Video #%1$d from %2$s', 'customer-reviews-woocommerce' ), $k_video, $comment->comment_author ) . '">';
-					echo '<button class="cr-comment-video-close">' . CR_Reviews::get_close_button_svg() . '</button>';
+					echo 'alt="' .
+					esc_attr(
+						sprintf( __( 'Video #%1$d from %2$s', 'customer-reviews-woocommerce' ), $k_video, $comment->comment_author )
+					) . '">';
+					echo '<button class="cr-comment-video-close" aria-label="' . esc_attr__( 'Close', 'customer-reviews-woocommerce' ) . '">' . CR_Reviews::get_close_button_svg() . '</button>';
 					echo '</div></div>';
 					$k_video++;
 				}
@@ -94,8 +99,10 @@ if ( ! class_exists( 'CR_Reviews_Media_Meta_Box' ) ) :
 						$temp_comment_content .= '<p><span class="cr-comment-image-detach-no">' . __( 'No', 'customer-reviews-woocommerce' ) . '</span>';
 						$temp_comment_content .= '<span class="cr-comment-image-detach-yes" data-nonce="' . wp_create_nonce( 'cr-upload-images-detach' ) . '" data-attachment="' . $pics_local[$i] . '">' . __( 'Yes', 'customer-reviews-woocommerce' ) . '</span>';
 						$temp_comment_content .= '</p><span class="cr-comment-image-detach-spinner"></span></div><img src="' .
-						$attachmentUrl . '" alt="' . sprintf( __( 'Image #%1$d from ', 'customer-reviews-woocommerce' ), $k_image ) .
-						$comment->comment_author . '" /></div>';
+						esc_url( $attachmentUrl ) . '" alt="' .
+						esc_attr(
+							sprintf( __( 'Image #%1$d from %2$s', 'customer-reviews-woocommerce' ), $k_image, $comment->comment_author )
+						) . '" /></div>';
 						$temp_comment_content .= $button_remove;
 						$temp_comment_content .= '</div>';
 						$k_image++;
@@ -123,11 +130,14 @@ if ( ! class_exists( 'CR_Reviews_Media_Meta_Box' ) ) :
 						$temp_comment_content .= '</p><span class="cr-comment-image-detach-spinner"></span></div>';
 						$temp_comment_content .= '<div class="cr-video-cont">';
 						$temp_comment_content .= '<video preload="metadata" class="cr-video-a" ';
-						$temp_comment_content .= 'src="' . $attachmentUrl;
+						$temp_comment_content .= 'src="' . esc_url( $attachmentUrl . '#t=0.1' );
 						$temp_comment_content .= '"></video>';
 						$temp_comment_content .= '<img class="cr-comment-videoicon" src="' . plugin_dir_url( dirname( dirname( __FILE__ ) ) ) . 'img/video.svg" ';
-						$temp_comment_content .= 'alt="' . sprintf( __( 'Video #%1$d from %2$s', 'customer-reviews-woocommerce' ), $k_video, $comment->comment_author ) . '">';
-						$temp_comment_content .= '<button class="cr-comment-video-close">' . CR_Reviews::get_close_button_svg() . '</button>';
+						$temp_comment_content .= 'alt="' .
+						esc_attr(
+							sprintf( __( 'Video #%1$d from %2$s', 'customer-reviews-woocommerce' ), $k_video, $comment->comment_author )
+						) . '">';
+						$temp_comment_content .= '<button class="cr-comment-video-close" aria-label="' . esc_attr__( 'Close', 'customer-reviews-woocommerce' ) . '">' . CR_Reviews::get_close_button_svg() . '</button>';
 						$temp_comment_content .= '</div></div>';
 						$temp_comment_content .= $button_remove;
 						$temp_comment_content .= '</div>';
@@ -144,7 +154,7 @@ if ( ! class_exists( 'CR_Reviews_Media_Meta_Box' ) ) :
 			$uploadMedia = '<div class="cr-upload-local-images">';
 			$uploadMedia .= '<label for="review_image" class="cr-upload-local-images-status">';
 			$uploadMedia .= __( 'Upload images or videos', 'customer-reviews-woocommerce' );
-			$uploadMedia .= '</label><input type="file" accept="image/*, video/*" multiple="multiple" name="review_image_' . $comment->comment_ID . '[]" id="review_image" />';
+			$uploadMedia .= '</label><input type="file" capture="environment" accept="image/*, video/*" multiple="multiple" name="review_image_' . $comment->comment_ID . '[]" id="review_image" />';
 			$uploadMedia .= '<input type="button" class="cr-upload-local-images-btn button button-secondary" value="' .
 			__( 'Upload', 'customer-reviews-woocommerce' ) . '" data-postid="' . $comment->comment_post_ID .
 			'" data-commentid="' . $comment->comment_ID . '" data-nonce="' . wp_create_nonce( 'cr-upload-images' ) . '"/>';

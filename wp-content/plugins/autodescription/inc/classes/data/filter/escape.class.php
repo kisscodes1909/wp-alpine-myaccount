@@ -10,7 +10,7 @@ namespace The_SEO_Framework\Data\Filter;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2024 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -30,7 +30,7 @@ namespace The_SEO_Framework\Data\Filter;
  *
  * @since 5.0.0
  * @access protected
- *         Use tsf()->filter()->escape() instead.
+ *         Use tsf()->escape() instead.
  */
 class Escape {
 
@@ -64,7 +64,7 @@ class Escape {
 	public static function json_encode_script( $value, $options = 0 ) {
 		return json_encode(
 			$value,
-			\JSON_UNESCAPED_SLASHES
+			  \JSON_UNESCAPED_SLASHES
 			| \JSON_HEX_TAG
 			| \JSON_UNESCAPED_UNICODE
 			| \JSON_INVALID_UTF8_IGNORE
@@ -86,7 +86,7 @@ class Escape {
 	public static function json_encode_html( $value, $options = 0 ) {
 		return json_encode(
 			$value,
-			\JSON_UNESCAPED_SLASHES
+			  \JSON_UNESCAPED_SLASHES
 			| \JSON_HEX_TAG
 			| \JSON_HEX_APOS
 			| \JSON_HEX_QUOT
@@ -120,7 +120,7 @@ class Escape {
 		return htmlspecialchars(
 			json_encode(
 				$value,
-				\JSON_UNESCAPED_SLASHES
+				  \JSON_UNESCAPED_SLASHES
 				| \JSON_HEX_TAG
 				| \JSON_HEX_APOS
 				| \JSON_HEX_QUOT

@@ -102,29 +102,26 @@ if ( ! class_exists( 'CR_Forms_Settings' ) ) :
 				$ivole_review_forms = array(
 					array(
 						'rtn_crta' => '',
-						'cus_atts' => ''
+						'cus_atts' => '',
+						'rev_perm' => ''
 					)
 				);
-				$update_ivole_review_forms = false;
 				// save the additional ratings
 				if ( ! empty( $_POST ) && isset( $_POST['ivole_rating_criteria'] ) ) {
 					$rtn_crta = json_decode( stripslashes( $_POST['ivole_rating_criteria'] ), true );
 					$rtn_crta = array_slice( $rtn_crta, 0, CR_Forms_Settings_Rating::get_max_rating_criteria() );
 					$ivole_review_forms[0]['rtn_crta'] = $rtn_crta;
-					$update_ivole_review_forms = true;
 				}
 				// save the customer attributes
 				if ( ! empty( $_POST ) && isset( $_POST['ivole_customer_attributes'] ) ) {
 					$cus_atts = json_decode( stripslashes( $_POST['ivole_customer_attributes'] ), true );
 					$cus_atts = array_slice( $cus_atts, 0, self::get_max_cus_atts() );
 					$ivole_review_forms[0]['cus_atts'] = $cus_atts;
-					$update_ivole_review_forms = true;
 				}
 				// save the review permissions
 				if ( ! empty( $_POST ) && isset( $_POST['ivole_review_permissions'] ) ) {
 					$rev_perm = strval( $_POST['ivole_review_permissions'] );
 					$ivole_review_forms[0]['rev_perm'] = $rev_perm;
-					$update_ivole_review_forms = true;
 				}
 				// save the terms and privacy checkbox
 				if ( ! empty( $_POST ) ) {
@@ -136,17 +133,15 @@ if ( ! class_exists( 'CR_Forms_Settings' ) ) :
 					} else {
 						$ivole_review_forms[0]['chbx'] = '';
 					}
-					$update_ivole_review_forms = true;
 				}
 				// save the terms and privacy text
 				if ( ! empty( $_POST ) && isset( $_POST['ivole_onsite_form_checkbox_text'] ) ) {
 					$ivole_review_forms[0]['chbx_text'] = esc_html( $_POST['ivole_onsite_form_checkbox_text'] );
-					$update_ivole_review_forms = true;
 				}
 				//
-				if ( $update_ivole_review_forms ) {
-					$_POST['ivole_review_forms'] = $ivole_review_forms;
-				}
+				$ivole_review_forms = apply_filters( 'cr_settings_save_onsite_form', $ivole_review_forms );
+				//
+				$_POST['ivole_review_forms'] = $ivole_review_forms;
 				// save the geolocation setting
 				if( ! empty( $_POST ) ) {
 					if( isset( $_POST['ivole_form_geolocation'] ) ) {
@@ -195,7 +190,29 @@ if ( ! class_exists( 'CR_Forms_Settings' ) ) :
 						$_POST['ivole_form_color_text'] = '#ffffff';
 					}
 				}
+				// validate that both reCAPTCHA site and secret keys are populated
+				if (
+					! empty( $_POST ) &&
+					isset( $_POST['ivole_captcha_site_key'] )  &&
+					isset( $_POST['ivole_captcha_secret_key'] )
+				) {
+					if (
+						(
+							trim( $_POST['ivole_captcha_site_key'] ) &&
+							! trim( $_POST['ivole_captcha_secret_key'] )
+						) ||
+						(
+							! trim( $_POST['ivole_captcha_site_key'] ) &&
+							trim( $_POST['ivole_captcha_secret_key'] )
+						)
+					) {
+						WC_Admin_Settings::add_error(
+							__( 'Error: Both the Site key and the Secret key are required for reCAPTCHA to function properly', 'customer-reviews-woocommerce' )
+						);
+					}
+				}
 				WC_Admin_Settings::save_fields( $this->settings );
+				CR_Local_Forms::delete_old_forms();
 			}
 		}
 
@@ -272,7 +289,8 @@ if ( ! class_exists( 'CR_Forms_Settings' ) ) :
 						'registered' => __( 'Reviewers must be registered and logged in', 'customer-reviews-woocommerce' ),
 						'verified' => __( 'Reviewers must be verified owners', 'customer-reviews-woocommerce' ),
 						'anybody' => __( 'Anyone can submit reviews', 'customer-reviews-woocommerce' )
-					)
+					),
+					'is_option' => false
 				),
 				24 => array(
 					'title'    => __( 'Login URL', 'customer-reviews-woocommerce' ),
@@ -410,7 +428,7 @@ if ( ! class_exists( 'CR_Forms_Settings' ) ) :
 					'desc_tip' => true,
 					'autoload' => false
 				),
-				105 => array(
+				110 => array(
 					'type' => 'sectionend',
 					'id'   => 'cr_options_aggregated_forms'
 				)
@@ -441,6 +459,36 @@ if ( ! class_exists( 'CR_Forms_Settings' ) ) :
 					'css'     => 'display:none;',
 					'autoload' => false
 				);
+			} else {
+				// and some features of review forms are available only for local forms
+				$wc_terms_page = wc_get_page_id( 'terms' );
+				$wc_terms_page = $wc_terms_page ? $wc_terms_page : '';
+				$this->settings[75] = array(
+					'title'   => __( 'Terms and Privacy Page', 'customer-reviews-woocommerce' ),
+					'type' => 'single_select_page_with_search',
+					'id'      => 'ivole_form_terms_page',
+					'default' => $wc_terms_page,
+					'class'    => 'wc-page-search',
+					'css'      => 'min-width:300px;',
+					'desc' => __( 'Select the page customers will be directed to when clicking the Terms and Conditions link on aggregated review forms.', 'customer-reviews-woocommerce' ),
+					'desc_tip' => true,
+					'args'     => array(
+						'exclude' =>
+							array(
+								wc_get_page_id( 'checkout' ),
+								wc_get_page_id( 'myaccount' ),
+							),
+					),
+					'autoload' => false
+				);
+				$this->settings[105] = array(
+					'title'   => __( 'Expiry Period', 'customer-reviews-woocommerce' ),
+					'type'    => 'number',
+					'id'      => 'ivole_form_expiry_period',
+					'default' => 0,
+					'desc_tip' => __( 'Aggregated review forms will be automatically deleted after the specified number of days, or kept indefinitely if set to 0.', 'customer-reviews-woocommerce' ),
+					'autoload' => false
+				);
 			}
 
 			$form_settings = self::get_default_form_settings();
@@ -452,7 +500,7 @@ if ( ! class_exists( 'CR_Forms_Settings' ) ) :
 				}
 			}
 
-			$this->settings = apply_filters( 'cr_settings_forms', $this->settings );
+			$this->settings = apply_filters( 'cr_settings_forms', $this->settings, $form_settings );
 			ksort( $this->settings );
 		}
 
