@@ -1949,14 +1949,15 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
     }
 .woocommerce-account .ma-orders__item-tracking-icon {
         display: inline-flex;
+        align-items: center;
+        justify-content: center;
         flex-shrink: 0;
         line-height: 0;
-        color: var(--ma-text-muted);
+        color: var(--ma-text-muted-dark);
     }
 .woocommerce-account .ma-orders__item-tracking-icon svg {
-            width: 1.25rem;
-            height: 1.25rem;
-            margin-top: 0.1em;
+            width: 1.125rem;
+            height: 1.125rem;
         }
 .woocommerce-account .ma-orders__item-tracking-main {
         min-width: 0;

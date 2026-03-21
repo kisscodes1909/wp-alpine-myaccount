@@ -101,6 +101,7 @@ class MyAccount_Core_Tracking_Resolver {
 			'current_key'    => $this->resolve_woocommerce_step_key( $status ),
 			'has_tracking'   => ! empty( $entries ),
 			'all_delivered'  => false,
+			'has_partial_shipment' => false,
 			'latest_ship_date' => null,
 		);
 
@@ -114,6 +115,7 @@ class MyAccount_Core_Tracking_Resolver {
 				'current_key'      => $all_delivered ? 'delivered' : 'shipped',
 				'has_tracking'     => true,
 				'all_delivered'    => $all_delivered,
+				'has_partial_shipment' => $this->has_partial_shipment( $entries ),
 				'latest_ship_date' => $this->get_latest_ship_date( $entries ),
 			);
 		}
@@ -223,6 +225,19 @@ class MyAccount_Core_Tracking_Resolver {
 		}
 
 		return end( $dates );
+	}
+
+	/**
+	 * @param array<int, MyAccount_Core_Tracking_Entry> $entries Tracking entries.
+	 */
+	private function has_partial_shipment( array $entries ): bool {
+		foreach ( $entries as $entry ) {
+			if ( $entry->is_partial_shipped ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private function is_order_marked_delivered( string $status ): bool {

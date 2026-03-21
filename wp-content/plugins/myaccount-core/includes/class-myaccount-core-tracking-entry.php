@@ -12,6 +12,7 @@ class MyAccount_Core_Tracking_Entry {
 	public ?string $ship_date;
 	public bool $is_delivered;
 	public bool $is_in_transit;
+	public bool $is_partial_shipped;
 
 	public function __construct( array $args = array() ) {
 		$this->provider        = sanitize_key( (string) ( $args['provider'] ?? '' ) );
@@ -23,6 +24,7 @@ class MyAccount_Core_Tracking_Entry {
 		$this->ship_date       = $this->sanitize_nullable_text( $args['ship_date'] ?? null );
 		$this->is_delivered    = ! empty( $args['is_delivered'] );
 		$this->is_in_transit   = ! empty( $args['is_in_transit'] );
+		$this->is_partial_shipped = ! empty( $args['is_partial_shipped'] );
 	}
 
 	public static function from_array( array $args ): MyAccount_Core_Tracking_Entry {
@@ -44,6 +46,7 @@ class MyAccount_Core_Tracking_Entry {
 			'ship_date'       => $this->ship_date,
 			'is_delivered'    => $this->is_delivered,
 			'is_in_transit'   => $this->is_in_transit,
+			'is_partial_shipped' => $this->is_partial_shipped,
 		);
 	}
 
