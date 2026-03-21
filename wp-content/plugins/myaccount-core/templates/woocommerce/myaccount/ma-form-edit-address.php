@@ -9,9 +9,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
     <div class="ma-address-form__header">
         <h2 class="ma-page-heading__title ma-page-heading__title--sm" x-text="$store.userAddress.form.title">Add Address</h2>
         <button type="button" class="ma-btn ma-btn--ghost" @click="$store.popup.closePopup()" aria-label="<?php esc_attr_e( 'Close', 'woocommerce' ); ?>">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none" aria-hidden="true">
-                <path d="M9.46584 8.12341L15.6959 1.89301C16.1014 1.48775 16.1014 0.832499 15.6959 0.427237C15.2907 0.0219756 14.6354 0.0219756 14.2302 0.427237L7.99991 6.65763L1.76983 0.427237C1.36438 0.0219756 0.709335 0.0219756 0.304082 0.427237C-0.101361 0.832499 -0.101361 1.48775 0.304082 1.89301L6.53416 8.12341L0.304082 14.3538C-0.101361 14.7591 -0.101361 15.4143 0.304082 15.8196C0.506044 16.0217 0.771594 16.1233 1.03695 16.1233C1.30231 16.1233 1.56767 16.0217 1.76983 15.8196L7.99991 9.58918L14.2302 15.8196C14.4323 16.0217 14.6977 16.1233 14.963 16.1233C15.2284 16.1233 15.4938 16.0217 15.6959 15.8196C16.1014 15.4143 16.1014 14.7591 15.6959 14.3538L9.46584 8.12341Z" fill="currentColor"/>
-            </svg>
+            <?php ma_form_icon_x_mark(); ?>
         </button>
     </div>
     <form class="ma-form ma-form-address ma-address-form"

@@ -22,6 +22,7 @@ class MyAccount_Core_Ajax {
 		add_action( 'wp_ajax_save-address', array( $this, 'save_address_book' ) );
 		add_action( 'wp_ajax_save_account_details', array( $this, 'save_account_details' ) );
 		add_action( 'wp_ajax_change_password', array( $this, 'handle_change_password' ) );
+		add_action( 'wp_ajax_submit_return_request', array( $this, 'submit_return_request' ) );
 		add_action( 'wp_ajax_handle_login', array( $this, 'handle_login_ajax' ) );
 		add_action( 'wp_ajax_nopriv_handle_login', array( $this, 'handle_login_ajax' ) );
 		add_action( 'wp_ajax_handle_signup', array( $this, 'handle_signup' ) );
@@ -161,6 +162,52 @@ class MyAccount_Core_Ajax {
 		wp_update_user( $user );
 
 		$this->send_json_success( __( 'Your account and contact details have been updated.', 'myaccount-core' ) );
+	}
+
+	public function submit_return_request(): void {
+		wc_nocache_headers();
+		$this->verify_nonce_or_die( 'submit-return-request', 'nonce' );
+
+		$user_id = get_current_user_id();
+		if ( $user_id <= 0 ) {
+			$this->send_json_error( __( 'Please sign in again and try submitting your return request.', 'myaccount-core' ) );
+		}
+
+		$order_id = isset( $_POST['orderId'] ) ? absint( wp_unslash( $_POST['orderId'] ) ) : 0;
+		$order    = $order_id ? wc_get_order( $order_id ) : false;
+
+		if ( ! $order instanceof WC_Order ) {
+			$this->send_json_error( __( 'We could not find that order.', 'myaccount-core' ) );
+		}
+
+		$returns = MyAccount_Core_Returns::instance();
+		if ( ! $returns->user_owns_order( $order, $user_id ) ) {
+			$this->send_json_error( __( 'You can only create return requests for your own orders.', 'myaccount-core' ) );
+		}
+
+		$raw_items = isset( $_POST['items'] ) ? wp_unslash( $_POST['items'] ) : '[]'; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON payload.
+		$items     = json_decode( is_string( $raw_items ) ? $raw_items : '[]', true );
+
+		$result = $returns->create_request(
+			$order,
+			array(
+				'requestType' => wc_clean( wp_unslash( $_POST['requestType'] ?? '' ) ),
+				'reason'      => wc_clean( wp_unslash( $_POST['reason'] ?? '' ) ),
+				'note'        => sanitize_textarea_field( wp_unslash( $_POST['note'] ?? '' ) ),
+				'items'       => is_array( $items ) ? $items : array(),
+			)
+		);
+
+		if ( is_wp_error( $result ) ) {
+			$this->send_json_error( $result->get_error_message() );
+		}
+
+		$this->send_json_success(
+			__( 'Your return request has been submitted.', 'myaccount-core' ),
+			array(
+				'request' => $result,
+			)
+		);
 	}
 
 	/**

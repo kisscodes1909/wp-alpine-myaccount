@@ -10,9 +10,42 @@ defined( 'ABSPATH' ) || exit;
 $notes = $order->get_customer_order_notes();
 $tracking_resolver = MyAccount_Core_Tracking_Resolver::instance();
 $tracking_entries  = $tracking_resolver->get_entries( $order );
+$returns_service   = MyAccount_Core_Returns::instance();
+$returns_policy    = $returns_service->get_policy_context( $order );
+$return_requests   = $returns_service->get_requests( $order );
+$eligible_items    = $returns_service->get_eligible_items( $order );
 
 if ( ! empty( $tracking_entries ) ) {
 	$tracking_resolver->maybe_suppress_view_order_output( $order );
+}
+
+$returns_script_handle = '';
+if ( wp_script_is( 'myaccount-core-js-endpoint', 'enqueued' ) ) {
+	$returns_script_handle = 'myaccount-core-js-endpoint';
+} elseif ( wp_script_is( 'alpine-bundle', 'enqueued' ) ) {
+	$returns_script_handle = 'alpine-bundle';
+}
+
+if ( '' !== $returns_script_handle ) {
+	wp_localize_script(
+		$returns_script_handle,
+		'viewOrderReturnsData',
+		array(
+			'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
+			'nonce'        => wp_create_nonce( 'submit-return-request' ),
+			'orderId'      => $order->get_id(),
+			'policy'       => $returns_policy,
+			'requests'     => $return_requests,
+			'eligibleItems' => $eligible_items,
+			'requestTypes' => $returns_service->get_request_type_labels(),
+			'i18n'         => array(
+				'selectItem'      => __( 'Please select at least one item to return or exchange.', 'myaccount-core' ),
+				'missingReason'   => __( 'Please tell us why you want to return or exchange these items.', 'myaccount-core' ),
+				'invalidQuantity' => __( 'One or more quantities are not valid for return.', 'myaccount-core' ),
+				'genericError'    => __( 'Something went wrong. Please try again.', 'myaccount-core' ),
+			),
+		)
+	);
 }
 
 // Order again is shown in order-details-items-summary; avoid duplicate from after_order_table on this endpoint.
@@ -38,8 +71,20 @@ wc_get_template(
 	<?php wc_get_template( 'order/order-status-card.php', array( 'order' => $order ) ); ?>
 	<?php wc_get_template( 'order/order-tracking-block.php', array( 'order' => $order, 'tracking_entries' => $tracking_entries ) ); ?>
 	<?php wc_get_template( 'order/order-details-items-summary.php', array( 'order' => $order ) ); ?>
+	<?php
+	wc_get_template(
+		'order/order-returns.php',
+		array(
+			'order'             => $order,
+			'section_id'        => 'ma-view-order-returns-' . (int) $order->get_id(),
+			'existing_requests' => $return_requests,
+			'eligible_items'    => $eligible_items,
+			'policy'            => $returns_policy,
+			'request_types'     => $returns_service->get_request_type_labels(),
+		)
+	);
+	?>
 </div>
-
 
 <?php if ( $notes ) : ?>
 	<h2><?php esc_html_e( 'Order updates', 'woocommerce' ); ?></h2>

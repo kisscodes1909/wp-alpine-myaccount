@@ -111,3 +111,47 @@ if ( ! function_exists( 'ma_form_icon_apple' ) ) {
 		<?php
 	}
 }
+
+if ( ! function_exists( 'ma_form_icon_arrows_right_left' ) ) {
+	/** Arrows right-left – return request type (Heroicons outline 24). */
+	function ma_form_icon_arrows_right_left() {
+		?>
+		<svg class="ma-form__input-icon-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+			<path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+		</svg>
+		<?php
+	}
+}
+
+if ( ! function_exists( 'ma_form_icon_chat_bubble_left_right' ) ) {
+	/** Chat bubble left-right – reason field (Heroicons outline 24). */
+	function ma_form_icon_chat_bubble_left_right() {
+		?>
+		<svg class="ma-form__input-icon-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+			<path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V4.258c0-1.035-.845-1.98-1.975-2.192a48.641 48.641 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334l-9.374 5.25a2.25 2.25 0 01-2.25 0l-9.374-5.25" />
+		</svg>
+		<?php
+	}
+}
+
+if ( ! function_exists( 'ma_form_icon_pencil_square' ) ) {
+	/** Pencil square – notes textarea (Heroicons outline 24). */
+	function ma_form_icon_pencil_square() {
+		?>
+		<svg class="ma-form__input-icon-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+			<path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+		</svg>
+		<?php
+	}
+}
+
+if ( ! function_exists( 'ma_form_icon_x_mark' ) ) {
+	/** X mark icon – popup close buttons. */
+	function ma_form_icon_x_mark() {
+		?>
+		<svg class="ma-form__input-icon-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+			<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+		</svg>
+		<?php
+	}
+}
