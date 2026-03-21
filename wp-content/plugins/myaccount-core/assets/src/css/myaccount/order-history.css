@@ -147,8 +147,68 @@
         min-width: 0;
     }
 
-    .ma-orders__item-meta-group:last-child {
+    .ma-orders__item-meta-group--items {
         text-align: right;
+    }
+
+    /* DATE | ITEMS | TRACKING — mobile: 3 rows; desktop: row; groups flex-start; tracking inherits .ma-orders__item-meta-value type. */
+    .ma-orders__item-meta--has-tracking {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: var(--ma-space-md);
+
+        .ma-orders__item-meta-group {
+            flex: 0 0 auto;
+            width: 100%;
+            min-width: 0;
+            text-align: left;
+        }
+    }
+
+    .ma-orders__item-meta-value--tracking {
+        display: flex;
+        flex-direction: column;
+        gap: var(--ma-space-sm);
+    }
+
+    .ma-orders__item-tracking-row {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--ma-space-xs);
+    }
+
+    .ma-orders__item-tracking-icon {
+        display: inline-flex;
+        flex-shrink: 0;
+        line-height: 0;
+        color: var(--ma-text-muted);
+
+        svg {
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-top: 0.1em;
+        }
+    }
+
+    .ma-orders__item-tracking-main {
+        min-width: 0;
+    }
+
+    .ma-orders__item-tracking-provider {
+        font-weight: 600;
+    }
+
+    .ma-orders__item-tracking-id {
+        color: inherit;
+        font-weight: 400;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+
+        &:hover,
+        &:focus-visible {
+            color: var(--ma-text-muted);
+        }
     }
 
     .ma-orders__item-meta-label {
@@ -206,7 +266,21 @@
             align-items: center;
         }
         .ma-orders__item-meta-group { flex: 0 1 auto; }
-        .ma-orders__item-meta-group:last-child { text-align: left; }
+        .ma-orders__item-meta-group--items { text-align: left; }
+
+        .ma-orders__item-meta--has-tracking {
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: flex-start;
+            justify-content: flex-start;
+            gap: var(--ma-space-xl);
+
+            .ma-orders__item-meta-group {
+                flex: 0 1 auto;
+                width: auto;
+                max-width: none;
+            }
+        }
         .ma-orders__item-footer {
             flex-direction: row;
             align-items: center;

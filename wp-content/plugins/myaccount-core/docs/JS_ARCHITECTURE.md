@@ -3,6 +3,8 @@
 ## Scope
 This document defines JavaScript architecture, loading contracts, and coding rules for AlpineJS in `myaccount-core`.
 
+Liên quan: [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) (cấu trúc plugin và thứ tự đọc cho agent), [CSS_ARCHITECTURE.md](CSS_ARCHITECTURE.md).
+
 ## Objectives
 - Reduce per-page JS payload by loading bundles per endpoint.
 - Keep runtime stable by separating shared runtime from endpoint logic.

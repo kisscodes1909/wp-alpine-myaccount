@@ -71,7 +71,11 @@ node_modules/
 
 # Cursor-generated project docs
 /AGENTS.md
-/PROJECT_CONTEXT.md
-/TASK_BOARD.md
 /ALPINE_UI.md
 /ALPINE_UI_OPTIMIZATION.md
+wp-content/plugins/myaccount-core/docs/JS_ARCHITECTURE.md
+wp-content/plugins/myaccount-core/docs/CSS_ARCHITECTURE.md
+wp-content/plugins/myaccount-core/docs/PROJECT_CONTEXT.md
+wp-content/plugins/myaccount-core/docs/CSS_ARCHITECTURE.md
+wp-content/plugins/myaccount-core/docs/JS_ARCHITECTURE.md
+wp-content/plugins/myaccount-core/docs/master-task-list.xlsx

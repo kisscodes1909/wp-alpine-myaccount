@@ -4,6 +4,7 @@
 Tài liệu này quy định “hợp đồng” CSS cho giao diện My Account trong `myaccount-core`.
 
 Liên quan:
+- Bối cảnh dự án + thứ tự đọc cho agent: [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md).
 - Kiến trúc JS và quy tắc dev: [JS_ARCHITECTURE.md](JS_ARCHITECTURE.md) (cùng thư mục plugin `docs/`).
 - Pattern nút & form (Maison, token `--ma-*`): [BUTTON-GUIDE.md](BUTTON-GUIDE.md), [FORM-GUIDE.md](FORM-GUIDE.md) (cùng thư mục plugin `docs/`).
 
@@ -31,7 +32,8 @@ Output:
 - Split: `ma-shared.css`, `ma-navigation.css`, `ma-{endpoint}.css`; legacy: `myaccount.css`
 
 ## Production build & CSS performance
-- **Release (mandatory before deploy):** from plugin root run `npm run build:production` so `assets/css/*.min.css` (and `assets/js/*.min.js`) exist. Staging/production should use `WP_ENVIRONMENT_TYPE=production` and avoid `SCRIPT_DEBUG` so enqueue loads `.min` assets ([class-myaccount-core-assets.php](includes/class-myaccount-core-assets.php)).
+- **Hằng ngày / khi dev:** dùng `npm run build:css` và/hoặc `npm run build:js` (hoặc `npm run build`) — **không** bắt buộc `build:production` trừ khi đang chuẩn bị release.
+- **Release (bắt buộc trước deploy):** từ root plugin chạy `npm run build:production` để có `assets/css/*.min.css` và `assets/js/*.min.js`. Staging/production nên `WP_ENVIRONMENT_TYPE=production` và tránh `SCRIPT_DEBUG` để enqueue load `.min` ([class-myaccount-core-assets.php](includes/class-myaccount-core-assets.php)).
 - **Checklist deploy (tránh fallback ~94KB):** trước khi release, xác nhận trên disk có đủ `ma-shared.min.css`, `ma-{endpoint}.min.css` tương ứng, và `ma-navigation.min.css` khi user đăng nhập; không xóa nhầm các file split; nếu nghi site đang tải `myaccount.css`, bật log (`MYACCOUNT_CORE_LOG_MISSING_ASSETS` hoặc `WP_DEBUG`) và kiểm tra `error_log`.
 - **Fallback `myaccount.css` (~94KB min):** loaded only when `ma-shared.css` **or** the endpoint CSS file is missing on disk. Missing split files doubles payload; always ship built min files.
 - **Debug:** with `WP_DEBUG` or `define('MYACCOUNT_CORE_LOG_MISSING_ASSETS', true)`, missing assets and fallback enqueue are logged to `error_log`.

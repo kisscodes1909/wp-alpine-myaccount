@@ -38,6 +38,11 @@ if ( is_user_logged_in() && $order->has_status( $valid_statuses ) ) {
 $totals            = $order->get_order_item_totals();
 $order_total       = isset( $totals['order_total'] ) ? $totals['order_total']['value'] : $order->get_formatted_order_total();
 $item_count        = $order->get_item_count();
+
+$ma_tracking_entries = array();
+if ( class_exists( 'MyAccount_Core_Tracking_Resolver' ) ) {
+	$ma_tracking_entries = MyAccount_Core_Tracking_Resolver::instance()->get_entries( $order );
+}
 ?>
 
 <div class="ma-orders__item-header">
@@ -48,14 +53,14 @@ $item_count        = $order->get_item_count();
 	</span>
 </div>
 
-<div class="ma-orders__item-meta">
+<div class="ma-orders__item-meta<?php echo ! empty( $ma_tracking_entries ) ? ' ma-orders__item-meta--has-tracking' : ''; ?>">
 	<div class="ma-orders__item-meta-group">
 		<p class="ma-orders__item-meta-label"><?php esc_html_e( 'Date', 'woocommerce' ); ?></p>
 		<p class="ma-orders__item-meta-value">
 			<time datetime="<?php echo esc_attr( $order->get_date_created()->date( 'c' ) ); ?>"><?php echo esc_html( wc_format_datetime( $order->get_date_created() ) ); ?></time>
 		</p>
 	</div>
-	<div class="ma-orders__item-meta-group">
+	<div class="ma-orders__item-meta-group ma-orders__item-meta-group--items">
 		<p class="ma-orders__item-meta-label"><?php esc_html_e( 'Items', 'woocommerce' ); ?></p>
 		<p class="ma-orders__item-meta-value">
 			<?php
@@ -64,6 +69,39 @@ $item_count        = $order->get_item_count();
 			?>
 		</p>
 	</div>
+	<?php if ( ! empty( $ma_tracking_entries ) ) : ?>
+		<div class="ma-orders__item-meta-group ma-orders__item-meta-group--tracking">
+			<p class="ma-orders__item-meta-label"><?php esc_html_e( 'Tracking', 'myaccount-core' ); ?></p>
+			<div class="ma-orders__item-meta-value ma-orders__item-meta-value--tracking">
+				<?php
+				foreach ( $ma_tracking_entries as $ma_tracking_entry ) {
+					$ma_tracking_label = '' !== $ma_tracking_entry->tracking_number
+						? $ma_tracking_entry->tracking_number
+						: __( 'Track', 'myaccount-core' );
+					$ma_link_title     = '' === $ma_tracking_entry->carrier_name
+						? sprintf( ' title="%s"', esc_attr__( 'Open carrier tracking page', 'myaccount-core' ) )
+						: '';
+					echo '<div class="ma-orders__item-tracking-row">';
+					echo '<span class="ma-orders__item-tracking-icon" aria-hidden="true">';
+					echo '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" focusable="false" aria-hidden="true">';
+					echo '<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.086H19.5m-9 0V8.25m0 0h4.125c.621 0 1.129.504 1.09 1.124a17.902 17.902 0 013.213 9.193c0 .538-.214 1.05-.595 1.426L18 18.75M9 8.25h.008v.008H9V8.25zm3 0h.008v.008H12V8.25zm3 0h.008v.008H15V8.25z" />';
+					echo '</svg></span><span class="ma-orders__item-tracking-main">';
+					if ( '' !== $ma_tracking_entry->carrier_name ) {
+						echo '<span class="ma-orders__item-tracking-provider">' . esc_html( $ma_tracking_entry->carrier_name ) . '</span>';
+						echo '<span class="ma-orders__item-tracking-sep" aria-hidden="true"> · </span>';
+					}
+					printf(
+						'<a href="%1$s" class="ma-orders__item-tracking-id" target="_blank" rel="noopener noreferrer"%3$s>%2$s</a>',
+						esc_url( $ma_tracking_entry->tracking_url ),
+						esc_html( $ma_tracking_label ),
+						$ma_link_title
+					);
+					echo '</span></div>';
+				}
+				?>
+			</div>
+		</div>
+	<?php endif; ?>
 </div>
 
 <div class="ma-orders__item-footer">
