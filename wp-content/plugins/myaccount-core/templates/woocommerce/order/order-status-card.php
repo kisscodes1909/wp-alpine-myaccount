@@ -15,7 +15,6 @@ $step_count        = max( 1, (int) ( $timeline_context['step_count'] ?? 3 ) );
 $current_step      = min( $step_count, max( 1, (int) ( $timeline_context['current_step'] ?? 1 ) ) );
 $current_key       = sanitize_key( (string) ( $timeline_context['current_key'] ?? 'placed' ) );
 $latest_ship_date  = isset( $timeline_context['latest_ship_date'] ) && is_string( $timeline_context['latest_ship_date'] ) ? $timeline_context['latest_ship_date'] : '';
-$has_partial_shipment = ! empty( $timeline_context['has_partial_shipment'] );
 
 $est_delivery = $order->get_meta( '_estimated_delivery' );
 $est_delivery = $est_delivery ? sanitize_text_field( $est_delivery ) : '';
@@ -33,6 +32,7 @@ $status_descriptions = array(
 $tracking_descriptions = array(
 	'placed'     => __( 'Your order has been received and is awaiting payment.', 'woocommerce' ),
 	'processing' => __( 'Your order has been confirmed and is being prepared for processing.', 'woocommerce' ),
+	'partial_shipped' => __( 'Part of your order has shipped and the remaining items will follow soon.', 'myaccount-core' ),
 	'shipped'    => __( 'Your order has shipped and is on the way.', 'myaccount-core' ),
 	'delivered'  => __( 'Tracking shows your order was delivered.', 'myaccount-core' ),
 );
@@ -43,25 +43,18 @@ if ( $is_tracking_mode && isset( $tracking_descriptions[ $current_key ] ) ) {
 	$status_description = $tracking_descriptions[ $current_key ];
 }
 
-if ( $is_tracking_mode && 'shipped' === $current_key && $has_partial_shipment ) {
-	$status_description = __( 'Part of your order has shipped and the remaining items will follow soon.', 'myaccount-core' );
-}
-
 $status_description = apply_filters( 'woocommerce_myaccount_order_status_description', $status_description, $order );
 
 $current_titles = array(
 	'placed'     => __( 'Order Placed', 'woocommerce' ),
 	'processing' => __( 'Processing', 'woocommerce' ),
+	'partial_shipped' => __( 'Partially Shipped', 'myaccount-core' ),
 	'shipped'    => __( 'Shipped', 'myaccount-core' ),
 	'delivered'  => __( 'Delivered', 'myaccount-core' ),
 	'complete'   => __( 'Delivered', 'woocommerce' ),
 );
 
 $current_title = isset( $current_titles[ $current_key ] ) ? $current_titles[ $current_key ] : __( 'Order Placed', 'woocommerce' );
-
-if ( $is_tracking_mode && 'shipped' === $current_key && $has_partial_shipment ) {
-	$current_title = __( 'Partially Shipped', 'myaccount-core' );
-}
 
 if ( ! $is_tracking_mode ) {
 	$status_titles = array(
@@ -107,6 +100,8 @@ $progress_pct = 1 === $step_count ? 100 : ( ( $current_step - 1 ) / ( $step_coun
 			$date_placed = $order->get_date_created() ? $order->get_date_created()->date_i18n( $fmt ) : '';
 			$date_paid   = $order->get_date_paid() ? $order->get_date_paid()->date_i18n( $fmt ) : '';
 			$date_done   = $order->get_date_completed() ? $order->get_date_completed()->date_i18n( $fmt ) : '';
+			$shipment_step_label = ( $is_tracking_mode && 'partial_shipped' === $current_key ) ? __( 'Partially Shipped', 'myaccount-core' ) : __( 'Shipped', 'myaccount-core' );
+			$shipment_step_sublabel = ( $is_tracking_mode && 'partial_shipped' === $current_key ) ? __( 'Split shipment', 'myaccount-core' ) : __( 'In transit', 'myaccount-core' );
 
 			$steps = $is_tracking_mode
 				? array(
@@ -124,8 +119,8 @@ $progress_pct = 1 === $step_count ? 100 : ( ( $current_step - 1 ) / ( $step_coun
 					),
 					array(
 						'key'      => 'shipped',
-						'label'    => __( 'Shipped', 'myaccount-core' ),
-						'sublabel' => __( 'In transit', 'myaccount-core' ),
+						'label'    => $shipment_step_label,
+						'sublabel' => $shipment_step_sublabel,
 						'date'     => ( $current_step >= 3 && $latest_ship_date ) ? $latest_ship_date : '',
 					),
 					array(

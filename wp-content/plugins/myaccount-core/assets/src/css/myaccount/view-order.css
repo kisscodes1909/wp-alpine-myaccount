@@ -387,25 +387,48 @@
 
     .ma-view-order-tracking__card {
         border: 1px solid var(--ma-border);
-        padding: var(--ma-space-lg);
+        padding: var(--ma-space-md) var(--ma-space-lg);
         background: var(--ma-surface-base, #fff);
-    }
-
-    .ma-view-order-tracking__list {
-        display: flex;
-        flex-direction: column;
-        gap: var(--ma-space-md);
     }
 
     .ma-view-order-tracking__item + .ma-view-order-tracking__item {
         padding-top: var(--ma-space-md);
+        margin-top: var(--ma-space-md);
         border-top: 1px solid var(--ma-border-divider);
     }
 
-    .ma-view-order-tracking__item-head {
+    .ma-view-order-tracking__item {
         display: flex;
         flex-direction: column;
         gap: var(--ma-space-sm);
+    }
+
+    .ma-view-order-tracking__row {
+        display: flex;
+        flex-direction: column;
+        gap: var(--ma-space-sm);
+    }
+
+    .ma-view-order-tracking__identity {
+        display: flex;
+        flex-direction: column;
+        gap: var(--ma-space-2xs);
+        min-width: 0;
+    }
+
+    .ma-view-order-tracking__icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.75rem;
+        height: 1.75rem;
+        color: var(--ma-text-muted-dark);
+        flex-shrink: 0;
+    }
+
+    .ma-view-order-tracking__icon svg {
+        width: 100%;
+        height: 100%;
     }
 
     .ma-view-order-tracking__carrier,
@@ -430,12 +453,6 @@
         word-break: break-word;
     }
 
-    .ma-view-order-tracking__meta {
-        display: flex;
-        flex-direction: column;
-        gap: var(--ma-space-2xs);
-    }
-
     .ma-view-order-tracking__status {
         color: var(--ma-text-primary);
         font-size: var(--ma-font-xs);
@@ -452,24 +469,36 @@
     }
 
     .ma-view-order-tracking__detail {
-        margin-top: var(--ma-space-sm);
+        margin-top: calc(var(--ma-space-sm) * -0.25);
     }
 
     .ma-view-order-tracking__actions {
-        margin-top: var(--ma-space-md);
+        margin-top: 0;
     }
 
     @media (min-width: 768px) {
-        .ma-view-order-tracking__item-head {
+        .ma-view-order-tracking__row {
             flex-direction: row;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
             gap: var(--ma-space-lg);
         }
 
-        .ma-view-order-tracking__meta {
-            align-items: flex-end;
-            text-align: right;
+        .ma-view-order-tracking__identity {
+            flex-direction: row;
+            align-items: center;
+            gap: var(--ma-space-md);
+            min-width: 0;
+            flex: 1;
+        }
+
+        .ma-view-order-tracking__status,
+        .ma-view-order-tracking__date {
+            white-space: nowrap;
+        }
+
+        .ma-view-order-tracking__actions {
+            flex-shrink: 0;
         }
     }
 

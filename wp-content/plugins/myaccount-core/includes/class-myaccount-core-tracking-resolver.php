@@ -106,16 +106,19 @@ class MyAccount_Core_Tracking_Resolver {
 		);
 
 		if ( ! empty( $entries ) && ! in_array( $status, array( 'cancelled', 'failed', 'refunded' ), true ) ) {
-			$all_delivered = $this->all_entries_delivered( $entries ) || $this->is_order_marked_delivered( $status );
+			$all_delivered       = $this->is_order_marked_delivered( $status ) || $this->all_entries_delivered( $entries );
+			$has_partial_shipment = $this->is_order_partially_shipped( $status ) || $this->has_partial_shipment( $entries );
+			$current_step        = $this->resolve_tracking_step( $status, $entries, $all_delivered, $has_partial_shipment, $order );
+			$current_key         = $this->resolve_tracking_current_key( $status, $entries, $all_delivered, $has_partial_shipment, $order );
 
 			$context = array(
 				'mode'             => 'tracking',
 				'step_count'       => 4,
-				'current_step'     => $all_delivered ? 4 : 3,
-				'current_key'      => $all_delivered ? 'delivered' : 'shipped',
+				'current_step'     => $current_step,
+				'current_key'      => $current_key,
 				'has_tracking'     => true,
 				'all_delivered'    => $all_delivered,
-				'has_partial_shipment' => $this->has_partial_shipment( $entries ),
+				'has_partial_shipment' => $has_partial_shipment,
 				'latest_ship_date' => $this->get_latest_ship_date( $entries ),
 			);
 		}
@@ -230,6 +233,60 @@ class MyAccount_Core_Tracking_Resolver {
 	/**
 	 * @param array<int, MyAccount_Core_Tracking_Entry> $entries Tracking entries.
 	 */
+	private function resolve_tracking_step( string $status, array $entries, bool $all_delivered, bool $has_partial_shipment, WC_Order $order ): int {
+		if ( $all_delivered ) {
+			return 4;
+		}
+
+		if ( $has_partial_shipment ) {
+			return 3;
+		}
+
+		if ( $this->is_order_marked_shipped( $status ) ) {
+			return 3;
+		}
+
+		$woocommerce_step = $this->resolve_woocommerce_step( $status, $order );
+
+		if ( $woocommerce_step >= 2 ) {
+			return $woocommerce_step;
+		}
+
+		return empty( $entries ) ? 1 : 3;
+	}
+
+	/**
+	 * @param array<int, MyAccount_Core_Tracking_Entry> $entries Tracking entries.
+	 */
+	private function resolve_tracking_current_key( string $status, array $entries, bool $all_delivered, bool $has_partial_shipment, WC_Order $order ): string {
+		if ( $all_delivered ) {
+			return 'delivered';
+		}
+
+		if ( $this->is_order_partially_shipped( $status ) || $has_partial_shipment ) {
+			return 'partial_shipped';
+		}
+
+		if ( $this->is_order_marked_shipped( $status ) ) {
+			return 'shipped';
+		}
+
+		$woocommerce_step = $this->resolve_woocommerce_step( $status, $order );
+
+		if ( $woocommerce_step >= 3 ) {
+			return 'shipped';
+		}
+
+		if ( 2 === $woocommerce_step ) {
+			return 'processing';
+		}
+
+		return empty( $entries ) ? 'placed' : 'shipped';
+	}
+
+	/**
+	 * @param array<int, MyAccount_Core_Tracking_Entry> $entries Tracking entries.
+	 */
 	private function has_partial_shipment( array $entries ): bool {
 		foreach ( $entries as $entry ) {
 			if ( $entry->is_partial_shipped ) {
@@ -244,13 +301,38 @@ class MyAccount_Core_Tracking_Resolver {
 		$delivered_statuses = apply_filters(
 			'myaccount_core_tracking_delivered_order_statuses',
 			array(
-				'completed',
 				'delivered',
 				'wc-delivered',
 			)
 		);
 
 		return in_array( $status, $delivered_statuses, true );
+	}
+
+	private function is_order_partially_shipped( string $status ): bool {
+		$partial_statuses = apply_filters(
+			'myaccount_core_tracking_partial_order_statuses',
+			array(
+				'partial-shipped',
+				'wc-partial-shipped',
+			)
+		);
+
+		return in_array( $status, $partial_statuses, true );
+	}
+
+	private function is_order_marked_shipped( string $status ): bool {
+		$shipped_statuses = apply_filters(
+			'myaccount_core_tracking_shipped_order_statuses',
+			array(
+				'completed',
+				'shipped',
+				'wc-completed',
+				'wc-shipped',
+			)
+		);
+
+		return in_array( $status, $shipped_statuses, true );
 	}
 
 }
