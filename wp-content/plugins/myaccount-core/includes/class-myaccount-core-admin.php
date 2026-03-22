@@ -55,6 +55,7 @@ class MyAccount_Core_Admin {
 				'default'           => '',
 			)
 		);
+
 	}
 
 	public function sanitize_owner_mode( $value ): string {

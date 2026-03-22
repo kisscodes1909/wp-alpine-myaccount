@@ -22,7 +22,9 @@ class MyAccount_Core_Ajax {
 		add_action( 'wp_ajax_save-address', array( $this, 'save_address_book' ) );
 		add_action( 'wp_ajax_save_account_details', array( $this, 'save_account_details' ) );
 		add_action( 'wp_ajax_change_password', array( $this, 'handle_change_password' ) );
-		add_action( 'wp_ajax_submit_return_request', array( $this, 'submit_return_request' ) );
+		if ( MyAccount_Core_Returns_Module::is_enabled() ) {
+			add_action( 'wp_ajax_submit_return_request', array( $this, 'submit_return_request' ) );
+		}
 		add_action( 'wp_ajax_handle_login', array( $this, 'handle_login_ajax' ) );
 		add_action( 'wp_ajax_nopriv_handle_login', array( $this, 'handle_login_ajax' ) );
 		add_action( 'wp_ajax_handle_signup', array( $this, 'handle_signup' ) );

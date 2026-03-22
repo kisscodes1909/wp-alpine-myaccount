@@ -35,8 +35,7 @@ class MyAccount_Core_Plugin {
 		MyAccount_Core_Hooks::instance();
 		MyAccount_Core_Template_Loader::instance( self::$plugin_dir );
 		MyAccount_Core_Assets::instance( self::$plugin_dir, self::$plugin_url );
-		MyAccount_Core_Returns::instance();
-		MyAccount_Core_Returns_Admin::instance();
+		MyAccount_Core_Returns_Module::instance( self::$plugin_dir, self::$plugin_url );
 		MyAccount_Core_Ajax::instance();
 	}
 

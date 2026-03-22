@@ -15,7 +15,7 @@ $request_types     = isset( $request_types ) && is_array( $request_types ) ? $re
 $can_submit        = ! empty( $policy['is_eligible'] ) && ! empty( $eligible_items );
 $popup_template_id = 'ma-view-order-returns-popup-template-' . (int) $order->get_id();
 ?>
-<section class="ma-view-order-returns" aria-labelledby="<?php echo esc_attr( $section_id ); ?>" x-data>
+<section class="ma-view-order-returns" aria-labelledby="<?php echo esc_attr( $section_id ); ?>" x-data="viewOrderReturns()" data-ma-returns-module>
 	<div class="ma-view-order-returns__header">
 		<div>
 			<h2 id="<?php echo esc_attr( $section_id ); ?>" class="ma-u-section-title ma-u-section-title--mb-md">
@@ -30,7 +30,7 @@ $popup_template_id = 'ma-view-order-returns-popup-template-' . (int) $order->get
 			<button
 				type="button"
 				class="ma-btn ma-btn--primary ma-view-order-returns__toggle"
-				@click="$store.popup.openPopup(document.getElementById('<?php echo esc_js( $popup_template_id ); ?>').innerHTML)"
+				@click="openPopup()"
 			>
 				<span><?php esc_html_e( 'Request return or exchange', 'myaccount-core' ); ?></span>
 			</button>
@@ -115,7 +115,7 @@ $popup_template_id = 'ma-view-order-returns-popup-template-' . (int) $order->get
 				'description'          => __( 'Eligible items from this order can be returned or exchanged here during the return window.', 'myaccount-core' ),
 				'primary_as_button'    => true,
 				'primary_label'        => __( 'Start a request', 'myaccount-core' ),
-				'primary_button_attrs' => $can_submit ? '@click="$store.popup.openPopup(document.getElementById(\'' . esc_attr( $popup_template_id ) . '\').innerHTML)"' : 'disabled="disabled"',
+				'primary_button_attrs' => $can_submit ? '@click="openPopup()"' : 'disabled="disabled"',
 				'modifier_class'       => 'ma-empty-state--returns',
 			)
 		);

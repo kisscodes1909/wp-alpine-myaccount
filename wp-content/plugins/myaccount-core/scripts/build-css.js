@@ -28,6 +28,10 @@ const buildTargets = [
     output: 'assets/css/ma-view-order.css',
   },
   {
+    input: 'assets/src/css/myaccount-module-returns.css',
+    output: 'assets/css/ma-module-returns.css',
+  },
+  {
     input: 'assets/src/css/myaccount-endpoint-payment-methods.css',
     output: 'assets/css/ma-payment-methods.css',
   },

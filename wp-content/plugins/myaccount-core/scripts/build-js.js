@@ -29,6 +29,10 @@ const buildTargets = [
     output: 'assets/js/alpine.view-order.js',
   },
   {
+    input: 'assets/src/js/alpine/entries/module-returns.js',
+    output: 'assets/js/alpine.module-returns.js',
+  },
+  {
     input: 'assets/src/js/alpine/entries/endpoint-payment-methods.js',
     output: 'assets/js/alpine.payment-methods.js',
   },
