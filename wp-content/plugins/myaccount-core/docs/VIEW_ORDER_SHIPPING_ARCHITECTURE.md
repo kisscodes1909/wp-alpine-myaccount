@@ -230,7 +230,7 @@ Kiến trúc hiện tại chia thành 3 lớp:
 
 #### `MyAccount_Core_Tracking_Adapter_Interface`
 
-File: `includes/class-myaccount-core-tracking-adapter-interface.php`
+File: `includes/modules/tracking/adapters/class-myaccount-core-tracking-adapter-interface.php`
 
 Đây là contract chung cho mọi tracking provider.
 
@@ -244,7 +244,7 @@ Mục tiêu là để template không phụ thuộc AST, AfterShip, hay plugin n
 
 #### `MyAccount_Core_Tracking_Adapter_Ast`
 
-File: `includes/class-myaccount-core-tracking-adapter-ast.php`
+File: `includes/modules/tracking/adapters/class-myaccount-core-tracking-adapter-ast.php`
 
 Adapter này đọc dữ liệu từ AST và normalize thành internal DTO.
 
@@ -273,7 +273,7 @@ Adapter AST cũng chịu trách nhiệm suppress block mặc định của AST t
 
 #### `MyAccount_Core_Tracking_Entry`
 
-File: `includes/class-myaccount-core-tracking-entry.php`
+File: `includes/modules/tracking/class-myaccount-core-tracking-entry.php`
 
 Đây là DTO nội bộ cho một tracking entry.
 
@@ -294,7 +294,7 @@ Template chỉ làm việc với object này, không đọc trực tiếp AST me
 
 #### `MyAccount_Core_Tracking_Resolver`
 
-File: `includes/class-myaccount-core-tracking-resolver.php`
+File: `includes/modules/tracking/class-myaccount-core-tracking-resolver.php`
 
 Đây là lớp điều phối chính.
 

@@ -40,8 +40,8 @@ $order_total       = isset( $totals['order_total'] ) ? $totals['order_total']['v
 $item_count        = $order->get_item_count();
 
 $ma_tracking_entries = array();
-if ( class_exists( 'MyAccount_Core_Tracking_Resolver' ) ) {
-	$ma_tracking_entries = MyAccount_Core_Tracking_Resolver::instance()->get_entries( $order );
+if ( class_exists( 'MyAccount_Core_Tracking_Module' ) ) {
+	$ma_tracking_entries = MyAccount_Core_Tracking_Module::instance()->get_entries( $order );
 }
 ?>
 

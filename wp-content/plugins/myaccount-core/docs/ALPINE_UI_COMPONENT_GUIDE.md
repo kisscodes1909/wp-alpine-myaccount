@@ -59,7 +59,7 @@ The current approach (IIFE bundles, `defer`, and WordPress enqueue with dependen
 
 - Registries are imported from `assets/src/js/alpine/entries/endpoint-*.js`.
 - If your form is used on an existing endpoint, its registry is already wired (e.g. edit-account entry imports `registerEditAccountFormComponents`).
-- If the form is for a **new** endpoint, add a new entry file and map the endpoint to that bundle in `includes/class-myaccount-core-assets.php` (see [JS_ARCHITECTURE.md](JS_ARCHITECTURE.md) for endpoint mapping and validation-required list).
+- If the form is for a **new** endpoint, add a new entry file and map the endpoint to that bundle in `includes/core/class-myaccount-core-assets.php` (see [JS_ARCHITECTURE.md](JS_ARCHITECTURE.md) for endpoint mapping and validation-required list).
 
 ### Step 4 – Use in template
 

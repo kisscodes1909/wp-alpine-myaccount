@@ -35,6 +35,7 @@ class MyAccount_Core_Plugin {
 		MyAccount_Core_Hooks::instance();
 		MyAccount_Core_Template_Loader::instance( self::$plugin_dir );
 		MyAccount_Core_Assets::instance( self::$plugin_dir, self::$plugin_url );
+		MyAccount_Core_Tracking_Module::instance();
 		MyAccount_Core_Returns_Module::instance( self::$plugin_dir, self::$plugin_url );
 		MyAccount_Core_Ajax::instance();
 	}
@@ -48,9 +49,6 @@ class MyAccount_Core_Plugin {
 		}
 	}
 
-	/**
-	 * WordPress class file naming: MyAccount_Core_Foo_Bar → includes/class-myaccount-core-foo-bar.php
-	 */
 	private static function register_autoloader(): void {
 		spl_autoload_register( array( __CLASS__, 'autoload' ) );
 	}
@@ -60,11 +58,43 @@ class MyAccount_Core_Plugin {
 			return;
 		}
 
-		$path = self::$plugin_dir . 'includes/class-' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
+		$path = self::resolve_class_path( $class );
 
-		if ( is_readable( $path ) ) {
+		if ( '' !== $path && is_readable( $path ) ) {
 			require_once $path;
 		}
+	}
+
+	private static function resolve_class_path( string $class ): string {
+		$filename = 'class-' . str_replace( '_', '-', strtolower( $class ) ) . '.php';
+		$core_classes = array(
+			'MyAccount_Core_Plugin',
+			'MyAccount_Core_Admin',
+			'MyAccount_Core_Ajax',
+			'MyAccount_Core_Assets',
+			'MyAccount_Core_Hooks',
+			'MyAccount_Core_Template_Loader',
+		);
+
+		if ( in_array( $class, $core_classes, true ) ) {
+			return self::$plugin_dir . 'includes/core/' . $filename;
+		}
+
+		if ( 'MyAccount_Core_Returns' === $class || 'MyAccount_Core_Returns_Service' === $class || 0 === strpos( $class, 'MyAccount_Core_Returns_' ) ) {
+			$returns_filename = 'MyAccount_Core_Returns' === $class ? 'class-myaccount-core-returns-service.php' : $filename;
+
+			return self::$plugin_dir . 'includes/modules/returns/' . $returns_filename;
+		}
+
+		if ( 0 === strpos( $class, 'MyAccount_Core_Tracking_Adapter_' ) ) {
+			return self::$plugin_dir . 'includes/modules/tracking/adapters/' . $filename;
+		}
+
+		if ( 0 === strpos( $class, 'MyAccount_Core_Tracking_' ) ) {
+			return self::$plugin_dir . 'includes/modules/tracking/' . $filename;
+		}
+
+		return '';
 	}
 
 	public static function deactivate(): void {

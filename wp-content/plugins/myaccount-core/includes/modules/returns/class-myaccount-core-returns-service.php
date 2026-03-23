@@ -2,12 +2,12 @@
 
 defined( 'ABSPATH' ) || exit;
 
-class MyAccount_Core_Returns {
+class MyAccount_Core_Returns_Service {
 	public const META_KEY = '_myaccount_core_return_requests';
 
-	private static ?MyAccount_Core_Returns $instance = null;
+	private static ?MyAccount_Core_Returns_Service $instance = null;
 
-	public static function instance(): MyAccount_Core_Returns {
+	public static function instance(): MyAccount_Core_Returns_Service {
 		if ( null === self::$instance ) {
 			self::$instance = new self();
 		}
@@ -579,4 +579,8 @@ class MyAccount_Core_Returns {
 
 		return (string) apply_filters( 'myaccount_core_order_item_meta_inline', implode( ', ', array_filter( $meta_parts ) ), $item, $order );
 	}
+}
+
+if ( ! class_exists( 'MyAccount_Core_Returns', false ) ) {
+	class_alias( 'MyAccount_Core_Returns_Service', 'MyAccount_Core_Returns' );
 }

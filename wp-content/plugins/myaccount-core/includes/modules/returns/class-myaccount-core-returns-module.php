@@ -26,11 +26,12 @@ class MyAccount_Core_Returns_Module {
 			return;
 		}
 
-		MyAccount_Core_Returns::instance();
+		MyAccount_Core_Returns_Service::instance();
 		MyAccount_Core_Returns_Admin::instance();
 
 		add_action( 'myaccount_core_view_order_after_items_summary', array( $this, 'render_view_order_section' ), 10, 1 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ), 25 );
+		add_filter( 'myaccount_core_managed_templates', array( $this, 'register_managed_templates' ) );
 		add_filter( 'myaccount_core_endpoint_js_dependencies', array( $this, 'filter_endpoint_js_dependencies' ), 10, 2 );
 		add_filter( 'script_loader_tag', array( $this, 'add_defer_attribute' ), 10, 2 );
 	}
@@ -92,7 +93,7 @@ class MyAccount_Core_Returns_Module {
 
 		$this->enqueue_section_assets();
 
-		$returns_service = MyAccount_Core_Returns::instance();
+		$returns_service = MyAccount_Core_Returns_Service::instance();
 		$returns_policy  = $returns_service->get_policy_context( $order );
 		$return_requests = $returns_service->get_requests( $order );
 		$eligible_items  = $returns_service->get_eligible_items( $order );
@@ -144,7 +145,7 @@ class MyAccount_Core_Returns_Module {
 	}
 
 	private function build_view_order_payload( WC_Order $order ): array {
-		$returns_service = MyAccount_Core_Returns::instance();
+		$returns_service = MyAccount_Core_Returns_Service::instance();
 
 		return array(
 			'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
@@ -169,6 +170,13 @@ class MyAccount_Core_Returns_Module {
 		}
 
 		return str_replace( ' src', ' defer="defer" src', $tag );
+	}
+
+	public function register_managed_templates( array $templates ): array {
+		$templates[] = 'order/order-returns.php';
+		$templates[] = 'myaccount/ma-form-return-request.php';
+
+		return array_values( array_unique( $templates ) );
 	}
 
 	private function should_use_min_assets(): bool {

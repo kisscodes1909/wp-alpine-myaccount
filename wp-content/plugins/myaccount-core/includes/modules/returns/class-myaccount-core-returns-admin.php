@@ -82,7 +82,7 @@ class MyAccount_Core_Returns_Admin {
 			return;
 		}
 
-		$returns = MyAccount_Core_Returns::instance();
+		$returns = MyAccount_Core_Returns_Service::instance();
 		$requests = $returns->get_requests( $order );
 
 		wp_nonce_field( self::NONCE_ACTION, self::NONCE_NAME );
@@ -145,7 +145,7 @@ class MyAccount_Core_Returns_Admin {
 
 		$updates_raw         = isset( $_POST['myaccount_core_return_updates'] ) ? wp_unslash( $_POST['myaccount_core_return_updates'] ) : array();
 		$approve_request_id  = isset( $_POST['myaccount_core_approve_return_request'] ) ? sanitize_text_field( wp_unslash( $_POST['myaccount_core_approve_return_request'] ) ) : '';
-		$returns             = MyAccount_Core_Returns::instance();
+		$returns             = MyAccount_Core_Returns_Service::instance();
 
 		if ( ! is_array( $updates_raw ) && '' === $approve_request_id ) {
 			return;
@@ -203,7 +203,7 @@ class MyAccount_Core_Returns_Admin {
 		$reason         = sanitize_text_field( (string) ( $request['reason'] ?? '' ) );
 		$note           = sanitize_textarea_field( (string) ( $request['note'] ?? '' ) );
 		$package_label  = esc_url( (string) ( $request['package_label'] ?? '' ) );
-		$status_options = MyAccount_Core_Returns::instance()->get_status_labels();
+		$status_options = MyAccount_Core_Returns_Service::instance()->get_status_labels();
 
 		echo '<div style="margin: 0 0 16px; padding: 12px; border: 1px solid #dcdcde; background: #fff;">';
 		echo '<p style="margin: 0 0 8px;"><strong>' . esc_html( sprintf( __( 'Request #%s', 'myaccount-core' ), strtoupper( substr( $request_id, 0, 8 ) ) ) ) . '</strong></p>';

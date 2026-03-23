@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) || exit;
 
 $status            = $order->get_status();
 $status_name       = wc_get_order_status_name( $status );
-$timeline_context  = MyAccount_Core_Tracking_Resolver::instance()->get_timeline_context( $order );
+$timeline_context  = MyAccount_Core_Tracking_Module::instance()->get_timeline_context( $order );
 $is_tracking_mode  = isset( $timeline_context['mode'] ) && 'tracking' === $timeline_context['mode'];
 $step_count        = max( 1, (int) ( $timeline_context['step_count'] ?? 3 ) );
 $current_step      = min( $step_count, max( 1, (int) ( $timeline_context['current_step'] ?? 1 ) ) );

@@ -182,7 +182,7 @@ class MyAccount_Core_Ajax {
 			$this->send_json_error( __( 'We could not find that order.', 'myaccount-core' ) );
 		}
 
-		$returns = MyAccount_Core_Returns::instance();
+		$returns = MyAccount_Core_Returns_Service::instance();
 		if ( ! $returns->user_owns_order( $order, $user_id ) ) {
 			$this->send_json_error( __( 'You can only create return requests for your own orders.', 'myaccount-core' ) );
 		}

@@ -66,6 +66,6 @@ Use this doc when translating Figma designs into this codebase via Figma MCP or 
 
 ## 5. Project structure and patterns
 
-- **Template loading:** `includes/class-myaccount-core-template-loader.php` lists managed templates; plugin templates override theme. Managed order templates: order-details-header, order-status-card, order-details-items-summary, order-details (and view-order, order-total, etc.).
+- **Template loading:** `includes/core/class-myaccount-core-template-loader.php` lists managed templates; plugin templates override theme. Managed order templates: order-details-header, order-status-card, order-details-items-summary, order-details (and view-order, order-total, etc.).
 - **View order flow:** On view-order, page-heading is called with empty `page_heading` (back link only; "Order Details" is the label inside order-details-header per Figma 36:1502). Below it: Section 1 (order-details-header), Section 2 (order-status-card), Section 3 (order-details-items-summary: items + shipping + summary). Then `do_action('woocommerce_view_order')`; order-details.php (plugin) outputs only downloads, shipments, "Not yet shipped", cancel/return, return list.
 - **Conventions:** Escape output (`esc_html`, `esc_attr`, `esc_url`), semantic HTML, ARIA where needed; comments in English; follow `.cursor/rules/woo-myaccount.mdc` for WooCommerce and My Account classes.

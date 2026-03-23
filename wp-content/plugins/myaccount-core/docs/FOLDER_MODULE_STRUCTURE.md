@@ -268,13 +268,13 @@ Nguyen tac:
 Neu muon onboard nhanh, thu tu doc tot nhat la:
 
 1. `myaccount-core.php`
-2. `includes/class-myaccount-core-plugin.php`
-3. `includes/class-myaccount-core-hooks.php`
-4. `includes/class-myaccount-core-template-loader.php`
-5. `includes/class-myaccount-core-assets.php`
+2. `includes/core/class-myaccount-core-plugin.php`
+3. `includes/core/class-myaccount-core-hooks.php`
+4. `includes/core/class-myaccount-core-template-loader.php`
+5. `includes/core/class-myaccount-core-assets.php`
 6. `templates/woocommerce/myaccount/`
 7. `assets/src/js/alpine/entries/`
-8. `assets/src/js/alpine/components/` va `stores/`
+8. `assets/src/js/alpine/modules/`, `components/` va `stores/`
 
 ## 8) File draw.io di kem
 

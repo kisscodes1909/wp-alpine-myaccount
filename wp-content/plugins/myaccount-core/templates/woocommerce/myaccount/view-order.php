@@ -8,11 +8,11 @@
 defined( 'ABSPATH' ) || exit;
 
 $notes = $order->get_customer_order_notes();
-$tracking_resolver = MyAccount_Core_Tracking_Resolver::instance();
-$tracking_entries  = $tracking_resolver->get_entries( $order );
+$tracking_module  = MyAccount_Core_Tracking_Module::instance();
+$tracking_entries = $tracking_module->get_entries( $order );
 
 if ( ! empty( $tracking_entries ) ) {
-	$tracking_resolver->maybe_suppress_view_order_output( $order );
+	$tracking_module->maybe_suppress_view_order_output( $order );
 }
 
 // Order again is shown in order-details-items-summary; avoid duplicate from after_order_table on this endpoint.
