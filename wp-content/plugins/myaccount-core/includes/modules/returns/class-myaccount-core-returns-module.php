@@ -31,6 +31,7 @@ class MyAccount_Core_Returns_Module {
 
 		add_action( 'myaccount_core_view_order_after_items_summary', array( $this, 'render_view_order_section' ), 10, 1 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ), 25 );
+		add_action( 'wp_ajax_submit_return_request', array( $this, 'submit_return_request' ) );
 		add_filter( 'myaccount_core_managed_templates', array( $this, 'register_managed_templates' ) );
 		add_filter( 'myaccount_core_endpoint_js_dependencies', array( $this, 'filter_endpoint_js_dependencies' ), 10, 2 );
 		add_filter( 'script_loader_tag', array( $this, 'add_defer_attribute' ), 10, 2 );
@@ -170,6 +171,55 @@ class MyAccount_Core_Returns_Module {
 		}
 
 		return str_replace( ' src', ' defer="defer" src', $tag );
+	}
+
+	public function submit_return_request(): void {
+		wc_nocache_headers();
+
+		$nonce = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'submit-return-request' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid security token. Please refresh and try again.', 'myaccount-core' ) ) );
+		}
+
+		$user_id = get_current_user_id();
+		if ( $user_id <= 0 ) {
+			wp_send_json_error( array( 'message' => __( 'Please sign in again and try submitting your return request.', 'myaccount-core' ) ) );
+		}
+
+		$order_id = isset( $_POST['orderId'] ) ? absint( wp_unslash( $_POST['orderId'] ) ) : 0;
+		$order    = $order_id ? wc_get_order( $order_id ) : false;
+		if ( ! $order instanceof WC_Order ) {
+			wp_send_json_error( array( 'message' => __( 'We could not find that order.', 'myaccount-core' ) ) );
+		}
+
+		$returns = MyAccount_Core_Returns_Service::instance();
+		if ( ! $returns->user_owns_order( $order, $user_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'You can only create return requests for your own orders.', 'myaccount-core' ) ) );
+		}
+
+		$raw_items = isset( $_POST['items'] ) ? wp_unslash( $_POST['items'] ) : '[]'; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON payload.
+		$items     = json_decode( is_string( $raw_items ) ? $raw_items : '[]', true );
+
+		$result = $returns->create_request(
+			$order,
+			array(
+				'requestType' => wc_clean( wp_unslash( $_POST['requestType'] ?? '' ) ),
+				'reason'      => wc_clean( wp_unslash( $_POST['reason'] ?? '' ) ),
+				'note'        => sanitize_textarea_field( wp_unslash( $_POST['note'] ?? '' ) ),
+				'items'       => is_array( $items ) ? $items : array(),
+			)
+		);
+
+		if ( is_wp_error( $result ) ) {
+			wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+		}
+
+		wp_send_json_success(
+			array(
+				'message' => __( 'Your return request has been submitted.', 'myaccount-core' ),
+				'request' => $result,
+			)
+		);
 	}
 
 	public function register_managed_templates( array $templates ): array {

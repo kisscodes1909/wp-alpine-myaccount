@@ -19,12 +19,8 @@ class MyAccount_Core_Ajax {
 	}
 
 	private function __construct() {
-		add_action( 'wp_ajax_save-address', array( $this, 'save_address_book' ) );
 		add_action( 'wp_ajax_save_account_details', array( $this, 'save_account_details' ) );
 		add_action( 'wp_ajax_change_password', array( $this, 'handle_change_password' ) );
-		if ( MyAccount_Core_Returns_Module::is_enabled() ) {
-			add_action( 'wp_ajax_submit_return_request', array( $this, 'submit_return_request' ) );
-		}
 		add_action( 'wp_ajax_handle_login', array( $this, 'handle_login_ajax' ) );
 		add_action( 'wp_ajax_nopriv_handle_login', array( $this, 'handle_login_ajax' ) );
 		add_action( 'wp_ajax_handle_signup', array( $this, 'handle_signup' ) );
@@ -166,52 +162,6 @@ class MyAccount_Core_Ajax {
 		$this->send_json_success( __( 'Your account and contact details have been updated.', 'myaccount-core' ) );
 	}
 
-	public function submit_return_request(): void {
-		wc_nocache_headers();
-		$this->verify_nonce_or_die( 'submit-return-request', 'nonce' );
-
-		$user_id = get_current_user_id();
-		if ( $user_id <= 0 ) {
-			$this->send_json_error( __( 'Please sign in again and try submitting your return request.', 'myaccount-core' ) );
-		}
-
-		$order_id = isset( $_POST['orderId'] ) ? absint( wp_unslash( $_POST['orderId'] ) ) : 0;
-		$order    = $order_id ? wc_get_order( $order_id ) : false;
-
-		if ( ! $order instanceof WC_Order ) {
-			$this->send_json_error( __( 'We could not find that order.', 'myaccount-core' ) );
-		}
-
-		$returns = MyAccount_Core_Returns_Service::instance();
-		if ( ! $returns->user_owns_order( $order, $user_id ) ) {
-			$this->send_json_error( __( 'You can only create return requests for your own orders.', 'myaccount-core' ) );
-		}
-
-		$raw_items = isset( $_POST['items'] ) ? wp_unslash( $_POST['items'] ) : '[]'; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON payload.
-		$items     = json_decode( is_string( $raw_items ) ? $raw_items : '[]', true );
-
-		$result = $returns->create_request(
-			$order,
-			array(
-				'requestType' => wc_clean( wp_unslash( $_POST['requestType'] ?? '' ) ),
-				'reason'      => wc_clean( wp_unslash( $_POST['reason'] ?? '' ) ),
-				'note'        => sanitize_textarea_field( wp_unslash( $_POST['note'] ?? '' ) ),
-				'items'       => is_array( $items ) ? $items : array(),
-			)
-		);
-
-		if ( is_wp_error( $result ) ) {
-			$this->send_json_error( $result->get_error_message() );
-		}
-
-		$this->send_json_success(
-			__( 'Your return request has been submitted.', 'myaccount-core' ),
-			array(
-				'request' => $result,
-			)
-		);
-	}
-
 	/**
 	 * Validate billing fields like WC_Form_Handler::save_address, persist WC_Customer billing, fire Woo hook.
 	 *
@@ -305,62 +255,6 @@ class MyAccount_Core_Ajax {
 		do_action( 'woocommerce_customer_save_address', $user_id, $address_type );
 
 		return true;
-	}
-
-	public function save_address_book(): void {
-		wc_nocache_headers();
-		$this->verify_nonce_or_die( 'save_address_nonce', 'nonce' );
-
-		$raw_data = isset( $_POST['data'] ) ? wp_unslash( $_POST['data'] ) : '[]'; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON
-		$new_address = json_decode( is_string( $raw_data ) ? $raw_data : '[]', true );
-		if ( ! is_array( $new_address ) ) {
-			$this->send_json_error( __( 'Invalid address data.', 'myaccount-core' ) );
-		}
-
-		$user_id = get_current_user_id();
-		if ( $user_id <= 0 ) {
-			$this->send_json_error( __( 'You must be logged in to save addresses.', 'myaccount-core' ) );
-		}
-
-		$customer = new WC_Customer( $user_id );
-
-		foreach ( $new_address as $address ) {
-			if ( ! empty( $address['default'] ) ) {
-				$country_code = $this->normalize_country_code( (string) ( $address['country'] ?? '' ) );
-
-				$customer->set_shipping_first_name( sanitize_text_field( $address['fname'] ?? '' ) );
-				$customer->set_shipping_last_name( sanitize_text_field( $address['lname'] ?? '' ) );
-				$customer->set_shipping_address_1( sanitize_text_field( $address['address'] ?? '' ) );
-				$customer->set_shipping_address_2( sanitize_text_field( $address['address2'] ?? '' ) );
-				$customer->set_shipping_city( sanitize_text_field( $address['city'] ?? '' ) );
-				$customer->set_shipping_state( sanitize_text_field( $address['region'] ?? '' ) );
-				$customer->set_shipping_postcode( sanitize_text_field( $address['postalCode'] ?? '' ) );
-				$customer->set_shipping_country( $country_code );
-				$customer->save();
-				break;
-			}
-		}
-
-		$sanitized_addresses = array();
-		foreach ( $new_address as $addr ) {
-			$country_code          = $this->normalize_country_code( (string) ( $addr['country'] ?? '' ) );
-			$sanitized_addresses[] = array(
-				'id'         => isset( $addr['id'] ) ? sanitize_text_field( (string) $addr['id'] ) : '',
-				'fname'      => sanitize_text_field( $addr['fname'] ?? '' ),
-				'lname'      => sanitize_text_field( $addr['lname'] ?? '' ),
-				'address'    => sanitize_text_field( $addr['address'] ?? '' ),
-				'address2'   => sanitize_text_field( $addr['address2'] ?? '' ),
-				'city'       => sanitize_text_field( $addr['city'] ?? '' ),
-				'region'     => sanitize_text_field( $addr['region'] ?? '' ),
-				'postalCode' => sanitize_text_field( $addr['postalCode'] ?? '' ),
-				'country'    => $country_code,
-				'phone'      => sanitize_text_field( $addr['phone'] ?? '' ),
-				'default'    => ! empty( $addr['default'] ),
-			);
-		}
-		update_user_meta( $user_id, 'address_book', maybe_serialize( $sanitized_addresses ) );
-
-		$this->send_json_success( __( 'Your address has been saved.', 'myaccount-core' ) );
 	}
 
 	public function handle_signup(): void {

@@ -43,7 +43,7 @@
         <mxCell id="21" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" value="Set order status to partial-shipped" vertex="1">
           <mxGeometry height="80" width="240" x="1950" y="140" as="geometry" />
         </mxCell>
-        <mxCell id="22" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" value="Set order status to shipped or completed" vertex="1">
+        <mxCell id="22" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" value="Set order status to shipped" vertex="1">
           <mxGeometry height="80" width="250" x="1600" y="820" as="geometry" />
         </mxCell>
         <mxCell id="23" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#000000;" value="Tracking resolver reads AST entries" vertex="1">

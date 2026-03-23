@@ -34,7 +34,7 @@ customer timeline should still avoid fake shipped state"]
     J --> H
     I -->|Yes| K{"Whole order shipped or only part?"}
     K -->|Part only| L["Owner sets order status to partial-shipped"]
-    K -->|All items shipped| M["Owner sets order status to shipped or completed"]
+    K -->|All items shipped| M["Owner sets order status to shipped"]
     L --> N["Customer view-order timeline shows step 3:
 Partially Shipped"]
     M --> O["Customer view-order timeline shows step 3:

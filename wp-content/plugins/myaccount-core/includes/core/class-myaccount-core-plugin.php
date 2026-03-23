@@ -35,6 +35,7 @@ class MyAccount_Core_Plugin {
 		MyAccount_Core_Hooks::instance();
 		MyAccount_Core_Template_Loader::instance( self::$plugin_dir );
 		MyAccount_Core_Assets::instance( self::$plugin_dir, self::$plugin_url );
+		MyAccount_Core_Address_Module::instance();
 		MyAccount_Core_Tracking_Module::instance();
 		MyAccount_Core_Returns_Module::instance( self::$plugin_dir, self::$plugin_url );
 		MyAccount_Core_Ajax::instance();
@@ -44,7 +45,7 @@ class MyAccount_Core_Plugin {
 		add_option( self::OPTION_OWNER_MODE, 'plugin' );
 
 		if ( class_exists( 'WooCommerce' ) ) {
-			MyAccount_Core_Hooks::register_endpoints();
+			MyAccount_Core_Address_Module::register_endpoints();
 			flush_rewrite_rules();
 		}
 	}
@@ -84,6 +85,10 @@ class MyAccount_Core_Plugin {
 			$returns_filename = 'MyAccount_Core_Returns' === $class ? 'class-myaccount-core-returns-service.php' : $filename;
 
 			return self::$plugin_dir . 'includes/modules/returns/' . $returns_filename;
+		}
+
+		if ( 0 === strpos( $class, 'MyAccount_Core_Address_' ) ) {
+			return self::$plugin_dir . 'includes/modules/address/' . $filename;
 		}
 
 		if ( 0 === strpos( $class, 'MyAccount_Core_Tracking_Adapter_' ) ) {

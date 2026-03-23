@@ -157,10 +157,14 @@ Timeline là phần tóm tắt trạng thái tổng hợp của order.
 
 Rule hiện tại:
 
-- `processing` -> bước `Processing`
-- `partial-shipped` -> bước 3 với label `Partially Shipped`
-- `completed` hoặc `shipped` -> bước 3 với label `Shipped`
-- `delivered` -> bước 4 với label `Delivered`
+- Khi tracking provider active:
+  - `processing` -> bước `Processing`
+  - `partial-shipped` -> bước 3 với label `Partially Shipped`
+  - `shipped` -> bước 3 với label `Shipped`
+  - `delivered` -> bước 4 với label `Delivered`
+- Khi tracking provider không active:
+  - fallback về timeline Woo cơ bản
+  - `completed` là trạng thái cuối của flow Woo, không được suy diễn thành `Delivered` trong shipping flow
 
 Điểm quan trọng:
 
@@ -264,7 +268,6 @@ Những gì adapter làm:
 - map `status_shipped`
 - xác định:
   - `is_delivered`
-  - `is_in_transit`
   - `is_partial_shipped`
 
 Adapter AST cũng chịu trách nhiệm suppress block mặc định của AST trên `woocommerce_view_order`, để không bị duplicate UI.
@@ -287,7 +290,6 @@ Field hiện tại:
 - `status_detail`
 - `ship_date`
 - `is_delivered`
-- `is_in_transit`
 - `is_partial_shipped`
 
 Template chỉ làm việc với object này, không đọc trực tiếp AST meta.
@@ -313,7 +315,8 @@ Rule resolver đang áp dụng:
 
 - nếu order là `delivered` -> timeline tới `Delivered`
 - nếu order là `partial-shipped` -> timeline ở step 3 với key `partial_shipped`
-- nếu order là `completed` / `shipped` -> timeline ở step 3 với key `shipped`
+- nếu order là `shipped` -> timeline ở step 3 với key `shipped`
+- nếu tracking provider không active và order là `completed` -> fallback về timeline Woo cơ bản
 - nếu chưa có shipping layer rõ -> fallback về timeline Woo cơ bản
 
 Resolver cũng có request-level cache theo `order_id` để tránh đọc lặp lại trong cùng request.
@@ -395,7 +398,7 @@ Tóm lại:
 | `date_shipped` | `ship_date` | Dòng `Shipped <date>` | Format theo date format của WP |
 | status text từ provider nếu có | `status_label` | Label ngắn trong tracking block | Optional |
 | status detail từ provider nếu có | `status_detail` | Mô tả phụ trong tracking block | Optional |
-| `status_shipped = 1` | `is_in_transit = true` | Tracking block / supporting signal | Nghĩa là shipment đã ship |
+| `status_shipped = 1` | shipment được normalize thành `shipped` | Tracking block / supporting signal | Nghĩa là shipment đã ship |
 | `status_shipped = 2` | `is_partial_shipped = true` | Tracking block / supporting signal | Nghĩa là shipment được đánh dấu partial |
 | delivered signal rõ từ tracking data | `is_delivered = true` | Supporting signal cho timeline | Chỉ dùng như tín hiệu phụ hoặc fallback |
 
@@ -408,7 +411,7 @@ Tóm lại:
 | `pending`, `on-hold`, `failed`, `cancelled` | chưa đi vào shipping flow bình thường | step 1 hoặc fallback Woo |
 | `processing` | đang xử lý đơn | `Processing` |
 | `partial-shipped` | mới giao một phần order | step 3, label `Partially Shipped` |
-| `completed`, `shipped` | toàn bộ order đã ship hết | step 3, label `Shipped` |
+| `shipped`, `wc-shipped` | toàn bộ order đã ship hết | step 3, label `Shipped` |
 | `delivered`, `wc-delivered` | order đã giao xong | step 4, label `Delivered` |
 
 Ghi chú:
@@ -452,9 +455,7 @@ Cho phép chỉnh danh sách status được coi là `Shipped`.
 
 Mặc định:
 
-- `completed`
 - `shipped`
-- `wc-completed`
 - `wc-shipped`
 
 ---

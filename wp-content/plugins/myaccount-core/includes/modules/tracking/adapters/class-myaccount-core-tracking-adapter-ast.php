@@ -23,9 +23,8 @@ class MyAccount_Core_Tracking_Adapter_Ast implements MyAccount_Core_Tracking_Ada
 			}
 
 			$normalized_status = $this->normalize_status_value( $item );
-			$is_delivered      = in_array( $normalized_status, array( 'delivered', 'complete', 'completed' ), true );
+			$is_delivered      = 'delivered' === $normalized_status;
 			$is_partial_shipped = $this->is_partial_shipped( $item, $normalized_status );
-			$is_in_transit     = ! $is_delivered;
 			$status_label      = $this->resolve_status_label( $item, $normalized_status );
 			$status_detail     = $this->resolve_status_detail( $item );
 
@@ -39,7 +38,6 @@ class MyAccount_Core_Tracking_Adapter_Ast implements MyAccount_Core_Tracking_Ada
 					'status_detail'   => $status_detail,
 					'ship_date'       => $this->resolve_ship_date( $item ),
 					'is_delivered'    => $is_delivered,
-					'is_in_transit'   => $is_in_transit,
 					'is_partial_shipped' => $is_partial_shipped,
 				)
 			);

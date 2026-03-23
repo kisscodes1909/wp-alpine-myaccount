@@ -105,21 +105,23 @@ class MyAccount_Core_Tracking_Resolver {
 			'latest_ship_date' => null,
 		);
 
-		if ( ! empty( $entries ) && ! in_array( $status, array( 'cancelled', 'failed', 'refunded' ), true ) ) {
+		$has_active_tracking_provider = $this->has_active_tracking_provider();
+
+		if ( $has_active_tracking_provider && ! in_array( $status, array( 'cancelled', 'failed', 'refunded' ), true ) ) {
 			$all_delivered       = $this->is_order_marked_delivered( $status ) || $this->all_entries_delivered( $entries );
 			$has_partial_shipment = $this->is_order_partially_shipped( $status ) || $this->has_partial_shipment( $entries );
 			$current_step        = $this->resolve_tracking_step( $status, $entries, $all_delivered, $has_partial_shipment, $order );
 			$current_key         = $this->resolve_tracking_current_key( $status, $entries, $all_delivered, $has_partial_shipment, $order );
 
-			$context = array(
-				'mode'             => 'tracking',
-				'step_count'       => 4,
-				'current_step'     => $current_step,
-				'current_key'      => $current_key,
-				'has_tracking'     => true,
-				'all_delivered'    => $all_delivered,
-				'has_partial_shipment' => $has_partial_shipment,
-				'latest_ship_date' => $this->get_latest_ship_date( $entries ),
+				$context = array(
+					'mode'             => 'tracking',
+					'step_count'       => 4,
+					'current_step'     => $current_step,
+					'current_key'      => $current_key,
+					'has_tracking'     => ! empty( $entries ),
+					'all_delivered'    => $all_delivered,
+					'has_partial_shipment' => $has_partial_shipment,
+					'latest_ship_date' => $this->get_latest_ship_date( $entries ),
 			);
 		}
 
@@ -325,14 +327,16 @@ class MyAccount_Core_Tracking_Resolver {
 		$shipped_statuses = apply_filters(
 			'myaccount_core_tracking_shipped_order_statuses',
 			array(
-				'completed',
 				'shipped',
-				'wc-completed',
 				'wc-shipped',
 			)
 		);
 
 		return in_array( $status, $shipped_statuses, true );
+	}
+
+	private function has_active_tracking_provider(): bool {
+		return function_exists( 'wc_advanced_shipment_tracking' );
 	}
 
 }

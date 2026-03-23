@@ -228,10 +228,14 @@ Timeline đi theo `order status`.
 
 Rule:
 
-- `processing` -> `Processing`
-- `partial-shipped` -> step 3, label `Partially Shipped`
-- `completed` hoặc `shipped` -> step 3, label `Shipped`
-- `delivered` -> step 4, label `Delivered`
+- Khi tracking provider active:
+  - `processing` -> `Processing`
+  - `partial-shipped` -> step 3, label `Partially Shipped`
+  - `shipped` -> step 3, label `Shipped`
+  - `delivered` -> step 4, label `Delivered`
+- Khi tracking provider không active:
+  - fallback về timeline Woo cơ bản
+  - `completed` là trạng thái cuối của flow Woo
 
 ### Tracking block
 
