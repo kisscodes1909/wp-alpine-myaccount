@@ -30,6 +30,7 @@ class MyAccount_Core_Returns_Module {
 
 		add_action( 'myaccount_core_view_order_after_items_summary', array( $this, 'render_view_order_section' ), 10, 1 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ), 25 );
+		add_filter( 'myaccount_core_endpoint_js_dependencies', array( $this, 'filter_endpoint_js_dependencies' ), 10, 2 );
 		add_filter( 'script_loader_tag', array( $this, 'add_defer_attribute' ), 10, 2 );
 	}
 
@@ -49,22 +50,33 @@ class MyAccount_Core_Returns_Module {
 			$css_deps
 		);
 
-		$js_dependency = '';
-		if ( wp_script_is( 'myaccount-core-js-endpoint', 'enqueued' ) ) {
-			$js_dependency = 'myaccount-core-js-endpoint';
-		} elseif ( wp_script_is( 'alpine-bundle', 'enqueued' ) ) {
+		if ( wp_script_is( 'alpine-bundle', 'enqueued' ) ) {
 			$js_dependency = 'alpine-bundle';
+
+			$this->enqueue_script_if_exists(
+				'myaccount-core-module-returns-js',
+				$this->asset_path( 'assets/js/alpine.module-returns.js' ),
+				array( $js_dependency )
+			);
+		}
+	}
+
+	public function filter_endpoint_js_dependencies( array $deps, string $endpoint ): array {
+		if ( 'view-order' !== $endpoint || ! self::is_enabled() ) {
+			return $deps;
 		}
 
-		if ( '' === $js_dependency ) {
-			return;
-		}
-
-		$this->enqueue_script_if_exists(
+		$module_script_loaded = $this->enqueue_script_if_exists(
 			'myaccount-core-module-returns-js',
 			$this->asset_path( 'assets/js/alpine.module-returns.js' ),
-			array( $js_dependency )
+			array( 'myaccount-core-js-shared-core' )
 		);
+
+		if ( $module_script_loaded ) {
+			$deps[] = 'myaccount-core-module-returns-js';
+		}
+
+		return array_values( array_unique( $deps ) );
 	}
 
 	public function localize_view_order_data( WC_Order $order ): void {

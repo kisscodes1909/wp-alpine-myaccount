@@ -1,5 +1,5 @@
 (() => {
-  // assets/src/js/alpine/components/account/viewOrderReturns.js
+  // assets/src/js/alpine/modules/returns/components/viewOrderReturns.js
   function getReturnsData() {
     return window.viewOrderReturnsData || {};
   }
@@ -171,18 +171,28 @@
     };
   }
 
-  // assets/src/js/alpine/entries/module-returns.js
+  // assets/src/js/alpine/modules/returns/register.js
+  function registerReturnsModuleComponents() {
+    const AlpineInstance = window.Alpine;
+    if (!AlpineInstance || typeof AlpineInstance.data !== "function") {
+      return;
+    }
+    AlpineInstance.data("viewOrderReturns", viewOrderReturns);
+    AlpineInstance.data("viewOrderReturnsForm", viewOrderReturnsForm);
+  }
   function initReturnsModuleTrees() {
-    if (!window.Alpine || typeof window.Alpine.initTree !== "function") {
+    const AlpineInstance = window.Alpine;
+    if (!AlpineInstance || typeof AlpineInstance.initTree !== "function") {
       return;
     }
     document.querySelectorAll("[data-ma-returns-module]").forEach((element) => {
-      window.Alpine.initTree(element);
+      AlpineInstance.initTree(element);
     });
   }
-  if (window.Alpine && typeof window.Alpine.data === "function") {
-    window.Alpine.data("viewOrderReturns", viewOrderReturns);
-    window.Alpine.data("viewOrderReturnsForm", viewOrderReturnsForm);
+
+  // assets/src/js/alpine/entries/module-returns.js
+  registerReturnsModuleComponents();
+  if (window.MyAccountAlpineRuntime?.started) {
     initReturnsModuleTrees();
   }
 })();

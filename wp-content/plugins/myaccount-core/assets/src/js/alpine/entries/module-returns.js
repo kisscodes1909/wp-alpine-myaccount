@@ -1,17 +1,7 @@
-import viewOrderReturns, { viewOrderReturnsForm } from '../components/account/viewOrderReturns.js';
+import { initReturnsModuleTrees, registerReturnsModuleComponents } from '../modules/returns/register.js';
 
-function initReturnsModuleTrees() {
-    if (!window.Alpine || typeof window.Alpine.initTree !== 'function') {
-        return;
-    }
+registerReturnsModuleComponents();
 
-    document.querySelectorAll('[data-ma-returns-module]').forEach((element) => {
-        window.Alpine.initTree(element);
-    });
-}
-
-if (window.Alpine && typeof window.Alpine.data === 'function') {
-    window.Alpine.data('viewOrderReturns', viewOrderReturns);
-    window.Alpine.data('viewOrderReturnsForm', viewOrderReturnsForm);
+if (window.MyAccountAlpineRuntime?.started) {
     initReturnsModuleTrees();
 }

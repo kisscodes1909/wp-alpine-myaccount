@@ -114,6 +114,7 @@ class MyAccount_Core_Assets {
 			if ( $validation_required ) {
 				$endpoint_js_deps[] = 'myaccount-core-js-shared-validation';
 			}
+			$endpoint_js_deps = apply_filters( 'myaccount_core_endpoint_js_dependencies', $endpoint_js_deps, $endpoint );
 
 			$this->enqueue_script_if_exists(
 				'myaccount-core-js-endpoint',

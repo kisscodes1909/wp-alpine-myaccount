@@ -7182,7 +7182,14 @@ attempted value: ${formattedValue}
     registerEditAccountFormComponents();
   }
 
-  // assets/src/js/alpine/components/account/viewOrderReturns.js
+  // assets/src/js/alpine/components/account/navDropdown.js
+  function navDropdown() {
+    return {
+      open: false
+    };
+  }
+
+  // assets/src/js/alpine/modules/returns/components/viewOrderReturns.js
   function getReturnsData() {
     return window.viewOrderReturnsData || {};
   }
@@ -7354,8 +7361,8 @@ attempted value: ${formattedValue}
     };
   }
 
-  // assets/src/js/alpine/components/account/index.js
-  function registerAccountComponents() {
+  // assets/src/js/alpine/modules/returns/register.js
+  function registerReturnsModuleComponents() {
     const AlpineInstance = window.Alpine;
     if (!AlpineInstance || typeof AlpineInstance.data !== "function") {
       return;
@@ -7374,7 +7381,8 @@ attempted value: ${formattedValue}
   registerValidationDirectives();
   registerLoadingDirective();
   registerFormComponents();
-  registerAccountComponents();
+  module_default.data("navDropdown", navDropdown);
+  registerReturnsModuleComponents();
   if (typeof performance !== "undefined" && performance.mark) {
     performance.mark("alpine-register-done");
   }

@@ -1,0 +1,91 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.1 Chrome/142.0.7444.265 Electron/39.8.0 Safari/537.36" version="29.6.1">
+  <diagram name="Endpoint Feature Map" id="6VVG-I_hotZ7O56UY7Ss">
+    <mxGraphModel dx="2944" dy="1970" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-51" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=24;fontStyle=1;fontColor=#FFFFFF;whiteSpace=wrap;" value="My Account Core&#xa;Endpoint Feature Map" vertex="1">
+          <mxGeometry height="80" width="280" x="40" y="-360" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-52" parent="1" style="swimlane;html=1;rounded=1;horizontal=1;startSize=32;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontColor=#000000;whiteSpace=wrap;" value="Endpoints" vertex="1">
+          <mxGeometry height="980" width="320" x="25" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-53" parent="1" style="swimlane;html=1;rounded=1;horizontal=1;startSize=32;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontColor=#000000;whiteSpace=wrap;" value="Features Present In Each Endpoint" vertex="1">
+          <mxGeometry height="1100" width="1340" x="410" y="-10" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-61" parent="aqxiLN4Jf4QgyjEbkM8H-53" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontColor=#000000;" value="Order list&#xa;product thumbnails&#xa;status badge&#xa;date + item count&#xa;tracking preview&#xa;reorder&#xa;view order&#xa;pagination" vertex="1">
+          <mxGeometry height="120" width="300" x="60" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-62" parent="aqxiLN4Jf4QgyjEbkM8H-53" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontColor=#000000;" value="Order header&#xa;status timeline&#xa;tracking block&#xa;item summary&#xa;payment summary&#xa;shipping/billing address&#xa;reorder&#xa;order notes" vertex="1">
+          <mxGeometry height="140" width="300" x="70" y="245" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-64" parent="aqxiLN4Jf4QgyjEbkM8H-53" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontColor=#000000;" value="Personal info&#xa;contact / billing info&#xa;readonly account email&#xa;frontend validation&#xa;save account details&#xa;change password popup&#xa;account status card" vertex="1">
+          <mxGeometry height="130" width="320" x="70" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-65" parent="aqxiLN4Jf4QgyjEbkM8H-53" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontColor=#000000;" value="Address list&#xa;default badge&#xa;add address&#xa;edit address&#xa;set default&#xa;delete address&#xa;empty state&#xa;max address limit" vertex="1">
+          <mxGeometry height="130" width="300" x="90" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-66" parent="aqxiLN4Jf4QgyjEbkM8H-53" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontColor=#000000;" value="Add payment method form&#xa;saved payment methods list&#xa;brand + masked card info&#xa;expiry&#xa;set default&#xa;delete method&#xa;empty state" vertex="1">
+          <mxGeometry height="130" width="320" x="70" y="695" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-67" parent="aqxiLN4Jf4QgyjEbkM8H-53" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontColor=#000000;" value="Request reset form&#xa;frontend validation" vertex="1">
+          <mxGeometry height="80" width="250" x="85" y="865" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-54" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontStyle=1;fontColor=#000000;" value="orders" vertex="1">
+          <mxGeometry height="70" width="230" x="70" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-55" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontStyle=1;fontColor=#000000;" value="view-order" vertex="1">
+          <mxGeometry height="70" width="230" x="70" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-56" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontStyle=1;fontColor=#000000;" value="edit-account" vertex="1">
+          <mxGeometry height="70" width="230" x="70" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-57" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontStyle=1;fontColor=#000000;" value="address" vertex="1">
+          <mxGeometry height="70" width="230" x="70" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-58" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontStyle=1;fontColor=#000000;" value="payment-methods&#xa;(includes add-payment-method)" vertex="1">
+          <mxGeometry height="80" width="230" x="70" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-59" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontStyle=1;fontColor=#000000;" value="lost-password" vertex="1">
+          <mxGeometry height="70" width="230" x="70" y="860" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-60" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontStyle=1;fontColor=#000000;" value="reset-password" vertex="1">
+          <mxGeometry height="70" width="230" x="70" y="960" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-63" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#000000;" value="Returns / exchange module&#xa;request return or exchange&#xa;existing requests list&#xa;eligibility / policy messaging" vertex="1">
+          <mxGeometry height="110" width="300" x="-510" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-68" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontColor=#000000;" value="Reset password form&#xa;frontend validation" vertex="1">
+          <mxGeometry height="80" width="250" x="520" y="955" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-69" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" value="dashboard is effectively a redirect target source&#xa;for logged-in users -&amp;gt; orders" vertex="1">
+          <mxGeometry height="80" width="320" x="1160" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-70" edge="1" parent="1" source="aqxiLN4Jf4QgyjEbkM8H-54" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf;fontColor=#000000;" target="aqxiLN4Jf4QgyjEbkM8H-61">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-71" edge="1" parent="1" source="aqxiLN4Jf4QgyjEbkM8H-55" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf;fontColor=#000000;" target="aqxiLN4Jf4QgyjEbkM8H-62">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-72" edge="1" parent="1" source="aqxiLN4Jf4QgyjEbkM8H-55" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b85450;fontColor=#FFFFFF;" target="aqxiLN4Jf4QgyjEbkM8H-63" value="optional module">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-73" edge="1" parent="1" source="aqxiLN4Jf4QgyjEbkM8H-56" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf;fontColor=#000000;" target="aqxiLN4Jf4QgyjEbkM8H-64">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-74" edge="1" parent="1" source="aqxiLN4Jf4QgyjEbkM8H-57" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf;fontColor=#000000;" target="aqxiLN4Jf4QgyjEbkM8H-65">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-75" edge="1" parent="1" source="aqxiLN4Jf4QgyjEbkM8H-58" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf;fontColor=#000000;" target="aqxiLN4Jf4QgyjEbkM8H-66">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-76" edge="1" parent="1" source="aqxiLN4Jf4QgyjEbkM8H-59" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf;fontColor=#000000;" target="aqxiLN4Jf4QgyjEbkM8H-67">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aqxiLN4Jf4QgyjEbkM8H-77" edge="1" parent="1" source="aqxiLN4Jf4QgyjEbkM8H-60" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf;fontColor=#000000;" target="aqxiLN4Jf4QgyjEbkM8H-68">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

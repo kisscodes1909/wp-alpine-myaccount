@@ -23,14 +23,16 @@ import { registerStores } from './stores/index.js';
 import { registerValidationDirectives } from './directives/validate.js';
 import { registerLoadingDirective } from './directives/loading.js';
 import { registerFormComponents } from './components/forms/index.js';
-import { registerAccountComponents } from './components/account/index.js';
+import navDropdown from './components/account/navDropdown.js';
+import { registerReturnsModuleComponents } from './modules/returns/register.js';
 
 // Register stores, directives, components (bundle runs in one file, Alpine already available)
 registerStores();
 registerValidationDirectives();
 registerLoadingDirective();
 registerFormComponents();
-registerAccountComponents();
+Alpine.data('navDropdown', navDropdown);
+registerReturnsModuleComponents();
 
 if (typeof performance !== 'undefined' && performance.mark) {
     performance.mark('alpine-register-done');

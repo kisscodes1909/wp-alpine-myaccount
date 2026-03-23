@@ -6,4 +6,4 @@
 
 defined( 'ABSPATH' ) || exit;
 
-// add_filter( 'myaccount_core_returns_module_enabled', '__return_true' );
+add_filter( 'myaccount_core_returns_module_enabled', '__return_true' );
