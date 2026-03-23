@@ -1,4 +1,4 @@
-import { initReturnsModuleTrees, registerReturnsModuleComponents } from '../modules/returns/register.js';
+import { initReturnsModuleTrees, registerReturnsModuleComponents } from './register.js';
 
 registerReturnsModuleComponents();
 

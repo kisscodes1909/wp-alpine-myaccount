@@ -4,6 +4,7 @@ defined( 'ABSPATH' ) || exit;
 
 class MyAccount_Core_Returns_Module {
 	private static ?MyAccount_Core_Returns_Module $instance = null;
+	private bool $section_assets_enqueued = false;
 	private string $plugin_dir;
 	private string $plugin_url;
 	private bool $use_min_assets = false;
@@ -39,16 +40,11 @@ class MyAccount_Core_Returns_Module {
 	}
 
 	public function enqueue_assets(): void {
-		if ( ! is_account_page() || ! is_wc_endpoint_url( 'view-order' ) ) {
+		if ( ! $this->should_load_for_current_request() ) {
 			return;
 		}
 
-		$css_deps = wp_style_is( 'myaccount-core-css-endpoint', 'enqueued' ) ? array( 'myaccount-core-css-endpoint' ) : array();
-		$this->enqueue_style_if_exists(
-			'myaccount-core-module-returns-css',
-			$this->asset_path( 'assets/css/ma-module-returns.css' ),
-			$css_deps
-		);
+		$this->enqueue_section_assets();
 
 		if ( wp_script_is( 'alpine-bundle', 'enqueued' ) ) {
 			$js_dependency = 'alpine-bundle';
@@ -62,15 +58,13 @@ class MyAccount_Core_Returns_Module {
 	}
 
 	public function filter_endpoint_js_dependencies( array $deps, string $endpoint ): array {
-		if ( 'view-order' !== $endpoint || ! self::is_enabled() ) {
+		if ( 'view-order' !== $endpoint || ! $this->should_load_for_current_request() ) {
 			return $deps;
 		}
 
-		$module_script_loaded = $this->enqueue_script_if_exists(
-			'myaccount-core-module-returns-js',
-			$this->asset_path( 'assets/js/alpine.module-returns.js' ),
-			array( 'myaccount-core-js-shared-core' )
-		);
+		$this->enqueue_section_assets();
+
+		$module_script_loaded = wp_script_is( 'myaccount-core-module-returns-js', 'enqueued' );
 
 		if ( $module_script_loaded ) {
 			$deps[] = 'myaccount-core-module-returns-js';
@@ -84,32 +78,19 @@ class MyAccount_Core_Returns_Module {
 			return;
 		}
 
-		$returns_service = MyAccount_Core_Returns::instance();
 		wp_localize_script(
 			'myaccount-core-module-returns-js',
 			'viewOrderReturnsData',
-			array(
-				'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
-				'nonce'         => wp_create_nonce( 'submit-return-request' ),
-				'orderId'       => $order->get_id(),
-				'policy'        => $returns_service->get_policy_context( $order ),
-				'requests'      => $returns_service->get_requests( $order ),
-				'eligibleItems' => $returns_service->get_eligible_items( $order ),
-				'requestTypes'  => $returns_service->get_request_type_labels(),
-				'i18n'          => array(
-					'selectItem'      => __( 'Please select at least one item to return or exchange.', 'myaccount-core' ),
-					'missingReason'   => __( 'Please tell us why you want to return or exchange these items.', 'myaccount-core' ),
-					'invalidQuantity' => __( 'One or more quantities are not valid for return.', 'myaccount-core' ),
-					'genericError'    => __( 'Something went wrong. Please try again.', 'myaccount-core' ),
-				),
-			)
+			$this->build_view_order_payload( $order )
 		);
 	}
 
 	public function render_view_order_section( $order ): void {
-		if ( ! self::is_enabled() || ! $order instanceof WC_Order ) {
+		if ( ! $this->should_render_view_order_section( $order ) ) {
 			return;
 		}
+
+		$this->enqueue_section_assets();
 
 		$returns_service = MyAccount_Core_Returns::instance();
 		$returns_policy  = $returns_service->get_policy_context( $order );
@@ -128,6 +109,57 @@ class MyAccount_Core_Returns_Module {
 				'policy'            => $returns_policy,
 				'request_types'     => $returns_service->get_request_type_labels(),
 			)
+		);
+	}
+
+	private function should_load_for_current_request(): bool {
+		return self::is_enabled() && is_account_page() && is_wc_endpoint_url( 'view-order' );
+	}
+
+	private function should_render_view_order_section( $order ): bool {
+		return $this->should_load_for_current_request() && $order instanceof WC_Order;
+	}
+
+	private function enqueue_section_assets(): void {
+		if ( $this->section_assets_enqueued ) {
+			return;
+		}
+
+		$css_deps = wp_style_is( 'myaccount-core-css-endpoint', 'enqueued' ) ? array( 'myaccount-core-css-endpoint' ) : array();
+		$this->enqueue_style_if_exists(
+			'myaccount-core-module-returns-css',
+			$this->asset_path( 'assets/css/ma-module-returns.css' ),
+			$css_deps
+		);
+
+		if ( wp_script_is( 'myaccount-core-js-shared-core', 'enqueued' ) ) {
+			$this->enqueue_script_if_exists(
+				'myaccount-core-module-returns-js',
+				$this->asset_path( 'assets/js/alpine.module-returns.js' ),
+				array( 'myaccount-core-js-shared-core' )
+			);
+		}
+
+		$this->section_assets_enqueued = true;
+	}
+
+	private function build_view_order_payload( WC_Order $order ): array {
+		$returns_service = MyAccount_Core_Returns::instance();
+
+		return array(
+			'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
+			'nonce'         => wp_create_nonce( 'submit-return-request' ),
+			'orderId'       => $order->get_id(),
+			'policy'        => $returns_service->get_policy_context( $order ),
+			'requests'      => $returns_service->get_requests( $order ),
+			'eligibleItems' => $returns_service->get_eligible_items( $order ),
+			'requestTypes'  => $returns_service->get_request_type_labels(),
+			'i18n'          => array(
+				'selectItem'      => __( 'Please select at least one item to return or exchange.', 'myaccount-core' ),
+				'missingReason'   => __( 'Please tell us why you want to return or exchange these items.', 'myaccount-core' ),
+				'invalidQuantity' => __( 'One or more quantities are not valid for return.', 'myaccount-core' ),
+				'genericError'    => __( 'Something went wrong. Please try again.', 'myaccount-core' ),
+			),
 		);
 	}
 

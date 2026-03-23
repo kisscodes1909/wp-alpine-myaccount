@@ -29,7 +29,7 @@ const buildTargets = [
     output: 'assets/js/alpine.view-order.js',
   },
   {
-    input: 'assets/src/js/alpine/entries/module-returns.js',
+    input: 'assets/src/js/alpine/modules/returns/entry.js',
     output: 'assets/js/alpine.module-returns.js',
   },
   {

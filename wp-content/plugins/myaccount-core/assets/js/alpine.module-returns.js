@@ -190,7 +190,7 @@
     });
   }
 
-  // assets/src/js/alpine/entries/module-returns.js
+  // assets/src/js/alpine/modules/returns/entry.js
   registerReturnsModuleComponents();
   if (window.MyAccountAlpineRuntime?.started) {
     initReturnsModuleTrees();

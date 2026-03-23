@@ -143,6 +143,7 @@ templates/woocommerce/
 ```text
 assets/src/js/alpine/
 ├── entries/            # diem vao bundle
+├── modules/            # feature modules tu so huu bootstrap cua chinh no
 ├── components/
 │   ├── account/        # component cho account flows
 │   └── forms/          # component form
@@ -162,8 +163,7 @@ assets/src/js/alpine/entries/
 ├── endpoint-view-order.js
 ├── endpoint-payment-methods.js
 ├── endpoint-edit-account.js
-├── endpoint-address.js
-└── module-returns.js
+└── endpoint-address.js
 ```
 
 - `shared-core.js`
@@ -177,15 +177,31 @@ assets/src/js/alpine/entries/
 - `endpoint-*.js`
   - entry theo tung endpoint
 
-- `module-returns.js`
-  - module JS bo sung cho `view-order`
+```text
+assets/src/js/alpine/modules/
+└── returns/
+    ├── entry.js
+    ├── register.js
+    └── components/
+        └── viewOrderReturns.js
+```
+
+- `modules/returns/entry.js`
+  - bootstrap rieng cua feature returns
+  - duoc enqueue boi PHP module khi section returns thuc su duoc render
+  - la dependency that cua `view-order` endpoint bundle de register xong roi moi `start()`
+
+- `modules/returns/register.js`
+  - noi dang ky tat ca Alpine component cua feature returns
+
+- `modules/returns/components/*`
+  - UI logic chi thuoc feature returns
+  - khong nam chung voi `components/account/` vi day khong phai shared account component
 
 ```text
 assets/src/js/alpine/components/
 ├── account/
-│   ├── navDropdown.js
-│   ├── viewOrderReturns.js
-│   └── index.js
+│   └── navDropdown.js
 └── forms/
     ├── login.js
     ├── signup.js
@@ -197,6 +213,21 @@ assets/src/js/alpine/components/
     ├── edit-account.js
     └── index.js
 ```
+
+Y nghia cua cach to chuc nay:
+- `entries/` chi giu cac bundle load theo runtime layer hoac theo endpoint
+- `modules/` giu cac feature optional co the bat/tat va co bundle rieng
+- `components/` chi giu nhung UI units shared theo domain chung, khong dung de giong feature ownership
+
+He qua tot:
+- nhin cay thu muc la biet feature nao tu so huu entry cua no
+- de debug load order hon: shared core -> module -> endpoint start
+- de tach module thanh plugin/package rieng hon trong tuong lai
+
+Mental model nen nho:
+- `endpoint` so huu page shell
+- `module` so huu optional section
+- `render section -> enqueue module asset -> endpoint start runtime`
 
 ```text
 assets/src/js/alpine/stores/
