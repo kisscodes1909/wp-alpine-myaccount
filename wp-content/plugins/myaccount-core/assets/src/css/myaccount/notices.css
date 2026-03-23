@@ -11,6 +11,7 @@
 .woocommerce-account .ma-form__notice {
     margin-bottom: var(--ma-space-xl);
 }
+.woocommerce-account .woocommerce-notices-wrapper:empty,
 .woocommerce-account .ma-form__notice:empty {
     display: none;
 }

@@ -18,6 +18,7 @@
 
     /* Section 1: Order details header (mobile-first: column + align left, then row at 768px) */
     .ma-order-details-header {
+        margin-block: var(--ma-space-xl);
         border-bottom: 1px solid var(--ma-border-divider);
         padding-bottom: var(--ma-space-2xs);
     }
@@ -135,7 +136,7 @@
     /* Section 2: Order status card + timeline */
     .ma-order-status-card {
         border: 1px solid var(--ma-border);
-        margin-top: calc(var(--ma-space-md) * 3.5);
+        margin-top: var(--ma-space-lg);
     }
 
     .ma-order-status-card__header {
@@ -510,7 +511,7 @@
         margin-top: var(--ma-space-lg);
 
         @media (min-width: 480px) {
-            margin-top: calc(var(--ma-space-md) * 3.5);
+            margin-top: var(--ma-space-lg);
         }
 
         .ma-order-details-items-summary__grid {
@@ -1043,8 +1044,8 @@
         }
 
         .ma-view-order__updates {
-            margin-top: var(--ma-space-2xl);
-            padding-top: var(--ma-space-2xl);
+            margin-top: var(--ma-space-lg);
+            padding-top: var(--ma-space-lg);
         }
 
     }

@@ -583,6 +583,7 @@
     }
 /* Section 1: Order details header (mobile-first: column + align left, then row at 768px) */
 .woocommerce-account .ma-order-details-header {
+        margin-block: var(--ma-space-xl);
         border-bottom: 1px solid var(--ma-border-divider);
         padding-bottom: var(--ma-space-2xs);
     }
@@ -687,7 +688,7 @@
 /* Section 2: Order status card + timeline */
 .woocommerce-account .ma-order-status-card {
         border: 1px solid var(--ma-border);
-        margin-top: calc(var(--ma-space-md) * 3.5);
+        margin-top: var(--ma-space-lg);
     }
 .woocommerce-account .ma-order-status-card__header {
         display: flex;
@@ -1019,7 +1020,7 @@
     }
 @media (min-width: 480px) {
 .woocommerce-account .ma-order-details-items-summary {
-            margin-top: calc(var(--ma-space-md) * 3.5)
+            margin-top: var(--ma-space-lg)
     }
         }
 .woocommerce-account .ma-order-details-items-summary .ma-order-details-items-summary__grid {
@@ -1504,8 +1505,8 @@
         }
 
         .woocommerce-account .ma-view-order__updates {
-            margin-top: var(--ma-space-2xl);
-            padding-top: var(--ma-space-2xl);
+            margin-top: var(--ma-space-lg);
+            padding-top: var(--ma-space-lg);
         }
 
     }

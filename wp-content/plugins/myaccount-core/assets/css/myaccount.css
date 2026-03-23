@@ -740,6 +740,7 @@ body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAcc
 .woocommerce-account .ma-form__notice {
     margin-bottom: var(--ma-space-xl);
 }
+.woocommerce-account .woocommerce-notices-wrapper:empty,
 .woocommerce-account .ma-form__notice:empty {
     display: none;
 }
@@ -2127,6 +2128,7 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
     }
 /* Section 1: Order details header (mobile-first: column + align left, then row at 768px) */
 .woocommerce-account .ma-order-details-header {
+        margin-block: var(--ma-space-xl);
         border-bottom: 1px solid var(--ma-border-divider);
         padding-bottom: var(--ma-space-2xs);
     }
@@ -2231,7 +2233,7 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
 /* Section 2: Order status card + timeline */
 .woocommerce-account .ma-order-status-card {
         border: 1px solid var(--ma-border);
-        margin-top: calc(var(--ma-space-md) * 3.5);
+        margin-top: var(--ma-space-lg);
     }
 .woocommerce-account .ma-order-status-card__header {
         display: flex;
@@ -2563,7 +2565,7 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
     }
 @media (min-width: 480px) {
 .woocommerce-account .ma-order-details-items-summary {
-            margin-top: calc(var(--ma-space-md) * 3.5)
+            margin-top: var(--ma-space-lg)
     }
         }
 .woocommerce-account .ma-order-details-items-summary .ma-order-details-items-summary__grid {
@@ -3048,8 +3050,8 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
         }
 
         .woocommerce-account .ma-view-order__updates {
-            margin-top: var(--ma-space-2xl);
-            padding-top: var(--ma-space-2xl);
+            margin-top: var(--ma-space-lg);
+            padding-top: var(--ma-space-lg);
         }
 
     }
@@ -3212,6 +3214,10 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
 /* My Account endpoint styles: Edit Account                                   */
 /* -------------------------------------------------------------------------- */
 /* Section gap uses form-base tokens (--ma-form-space-main-gap, etc.) for consistency across all forms */
+.woocommerce-account.woocommerce-edit-account .ma-form {
+    --ma-form-space-bordered-top: var(--ma-space-lg);
+    --ma-form-space-actions-top: var(--ma-space-lg);
+}
 .woocommerce-account.woocommerce-edit-account .ma-form__section--divided {
     border-top: 1px solid var(--ma-form-color-border);
 }

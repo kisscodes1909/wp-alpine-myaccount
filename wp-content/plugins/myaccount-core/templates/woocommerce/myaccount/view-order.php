@@ -18,21 +18,7 @@ if ( ! empty( $tracking_entries ) ) {
 // Order again is shown in order-details-items-summary; avoid duplicate from after_order_table on this endpoint.
 remove_action( 'woocommerce_order_details_after_order_table', 'woocommerce_order_again_button', 10 );
 
-wc_get_template(
-	'myaccount/page-heading.php',
-	array(
-		'page_heading'      => sprintf(
-			/* translators: %s: order number */
-			__( 'Order %s', 'woocommerce' ),
-			'#' . $order->get_order_number()
-		),
-		'page_description'  => __( 'Status, items, and updates for this order.', 'myaccount-core' ),
-		'page_heading_icon' => 'order',
-	)
-);
-
 ?>
-
 <div class="ma-view-order">
 	<?php wc_get_template( 'order/order-details-header.php', array( 'order' => $order ) ); ?>
 	<?php wc_get_template( 'order/order-status-card.php', array( 'order' => $order ) ); ?>
