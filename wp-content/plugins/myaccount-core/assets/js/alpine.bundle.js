@@ -6144,7 +6144,6 @@ attempted value: ${formattedValue}
   };
 
   // assets/src/js/alpine/stores/popup.js
-  var BODY_SCROLL_LOCK = "ma-popup-scroll-lock";
   var popup_default = {
     open: false,
     content: ``,
@@ -6153,13 +6152,11 @@ attempted value: ${formattedValue}
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           this.open = true;
-          document.body.classList.add(BODY_SCROLL_LOCK);
         });
       });
     },
     closePopup() {
       this.open = false;
-      document.body.classList.remove(BODY_SCROLL_LOCK);
     }
   };
 

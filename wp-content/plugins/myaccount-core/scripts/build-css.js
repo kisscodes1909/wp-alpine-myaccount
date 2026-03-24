@@ -44,6 +44,10 @@ const buildTargets = [
     output: 'assets/css/ma-address.css',
   },
   {
+    input: 'assets/src/css/myaccount-endpoint-wishlist.css',
+    output: 'assets/css/ma-wishlist.css',
+  },
+  {
     input: 'assets/src/css/myaccount-endpoint-auth.css',
     output: 'assets/css/ma-auth.css',
   },

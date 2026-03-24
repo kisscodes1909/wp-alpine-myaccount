@@ -45,7 +45,7 @@ class MyAccount_Core_Hooks {
 
 	public function reorder_menu_items( array $items ): array {
 		$ordered = array();
-		$keys    = array( 'orders', 'edit-account', 'address', 'payment-methods', 'customer-logout' );
+		$keys    = array( 'orders', 'wishlist', 'edit-account', 'address', 'payment-methods', 'customer-logout' );
 
 		foreach ( $keys as $key ) {
 			if ( isset( $items[ $key ] ) ) {

@@ -73,11 +73,6 @@
     pointer-events: none;
 }
 
-/* Body scroll lock when popup is open (class added by popup store) */
-body.ma-popup-scroll-lock {
-    overflow: hidden;
-}
-
 /* Shared backdrop: full-screen dim layer — reuse for popup, loader, confirm, etc. */
 .ma-u-backdrop {
     position: fixed;

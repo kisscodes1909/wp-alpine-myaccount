@@ -36,6 +36,7 @@ class MyAccount_Core_Plugin {
 		MyAccount_Core_Template_Loader::instance( self::$plugin_dir );
 		MyAccount_Core_Assets::instance( self::$plugin_dir, self::$plugin_url );
 		MyAccount_Core_Address_Module::instance();
+		MyAccount_Core_Wishlist_Module::instance();
 		MyAccount_Core_Tracking_Module::instance();
 		MyAccount_Core_Returns_Module::instance( self::$plugin_dir, self::$plugin_url );
 		MyAccount_Core_Ajax::instance();
@@ -46,6 +47,7 @@ class MyAccount_Core_Plugin {
 
 		if ( class_exists( 'WooCommerce' ) ) {
 			MyAccount_Core_Address_Module::register_endpoints();
+			MyAccount_Core_Wishlist_Module::register_endpoints();
 			flush_rewrite_rules();
 		}
 	}
@@ -89,6 +91,10 @@ class MyAccount_Core_Plugin {
 
 		if ( 0 === strpos( $class, 'MyAccount_Core_Address_' ) ) {
 			return self::$plugin_dir . 'includes/modules/address/' . $filename;
+		}
+
+		if ( 0 === strpos( $class, 'MyAccount_Core_Wishlist_' ) ) {
+			return self::$plugin_dir . 'includes/modules/wishlist/' . $filename;
 		}
 
 		if ( 0 === strpos( $class, 'MyAccount_Core_Tracking_Adapter_' ) ) {
