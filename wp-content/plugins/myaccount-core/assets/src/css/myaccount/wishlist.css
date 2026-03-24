@@ -82,28 +82,55 @@
         display: flex;
         align-items: stretch;
         justify-content: space-between;
+        flex-wrap: nowrap;
+        gap: var(--ma-space-xs);
         padding: var(--ma-space-sm);
-        opacity: 0;
-        /* Same length as --ma-font-sm at default scale (~14px); motion offset only */
-        transform: translateY(var(--ma-font-sm));
-        transition: opacity var(--ma-duration-fast) var(--ma-easing-smooth),
-            transform var(--ma-duration-fast) var(--ma-easing-smooth);
-        pointer-events: none;
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
     }
 
     .ma-wishlist-card__media-actions-primary {
         flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .ma-wishlist-card__purchase-form {
+        display: grid;
+        grid-template-columns: calc(var(--ma-space-md) * 5.25) minmax(0, 1fr);
+        align-items: stretch;
+        width: 100%;
+        gap: var(--ma-space-xs);
+    }
+
+    .ma-wishlist-card__purchase-quantity {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .ma-wishlist-card__purchase-quantity .quantity {
+        width: 100%;
+        height: 100%;
+    }
+
+    .ma-wishlist-card__purchase-quantity .qty {
+        width: 100%;
+        min-height: calc(var(--ma-space-md) * 2.625);
+        padding-inline: var(--ma-space-sm);
+        border: 1px solid var(--ma-border);
+        background: var(--ma-surface);
+        color: var(--ma-text-primary);
+        font-size: var(--ma-font-sm);
+    }
+
+    .ma-wishlist-card__purchase-form .ma-wishlist-card__cta {
+        flex: 1 1 auto;
+        width: auto;
+        min-width: 0;
     }
 
     .ma-wishlist-card__media-actions--remove-only {
         justify-content: flex-end;
-    }
-
-    .ma-wishlist-card:hover .ma-wishlist-card__media-actions,
-    .ma-wishlist-card:focus-within .ma-wishlist-card__media-actions {
-        opacity: 1;
-        transform: translateY(0);
-        pointer-events: auto;
     }
 
     .ma-wishlist-card__stock-badge {

@@ -35,6 +35,7 @@ $columns = (int) apply_filters( 'yith_wcwl_wishlist_view_images_columns', 3 );
 			$stock_label       = $is_in_stock ? __( 'In stock', 'yith-woocommerce-wishlist' ) : __( 'Out of stock', 'yith-woocommerce-wishlist' );
 			$date_added        = $show_dateadded && $item->get_date_added() ? $item->get_date_added_formatted() : '';
 			$quantity_value    = $show_quantity ? (int) $item->get_quantity() : 0;
+			$remove_after_add  = 'yes' === get_option( 'yith_wcwl_remove_after_add_to_cart' );
 			$attribute_summary = array();
 
 			if ( $show_variation && $product->is_type( 'variation' ) ) {
@@ -59,15 +60,18 @@ $columns = (int) apply_filters( 'yith_wcwl_wishlist_view_images_columns', 3 );
 				'ma-wishlist-card__cta',
 			);
 
-			$is_direct_add_to_cart = $product->is_type( 'simple' );
+			$is_simple_product         = $product->is_type( 'simple' );
+			$is_variation_product      = $product->is_type( 'variation' );
+			$variation_parent_id       = $is_variation_product ? (int) $product->get_parent_id() : 0;
+			$variation_attributes      = $is_variation_product ? array_filter( (array) $product->get_variation_attributes() ) : array();
+			$has_real_variation_data   = $is_variation_product && $variation_parent_id > 0 && ! empty( $variation_attributes );
+			$is_direct_add_to_cart     = $is_simple_product || $has_real_variation_data;
+			$add_to_cart_product_id    = $is_variation_product ? $variation_parent_id : $product->get_id();
+			$selected_variation_id     = $is_variation_product ? (int) $product->get_id() : 0;
 
 			if ( $is_direct_add_to_cart && $product->is_purchasable() && $product->is_in_stock() ) {
 				$add_to_cart_class[] = 'product_type_' . $product->get_type();
 				$add_to_cart_class[] = 'add_to_cart_button';
-			}
-
-			if ( $is_direct_add_to_cart && $product->supports( 'ajax_add_to_cart' ) && $product->is_purchasable() && $product->is_in_stock() ) {
-				$add_to_cart_class[] = 'ajax_add_to_cart';
 			}
 			?>
 			<li
@@ -89,13 +93,51 @@ $columns = (int) apply_filters( 'yith_wcwl_wishlist_view_images_columns', 3 );
 								<div class="ma-wishlist-card__media-actions-primary">
 									<?php if ( $is_direct_add_to_cart ) : ?>
 										<?php
-										woocommerce_template_loop_add_to_cart(
-											array(
-												'quantity' => $show_quantity ? $item->get_quantity() : 1,
-												'class'    => implode( ' ', array_filter( $add_to_cart_class ) ),
-											)
-										);
+										$default_add_quantity = max( 1, (int) ( $show_quantity ? $item->get_quantity() : 1 ) );
+										$max_add_quantity     = (int) $product->get_max_purchase_quantity();
+										$wishlist_action_url  = wc_get_endpoint_url( 'wishlist', '', wc_get_page_permalink( 'myaccount' ) );
+										if ( ! empty( $wishlist_id ) ) {
+											$wishlist_action_url = add_query_arg( 'wishlist_id', rawurlencode( (string) $wishlist_id ), $wishlist_action_url );
+										}
+
+										if ( isset( $current_page ) && (int) $current_page > 1 ) {
+											$wishlist_action_url = add_query_arg( 'paged', (int) $current_page, $wishlist_action_url );
+										}
 										?>
+										<form class="ma-wishlist-card__purchase-form" action="<?php echo esc_url( $wishlist_action_url ); ?>" method="get">
+											<?php if ( $has_real_variation_data ) : ?>
+												<input type="hidden" name="variation_id" value="<?php echo esc_attr( $selected_variation_id ); ?>" />
+												<?php foreach ( $variation_attributes as $attribute_name => $attribute_value ) : ?>
+													<input type="hidden" name="<?php echo esc_attr( $attribute_name ); ?>" value="<?php echo esc_attr( $attribute_value ); ?>" />
+												<?php endforeach; ?>
+											<?php endif; ?>
+											<?php if ( $remove_after_add ) : ?>
+												<input type="hidden" name="remove_from_wishlist_after_add_to_cart" value="<?php echo esc_attr( $item->get_product_id() ); ?>" />
+												<input type="hidden" name="wishlist_id" value="<?php echo esc_attr( (string) $wishlist_id ); ?>" />
+												<input type="hidden" name="wishlist_token" value="<?php echo esc_attr( (string) $wishlist_token ); ?>" />
+											<?php endif; ?>
+											<label class="screen-reader-text" for="ma-wishlist-qty-<?php echo esc_attr( $item->get_product_id() ); ?>">
+												<?php esc_html_e( 'Quantity', 'woocommerce' ); ?>
+											</label>
+											<div class="ma-wishlist-card__purchase-quantity">
+												<input
+													id="ma-wishlist-qty-<?php echo esc_attr( $item->get_product_id() ); ?>"
+													class="input-text qty text"
+													type="number"
+													name="quantity"
+													value="<?php echo esc_attr( $default_add_quantity ); ?>"
+													min="1"
+													<?php if ( $max_add_quantity > 0 ) : ?>
+														max="<?php echo esc_attr( $max_add_quantity ); ?>"
+													<?php endif; ?>
+													step="1"
+													inputmode="numeric"
+													autocomplete="off" />
+											</div>
+											<button type="submit" name="add-to-cart" value="<?php echo esc_attr( $add_to_cart_product_id ); ?>" class="<?php echo esc_attr( implode( ' ', array_filter( $add_to_cart_class ) ) ); ?>">
+												<?php echo esc_html( $product->add_to_cart_text() ); ?>
+											</button>
+										</form>
 									<?php else : ?>
 										<a class="ma-btn ma-btn--primary ma-btn--block ma-wishlist-card__cta" href="<?php echo esc_url( $product->add_to_cart_url() ); ?>">
 											<?php echo esc_html( $product->add_to_cart_text() ); ?>
@@ -139,17 +181,6 @@ $columns = (int) apply_filters( 'yith_wcwl_wishlist_view_images_columns', 3 );
 						</div>
 
 						<div class="ma-wishlist-card__details">
-							<?php if ( $show_quantity ) : ?>
-								<div class="ma-wishlist-card__quantity">
-									<p class="ma-wishlist-card__quantity-label">
-										<?php esc_html_e( 'x', 'myaccount-core' ); ?>
-									</p>
-									<p class="ma-wishlist-card__quantity-value">
-										<?php echo esc_html( max( 1, $quantity_value ) ); ?>
-									</p>
-								</div>
-							<?php endif; ?>
-
 							<?php if ( $show_price || $show_price_variations ) : ?>
 								<p class="ma-wishlist-card__price">
 									<?php

@@ -36,7 +36,7 @@ class MyAccount_Core_Plugin {
 		MyAccount_Core_Template_Loader::instance( self::$plugin_dir );
 		MyAccount_Core_Assets::instance( self::$plugin_dir, self::$plugin_url );
 		MyAccount_Core_Address_Module::instance();
-		MyAccount_Core_Wishlist_Module::instance();
+		MyAccount_Core_Wishlist_Module::instance( self::$plugin_dir, self::$plugin_url );
 		MyAccount_Core_Tracking_Module::instance();
 		MyAccount_Core_Returns_Module::instance( self::$plugin_dir, self::$plugin_url );
 		MyAccount_Core_Ajax::instance();

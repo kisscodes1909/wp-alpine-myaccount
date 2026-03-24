@@ -48,7 +48,7 @@ class MyAccount_Core_Assets {
 		}
 
 		$endpoint_file   = $this->resolve_endpoint_css_file( $endpoint );
-		$endpoint_loaded = false;
+		$endpoint_loaded = '' === $endpoint_file;
 		$endpoint_deps   = $shared_loaded ? array( 'myaccount-core-css-shared' ) : array();
 
 		if ( '' !== $endpoint_file ) {
@@ -59,7 +59,7 @@ class MyAccount_Core_Assets {
 			);
 		}
 
-		if ( ! $endpoint_loaded && 'ma-auth.css' !== $endpoint_file ) {
+		if ( '' !== $endpoint_file && ! $endpoint_loaded && 'ma-auth.css' !== $endpoint_file ) {
 			$endpoint_loaded = $this->enqueue_style_if_exists(
 				'myaccount-core-css-endpoint-auth-fallback',
 				$this->asset_path( 'assets/css/ma-auth.css' ),
@@ -82,11 +82,12 @@ class MyAccount_Core_Assets {
 
 		$validation_required   = $this->endpoint_requires_validation_js( $endpoint );
 		$endpoint_js_file      = $this->resolve_endpoint_js_file( $endpoint );
+		$has_endpoint_js       = '' !== $endpoint_js_file;
 		$shared_js_path        = $this->asset_path( 'assets/js/alpine.shared-core.js' );
-		$endpoint_js_path      = $this->asset_path( 'assets/js/' . $endpoint_js_file );
+		$endpoint_js_path      = $has_endpoint_js ? $this->asset_path( 'assets/js/' . $endpoint_js_file ) : '';
 		$validation_js_path    = $this->asset_path( 'assets/js/alpine.shared-validation.js' );
 		$shared_js_exists     = file_exists( $this->plugin_dir . $shared_js_path );
-		$endpoint_js_exists   = file_exists( $this->plugin_dir . $endpoint_js_path );
+		$endpoint_js_exists   = ! $has_endpoint_js || file_exists( $this->plugin_dir . $endpoint_js_path );
 		$validation_js_exists = ! $validation_required || file_exists( $this->plugin_dir . $validation_js_path );
 		$can_use_split_loading = $shared_js_exists && $endpoint_js_exists && $validation_js_exists;
 		$legacy_js_loaded      = false;
@@ -116,11 +117,13 @@ class MyAccount_Core_Assets {
 			}
 			$endpoint_js_deps = apply_filters( 'myaccount_core_endpoint_js_dependencies', $endpoint_js_deps, $endpoint );
 
-			$this->enqueue_script_if_exists(
-				'myaccount-core-js-endpoint',
-				$endpoint_js_path,
-				$endpoint_js_deps
-			);
+			if ( $has_endpoint_js ) {
+				$this->enqueue_script_if_exists(
+					'myaccount-core-js-endpoint',
+					$endpoint_js_path,
+					$endpoint_js_deps
+				);
+			}
 		} else {
 			$legacy_js_loaded = $this->enqueue_script_if_exists(
 				'alpine-bundle',
@@ -238,7 +241,7 @@ class MyAccount_Core_Assets {
 			'view-order'         => 'ma-view-order.css',
 			'payment-methods'    => 'ma-payment-methods.css',
 			'add-payment-method' => 'ma-payment-methods.css',
-			'wishlist'           => 'ma-wishlist.css',
+			'wishlist'           => '',
 			'edit-account'       => 'ma-edit-account.css',
 			'edit-address'       => 'ma-edit-account.css',
 			'address'            => 'ma-address.css',
@@ -257,7 +260,7 @@ class MyAccount_Core_Assets {
 			'view-order'         => 'alpine.view-order.js',
 			'payment-methods'    => 'alpine.payment-methods.js',
 			'add-payment-method' => 'alpine.payment-methods.js',
-			'wishlist'           => 'alpine.auth.js',
+			'wishlist'           => '',
 			'edit-account'       => 'alpine.edit-account.js',
 			'edit-address'       => 'alpine.edit-account.js',
 			'address'            => 'alpine.address.js',
