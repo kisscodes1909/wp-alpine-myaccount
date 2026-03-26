@@ -355,7 +355,7 @@
             flex-direction: column;
             gap: 0;
         }
-/* Section title/description: .ma-u-section-title / .ma-u-section-description (myaccount-shared.css). */
+/* Section title/description: .ma-u-section-title / .ma-u-section-description (myaccount-global.css). */
 .woocommerce-account .ma-form .ma-form__grid {
             display: grid;
             grid-template-columns: 1fr;

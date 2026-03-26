@@ -396,6 +396,16 @@
         letter-spacing: var(--ma-tracking-wide);
     }
 /* -------------------------------------------------------------------------- */
+/* Demo: hide Hello theme header on My Account only                            */
+/* -------------------------------------------------------------------------- */
+body.woocommerce-account #site-header,
+body.woocommerce-account header.site-header,
+body.woocommerce-account .site-header,
+body.woocommerce-account .elementor-location-header,
+body.woocommerce-account header[data-elementor-type="header"] {
+    display: none;
+}
+/* -------------------------------------------------------------------------- */
 /* My Account shared buttons (.ma-btn) — token-based, no WooCommerce dependency */
 /* Variants: --primary, --secondary (= secondary-light), --secondary-light, --danger, --ghost, --block */
 /* -------------------------------------------------------------------------- */
@@ -951,4 +961,4 @@ body.woocommerce-account {
     }
 }
 
-/*# sourceMappingURL=ma-shared.css.map */
+/*# sourceMappingURL=ma-global.css.map */

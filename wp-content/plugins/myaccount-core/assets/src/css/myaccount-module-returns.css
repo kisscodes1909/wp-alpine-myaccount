@@ -1,17 +1,13 @@
 /*
  * Returns module CSS entry.
  *
- * Shared dependencies already come from ma-shared.css:
+ * Shared dependencies already come from ma-global.css:
  * - base.css (.ma-page-heading__title)
  * - buttons.css (.ma-btn*)
  * - empty-state.css (.ma-empty-state*)
  * - shared utilities (.ma-u-section-*, .ma-u-surface-panel)
  *
- * Module-local template dependencies that are not in ma-shared:
- * - form-base.css (.ma-form*, .ma-form-actions*)
- * - order-line-card.css (.ma-line-card*)
+ * Module-local template dependencies that are not in ma-global:
  * - returns-module.css (.ma-view-order-returns*)
  */
-@import "./myaccount/form-base.css";
-@import "./myaccount/order-line-card.css";
 @import "./myaccount/returns-module.css";

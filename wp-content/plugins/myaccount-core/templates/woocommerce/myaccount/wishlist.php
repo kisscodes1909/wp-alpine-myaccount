@@ -19,7 +19,7 @@ wc_get_template(
 <div class="ma-wishlist">
 	<div class="ma-wishlist__shortcode">
 		<?php
-		echo do_shortcode( '[yith_wcwl_wishlist pagination="yes" per_page="3" layout="images"]' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Shortcode renders trusted plugin HTML.
+		echo do_shortcode( '[yith_wcwl_wishlist pagination="yes" per_page="6" layout="images"]' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Shortcode renders trusted plugin HTML.
 		?>
 	</div>
 </div>

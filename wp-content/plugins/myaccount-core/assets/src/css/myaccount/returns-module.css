@@ -85,8 +85,16 @@
 
     .ma-view-order-returns__request-id,
     .ma-view-order-returns__request-label,
-    .ma-view-order-returns__item-name,
     .ma-view-order-returns__form-title {
+        color: var(--ma-text-primary);
+    }
+
+    /* Match .ma-wishlist-card__title */
+    .ma-view-order-returns__item-name {
+        font-size: var(--ma-font-base);
+        line-height: var(--ma-line-snug);
+        font-weight: var(--ma-weight-medium);
+        letter-spacing: var(--ma-tracking-tight);
         color: var(--ma-text-primary);
     }
 
@@ -107,6 +115,12 @@
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
         color: var(--ma-text-muted-dark);
+    }
+
+    /* Match .ma-wishlist-card__variation */
+    .ma-view-order-returns__item-meta {
+        text-transform: uppercase;
+        letter-spacing: var(--ma-tracking-wide);
     }
 
     .ma-view-order-returns__request-badges {

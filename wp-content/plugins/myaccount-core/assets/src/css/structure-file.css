@@ -1,5 +1,5 @@
 /* Legacy aggregate fallback: single copy of form-base, navigation, auth-shell */
-@import "./myaccount-shared.css";
+@import "./myaccount-global.css";
 @import "./myaccount/form-base.css";
 @import "./myaccount/navigation.css";
 @import "./myaccount/auth-shell.css";

@@ -16,8 +16,8 @@ const useLivereload = process.argv.includes('--livereload');
 
 const buildTargets = [
   {
-    input: 'assets/src/css/myaccount-shared.css',
-    output: 'assets/css/ma-shared.css',
+    input: 'assets/src/css/myaccount-global.css',
+    output: 'assets/css/ma-global.css',
   },
   {
     input: 'assets/src/css/myaccount-endpoint-orders.css',

@@ -33,6 +33,7 @@ class MyAccount_Core_Plugin {
 		}
 
 		MyAccount_Core_Hooks::instance();
+		MyAccount_Core_Auth_Module::instance();
 		MyAccount_Core_Template_Loader::instance( self::$plugin_dir );
 		MyAccount_Core_Assets::instance( self::$plugin_dir, self::$plugin_url );
 		MyAccount_Core_Address_Module::instance();
@@ -46,8 +47,14 @@ class MyAccount_Core_Plugin {
 		add_option( self::OPTION_OWNER_MODE, 'plugin' );
 
 		if ( class_exists( 'WooCommerce' ) ) {
-			MyAccount_Core_Address_Module::register_endpoints();
-			MyAccount_Core_Wishlist_Module::register_endpoints();
+			if ( MyAccount_Core_Address_Module::is_enabled() ) {
+				MyAccount_Core_Address_Module::register_endpoints();
+			}
+
+			if ( MyAccount_Core_Wishlist_Module::is_enabled() ) {
+				MyAccount_Core_Wishlist_Module::register_endpoints();
+			}
+
 			flush_rewrite_rules();
 		}
 	}
@@ -87,6 +94,10 @@ class MyAccount_Core_Plugin {
 			$returns_filename = 'MyAccount_Core_Returns' === $class ? 'class-myaccount-core-returns-service.php' : $filename;
 
 			return self::$plugin_dir . 'includes/modules/returns/' . $returns_filename;
+		}
+
+		if ( 0 === strpos( $class, 'MyAccount_Core_Auth_' ) ) {
+			return self::$plugin_dir . 'includes/modules/auth/' . $filename;
 		}
 
 		if ( 0 === strpos( $class, 'MyAccount_Core_Address_' ) ) {

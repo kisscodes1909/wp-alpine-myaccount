@@ -16,10 +16,8 @@
         line-height: var(--ma-line-normal);
     }
 
-    /* No underline on links inside line cards (including hover) */
-    .ma-line-card a,
-    .ma-line-card a:hover,
-    .ma-line-card a:focus {
+    /* Default link: no underline; hover/focus styles come from endpoint (e.g. title links like .ma-wishlist-card__title a) */
+    .ma-line-card a {
         text-decoration: none;
     }
 
@@ -53,23 +51,18 @@
         transform: scale(1.05);
     }
 
-    /* Padding md — same mobile → desktop (no breakpoint shrink) */
+    /* Body: align with .ma-wishlist-card__body (padding md, sm gap, muted default text) */
     .ma-line-card__body {
         box-sizing: border-box;
         display: flex;
+        flex: 1 1 0;
         flex-direction: column;
         gap: var(--ma-space-sm);
-        flex: 1 1 0;
         min-width: 0;
         padding: var(--ma-space-md);
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
-    }
-
-    @media (min-width: 480px) {
-        .ma-line-card__body {
-            gap: var(--ma-space-md);
-        }
+        color: var(--ma-text-muted-dark);
     }
 
     @media (prefers-reduced-motion: reduce) {

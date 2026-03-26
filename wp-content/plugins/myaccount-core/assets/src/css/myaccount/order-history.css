@@ -46,7 +46,6 @@
     .ma-orders__item-body.ma-line-card__body {
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
-        color: var(--ma-text-primary);
     }
 
     /* Row 1: Order ID - Status */
@@ -58,12 +57,14 @@
         gap: var(--ma-space-sm);
     }
 
+    /* Match .ma-wishlist-card__title */
     .ma-orders__item-order-number {
         margin: 0;
-        font-size: var(--ma-font-sm);
-        line-height: var(--ma-line-normal);
-        font-weight: 600;
+        font-size: var(--ma-font-base);
+        line-height: var(--ma-line-snug);
+        font-weight: var(--ma-weight-medium);
         letter-spacing: var(--ma-tracking-tight);
+        color: var(--ma-text-primary);
     }
 
     .ma-orders__item-status {
@@ -292,12 +293,14 @@
         }
     }
 
+    /* Match .ma-wishlist-card__price */
     .ma-orders__item-total {
         margin: 0;
-        font-size: var(--ma-font-sm);
+        font-size: var(--ma-font-base);
         line-height: var(--ma-line-normal);
-        font-weight: 600;
+        font-weight: var(--ma-weight-semibold);
         letter-spacing: var(--ma-tracking-tight);
+        color: var(--ma-text-primary);
     }
 
     .ma-orders__item-actions {
@@ -341,7 +344,7 @@
     .ma-orders__pagination-caption {
         margin: 0;
         font-size: var(--ma-font-xs);
-        font-weight: 400;
+        font-weight: var(--ma-weight-regular);
         line-height: var(--ma-line-tight);
         text-transform: uppercase;
         letter-spacing: var(--ma-tracking-wider);

@@ -22,7 +22,7 @@ class MyAccount_Core_Assets {
 		$this->use_min_assets = $this->should_use_min_assets();
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ), 20 );
-		add_action( 'wp_head', array( $this, 'preload_shared_css' ), 1 );
+		add_action( 'wp_head', array( $this, 'preload_global_css' ), 1 );
 		add_filter( 'body_class', array( $this, 'add_endpoint_body_class' ) );
 		add_filter( 'script_loader_tag', array( $this, 'add_defer_attribute' ), 10, 2 );
 	}
@@ -33,12 +33,17 @@ class MyAccount_Core_Assets {
 		}
 
 		$endpoint      = $this->get_account_endpoint();
-		$shared_loaded = $this->enqueue_style_if_exists(
-			'myaccount-core-css-shared',
-			$this->asset_path( 'assets/css/ma-shared.css' )
+
+		if ( MyAccount_Core_Auth_Module::should_bypass_plugin_auth_assets( $endpoint ) ) {
+			return;
+		}
+
+		$global_loaded = $this->enqueue_style_if_exists(
+			'myaccount-core-css-global',
+			$this->asset_path( 'assets/css/ma-global.css' )
 		);
 
-		$nav_deps = $shared_loaded ? array( 'myaccount-core-css-shared' ) : array();
+		$nav_deps = $global_loaded ? array( 'myaccount-core-css-global' ) : array();
 		if ( is_user_logged_in() ) {
 			$this->enqueue_style_if_exists(
 				'myaccount-core-css-navigation',
@@ -49,7 +54,7 @@ class MyAccount_Core_Assets {
 
 		$endpoint_file   = $this->resolve_endpoint_css_file( $endpoint );
 		$endpoint_loaded = '' === $endpoint_file;
-		$endpoint_deps   = $shared_loaded ? array( 'myaccount-core-css-shared' ) : array();
+		$endpoint_deps   = $global_loaded ? array( 'myaccount-core-css-global' ) : array();
 
 		if ( '' !== $endpoint_file ) {
 			$endpoint_loaded = $this->enqueue_style_if_exists(
@@ -67,11 +72,11 @@ class MyAccount_Core_Assets {
 			);
 		}
 
-		if ( ! $shared_loaded || ! $endpoint_loaded ) {
+		if ( ! $global_loaded || ! $endpoint_loaded ) {
 			$this->log_asset_fallback(
-				$shared_loaded,
+				$global_loaded,
 				$endpoint_loaded,
-				$this->asset_path( 'assets/css/ma-shared.css' ),
+				$this->asset_path( 'assets/css/ma-global.css' ),
 				$endpoint_file
 			);
 			$this->enqueue_style_if_exists(
@@ -164,7 +169,7 @@ class MyAccount_Core_Assets {
 
 		$endpoint = $this->get_account_endpoint();
 		$classes[] = 'ma-endpoint-' . sanitize_html_class( $endpoint );
-		$classes[] = 'ma-shared-scope';
+		$classes[] = 'ma-global-scope';
 
 		return $classes;
 	}
@@ -288,13 +293,19 @@ class MyAccount_Core_Assets {
 	}
 
 	/**
-	 * Preload ma-shared CSS on account pages (reduces render-blocking chain when browser supports preload).
+	 * Preload ma-global CSS on account pages (reduces render-blocking chain when browser supports preload).
 	 */
-	public function preload_shared_css(): void {
+	public function preload_global_css(): void {
 		if ( ! is_account_page() ) {
 			return;
 		}
-		$path = $this->asset_path( 'assets/css/ma-shared.css' );
+
+		$endpoint = $this->get_account_endpoint();
+		if ( MyAccount_Core_Auth_Module::should_bypass_plugin_auth_assets( $endpoint ) ) {
+			return;
+		}
+
+		$path = $this->asset_path( 'assets/css/ma-global.css' );
 		$file = $this->plugin_dir . $path;
 		if ( ! file_exists( $file ) ) {
 			return;
@@ -306,13 +317,13 @@ class MyAccount_Core_Assets {
 	/**
 	 * Log when split CSS failed so myaccount.css (~94KB min) loads. Enable WP_DEBUG or MYACCOUNT_CORE_LOG_MISSING_ASSETS.
 	 */
-	private function log_asset_fallback( bool $shared_loaded, bool $endpoint_loaded, string $shared_path, string $endpoint_file ): void {
+	private function log_asset_fallback( bool $global_loaded, bool $endpoint_loaded, string $global_path, string $endpoint_file ): void {
 		if ( ! $this->should_log_missing_assets() ) {
 			return;
 		}
 		$reasons = array();
-		if ( ! $shared_loaded ) {
-			$reasons[] = 'missing shared: ' . $shared_path . ' (expected under ' . $this->plugin_dir . ')';
+		if ( ! $global_loaded ) {
+			$reasons[] = 'missing global: ' . $global_path . ' (expected under ' . $this->plugin_dir . ')';
 		}
 		if ( ! $endpoint_loaded && '' !== $endpoint_file ) {
 			$reasons[] = 'missing endpoint: assets/css/' . $endpoint_file;
@@ -320,7 +331,7 @@ class MyAccount_Core_Assets {
 		if ( empty( $reasons ) ) {
 			return;
 		}
-		error_log( '[myaccount-core] CSS fallback myaccount.css loaded. ' . implode( '; ', $reasons ) . ' — run npm run build:production and deploy ma-*.min.css + ma-shared.min.css.' );
+		error_log( '[myaccount-core] CSS fallback myaccount.css loaded. ' . implode( '; ', $reasons ) . ' — run npm run build:production and deploy ma-*.min.css + ma-global.min.css.' );
 	}
 
 	private function should_log_missing_assets(): bool {

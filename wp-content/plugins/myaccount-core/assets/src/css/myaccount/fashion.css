@@ -81,6 +81,14 @@ body.myaccount-template-fashion.woocommerce-account .ma-orders__item.ma-line-car
     background: transparent;
 }
 
+body.myaccount-template-fashion.woocommerce-account .ma-wishlist-card {
+    background: transparent;
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-wishlist-card__media {
+    background: var(--ma-fashion-surface);
+}
+
 body.myaccount-template-fashion.woocommerce-account .ma-page-heading__description {
     color: var(--ma-text-muted);
 }
@@ -159,31 +167,35 @@ body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summ
     border-color: var(--ma-border);
 }
 
-body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-body.ma-line-card__body {
-    color: var(--ma-text-primary);
-}
-
+/* Align with .ma-wishlist-card__title / __price / __variation (view-order.css base) */
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-name {
-    font-size: var(--ma-font-sm);
-    line-height: var(--ma-line-normal);
+    font-size: var(--ma-font-base);
+    line-height: var(--ma-line-snug);
+    font-weight: var(--ma-weight-medium);
+    color: var(--ma-text-primary);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-meta,
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-qty {
     font-size: var(--ma-font-sm);
     line-height: var(--ma-line-normal);
-    letter-spacing: var(--ma-tracking-tight);
+}
+
+body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-meta {
+    letter-spacing: var(--ma-tracking-wide);
+    text-transform: uppercase;
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-qty {
-    text-transform: uppercase;
     letter-spacing: var(--ma-tracking-wider);
+    text-transform: uppercase;
+    font-weight: var(--ma-weight-medium);
 }
 
 body.myaccount-template-fashion.woocommerce-account .ma-order-details-items-summary__item-price {
-    font-size: var(--ma-font-sm);
+    font-size: var(--ma-font-base);
     line-height: var(--ma-line-normal);
-    font-weight: 600;
+    font-weight: var(--ma-weight-semibold);
     color: var(--ma-text-primary);
     letter-spacing: var(--ma-tracking-tight);
 }

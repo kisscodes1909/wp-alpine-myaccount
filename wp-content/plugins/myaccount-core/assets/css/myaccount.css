@@ -397,6 +397,16 @@
         letter-spacing: var(--ma-tracking-wide);
     }
 /* -------------------------------------------------------------------------- */
+/* Demo: hide Hello theme header on My Account only                            */
+/* -------------------------------------------------------------------------- */
+body.woocommerce-account #site-header,
+body.woocommerce-account header.site-header,
+body.woocommerce-account .site-header,
+body.woocommerce-account .elementor-location-header,
+body.woocommerce-account header[data-elementor-type="header"] {
+    display: none;
+}
+/* -------------------------------------------------------------------------- */
 /* My Account shared buttons (.ma-btn) — token-based, no WooCommerce dependency */
 /* Variants: --primary, --secondary (= secondary-light), --secondary-light, --danger, --ghost, --block */
 /* -------------------------------------------------------------------------- */
@@ -1257,7 +1267,7 @@ body.woocommerce-account {
             flex-direction: column;
             gap: 0;
         }
-/* Section title/description: .ma-u-section-title / .ma-u-section-description (myaccount-shared.css). */
+/* Section title/description: .ma-u-section-title / .ma-u-section-description (myaccount-global.css). */
 .woocommerce-account .ma-form .ma-form__grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -1495,7 +1505,7 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lis
                 --ma-nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9'/%3E%3C/svg%3E");
             }
 body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--wishlist {
-                --ma-nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='black' viewBox='0 0 24 24'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
+                --ma-nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z'/%3E%3C/svg%3E");
             }
 body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--edit-account {
                 --ma-nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 6.75a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75a17.933 17.933 0 01-7.499-1.632z'/%3E%3C/svg%3E");
@@ -1731,10 +1741,8 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
     }
-/* No underline on links inside line cards (including hover) */
-.woocommerce-account .ma-line-card a,
-    .woocommerce-account .ma-line-card a:hover,
-    .woocommerce-account .ma-line-card a:focus {
+/* Default link: no underline; hover/focus styles come from endpoint (e.g. title links like .ma-wishlist-card__title a) */
+.woocommerce-account .ma-line-card a {
         text-decoration: none;
     }
 .woocommerce-account .ma-line-card__media {
@@ -1764,22 +1772,18 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
     .woocommerce-account .ma-line-card:focus-within .ma-line-card__media img {
         transform: scale(1.05);
     }
-/* Padding md — same mobile → desktop (no breakpoint shrink) */
+/* Body: align with .ma-wishlist-card__body (padding md, sm gap, muted default text) */
 .woocommerce-account .ma-line-card__body {
         box-sizing: border-box;
         display: flex;
+        flex: 1 1 0;
         flex-direction: column;
         gap: var(--ma-space-sm);
-        flex: 1 1 0;
         min-width: 0;
         padding: var(--ma-space-md);
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
-    }
-@media (min-width: 480px) {
-        .woocommerce-account .ma-line-card__body {
-            gap: var(--ma-space-md);
-        }
+        color: var(--ma-text-muted-dark);
     }
 @media (prefers-reduced-motion: reduce) {
         .woocommerce-account .ma-line-card__media img {
@@ -1833,7 +1837,6 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
 .woocommerce-account .ma-orders__item-body.ma-line-card__body {
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
-        color: var(--ma-text-primary);
     }
 /* Row 1: Order ID - Status */
 .woocommerce-account .ma-orders__item-header {
@@ -1843,12 +1846,14 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
         justify-content: space-between;
         gap: var(--ma-space-sm);
     }
+/* Match .ma-wishlist-card__title */
 .woocommerce-account .ma-orders__item-order-number {
         margin: 0;
-        font-size: var(--ma-font-sm);
-        line-height: var(--ma-line-normal);
-        font-weight: 600;
+        font-size: var(--ma-font-base);
+        line-height: var(--ma-line-snug);
+        font-weight: var(--ma-weight-medium);
         letter-spacing: var(--ma-tracking-tight);
+        color: var(--ma-text-primary);
     }
 .woocommerce-account .ma-orders__item-status {
         display: inline-flex;
@@ -2047,12 +2052,14 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
             padding-bottom: var(--ma-space-2xs);
         }
     }
+/* Match .ma-wishlist-card__price */
 .woocommerce-account .ma-orders__item-total {
         margin: 0;
-        font-size: var(--ma-font-sm);
+        font-size: var(--ma-font-base);
         line-height: var(--ma-line-normal);
-        font-weight: 600;
+        font-weight: var(--ma-weight-semibold);
         letter-spacing: var(--ma-tracking-tight);
+        color: var(--ma-text-primary);
     }
 .woocommerce-account .ma-orders__item-actions {
         display: flex;
@@ -2090,7 +2097,7 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
 .woocommerce-account .ma-orders__pagination-caption {
         margin: 0;
         font-size: var(--ma-font-xs);
-        font-weight: 400;
+        font-weight: var(--ma-weight-regular);
         line-height: var(--ma-line-tight);
         text-transform: uppercase;
         letter-spacing: var(--ma-tracking-wider);
@@ -2657,7 +2664,6 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
 /* Full __body padding from order-line-card; tighter gap on small screens only */
 .woocommerce-account .ma-order-details-items-summary__item-body.ma-line-card__body {
         gap: var(--ma-space-xs);
-        color: var(--ma-text-primary);
     }
 @media (min-width: 480px) {
 
@@ -2670,33 +2676,38 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
             min-height: 128px;
         }
     }
+/* Title / price / secondary copy: match .ma-wishlist-card__title, __price, __variation */
 .woocommerce-account .ma-order-details-items-summary__item-name {
         margin: 0;
-        font-size: var(--ma-font-sm);
-        font-weight: 600;
-        line-height: var(--ma-line-normal);
+        font-size: var(--ma-font-base);
+        font-weight: var(--ma-weight-medium);
+        line-height: var(--ma-line-snug);
         overflow-wrap: break-word;
         word-break: break-word;
         letter-spacing: var(--ma-tracking-tight);
+        color: var(--ma-text-primary);
     }
+/* Product title link: match .ma-wishlist-card__title a (color fade, no underline) */
 .woocommerce-account .ma-order-details-items-summary__item-name a {
         color: inherit;
         text-decoration: none;
+        transition: color var(--ma-duration-fast) var(--ma-easing-smooth);
     }
 .woocommerce-account .ma-order-details-items-summary__item-name a:hover,
-    .woocommerce-account .ma-order-details-items-summary__item-name a:focus {
-        text-decoration: none;
+    .woocommerce-account .ma-order-details-items-summary__item-name a:focus-visible {
+        color: var(--ma-text-muted-dark);
     }
-.woocommerce-account .ma-order-details-items-summary__item-name a:focus-visible {
-        outline: 2px solid var(--ma-text-primary);
-        outline-offset: 2px;
-        border-radius: 2px;
+@media (prefers-reduced-motion: reduce) {
+        .woocommerce-account .ma-order-details-items-summary__item-name a {
+            transition: none;
+        }
     }
 .woocommerce-account .ma-order-details-items-summary__item-meta {
-        margin: var(--ma-space-2xs) 0 0;
+        margin: 0;
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
-        letter-spacing: var(--ma-tracking-tight);
+        letter-spacing: var(--ma-tracking-wide);
+        text-transform: uppercase;
         color: var(--ma-text-muted-dark);
         display: block;
     }
@@ -2706,12 +2717,15 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
         letter-spacing: var(--ma-tracking-wider);
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
+        font-weight: var(--ma-weight-medium);
+        color: var(--ma-text-primary);
     }
 .woocommerce-account .ma-order-details-items-summary__item-price {
-        font-size: var(--ma-font-sm);
-        font-weight: 600;
+        margin: 0;
+        font-size: var(--ma-font-base);
+        font-weight: var(--ma-weight-semibold);
         line-height: var(--ma-line-normal);
-        color: var(--ma-text-strong);
+        color: var(--ma-text-primary);
         letter-spacing: var(--ma-tracking-tight);
     }
 .woocommerce-account .ma-order-details-items-summary__item-purchase-note {

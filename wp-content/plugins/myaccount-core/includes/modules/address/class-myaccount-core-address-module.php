@@ -13,11 +13,23 @@ class MyAccount_Core_Address_Module {
 		return self::$instance;
 	}
 
+	public static function is_enabled(): bool {
+		return (bool) apply_filters( 'myaccount_core_address_module_enabled', true );
+	}
+
 	public static function register_endpoints(): void {
+		if ( ! self::is_enabled() ) {
+			return;
+		}
+
 		add_rewrite_endpoint( 'address', EP_ROOT | EP_PAGES );
 	}
 
 	private function __construct() {
+		if ( ! self::is_enabled() ) {
+			return;
+		}
+
 		add_action( 'init', array( __CLASS__, 'register_endpoints' ) );
 		add_filter( 'woocommerce_account_menu_items', array( $this, 'add_address_menu_item' ) );
 		add_filter( 'woocommerce_get_query_vars', array( $this, 'add_address_query_var' ) );
@@ -28,18 +40,30 @@ class MyAccount_Core_Address_Module {
 	}
 
 	public function add_address_menu_item( array $items ): array {
+		if ( ! self::is_enabled() ) {
+			return $items;
+		}
+
 		$items['address'] = 'Address Book';
 
 		return $items;
 	}
 
 	public function add_address_query_var( array $vars ): array {
+		if ( ! self::is_enabled() ) {
+			return $vars;
+		}
+
 		$vars['address'] = 'address';
 
 		return $vars;
 	}
 
 	public function render_address_endpoint(): void {
+		if ( ! self::is_enabled() ) {
+			return;
+		}
+
 		$user_id         = get_current_user_id();
 		$countries       = WC()->countries->get_countries();
 		$customer        = new WC_Customer( $user_id );
@@ -70,6 +94,10 @@ class MyAccount_Core_Address_Module {
 	 * @param array $data        Checkout posted data (unused, kept for hook signature).
 	 */
 	public function sync_address_book_default_from_checkout( int $customer_id, array $data = array() ): void {
+		if ( ! self::is_enabled() ) {
+			return;
+		}
+
 		unset( $data );
 
 		if ( $customer_id <= 0 ) {
@@ -93,6 +121,10 @@ class MyAccount_Core_Address_Module {
 	}
 
 	public function save_address_book(): void {
+		if ( ! self::is_enabled() ) {
+			return;
+		}
+
 		wc_nocache_headers();
 		$this->verify_nonce_or_die( 'save_address_nonce', 'nonce' );
 
@@ -150,6 +182,10 @@ class MyAccount_Core_Address_Module {
 	}
 
 	public function register_managed_templates( array $templates ): array {
+		if ( ! self::is_enabled() ) {
+			return $templates;
+		}
+
 		$templates[] = 'myaccount/apl-address.php';
 		$templates[] = 'myaccount/ma-form-edit-address.php';
 

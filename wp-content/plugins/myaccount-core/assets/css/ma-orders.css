@@ -13,10 +13,8 @@
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
     }
-/* No underline on links inside line cards (including hover) */
-.woocommerce-account .ma-line-card a,
-    .woocommerce-account .ma-line-card a:hover,
-    .woocommerce-account .ma-line-card a:focus {
+/* Default link: no underline; hover/focus styles come from endpoint (e.g. title links like .ma-wishlist-card__title a) */
+.woocommerce-account .ma-line-card a {
         text-decoration: none;
     }
 .woocommerce-account .ma-line-card__media {
@@ -46,22 +44,18 @@
     .woocommerce-account .ma-line-card:focus-within .ma-line-card__media img {
         transform: scale(1.05);
     }
-/* Padding md — same mobile → desktop (no breakpoint shrink) */
+/* Body: align with .ma-wishlist-card__body (padding md, sm gap, muted default text) */
 .woocommerce-account .ma-line-card__body {
         box-sizing: border-box;
         display: flex;
+        flex: 1 1 0;
         flex-direction: column;
         gap: var(--ma-space-sm);
-        flex: 1 1 0;
         min-width: 0;
         padding: var(--ma-space-md);
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
-    }
-@media (min-width: 480px) {
-        .woocommerce-account .ma-line-card__body {
-            gap: var(--ma-space-md);
-        }
+        color: var(--ma-text-muted-dark);
     }
 @media (prefers-reduced-motion: reduce) {
         .woocommerce-account .ma-line-card__media img {
@@ -115,7 +109,6 @@
 .woocommerce-account .ma-orders__item-body.ma-line-card__body {
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
-        color: var(--ma-text-primary);
     }
 /* Row 1: Order ID - Status */
 .woocommerce-account .ma-orders__item-header {
@@ -125,12 +118,14 @@
         justify-content: space-between;
         gap: var(--ma-space-sm);
     }
+/* Match .ma-wishlist-card__title */
 .woocommerce-account .ma-orders__item-order-number {
         margin: 0;
-        font-size: var(--ma-font-sm);
-        line-height: var(--ma-line-normal);
-        font-weight: 600;
+        font-size: var(--ma-font-base);
+        line-height: var(--ma-line-snug);
+        font-weight: var(--ma-weight-medium);
         letter-spacing: var(--ma-tracking-tight);
+        color: var(--ma-text-primary);
     }
 .woocommerce-account .ma-orders__item-status {
         display: inline-flex;
@@ -329,12 +324,14 @@
             padding-bottom: var(--ma-space-2xs);
         }
     }
+/* Match .ma-wishlist-card__price */
 .woocommerce-account .ma-orders__item-total {
         margin: 0;
-        font-size: var(--ma-font-sm);
+        font-size: var(--ma-font-base);
         line-height: var(--ma-line-normal);
-        font-weight: 600;
+        font-weight: var(--ma-weight-semibold);
         letter-spacing: var(--ma-tracking-tight);
+        color: var(--ma-text-primary);
     }
 .woocommerce-account .ma-orders__item-actions {
         display: flex;
@@ -372,7 +369,7 @@
 .woocommerce-account .ma-orders__pagination-caption {
         margin: 0;
         font-size: var(--ma-font-xs);
-        font-weight: 400;
+        font-weight: var(--ma-weight-regular);
         line-height: var(--ma-line-tight);
         text-transform: uppercase;
         letter-spacing: var(--ma-tracking-wider);

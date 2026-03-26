@@ -16,7 +16,15 @@ class MyAccount_Core_Wishlist_Module {
 		return self::$instance;
 	}
 
+	public static function is_enabled(): bool {
+		return (bool) apply_filters( 'myaccount_core_wishlist_module_enabled', true );
+	}
+
 	public static function register_endpoints(): void {
+		if ( ! self::is_enabled() ) {
+			return;
+		}
+
 		add_rewrite_endpoint( 'wishlist', EP_ROOT | EP_PAGES );
 	}
 
@@ -24,6 +32,10 @@ class MyAccount_Core_Wishlist_Module {
 		$this->plugin_dir     = $plugin_dir ? trailingslashit( $plugin_dir ) : trailingslashit( dirname( __DIR__, 3 ) );
 		$this->plugin_url     = $plugin_url ? trailingslashit( $plugin_url ) : trailingslashit( plugin_dir_url( $this->plugin_dir . 'myaccount-core.php' ) );
 		$this->use_min_assets = $this->should_use_min_assets();
+
+		if ( ! self::is_enabled() ) {
+			return;
+		}
 
 		if ( ! $this->is_yith_wishlist_active() ) {
 			return;
@@ -83,7 +95,7 @@ class MyAccount_Core_Wishlist_Module {
 			return;
 		}
 
-		$deps = wp_style_is( 'myaccount-core-css-shared', 'enqueued' ) ? array( 'myaccount-core-css-shared' ) : array();
+		$deps = wp_style_is( 'myaccount-core-css-global', 'enqueued' ) ? array( 'myaccount-core-css-global' ) : array();
 		wp_enqueue_style(
 			'myaccount-core-module-wishlist-css',
 			$this->plugin_url . $css_path,

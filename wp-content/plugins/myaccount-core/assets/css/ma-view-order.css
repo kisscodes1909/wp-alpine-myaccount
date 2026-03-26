@@ -304,7 +304,7 @@
             flex-direction: column;
             gap: 0;
         }
-/* Section title/description: .ma-u-section-title / .ma-u-section-description (myaccount-shared.css). */
+/* Section title/description: .ma-u-section-title / .ma-u-section-description (myaccount-global.css). */
 .woocommerce-account .ma-form .ma-form__grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -503,10 +503,8 @@
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
     }
-/* No underline on links inside line cards (including hover) */
-.woocommerce-account .ma-line-card a,
-    .woocommerce-account .ma-line-card a:hover,
-    .woocommerce-account .ma-line-card a:focus {
+/* Default link: no underline; hover/focus styles come from endpoint (e.g. title links like .ma-wishlist-card__title a) */
+.woocommerce-account .ma-line-card a {
         text-decoration: none;
     }
 .woocommerce-account .ma-line-card__media {
@@ -536,22 +534,18 @@
     .woocommerce-account .ma-line-card:focus-within .ma-line-card__media img {
         transform: scale(1.05);
     }
-/* Padding md — same mobile → desktop (no breakpoint shrink) */
+/* Body: align with .ma-wishlist-card__body (padding md, sm gap, muted default text) */
 .woocommerce-account .ma-line-card__body {
         box-sizing: border-box;
         display: flex;
+        flex: 1 1 0;
         flex-direction: column;
         gap: var(--ma-space-sm);
-        flex: 1 1 0;
         min-width: 0;
         padding: var(--ma-space-md);
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
-    }
-@media (min-width: 480px) {
-        .woocommerce-account .ma-line-card__body {
-            gap: var(--ma-space-md);
-        }
+        color: var(--ma-text-muted-dark);
     }
 @media (prefers-reduced-motion: reduce) {
         .woocommerce-account .ma-line-card__media img {
@@ -1116,7 +1110,6 @@
 /* Full __body padding from order-line-card; tighter gap on small screens only */
 .woocommerce-account .ma-order-details-items-summary__item-body.ma-line-card__body {
         gap: var(--ma-space-xs);
-        color: var(--ma-text-primary);
     }
 @media (min-width: 480px) {
 
@@ -1129,33 +1122,38 @@
             min-height: 128px;
         }
     }
+/* Title / price / secondary copy: match .ma-wishlist-card__title, __price, __variation */
 .woocommerce-account .ma-order-details-items-summary__item-name {
         margin: 0;
-        font-size: var(--ma-font-sm);
-        font-weight: 600;
-        line-height: var(--ma-line-normal);
+        font-size: var(--ma-font-base);
+        font-weight: var(--ma-weight-medium);
+        line-height: var(--ma-line-snug);
         overflow-wrap: break-word;
         word-break: break-word;
         letter-spacing: var(--ma-tracking-tight);
+        color: var(--ma-text-primary);
     }
+/* Product title link: match .ma-wishlist-card__title a (color fade, no underline) */
 .woocommerce-account .ma-order-details-items-summary__item-name a {
         color: inherit;
         text-decoration: none;
+        transition: color var(--ma-duration-fast) var(--ma-easing-smooth);
     }
 .woocommerce-account .ma-order-details-items-summary__item-name a:hover,
-    .woocommerce-account .ma-order-details-items-summary__item-name a:focus {
-        text-decoration: none;
+    .woocommerce-account .ma-order-details-items-summary__item-name a:focus-visible {
+        color: var(--ma-text-muted-dark);
     }
-.woocommerce-account .ma-order-details-items-summary__item-name a:focus-visible {
-        outline: 2px solid var(--ma-text-primary);
-        outline-offset: 2px;
-        border-radius: 2px;
+@media (prefers-reduced-motion: reduce) {
+        .woocommerce-account .ma-order-details-items-summary__item-name a {
+            transition: none;
+        }
     }
 .woocommerce-account .ma-order-details-items-summary__item-meta {
-        margin: var(--ma-space-2xs) 0 0;
+        margin: 0;
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
-        letter-spacing: var(--ma-tracking-tight);
+        letter-spacing: var(--ma-tracking-wide);
+        text-transform: uppercase;
         color: var(--ma-text-muted-dark);
         display: block;
     }
@@ -1165,12 +1163,15 @@
         letter-spacing: var(--ma-tracking-wider);
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
+        font-weight: var(--ma-weight-medium);
+        color: var(--ma-text-primary);
     }
 .woocommerce-account .ma-order-details-items-summary__item-price {
-        font-size: var(--ma-font-sm);
-        font-weight: 600;
+        margin: 0;
+        font-size: var(--ma-font-base);
+        font-weight: var(--ma-weight-semibold);
         line-height: var(--ma-line-normal);
-        color: var(--ma-text-strong);
+        color: var(--ma-text-primary);
         letter-spacing: var(--ma-tracking-tight);
     }
 .woocommerce-account .ma-order-details-items-summary__item-purchase-note {
@@ -1509,141 +1510,6 @@
             padding-top: var(--ma-space-lg);
         }
 
-    }
-/* Re-apply .ma-btn after view-order so Order again + actions match buttons.css (theme-safe). */
-/* -------------------------------------------------------------------------- */
-/* My Account shared buttons (.ma-btn) — token-based, no WooCommerce dependency */
-/* Variants: --primary, --secondary (= secondary-light), --secondary-light, --danger, --ghost, --block */
-/* -------------------------------------------------------------------------- */
-.woocommerce-account .ma-btn {
-        -webkit-appearance: none;
-           -moz-appearance: none;
-                appearance: none;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: var(--ma-space-sm);
-        padding: var(--ma-space-sm) var(--ma-space-md);
-        font-family: inherit;
-        font-size: var(--ma-font-xs);
-        font-weight: 500;
-        line-height: var(--ma-line-tight);
-        text-transform: uppercase;
-        letter-spacing: var(--ma-tracking-wider);
-        text-decoration: none;
-        border: 1px solid var(--ma-btn-secondary-border);
-        background: var(--ma-btn-secondary-bg);
-        color: var(--ma-btn-secondary-text);
-        cursor: pointer;
-        border-radius: 0;
-        transition: border-color var(--ma-duration-fast) var(--ma-easing-smooth),
-            background-color var(--ma-duration-fast) var(--ma-easing-smooth),
-            color var(--ma-duration-fast) var(--ma-easing-smooth);
-    }
-.woocommerce-account .ma-btn:hover {
-        border-color: var(--ma-btn-secondary-border-hover);
-        background: var(--ma-btn-secondary-bg-hover);
-        color: var(--ma-btn-secondary-text);
-    }
-.woocommerce-account .ma-btn:focus-visible {
-        outline: 2px solid var(--ma-text-primary);
-        outline-offset: 2px;
-    }
-.woocommerce-account .ma-btn:disabled,
-    .woocommerce-account .ma-btn[disabled] {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-/* Keep primary CTA look when disabled/loading (WC/theme often resets button:disabled to light bg). */
-.woocommerce-account .ma-btn--primary:disabled,
-    .woocommerce-account .ma-btn--primary[disabled],
-    .woocommerce-account .ma-btn--primary[aria-busy='true'] {
-        background: var(--ma-btn-primary-bg);
-        border-color: var(--ma-btn-primary-border);
-        color: var(--ma-btn-primary-text);
-        opacity: 0.92;
-    }
-.woocommerce-account .ma-btn--primary .ma-btn-loading,
-    .woocommerce-account .ma-btn--primary .button-loading-label {
-        color: inherit;
-    }
-/* Icons inside any .ma-btn (empty state, address, auth, etc.) — one size */
-.woocommerce-account .ma-btn svg {
-        display: block;
-        width: var(--ma-font-base);
-        height: var(--ma-font-base);
-        flex-shrink: 0;
-    }
-.woocommerce-account .ma-btn--primary {
-        border-color: var(--ma-btn-primary-border);
-        background: var(--ma-btn-primary-bg);
-        color: var(--ma-btn-primary-text);
-    }
-.woocommerce-account .ma-btn--primary:hover:not(:disabled) {
-        background: var(--ma-btn-primary-bg-hover);
-        border-color: var(--ma-btn-primary-border);
-        color: var(--ma-btn-primary-text);
-    }
-.woocommerce-account .ma-btn--secondary-light {
-        border-color: var(--ma-border);
-        background: var(--ma-surface);
-        color: var(--ma-text-primary);
-    }
-.woocommerce-account .ma-btn--secondary-light:hover:not(:disabled) {
-        border-color: var(--ma-btn-secondary-border-hover);
-        background: var(--ma-btn-secondary-bg-hover);
-        color: var(--ma-text-primary);
-    }
-/* Alias: same as secondary-light (templates / view-order summary links) */
-.woocommerce-account .ma-btn--secondary {
-        border-color: var(--ma-border);
-        background: var(--ma-surface);
-        color: var(--ma-text-primary);
-    }
-.woocommerce-account .ma-btn--secondary:hover:not(:disabled) {
-        border-color: var(--ma-btn-secondary-border-hover);
-        background: var(--ma-btn-secondary-bg-hover);
-        color: var(--ma-text-primary);
-    }
-/* Full-width stack (e.g. order summary actions) */
-.woocommerce-account .ma-btn--block {
-        width: 100%;
-        box-sizing: border-box;
-        min-height: calc(var(--ma-space-md) * 2.625);
-    }
-.woocommerce-account .ma-btn--block.ma-btn--danger {
-        min-height: calc(var(--ma-space-md) * 2.875);
-    }
-.woocommerce-account .ma-btn--danger {
-        border-color: var(--ma-btn-danger-border);
-        background: var(--ma-btn-danger-bg);
-        color: var(--ma-btn-danger-text);
-    }
-.woocommerce-account .ma-btn--danger:hover:not(:disabled) {
-        border-color: var(--ma-btn-danger-border-hover);
-        background: var(--ma-btn-danger-bg-hover);
-        color: var(--ma-btn-danger-text);
-    }
-/* Ghost: bare icon button (e.g. modal close), no border/bg */
-.woocommerce-account .ma-btn--ghost {
-        border-color: transparent;
-        background: transparent;
-        color: var(--ma-text-muted);
-        padding: var(--ma-space-xs);
-    }
-.woocommerce-account .ma-btn--ghost:hover:not(:disabled) {
-        color: var(--ma-text-primary);
-    }
-.woocommerce-account .ma-btn--ghost svg {
-        display: block;
-        width: 1rem;
-        height: 1rem;
-    }
-/* Icon inside primary/CTA buttons (e.g. arrow in Sign In / Create Account) */
-.woocommerce-account .ma-btn .ma-form__input-icon-svg {
-        width: var(--ma-font-base);
-        height: var(--ma-font-base);
-        flex-shrink: 0;
     }
 /* @import "./myaccount/view-order-legacy.css"; */
 

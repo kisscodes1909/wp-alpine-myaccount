@@ -35,10 +35,25 @@ class MyAccount_Core_Returns_Module {
 		add_filter( 'myaccount_core_managed_templates', array( $this, 'register_managed_templates' ) );
 		add_filter( 'myaccount_core_endpoint_js_dependencies', array( $this, 'filter_endpoint_js_dependencies' ), 10, 2 );
 		add_filter( 'script_loader_tag', array( $this, 'add_defer_attribute' ), 10, 2 );
+		add_filter( 'myaccount_core_returns_allowed_statuses', array( $this, 'filter_allowed_statuses' ) );
 	}
 
 	public static function is_enabled(): bool {
 		return (bool) apply_filters( 'myaccount_core_returns_module_enabled', false );
+	}
+
+	/**
+	 * Allow returns for completed and delivered orders.
+	 *
+	 * @param array<int, string> $statuses
+	 * @return array<int, string>
+	 */
+	public function filter_allowed_statuses( array $statuses ): array {
+		$statuses = array_map( 'sanitize_key', is_array( $statuses ) ? $statuses : array() );
+		$statuses[] = 'completed';
+		$statuses[] = 'delivered';
+
+		return array_values( array_unique( array_filter( $statuses ) ) );
 	}
 
 	public function enqueue_assets(): void {

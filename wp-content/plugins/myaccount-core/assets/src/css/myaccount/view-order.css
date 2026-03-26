@@ -612,7 +612,6 @@
     /* Full __body padding from order-line-card; tighter gap on small screens only */
     .ma-order-details-items-summary__item-body.ma-line-card__body {
         gap: var(--ma-space-xs);
-        color: var(--ma-text-primary);
     }
 
     @media (min-width: 480px) {
@@ -627,37 +626,42 @@
         }
     }
 
+    /* Title / price / secondary copy: match .ma-wishlist-card__title, __price, __variation */
     .ma-order-details-items-summary__item-name {
         margin: 0;
-        font-size: var(--ma-font-sm);
-        font-weight: 600;
-        line-height: var(--ma-line-normal);
+        font-size: var(--ma-font-base);
+        font-weight: var(--ma-weight-medium);
+        line-height: var(--ma-line-snug);
         overflow-wrap: break-word;
         word-break: break-word;
         letter-spacing: var(--ma-tracking-tight);
+        color: var(--ma-text-primary);
     }
 
+    /* Product title link: match .ma-wishlist-card__title a (color fade, no underline) */
     .ma-order-details-items-summary__item-name a {
         color: inherit;
         text-decoration: none;
+        transition: color var(--ma-duration-fast) var(--ma-easing-smooth);
     }
 
     .ma-order-details-items-summary__item-name a:hover,
-    .ma-order-details-items-summary__item-name a:focus {
-        text-decoration: none;
+    .ma-order-details-items-summary__item-name a:focus-visible {
+        color: var(--ma-text-muted-dark);
     }
 
-    .ma-order-details-items-summary__item-name a:focus-visible {
-        outline: 2px solid var(--ma-text-primary);
-        outline-offset: 2px;
-        border-radius: 2px;
+    @media (prefers-reduced-motion: reduce) {
+        .ma-order-details-items-summary__item-name a {
+            transition: none;
+        }
     }
 
     .ma-order-details-items-summary__item-meta {
-        margin: var(--ma-space-2xs) 0 0;
+        margin: 0;
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
-        letter-spacing: var(--ma-tracking-tight);
+        letter-spacing: var(--ma-tracking-wide);
+        text-transform: uppercase;
         color: var(--ma-text-muted-dark);
         display: block;
     }
@@ -668,13 +672,16 @@
         letter-spacing: var(--ma-tracking-wider);
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
+        font-weight: var(--ma-weight-medium);
+        color: var(--ma-text-primary);
     }
 
     .ma-order-details-items-summary__item-price {
-        font-size: var(--ma-font-sm);
-        font-weight: 600;
+        margin: 0;
+        font-size: var(--ma-font-base);
+        font-weight: var(--ma-weight-semibold);
         line-height: var(--ma-line-normal);
-        color: var(--ma-text-strong);
+        color: var(--ma-text-primary);
         letter-spacing: var(--ma-tracking-tight);
     }
 
