@@ -11,36 +11,19 @@
     }
 
     /* Shell: .ma-line-card (+ __media, __body) in order-line-card.css */
-
-    .ma-orders__item-image-overlay {
-        position: absolute;
-        inset: 0;
-        display: flex;
+    .ma-orders__item.ma-line-card {
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: var(--ma-space-xs);
-        background: var(--ma-surface-overlay);
     }
 
-    .ma-orders__item-image-overlay-count,
-    .ma-orders__item-image-overlay-label {
-        font-size: var(--ma-font-sm);
-        line-height: var(--ma-line-normal);
-    }
-    .ma-orders__item-image-overlay-count {
-        font-weight: 600;
-        color: var(--ma-text-inverse);
-        letter-spacing: var(--ma-tracking-tight);
-    }
-    .ma-orders__item-image-overlay-label {
-        font-weight: 400;
-        color: var(--ma-text-inverse-soft);
+    .ma-orders__item .ma-line-card__media {
+        width: 100%;
+        min-width: 0;
+        aspect-ratio: 1 / 1;
     }
 
-    /* Media img: base fill + min-height; zoom/hover on .ma-line-card (order-line-card.css) */
     .ma-orders__item-image img {
-        min-height: 120px;
+        height: 100%;
+        min-height: 0;
     }
 
     .ma-orders__item-body.ma-line-card__body {
@@ -52,7 +35,7 @@
     .ma-orders__item-header {
         display: flex;
         flex-direction: row;
-        align-items: flex-start;
+        align-items: center;
         justify-content: space-between;
         gap: var(--ma-space-sm);
     }
@@ -81,64 +64,53 @@
         flex-shrink: 0;
     }
 
-    .ma-orders__item-status--success {
-        background-color: var(--ma-success-bg);
-        border-color: var(--ma-success-border);
-        color: var(--ma-success-text);
-    }
-
-    .ma-orders__item-status--success .ma-orders__item-status-dot {
-        background-color: var(--ma-success-text);
-    }
-
-    .ma-orders__item-status--error {
-        background-color: var(--ma-danger-bg);
-        border-color: var(--ma-danger-border);
-        color: var(--ma-danger-text);
-    }
-
-    .ma-orders__item-status--error .ma-orders__item-status-dot {
-        background-color: var(--ma-danger-text);
-    }
-
-    .ma-orders__item-status--warning {
+    .ma-orders__item-status--state-pending,
+    .ma-orders__item-status--state-on-hold {
         background-color: var(--ma-warning-bg);
         border-color: var(--ma-warning-border);
         color: var(--ma-warning-text);
     }
 
-    .ma-orders__item-status--warning .ma-orders__item-status-dot {
-        background-color: var(--ma-warning-text);
-    }
-
-    .ma-orders__item-status--info {
+    .ma-orders__item-status--state-processing {
         background-color: var(--ma-info-bg);
         border-color: var(--ma-info-border);
         color: var(--ma-info-text);
     }
 
-    .ma-orders__item-status--info .ma-orders__item-status-dot {
-        background-color: var(--ma-info-text);
+    .ma-orders__item-status--state-completed {
+        background-color: var(--ma-success-bg);
+        border-color: var(--ma-success-border);
+        color: var(--ma-success-text);
     }
 
-    .ma-orders__item-status-dot {
-        width: var(--ma-space-2xs);
-        height: var(--ma-space-2xs);
+    .ma-orders__item-status--state-refunded {
+        background-color: var(--ma-surface-alt);
+        border-color: var(--ma-border-strong);
+        color: var(--ma-text-muted-dark);
     }
 
-    /* Row 2: Mobile = Date | Items căn 2 bên (flex 1, Items right-align). Desktop = flow, no flex 1. */
-    .ma-orders__item-meta {
+    .ma-orders__item-status--state-cancelled,
+    .ma-orders__item-status--state-failed {
+        background-color: var(--ma-danger-bg);
+        border-color: var(--ma-danger-border);
+        color: var(--ma-danger-text);
+    }
+
+    /* Mobile meta follows the screenshot layout; desktop keeps the original grouped meta. */
+    .ma-orders__item-meta--mobile {
         display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: space-between;
+        flex-direction: column;
         gap: var(--ma-space-sm);
-        align-items: flex-start;
+        align-items: stretch;
+    }
+
+    .ma-orders__item-meta--desktop {
+        display: none;
     }
 
     @media (min-width: 480px) {
-        .ma-orders__item-meta {
-            gap: var(--ma-space-md);
+        .ma-orders__item-meta--mobile {
+            gap: var(--ma-space-sm);
         }
     }
 
@@ -152,65 +124,21 @@
         text-align: right;
     }
 
-    /* DATE | ITEMS | TRACKING — mobile: 3 rows; desktop: row; groups flex-start; tracking inherits .ma-orders__item-meta-value type. */
-    .ma-orders__item-meta--has-tracking {
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: flex-start;
-        gap: var(--ma-space-md);
-
-        .ma-orders__item-meta-group {
-            flex: 0 0 auto;
-            width: 100%;
-            min-width: 0;
-            text-align: left;
-        }
-    }
-
-    .ma-orders__item-meta-value--tracking {
+    .ma-orders__item-meta-row {
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
         gap: var(--ma-space-sm);
     }
 
-    .ma-orders__item-tracking-row {
-        display: flex;
-        align-items: flex-start;
-        gap: var(--ma-space-xs);
-    }
-
-    .ma-orders__item-tracking-icon {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        line-height: 0;
-        color: var(--ma-text-muted-dark);
-
-        svg {
-            width: 1.125rem;
-            height: 1.125rem;
-        }
-    }
-
-    .ma-orders__item-tracking-main {
+    .ma-orders__item-meta--mobile .ma-orders__item-meta-row > :first-child,
+    .ma-orders__item-meta--mobile .ma-orders__item-meta-row > :last-child {
+        flex: 1 1 50%;
         min-width: 0;
     }
 
-    .ma-orders__item-tracking-provider {
-        font-weight: 600;
-    }
-
-    .ma-orders__item-tracking-id {
-        color: inherit;
-        font-weight: 400;
-        text-decoration: underline;
-        text-underline-offset: 2px;
-
-        &:hover,
-        &:focus-visible {
-            color: var(--ma-text-muted);
-        }
+    .ma-orders__item-meta--mobile .ma-orders__item-meta-row > :last-child {
+        text-align: right;
     }
 
     .ma-orders__item-meta-label {
@@ -229,40 +157,107 @@
         color: var(--ma-text-primary);
     }
 
+    .ma-orders__item-meta-row--total .ma-orders__item-meta-value,
+    .ma-orders__item-meta-group--total .ma-orders__item-meta-value {
+        font-weight: var(--ma-weight-semibold);
+    }
+
+    .ma-orders__item-meta-row .ma-orders__item-meta-label,
+    .ma-orders__item-meta-row .ma-orders__item-meta-value,
+    .ma-orders__item-meta-group .ma-orders__item-meta-label,
+    .ma-orders__item-meta-group .ma-orders__item-meta-value {
+        margin: 0;
+    }
+
     /* Row 3: Price | View Details, căn 2 bên. */
     .ma-orders__item-footer {
         display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        justify-content: flex-start;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
         gap: var(--ma-space-sm);
         padding-top: var(--ma-space-sm);
         margin-top: 0;
         border-top: 1px solid var(--ma-border);
     }
 
-    /* 480–767px: taller thumb (media column still 120px wide) */
-    @media (min-width: 480px) {
-        .ma-orders__item .ma-line-card__media {
-            min-height: 128px;
-        }
-
-        .ma-orders__item-image img {
-            min-height: 128px;
-        }
+    .ma-orders__item-fulfillment {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--ma-space-xs);
+        font-size: var(--ma-font-xs);
+        line-height: var(--ma-line-normal);
+        letter-spacing: var(--ma-tracking-wider);
+        text-transform: uppercase;
     }
 
-    /* 768px+: 150px media column + taller row */
+    a.ma-orders__item-fulfillment {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .ma-orders__item-fulfillment-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 0;
+        flex-shrink: 0;
+    }
+
+    .ma-orders__item-fulfillment-icon svg {
+        display: block;
+        width: var(--ma-font-lg);
+        height: var(--ma-font-lg);
+    }
+
+    .ma-orders__item-image-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: var(--ma-space-xs);
+        background: var(--ma-surface-overlay);
+        pointer-events: none;
+    }
+
+    .ma-orders__item-image-overlay-count,
+    .ma-orders__item-image-overlay-label {
+        font-size: var(--ma-font-sm);
+        line-height: var(--ma-line-normal);
+    }
+    .ma-orders__item-image-overlay-count {
+        font-weight: 600;
+        color: var(--ma-text-inverse);
+        letter-spacing: var(--ma-tracking-tight);
+    }
+    .ma-orders__item-image-overlay-label {
+        font-weight: 400;
+        color: var(--ma-text-inverse-soft);
+    }
+
+    /* 768px+: horizontal card with fixed 180px square media */
     @media (min-width: 768px) {
-        .ma-orders__item .ma-line-card__media,
-        .ma-orders__item-image img {
-            min-height: 180px;
+        .ma-orders__item.ma-line-card {
+            flex-direction: row;
+        }
+
+        .ma-orders__item .ma-line-card__media {
+            width: 180px;
+            min-width: 180px;
+            aspect-ratio: 1 / 1;
         }
         .ma-orders__item-body.ma-line-card__body {
             justify-content: space-between;
             gap: 0;
         }
-        .ma-orders__item-meta {
+        .ma-orders__item-meta--mobile {
+            display: none;
+        }
+
+        .ma-orders__item-meta--desktop {
+            display: flex;
             justify-content: flex-start;
             gap: var(--ma-space-xl);
             align-items: center;
@@ -270,53 +265,24 @@
         .ma-orders__item-meta-group { flex: 0 1 auto; }
         .ma-orders__item-meta-group--items { text-align: left; }
 
-        .ma-orders__item-meta--has-tracking {
-            flex-direction: row;
-            flex-wrap: nowrap;
-            align-items: flex-start;
-            justify-content: flex-start;
-            gap: var(--ma-space-xl);
-
-            .ma-orders__item-meta-group {
-                flex: 0 1 auto;
-                width: auto;
-                max-width: none;
-            }
-        }
         .ma-orders__item-footer {
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
             margin-top: var(--ma-space-xs);
             padding-top: var(--ma-space-md);
             padding-bottom: var(--ma-space-2xs);
         }
     }
 
-    /* Match .ma-wishlist-card__price */
-    .ma-orders__item-total {
-        margin: 0;
-        font-size: var(--ma-font-base);
-        line-height: var(--ma-line-normal);
-        font-weight: var(--ma-weight-semibold);
-        letter-spacing: var(--ma-tracking-tight);
-        color: var(--ma-text-primary);
-    }
-
     .ma-orders__item-actions {
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--ma-space-2xs);
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--ma-space-sm);
     }
 
-    @media (min-width: 480px) {
-        .ma-orders__item-actions {
-            flex-direction: row;
-            align-items: center;
-            justify-content: flex-start;
-            gap: var(--ma-space-md);
-        }
+    .ma-orders__item-footer--no-tracking .ma-orders__item-actions {
+        margin-inline-start: auto;
+        justify-content: flex-end;
     }
 
     .ma-orders__item-action-button { justify-content: flex-start; }

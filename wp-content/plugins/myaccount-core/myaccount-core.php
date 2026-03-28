@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 if ( ! class_exists( 'MyAccount_Core_Plugin' ) ) {
 	require_once __DIR__ . '/includes/core/class-myaccount-core-plugin.php';
 }
-// define( 'MYACCOUNT_CORE_USE_MIN_ASSETS', false );
+define( 'MYACCOUNT_CORE_USE_MIN_ASSETS', false );
 if ( ! defined( 'MYACCOUNT_CORE_USE_MIN_ASSETS' ) ) {
 	define(
 		'MYACCOUNT_CORE_USE_MIN_ASSETS',

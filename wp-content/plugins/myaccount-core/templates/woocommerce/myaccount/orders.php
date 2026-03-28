@@ -18,18 +18,43 @@ do_action( 'woocommerce_before_account_orders', $has_orders );
 		<?php
 		foreach ( $customer_orders->orders as $customer_order ) {
 			$order  = wc_get_order( $customer_order ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			$actions = wc_get_account_orders_actions( $order );
+			$view_url = isset( $actions['view']['url'] ) ? $actions['view']['url'] : '';
 			$items  = array_values( $order->get_items() );
 			$first_item = ! empty( $items ) ? $items[0] : null;
 			if ( $first_item && is_object( $first_item ) ) {
 				$product = $first_item->get_product();
-				$image   = $product ? $product->get_image( 'thumbnail' ) : wp_sprintf( '<img src="%s" alt="" />', esc_url( wc_placeholder_img_src( 'thumbnail' ) ) );
+				$image_alt = $first_item->get_name();
+				$image     = $product
+					? $product->get_image(
+						'thumbnail',
+						array(
+							'alt'      => $image_alt,
+							'loading'  => 'lazy',
+							'decoding' => 'async',
+						)
+					)
+					: wp_sprintf(
+						'<img src="%s" alt="%s" loading="lazy" decoding="async" />',
+						esc_url( wc_placeholder_img_src( 'thumbnail' ) ),
+						esc_attr( $image_alt )
+					);
 			} else {
-				$image = wp_sprintf( '<img src="%s" alt="" />', esc_url( wc_placeholder_img_src( 'thumbnail' ) ) );
+				$image = wp_sprintf(
+					'<img src="%s" alt="" loading="lazy" decoding="async" />',
+					esc_url( wc_placeholder_img_src( 'thumbnail' ) )
+				);
 			}
 			?>
 			<div class="ma-orders__item ma-line-card">
 				<div class="ma-orders__item-image ma-line-card__media">
+					<?php if ( $view_url ) : ?>
+						<a class="ma-orders__item-image-link" href="<?php echo esc_url( $view_url ); ?>" aria-label="<?php esc_attr_e( 'View order details', 'woocommerce' ); ?>">
+					<?php endif; ?>
 					<?php echo $image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- product image or placeholder HTML ?>
+					<?php if ( $view_url ) : ?>
+						</a>
+					<?php endif; ?>
 					<?php if ( count( $items ) > 1 ) : ?>
 						<div class="ma-orders__item-image-overlay" aria-hidden="true">
 							<span class="ma-orders__item-image-overlay-count">+<?php echo esc_html( (string) ( count( $items ) - 1 ) ); ?></span>

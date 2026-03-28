@@ -261,6 +261,10 @@
 
   // assets/src/js/alpine/entries/endpoint-address.js
   registerAddressStore();
+  var userAddressStore = window.Alpine?.store?.("userAddress");
+  if (userAddressStore?.init) {
+    userAddressStore.init();
+  }
   window.MyAccountAlpineRuntime?.start?.();
 })();
 //# sourceMappingURL=alpine.address.js.map

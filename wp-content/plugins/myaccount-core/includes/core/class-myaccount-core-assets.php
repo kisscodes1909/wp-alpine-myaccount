@@ -99,9 +99,11 @@ class MyAccount_Core_Assets {
 		$js_shared_loaded     = false;
 
 		if ( $can_use_split_loading ) {
+			$shared_deps = array( 'wp-util' );
 			$js_shared_loaded = $this->enqueue_script_if_exists(
 				'myaccount-core-js-shared-core',
-				$shared_js_path
+				$shared_js_path,
+				$shared_deps
 			);
 
 			if ( $validation_required ) {
@@ -132,7 +134,8 @@ class MyAccount_Core_Assets {
 		} else {
 			$legacy_js_loaded = $this->enqueue_script_if_exists(
 				'alpine-bundle',
-				$this->asset_path( 'assets/js/alpine.bundle.js' )
+				$this->asset_path( 'assets/js/alpine.bundle.js' ),
+				array( 'wp-util' )
 			);
 		}
 

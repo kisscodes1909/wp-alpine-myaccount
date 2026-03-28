@@ -100,7 +100,7 @@ require_once __DIR__ . '/partials/form-field-icons.php';
 			</form>
 		</div>
 
-		<div x-show="openTab === 'signUp'">
+		<div x-show="openTab === 'signUp'" x-cloak>
 			<div class="ma-auth__signup-head">
 				<p class="ma-auth__signup-welcome"><?php esc_html_e( 'Join us', 'woocommerce' ); ?></p>
 				<h2 class="ma-auth__signup-title"><?php esc_html_e( 'Create Account', 'woocommerce' ); ?></h2>

@@ -36,6 +36,7 @@ class MyAccount_Core_Plugin {
 		MyAccount_Core_Auth_Module::instance();
 		MyAccount_Core_Template_Loader::instance( self::$plugin_dir );
 		MyAccount_Core_Assets::instance( self::$plugin_dir, self::$plugin_url );
+		MyAccount_Core_Account_Asset_Optimizer::instance();
 		MyAccount_Core_Address_Module::instance();
 		MyAccount_Core_Wishlist_Module::instance( self::$plugin_dir, self::$plugin_url );
 		MyAccount_Core_Tracking_Module::instance();
@@ -82,6 +83,7 @@ class MyAccount_Core_Plugin {
 			'MyAccount_Core_Admin',
 			'MyAccount_Core_Ajax',
 			'MyAccount_Core_Assets',
+			'MyAccount_Core_Account_Asset_Optimizer',
 			'MyAccount_Core_Hooks',
 			'MyAccount_Core_Template_Loader',
 		);
