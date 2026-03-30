@@ -51,6 +51,7 @@
         /* Motion: same contract as .ma-line-card__media img (order-line-card.css) — duration + easing from base tokens. */
         --ma-wishlist-media-motion-duration: var(--ma-duration-normal);
         --ma-wishlist-media-motion-easing: var(--ma-easing-smooth);
+        --ma-wishlist-card-section-padding: var(--ma-space-md);
     }
 
     .ma-wishlist-card__media {
@@ -80,7 +81,7 @@
         opacity: var(--ma-opacity-90);
     }
 
-    /* Block: overlay — rest: hidden (opacity + offset); active: hover | :focus-within on .ma-wishlist-card. */
+    /* Media actions: mobile keeps remove visible in media; desktop enhances purchase back into overlay. */
     .ma-wishlist-card__media-actions {
         position: absolute;
         z-index: 2;
@@ -101,16 +102,21 @@
             transform var(--ma-wishlist-media-motion-duration) var(--ma-wishlist-media-motion-easing);
     }
 
-    .ma-wishlist-card:hover .ma-wishlist-card__media-actions,
-    .ma-wishlist-card:focus-within .ma-wishlist-card__media-actions {
+    .ma-wishlist-card__media-actions--remove-only {
+        justify-content: flex-end;
         opacity: var(--ma-opacity-100);
         transform: translateY(var(--ma-space-0));
         pointer-events: auto;
     }
 
-    .ma-wishlist-card__media-actions > .ma-wishlist-card__purchase-form,
-    .ma-wishlist-card__media-actions > a.ma-wishlist-card__cta {
+    .ma-wishlist-card__media-actions--purchase-desktop {
+        display: none;
+    }
+
+    .ma-wishlist-card__footer > .ma-wishlist-card__purchase-form,
+    .ma-wishlist-card__footer > a.ma-wishlist-card__cta {
         flex: 1 1 auto;
+        width: 100%;
         min-width: 0;
     }
 
@@ -153,8 +159,14 @@
         min-width: 0;
     }
 
-    .ma-wishlist-card__media-actions--remove-only {
-        justify-content: flex-end;
+    .ma-wishlist-card__footer {
+        display: flex;
+        flex-direction: column;
+        gap: var(--ma-space-sm);
+        padding: var(--ma-wishlist-card-section-padding);
+        padding-top: 0;
+        margin-top: calc(var(--ma-wishlist-card-section-padding) * -1);
+        border-top: 1px solid var(--ma-border);
     }
 
     .ma-wishlist-card__stock-badge {
@@ -192,7 +204,7 @@
         flex-direction: column;
         gap: var(--ma-space-sm);
         min-width: 0;
-        padding: var(--ma-space-md);
+        padding: var(--ma-wishlist-card-section-padding);
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
         color: var(--ma-text-muted-dark);
@@ -322,7 +334,7 @@
             transform: none;
         }
 
-        .ma-wishlist-card__media-actions {
+        .ma-wishlist-card__media-actions--purchase-desktop {
             opacity: var(--ma-opacity-100);
             transform: translateY(var(--ma-space-0));
             pointer-events: auto;
@@ -344,6 +356,27 @@
     @media (min-width: 992px) {
         .ma-wishlist-grid {
             grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .ma-wishlist-card__footer {
+            display: none;
+        }
+
+        .ma-wishlist-card__media-actions--purchase-desktop {
+            display: flex;
+        }
+
+        .ma-wishlist-card:hover .ma-wishlist-card__media-actions--purchase-desktop,
+        .ma-wishlist-card:focus-within .ma-wishlist-card__media-actions--purchase-desktop {
+            opacity: var(--ma-opacity-100);
+            transform: translateY(var(--ma-space-0));
+            pointer-events: auto;
+        }
+
+        .ma-wishlist-card__media-actions--purchase-desktop > .ma-wishlist-card__purchase-form,
+        .ma-wishlist-card__media-actions--purchase-desktop > a.ma-wishlist-card__cta {
+            flex: 1 1 auto;
+            min-width: 0;
         }
     }
 }

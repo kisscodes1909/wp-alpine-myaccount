@@ -44,10 +44,12 @@ class MyAccount_Core_Wishlist_Module {
 		add_action( 'init', array( __CLASS__, 'register_endpoints' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ), 25 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'dequeue_yith_wishlist_styles' ), 30 );
+		add_action( 'wp_print_footer_scripts', array( $this, 'dequeue_yith_wishlist_scripts' ), 1 );
 		add_filter( 'woocommerce_account_menu_items', array( $this, 'add_wishlist_menu_item' ) );
 		add_filter( 'woocommerce_get_query_vars', array( $this, 'add_wishlist_query_var' ) );
 		add_action( 'woocommerce_account_wishlist_endpoint', array( $this, 'render_wishlist_endpoint' ) );
 		add_filter( 'myaccount_core_managed_templates', array( $this, 'register_managed_templates' ) );
+		add_filter( 'yith_wcwl_is_wishlist_responsive', array( $this, 'filter_yith_wishlist_responsive' ) );
 		add_filter( 'yith_wcwl_wishlist_page_url', array( $this, 'filter_wishlist_page_url' ), 10, 2 );
 		add_filter( 'yith_wcwl_wishlist_title', array( $this, 'filter_wishlist_title' ) );
 		add_filter( 'yith_wcwl_show_wishlist_update_button', array( $this, 'filter_show_update_button' ), 10, 2 );
@@ -82,6 +84,17 @@ class MyAccount_Core_Wishlist_Module {
 		wp_dequeue_style( 'yith-wcwl-theme' );
 		wp_dequeue_style( 'jquery-selectBox' );
 		wp_dequeue_style( 'yith-wcwl-font-awesome' );
+	}
+
+	public function dequeue_yith_wishlist_scripts(): void {
+		if ( ! $this->is_wishlist_endpoint_request() ) {
+			return;
+		}
+
+		wp_dequeue_script( 'jquery-yith-wcwl' );
+		wp_dequeue_script( 'jquery-yith-wcwl-user' );
+		wp_dequeue_script( 'jquery-selectBox' );
+		wp_dequeue_script( 'prettyPhoto' );
 	}
 
 	public function enqueue_assets(): void {
@@ -176,6 +189,14 @@ class MyAccount_Core_Wishlist_Module {
 		}
 
 		return $show_update;
+	}
+
+	public function filter_yith_wishlist_responsive( bool $is_responsive ): bool {
+		if ( $this->is_wishlist_endpoint_request() ) {
+			return false;
+		}
+
+		return $is_responsive;
 	}
 
 	public function filter_wishlist_params( array $params, string $action ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- YITH filter signature.
