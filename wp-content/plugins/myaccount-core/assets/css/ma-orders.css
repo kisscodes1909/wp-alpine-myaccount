@@ -161,19 +161,6 @@
 .woocommerce-account .ma-orders__item-meta--desktop {
         display: none;
     }
-@media (min-width: 480px) {
-        .woocommerce-account .ma-orders__item-meta--mobile {
-            gap: var(--ma-space-sm);
-        }
-    }
-.woocommerce-account .ma-orders__item-meta-group {
-        margin: 0;
-        flex: 1;
-        min-width: 0;
-    }
-.woocommerce-account .ma-orders__item-meta-group--items {
-        text-align: right;
-    }
 .woocommerce-account .ma-orders__item-meta-row {
         display: flex;
         align-items: center;
@@ -215,22 +202,26 @@
 /* Row 3: Price | View Details, căn 2 bên. */
 .woocommerce-account .ma-orders__item-footer {
         display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
         gap: var(--ma-space-sm);
         padding-top: var(--ma-space-sm);
         margin-top: 0;
-        border-top: 1px solid var(--ma-border);
     }
 .woocommerce-account .ma-orders__item-fulfillment {
         display: inline-flex;
         align-items: center;
         gap: var(--ma-space-xs);
+        width: 100%;
+        padding-top: var(--ma-space-sm);
+        border-top: 1px solid var(--ma-border);
         font-size: var(--ma-font-xs);
         line-height: var(--ma-line-normal);
         letter-spacing: var(--ma-tracking-wider);
         text-transform: uppercase;
+        font-style: italic;
+        justify-content: flex-end;
     }
 .woocommerce-account a.ma-orders__item-fulfillment {
         color: inherit;
@@ -273,6 +264,18 @@
         font-weight: 400;
         color: var(--ma-text-inverse-soft);
     }
+.woocommerce-account .ma-orders__item-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        gap: var(--ma-space-sm);
+        width: 100%;
+        margin-inline-start: auto;
+        padding-top: var(--ma-space-sm);
+        border-top: 1px solid var(--ma-border);
+    }
+.woocommerce-account .ma-orders__item-action-button { justify-content: flex-start; }
 /* 768px+: horizontal card with fixed 180px square media */
 @media (min-width: 768px) {
         .woocommerce-account .ma-orders__item.ma-line-card {
@@ -298,30 +301,37 @@
             gap: var(--ma-space-xl);
             align-items: center;
         }
-        .woocommerce-account .ma-orders__item-meta-group { flex: 0 1 auto; }
-        .woocommerce-account .ma-orders__item-meta-group--items { text-align: left; }
+
+        .woocommerce-account .ma-orders__item-meta-group {
+            margin: 0;
+            flex: 0 1 auto;
+            min-width: 0;
+        }
+
+        .woocommerce-account .ma-orders__item-meta-group--items {
+            text-align: left;
+        }
 
         .woocommerce-account .ma-orders__item-footer {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
             margin-top: var(--ma-space-xs);
             padding-top: var(--ma-space-md);
             padding-bottom: var(--ma-space-2xs);
+            border-top: 1px solid var(--ma-border);
         }
-    }
-.woocommerce-account .ma-orders__item-actions {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: var(--ma-space-sm);
-    }
-.woocommerce-account .ma-orders__item-footer--no-tracking .ma-orders__item-actions {
-        margin-inline-start: auto;
-        justify-content: flex-end;
-    }
-.woocommerce-account .ma-orders__item-action-button { justify-content: flex-start; }
-@media (min-width: 768px) {
+
+        .woocommerce-account .ma-orders__item-fulfillment {
+            width: auto;
+            padding-top: 0;
+            border-top: 0;
+        }
+
         .woocommerce-account .ma-orders__item-actions {
-            justify-content: flex-end;
+            width: auto;
+            padding-top: 0;
+            border-top: 0;
         }
 
         .woocommerce-account .ma-orders__item-action-button {

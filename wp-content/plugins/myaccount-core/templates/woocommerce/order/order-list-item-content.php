@@ -12,17 +12,6 @@ defined( 'ABSPATH' ) || exit;
 
 $order_status      = $order->get_status();
 $order_status_name = wc_get_order_status_name( $order_status );
-// Map WooCommerce status to semantic type (reuses --ma-success/error/warning/info-* tokens).
-$status_type_map   = array(
-	'completed'  => 'success',
-	'processing' => 'info',
-	'pending'    => 'info',
-	'on-hold'    => 'warning',
-	'refunded'   => 'warning',
-	'cancelled'  => 'error',
-	'failed'     => 'error',
-);
-$status_mod        = isset( $status_type_map[ $order_status ] ) ? $status_type_map[ $order_status ] : 'info';
 $actions           = wc_get_account_orders_actions( $order );
 $view_url          = isset( $actions['view']['url'] ) ? $actions['view']['url'] : '';
 $pay_action        = isset( $actions['pay'] ) && is_array( $actions['pay'] ) ? $actions['pay'] : null;
@@ -64,7 +53,7 @@ if ( $ma_has_tracking ) {
 
 <div class="ma-orders__item-header">
 	<p class="ma-orders__item-order-number">Order #<?php echo esc_html( $order->get_order_number() ); ?></p>
-	<span class="ma-orders__item-status ma-orders__item-status--<?php echo esc_attr( $status_mod ); ?> ma-orders__item-status--state-<?php echo esc_attr( sanitize_html_class( $order_status ) ); ?>">
+	<span class="ma-orders__item-status ma-orders__item-status--state-<?php echo esc_attr( sanitize_html_class( $order_status ) ); ?>">
 		<span><?php echo esc_html( $order_status_name ); ?></span>
 	</span>
 </div>
@@ -115,31 +104,27 @@ if ( $ma_has_tracking ) {
 	</div>
 </div>
 
-<div class="ma-orders__item-footer<?php echo ! $ma_has_tracking ? ' ma-orders__item-footer--no-tracking' : ''; ?>">
+<div class="ma-orders__item-footer">
 	<?php if ( $ma_has_tracking ) : ?>
-		<<?php echo $ma_tracking_view_url ? 'a' : 'div'; ?>
-			<?php if ( $ma_tracking_view_url ) : ?>
-				href="<?php echo esc_url( $ma_tracking_view_url ); ?>"
-			<?php endif; ?>
-			class="ma-orders__item-fulfillment ma-orders__item-fulfillment--<?php echo $ma_all_tracking_done ? 'delivered' : 'transit'; ?>"
-		>
+		<a href="<?php echo esc_url( $ma_tracking_view_url ? $ma_tracking_view_url : $view_url ); ?>" class="ma-orders__item-fulfillment">
 			<span class="ma-orders__item-fulfillment-icon" aria-hidden="true">
 				<?php if ( $ma_all_tracking_done ) : ?>
-					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor" focusable="false" aria-hidden="true">
-						<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.086H19.5m-9 0V8.25m0 0h4.125c.621 0 1.129.504 1.09 1.124a17.902 17.902 0 013.213 9.193c0 .538-.214 1.05-.595 1.426L18 18.75M9 8.25h.008v.008H9V8.25zm3 0h.008v.008H12V8.25zm3 0h.008v.008H15V8.25z" />
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" focusable="false">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm7.5 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+						<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h10.5v9h4.072a.75.75 0 00.67-.414l1.82-3.641a.75.75 0 00-.67-1.086H14.25V6.75a1.5 1.5 0 00-1.5-1.5H3.75z" />
 					</svg>
 				<?php else : ?>
-					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor" focusable="false" aria-hidden="true">
-						<path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-						<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.086H19.5m-9 0V8.25m0 0h4.125c.621 0 1.129.504 1.09 1.124a17.902 17.902 0 013.213 9.193c0 .538-.214 1.05-.595 1.426L18 18.75M9 8.25h.008v.008H9V8.25zm3 0h.008v.008H12V8.25zm3 0h.008v.008H15V8.25z" />
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" focusable="false">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm7.5 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+						<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h10.5v9h4.072a.75.75 0 00.67-.414l1.82-3.641a.75.75 0 00-.67-1.086H14.25V6.75a1.5 1.5 0 00-1.5-1.5H3.75z" />
+						<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 7.5h3.75m0 0-1.5-1.5m1.5 1.5-1.5 1.5" />
 					</svg>
 				<?php endif; ?>
 			</span>
-			<span class="ma-orders__item-fulfillment-text">
-				<?php echo esc_html( $ma_all_tracking_done ? __( 'Delivered successfully', 'myaccount-core' ) : __( 'In transit', 'myaccount-core' ) ); ?>
-			</span>
-		</<?php echo $ma_tracking_view_url ? 'a' : 'div'; ?>>
+			<span class="ma-orders__item-fulfillment-text"><?php echo esc_html( $ma_all_tracking_done ? __( 'Delivered successfully', 'myaccount-core' ) : __( 'In transit', 'myaccount-core' ) ); ?></span>
+		</a>
 	<?php endif; ?>
+
 	<div class="ma-orders__item-actions">
 		<?php // TODO: Exchange/Refund button (UI only; feature not implemented yet). ?>
 		<?php // TODO: Review button (UI only; feature not implemented yet). ?>
@@ -170,15 +155,6 @@ if ( $ma_has_tracking ) {
 				<?php esc_html_e( 'Help', 'myaccount-core' ); ?>
 			</a>
 		<?php endif; ?>
-		<?php if ( 'processing' === $order_status && $ma_tracking_view_url ) : ?>
-			<a href="<?php echo esc_url( $ma_tracking_view_url ); ?>" class="ma-btn ma-btn--secondary-light ma-orders__item-action-button ma-orders__item-track-button">
-				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" focusable="false">
-					<path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-					<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.086H19.5m-9 0V8.25m0 0h4.125c.621 0 1.129.504 1.09 1.124a17.902 17.902 0 013.213 9.193c0 .538-.214 1.05-.595 1.426L18 18.75M9 8.25h.008v.008H9V8.25zm3 0h.008v.008H12V8.25zm3 0h.008v.008H15V8.25z" />
-				</svg>
-				<?php esc_html_e( 'Track delivery', 'myaccount-core' ); ?>
-			</a>
-		<?php endif; ?>
 		<?php if ( $reorder_url ) : ?>
 			<a href="<?php echo esc_url( $reorder_url ); ?>" class="ma-btn ma-btn--primary ma-orders__item-action-button ma-orders__item-reorder-button">
 				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" focusable="false">
@@ -187,6 +163,14 @@ if ( $ma_has_tracking ) {
 				<?php esc_html_e( 'Order again', 'woocommerce' ); ?>
 			</a>
 		<?php endif; ?>
-		<?php // View details button removed; order item is clickable. ?>
+		<?php if ( $view_url ) : ?>
+			<a href="<?php echo esc_url( $view_url ); ?>" class="ma-btn ma-btn--secondary-light ma-orders__item-action-button ma-orders__item-view-button">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" focusable="false">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12S5.25 5.25 12 5.25 21.75 12 21.75 12 18.75 18.75 12 18.75 2.25 12 2.25 12z" />
+					<path stroke-linecap="round" stroke-linejoin="round" d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
+				</svg>
+				<?php esc_html_e( 'View order', 'woocommerce' ); ?>
+			</a>
+		<?php endif; ?>
 	</div>
 </div>
