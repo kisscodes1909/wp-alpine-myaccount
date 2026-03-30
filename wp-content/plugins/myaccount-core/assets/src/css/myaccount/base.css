@@ -244,6 +244,18 @@
     --ma-opacity-90: 0.9;
     --ma-opacity-100: 1;
 
+    /* ─────────────────────────────────────────────────────────────
+        BADGES & STATUS PILLS (shared .ma-u-badge)
+        ───────────────────────────────────────────────────────────── */
+    --ma-badge-font-size: var(--ma-font-xs);
+    --ma-badge-font-weight: var(--ma-weight-medium);
+    --ma-badge-padding-x: var(--ma-space-sm);
+    --ma-badge-padding-y: var(--ma-space-xs);
+    --ma-badge-line-height: var(--ma-line-snug);
+    --ma-badge-letter-spacing: var(--ma-tracking-wider);
+    --ma-badge-radius: var(--ma-radius-sm);
+    --ma-badge-border-width: 1px;
+
     /* Shared full-bleed utility for My Account bands inside constrained containers.
        Uses 100vw centered so the band never extends past the viewport (no layout stretch/overflow). */
     .ma-fullbleed-band {

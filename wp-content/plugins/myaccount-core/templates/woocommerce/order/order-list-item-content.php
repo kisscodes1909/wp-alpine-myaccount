@@ -49,13 +49,32 @@ if ( $ma_has_tracking ) {
 		}
 	}
 }
+
+$ma_order_status_badge_tone = 'ma-u-badge--muted';
+switch ( $order_status ) {
+	case 'pending':
+	case 'on-hold':
+		$ma_order_status_badge_tone = 'ma-u-badge--warning';
+		break;
+	case 'processing':
+		$ma_order_status_badge_tone = 'ma-u-badge--info';
+		break;
+	case 'completed':
+		$ma_order_status_badge_tone = 'ma-u-badge--success';
+		break;
+	case 'refunded':
+		$ma_order_status_badge_tone = 'ma-u-badge--neutral';
+		break;
+	case 'cancelled':
+	case 'failed':
+		$ma_order_status_badge_tone = 'ma-u-badge--danger';
+		break;
+}
 ?>
 
 <div class="ma-orders__item-header">
 	<p class="ma-orders__item-order-number">Order #<?php echo esc_html( $order->get_order_number() ); ?></p>
-	<span class="ma-orders__item-status ma-orders__item-status--state-<?php echo esc_attr( sanitize_html_class( $order_status ) ); ?>">
-		<span><?php echo esc_html( $order_status_name ); ?></span>
-	</span>
+	<span class="ma-orders__item-status ma-u-badge <?php echo esc_attr( $ma_order_status_badge_tone ); ?>"><?php echo esc_html( $order_status_name ); ?></span>
 </div>
 
 
@@ -106,18 +125,25 @@ if ( $ma_has_tracking ) {
 
 <div class="ma-orders__item-footer">
 	<?php if ( $ma_has_tracking ) : ?>
+		<?php // Truck glyph: Lucide Icons "truck" (ISC, https://lucide.dev); horizontal speed lines added for in-transit. ?>
 		<a href="<?php echo esc_url( $ma_tracking_view_url ? $ma_tracking_view_url : $view_url ); ?>" class="ma-orders__item-fulfillment">
-			<span class="ma-orders__item-fulfillment-icon" aria-hidden="true">
+			<span class="ma-orders__item-fulfillment-icon <?php echo esc_attr( $ma_all_tracking_done ? 'ma-orders__item-fulfillment-icon--delivered' : 'ma-orders__item-fulfillment-icon--in-transit' ); ?>" aria-hidden="true">
 				<?php if ( $ma_all_tracking_done ) : ?>
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" focusable="false">
-						<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm7.5 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
-						<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h10.5v9h4.072a.75.75 0 00.67-.414l1.82-3.641a.75.75 0 00-.67-1.086H14.25V6.75a1.5 1.5 0 00-1.5-1.5H3.75z" />
+						<path stroke-linecap="round" stroke-linejoin="round" d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2" />
+						<path stroke-linecap="round" stroke-linejoin="round" d="M15 18H9" />
+						<path stroke-linecap="round" stroke-linejoin="round" d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14" />
+						<circle cx="7" cy="18" r="2"></circle>
+						<circle cx="17" cy="18" r="2"></circle>
 					</svg>
 				<?php else : ?>
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" focusable="false">
-						<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm7.5 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
-						<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h10.5v9h4.072a.75.75 0 00.67-.414l1.82-3.641a.75.75 0 00-.67-1.086H14.25V6.75a1.5 1.5 0 00-1.5-1.5H3.75z" />
-						<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 7.5h3.75m0 0-1.5-1.5m1.5 1.5-1.5 1.5" />
+						<path stroke-linecap="round" stroke-linejoin="round" d="M0.5 9.25h3.5M0 12h4.25M0.5 14.75h3.5" />
+						<path stroke-linecap="round" stroke-linejoin="round" d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2" />
+						<path stroke-linecap="round" stroke-linejoin="round" d="M15 18H9" />
+						<path stroke-linecap="round" stroke-linejoin="round" d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14" />
+						<circle cx="7" cy="18" r="2"></circle>
+						<circle cx="17" cy="18" r="2"></circle>
 					</svg>
 				<?php endif; ?>
 			</span>

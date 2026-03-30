@@ -64,17 +64,7 @@
         color: var(--ma-text-muted-dark);
     }
 
-    .ma-address-book__default-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--ma-space-xs);
-        padding: var(--ma-space-xs) var(--ma-space-sm);
-        font-size: var(--ma-font-xs);
-        text-transform: uppercase;
-        letter-spacing: var(--ma-tracking-wider);
-        white-space: nowrap;
-        line-height: var(--ma-line-snug);
-    }
+    /* Shell: .ma-u-badge.ma-u-badge--inverse (+ .ma-address-book__default-pill in template). */
 
     .ma-address-book__default-icon {
         width: var(--ma-font-xs);

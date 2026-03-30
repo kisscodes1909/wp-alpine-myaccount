@@ -1,5 +1,6 @@
 @import "./myaccount/reset.css";
 @import "./myaccount/base.css";
+@import "./myaccount/badge.css";
 @import "./myaccount/buttons.css";
 @import "./myaccount/empty-state.css";
 @import "./myaccount/ui-overlays.css";

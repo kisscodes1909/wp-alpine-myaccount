@@ -75,7 +75,7 @@ wp_enqueue_script( 'wc-add-payment-method' );
                                             $brand_code = 'CARD';
                                         }
                                         ?>
-                                        <span class="payment-methods-item__brand-badge"><?php echo esc_html( $brand_code ); ?></span>
+                                        <span class="payment-methods-item__brand-badge ma-u-badge ma-u-badge--brand-tile"><?php echo esc_html( $brand_code ); ?></span>
                                     </div>
 
                                     <div class="payment-methods-item__meta">
@@ -103,7 +103,7 @@ wp_enqueue_script( 'wc-add-payment-method' );
 
                                 <div class="payment-methods-item__actions">
                                     <?php if ( ! isset( $method['actions']['default'] ) ) : ?>
-                                        <span class="payment-methods-item__default-pill">
+                                        <span class="payment-methods-item__default-pill ma-u-badge ma-u-badge--inverse">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="payment-methods-item__default-icon" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                                             </svg>

@@ -23,8 +23,6 @@
         --ma-form-space-actions-top: var(--ma-space-xl);
         --ma-form-space-setting-card-gap: var(--ma-space-md);
         --ma-form-space-setting-meta-gap: var(--ma-space-xs);
-        --ma-form-space-status-pill-padding-x: var(--ma-space-sm);
-        --ma-form-space-status-pill-padding-y: var(--ma-space-xs);
         --ma-form-space-button-gap: var(--ma-space-sm);
         --ma-form-space-button-padding-x: var(--ma-space-md);
         --ma-form-space-field-padding-x: var(--ma-space-md);
@@ -63,6 +61,8 @@
         display: flex;
         flex-direction: column;
         gap: var(--ma-form-space-main-gap);
+
+        /* Account status pill: .ma-u-badge.ma-u-badge--success (+ .ma-form__status-pill). */
     }
 .woocommerce-account .ma-form label {
             margin-bottom: 0;
@@ -441,15 +441,6 @@
             line-height: var(--ma-line-normal);
             color: var(--ma-form-color-text);
         }
-.woocommerce-account .ma-form .ma-form__status-pill {
-            display: inline-flex;
-            text-transform: uppercase;
-            letter-spacing: var(--ma-tracking-wider);
-            font-size: var(--ma-font-base);
-            line-height: var(--ma-line-normal);
-            padding-inline: var(--ma-form-space-status-pill-padding-x);
-            padding-block: var(--ma-form-space-status-pill-padding-y);
-        }
 .woocommerce-account .ma-form .ma-form__actions {
             border-top: 1px solid var(--ma-border);
             padding-top: var(--ma-form-space-actions-top);
@@ -543,17 +534,7 @@
         line-height: var(--ma-line-normal);
         color: var(--ma-text-muted-dark);
     }
-.woocommerce-account .ma-address-book__default-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--ma-space-xs);
-        padding: var(--ma-space-xs) var(--ma-space-sm);
-        font-size: var(--ma-font-xs);
-        text-transform: uppercase;
-        letter-spacing: var(--ma-tracking-wider);
-        white-space: nowrap;
-        line-height: var(--ma-line-snug);
-    }
+/* Shell: .ma-u-badge.ma-u-badge--inverse (+ .ma-address-book__default-pill in template). */
 .woocommerce-account .ma-address-book__default-icon {
         width: var(--ma-font-xs);
         height: var(--ma-font-xs);

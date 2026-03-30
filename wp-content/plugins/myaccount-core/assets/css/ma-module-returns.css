@@ -10,6 +10,10 @@
  * Module-local template dependencies that are not in ma-global:
  * - returns-module.css (.ma-view-order-returns*)
  */
+.woocommerce-account {
+
+    /* Shell + tone: .ma-u-badge (+ .ma-view-order-returns__badge for BEM). */
+}
 .woocommerce-account .ma-view-order-returns {
         margin-top: var(--ma-space-2xl);
         padding-top: var(--ma-space-lg);
@@ -121,30 +125,6 @@
         display: flex;
         flex-wrap: wrap;
         gap: var(--ma-space-sm);
-    }
-.woocommerce-account .ma-view-order-returns__badge {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: calc(var(--ma-space-md) * 1.75);
-        padding: 0 var(--ma-space-sm);
-        border: 1px solid var(--ma-border);
-        font-size: var(--ma-font-xs);
-        line-height: var(--ma-line-tight);
-        letter-spacing: var(--ma-tracking-wide);
-        text-transform: uppercase;
-        color: var(--ma-text-primary);
-        background: var(--ma-surface-alt);
-    }
-.woocommerce-account .ma-view-order-returns__badge--submitted,
-    .woocommerce-account .ma-view-order-returns__badge--approved,
-    .woocommerce-account .ma-view-order-returns__badge--received,
-    .woocommerce-account .ma-view-order-returns__badge--completed {
-        border-color: var(--ma-text-primary);
-    }
-.woocommerce-account .ma-view-order-returns__badge--rejected {
-        border-color: var(--ma-danger-border);
-        color: var(--ma-danger-text);
     }
 .woocommerce-account .ma-view-order-returns__request-items {
         list-style: none;

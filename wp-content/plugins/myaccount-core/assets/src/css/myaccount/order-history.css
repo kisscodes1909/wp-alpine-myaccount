@@ -50,50 +50,9 @@
         color: var(--ma-text-primary);
     }
 
+    /* Tone: .ma-u-badge--* (+ .ma-orders__item-status for BEM). */
     .ma-orders__item-status {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--ma-space-sm);
-        padding: var(--ma-space-xs) var(--ma-space-sm);
-        border: 1px solid transparent;
-        font-size: var(--ma-font-sm);
-        line-height: var(--ma-line-normal);
-        font-weight: 400;
-        text-transform: uppercase;
-        letter-spacing: var(--ma-tracking-wider);
         flex-shrink: 0;
-    }
-
-    .ma-orders__item-status--state-pending,
-    .ma-orders__item-status--state-on-hold {
-        background-color: var(--ma-warning-bg);
-        border-color: var(--ma-warning-border);
-        color: var(--ma-warning-text);
-    }
-
-    .ma-orders__item-status--state-processing {
-        background-color: var(--ma-info-bg);
-        border-color: var(--ma-info-border);
-        color: var(--ma-info-text);
-    }
-
-    .ma-orders__item-status--state-completed {
-        background-color: var(--ma-success-bg);
-        border-color: var(--ma-success-border);
-        color: var(--ma-success-text);
-    }
-
-    .ma-orders__item-status--state-refunded {
-        background-color: var(--ma-surface-alt);
-        border-color: var(--ma-border-strong);
-        color: var(--ma-text-muted-dark);
-    }
-
-    .ma-orders__item-status--state-cancelled,
-    .ma-orders__item-status--state-failed {
-        background-color: var(--ma-danger-bg);
-        border-color: var(--ma-danger-border);
-        color: var(--ma-danger-text);
     }
 
     /* Mobile meta follows the screenshot layout; desktop keeps the original grouped meta. */
@@ -196,6 +155,11 @@
         display: block;
         width: var(--ma-font-lg);
         height: var(--ma-font-lg);
+    }
+
+    /* Delivered: Lucide truck, no speed lines; green tint reads as completed. */
+    .ma-orders__item-fulfillment-icon--delivered svg {
+        color: var(--ma-success-icon);
     }
 
     .ma-orders__item-image-overlay {

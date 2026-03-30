@@ -60,18 +60,7 @@
             flex: none;
         }
 
-        .payment-methods-item__brand-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: var(--ma-font-xs);
-            font-weight: 700;
-            border: 1px solid var(--ma-border);
-            color: var(--ma-text-muted-dark);
-            width: var(--ma-space-4xl);
-            height: var(--ma-space-2xl);
-            line-height: var(--ma-line-snug);
-        }
+        /* Brand tile: .ma-u-badge.ma-u-badge--brand-tile */
 
         .payment-methods-item__meta {
             display: flex;
@@ -134,17 +123,10 @@
             height: var(--ma-font-md);
         }
 
-        .payment-methods-item__default-pill {
-            display: inline-flex;
-            align-items: center;
-            background: var(--ma-btn-pill-bg);
-            color: var(--ma-btn-pill-text);
+        /* Default pill: .ma-u-badge.ma-u-badge--inverse — slightly wider gap for check icon + label */
+
+        .payment-methods-item__default-pill.ma-u-badge {
             gap: var(--ma-space-sm);
-            padding: var(--ma-space-xs) var(--ma-space-sm);
-            line-height: var(--ma-line-snug);
-            font-size: var(--ma-font-xs);
-            letter-spacing: var(--ma-tracking-wider);
-            text-transform: uppercase;
         }
 
         .payment-methods-item__default-icon {

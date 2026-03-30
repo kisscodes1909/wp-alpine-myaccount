@@ -73,9 +73,18 @@ $popup_template_id = 'ma-view-order-returns-popup-template-' . (int) $order->get
 						</p>
 						<p class="ma-view-order-returns__request-date"><?php echo esc_html( $request['created_at_label'] ?? '' ); ?></p>
 					</div>
+					<?php
+					$ma_return_status = isset( $request['status'] ) ? sanitize_key( (string) $request['status'] ) : 'submitted';
+					$ma_return_badge_tone = 'ma-u-badge--info';
+					if ( in_array( $ma_return_status, array( 'approved', 'received', 'completed' ), true ) ) {
+						$ma_return_badge_tone = 'ma-u-badge--success';
+					} elseif ( 'rejected' === $ma_return_status ) {
+						$ma_return_badge_tone = 'ma-u-badge--danger';
+					}
+					?>
 					<div class="ma-view-order-returns__request-badges">
-						<span class="ma-view-order-returns__badge ma-view-order-returns__badge--type"><?php echo esc_html( $request['request_type_label'] ?? '' ); ?></span>
-						<span class="ma-view-order-returns__badge ma-view-order-returns__badge--<?php echo esc_attr( $request['status'] ?? 'submitted' ); ?>"><?php echo esc_html( $request['status_label'] ?? '' ); ?></span>
+						<span class="ma-view-order-returns__badge ma-u-badge ma-u-badge--muted"><?php echo esc_html( $request['request_type_label'] ?? '' ); ?></span>
+						<span class="ma-view-order-returns__badge ma-u-badge <?php echo esc_attr( $ma_return_badge_tone ); ?>"><?php echo esc_html( $request['status_label'] ?? '' ); ?></span>
 					</div>
 				</div>
 

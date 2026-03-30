@@ -147,7 +147,7 @@ $ma_wishlist_trash_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2
 						<?php echo $product->get_image( 'woocommerce_thumbnail' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WooCommerce product image HTML. ?>
 					</a>
 					<?php if ( $show_stock_status ) : ?>
-						<span class="ma-wishlist-card__stock-badge <?php echo $is_in_stock ? 'ma-wishlist-card__stock-badge--in-stock' : 'ma-wishlist-card__stock-badge--out-of-stock'; ?>">
+						<span class="ma-wishlist-card__stock-badge ma-u-badge <?php echo $is_in_stock ? 'ma-u-badge--success' : 'ma-u-badge--danger'; ?>">
 							<?php echo esc_html( strtoupper( $stock_label ) ); ?>
 						</span>
 					<?php endif; ?>

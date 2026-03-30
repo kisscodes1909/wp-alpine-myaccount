@@ -227,7 +227,7 @@ wc_get_template( 'myaccount/page-heading.php', array( 'page_heading' => 'My Info
                     <p class="ma-form__setting-label">Account Status</p>
                     <p class="ma-form__setting-value">Active since <?php echo esc_html( $active_since ); ?></p>
                 </div>
-                <span class="ma-form__status-pill">Active</span>
+                <span class="ma-form__status-pill ma-u-badge ma-u-badge--success"><?php esc_html_e( 'Active', 'myaccount-core' ); ?></span>
             </div>
         </div>
     </div>

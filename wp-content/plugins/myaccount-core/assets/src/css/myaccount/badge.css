@@ -1,0 +1,76 @@
+/* -------------------------------------------------------------------------- */
+/* Shared badges & status pills (.ma-u-badge*) — use across endpoints         */
+/* -------------------------------------------------------------------------- */
+
+.woocommerce-account {
+    .ma-u-badge {
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--ma-space-xs);
+        padding: var(--ma-badge-padding-y) var(--ma-badge-padding-x);
+        font-size: var(--ma-badge-font-size);
+        font-weight: var(--ma-badge-font-weight);
+        line-height: var(--ma-badge-line-height);
+        letter-spacing: var(--ma-badge-letter-spacing);
+        text-transform: uppercase;
+        white-space: nowrap;
+        border-radius: var(--ma-badge-radius);
+        border: var(--ma-badge-border-width) solid transparent;
+    }
+
+    .ma-u-badge--inverse {
+        background: var(--ma-btn-pill-bg);
+        color: var(--ma-btn-pill-text);
+        border-color: transparent;
+    }
+
+    .ma-u-badge--muted {
+        background: var(--ma-surface-alt);
+        color: var(--ma-text-primary);
+        border-color: var(--ma-border);
+    }
+
+    .ma-u-badge--success {
+        background-color: var(--ma-success-bg);
+        border-color: var(--ma-success-border);
+        color: var(--ma-success-text);
+    }
+
+    .ma-u-badge--warning {
+        background-color: var(--ma-warning-bg);
+        border-color: var(--ma-warning-border);
+        color: var(--ma-warning-text);
+    }
+
+    .ma-u-badge--info {
+        background-color: var(--ma-info-bg);
+        border-color: var(--ma-info-border);
+        color: var(--ma-info-text);
+    }
+
+    .ma-u-badge--danger {
+        background-color: var(--ma-danger-bg);
+        border-color: var(--ma-danger-border);
+        color: var(--ma-danger-text);
+    }
+
+    .ma-u-badge--neutral {
+        background-color: var(--ma-surface-alt);
+        border-color: var(--ma-border-strong);
+        color: var(--ma-text-muted-dark);
+    }
+
+    /* Payment card brand: shared type scale, fixed footprint */
+    .ma-u-badge--brand-tile {
+        width: var(--ma-space-4xl);
+        height: var(--ma-space-2xl);
+        padding: 0;
+        gap: 0;
+        font-weight: var(--ma-weight-bold);
+        border-color: var(--ma-border);
+        color: var(--ma-text-muted-dark);
+        background: transparent;
+    }
+}

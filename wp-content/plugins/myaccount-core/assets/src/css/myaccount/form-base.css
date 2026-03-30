@@ -24,8 +24,6 @@
         --ma-form-space-actions-top: var(--ma-space-xl);
         --ma-form-space-setting-card-gap: var(--ma-space-md);
         --ma-form-space-setting-meta-gap: var(--ma-space-xs);
-        --ma-form-space-status-pill-padding-x: var(--ma-space-sm);
-        --ma-form-space-status-pill-padding-y: var(--ma-space-xs);
         --ma-form-space-button-gap: var(--ma-space-sm);
         --ma-form-space-button-padding-x: var(--ma-space-md);
         --ma-form-space-field-padding-x: var(--ma-space-md);
@@ -497,15 +495,7 @@
             color: var(--ma-form-color-text);
         }
 
-        .ma-form__status-pill {
-            display: inline-flex;
-            text-transform: uppercase;
-            letter-spacing: var(--ma-tracking-wider);
-            font-size: var(--ma-font-base);
-            line-height: var(--ma-line-normal);
-            padding-inline: var(--ma-form-space-status-pill-padding-x);
-            padding-block: var(--ma-form-space-status-pill-padding-y);
-        }
+        /* Account status pill: .ma-u-badge.ma-u-badge--success (+ .ma-form__status-pill). */
 
         .ma-form__actions {
             border-top: 1px solid var(--ma-border);

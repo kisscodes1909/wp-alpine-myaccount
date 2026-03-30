@@ -282,6 +282,18 @@
     --ma-opacity-90: 0.9;
     --ma-opacity-100: 1;
 
+    /* ─────────────────────────────────────────────────────────────
+        BADGES & STATUS PILLS (shared .ma-u-badge)
+        ───────────────────────────────────────────────────────────── */
+    --ma-badge-font-size: var(--ma-font-xs);
+    --ma-badge-font-weight: var(--ma-weight-medium);
+    --ma-badge-padding-x: var(--ma-space-sm);
+    --ma-badge-padding-y: var(--ma-space-xs);
+    --ma-badge-line-height: var(--ma-line-snug);
+    --ma-badge-letter-spacing: var(--ma-tracking-wider);
+    --ma-badge-radius: var(--ma-radius-sm);
+    --ma-badge-border-width: 1px;
+
     /* ma-orders: moved to base-order-history.css */
 
     /* Payment methods page – shared base layout (Add + Saved sections) */
@@ -406,6 +418,71 @@ body.woocommerce-account .elementor-location-header,
 body.woocommerce-account header[data-elementor-type="header"] {
     display: none;
 }
+/* -------------------------------------------------------------------------- */
+/* Shared badges & status pills (.ma-u-badge*) — use across endpoints         */
+/* -------------------------------------------------------------------------- */
+.woocommerce-account .ma-u-badge {
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--ma-space-xs);
+        padding: var(--ma-badge-padding-y) var(--ma-badge-padding-x);
+        font-size: var(--ma-badge-font-size);
+        font-weight: var(--ma-badge-font-weight);
+        line-height: var(--ma-badge-line-height);
+        letter-spacing: var(--ma-badge-letter-spacing);
+        text-transform: uppercase;
+        white-space: nowrap;
+        border-radius: var(--ma-badge-radius);
+        border: var(--ma-badge-border-width) solid transparent;
+    }
+.woocommerce-account .ma-u-badge--inverse {
+        background: var(--ma-btn-pill-bg);
+        color: var(--ma-btn-pill-text);
+        border-color: transparent;
+    }
+.woocommerce-account .ma-u-badge--muted {
+        background: var(--ma-surface-alt);
+        color: var(--ma-text-primary);
+        border-color: var(--ma-border);
+    }
+.woocommerce-account .ma-u-badge--success {
+        background-color: var(--ma-success-bg);
+        border-color: var(--ma-success-border);
+        color: var(--ma-success-text);
+    }
+.woocommerce-account .ma-u-badge--warning {
+        background-color: var(--ma-warning-bg);
+        border-color: var(--ma-warning-border);
+        color: var(--ma-warning-text);
+    }
+.woocommerce-account .ma-u-badge--info {
+        background-color: var(--ma-info-bg);
+        border-color: var(--ma-info-border);
+        color: var(--ma-info-text);
+    }
+.woocommerce-account .ma-u-badge--danger {
+        background-color: var(--ma-danger-bg);
+        border-color: var(--ma-danger-border);
+        color: var(--ma-danger-text);
+    }
+.woocommerce-account .ma-u-badge--neutral {
+        background-color: var(--ma-surface-alt);
+        border-color: var(--ma-border-strong);
+        color: var(--ma-text-muted-dark);
+    }
+/* Payment card brand: shared type scale, fixed footprint */
+.woocommerce-account .ma-u-badge--brand-tile {
+        width: var(--ma-space-4xl);
+        height: var(--ma-space-2xl);
+        padding: 0;
+        gap: 0;
+        font-weight: var(--ma-weight-bold);
+        border-color: var(--ma-border);
+        color: var(--ma-text-muted-dark);
+        background: transparent;
+    }
 /* -------------------------------------------------------------------------- */
 /* My Account shared buttons (.ma-btn) — token-based, no WooCommerce dependency */
 /* Variants: --primary, --secondary (= secondary-light), --secondary-light, --danger, --ghost, --block */
@@ -1046,8 +1123,6 @@ body.woocommerce-account {
         --ma-form-space-actions-top: var(--ma-space-xl);
         --ma-form-space-setting-card-gap: var(--ma-space-md);
         --ma-form-space-setting-meta-gap: var(--ma-space-xs);
-        --ma-form-space-status-pill-padding-x: var(--ma-space-sm);
-        --ma-form-space-status-pill-padding-y: var(--ma-space-xs);
         --ma-form-space-button-gap: var(--ma-space-sm);
         --ma-form-space-button-padding-x: var(--ma-space-md);
         --ma-form-space-field-padding-x: var(--ma-space-md);
@@ -1086,6 +1161,8 @@ body.woocommerce-account {
         display: flex;
         flex-direction: column;
         gap: var(--ma-form-space-main-gap);
+
+        /* Account status pill: .ma-u-badge.ma-u-badge--success (+ .ma-form__status-pill). */
     }
 .woocommerce-account .ma-form label {
             margin-bottom: 0;
@@ -1463,15 +1540,6 @@ body.woocommerce-account {
             font-size: var(--ma-font-base);
             line-height: var(--ma-line-normal);
             color: var(--ma-form-color-text);
-        }
-.woocommerce-account .ma-form .ma-form__status-pill {
-            display: inline-flex;
-            text-transform: uppercase;
-            letter-spacing: var(--ma-tracking-wider);
-            font-size: var(--ma-font-base);
-            line-height: var(--ma-line-normal);
-            padding-inline: var(--ma-form-space-status-pill-padding-x);
-            padding-block: var(--ma-form-space-status-pill-padding-y);
         }
 .woocommerce-account .ma-form .ma-form__actions {
             border-top: 1px solid var(--ma-border);
@@ -1899,45 +1967,9 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
         letter-spacing: var(--ma-tracking-tight);
         color: var(--ma-text-primary);
     }
+/* Tone: .ma-u-badge--* (+ .ma-orders__item-status for BEM). */
 .woocommerce-account .ma-orders__item-status {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--ma-space-sm);
-        padding: var(--ma-space-xs) var(--ma-space-sm);
-        border: 1px solid transparent;
-        font-size: var(--ma-font-sm);
-        line-height: var(--ma-line-normal);
-        font-weight: 400;
-        text-transform: uppercase;
-        letter-spacing: var(--ma-tracking-wider);
         flex-shrink: 0;
-    }
-.woocommerce-account .ma-orders__item-status--state-pending,
-    .woocommerce-account .ma-orders__item-status--state-on-hold {
-        background-color: var(--ma-warning-bg);
-        border-color: var(--ma-warning-border);
-        color: var(--ma-warning-text);
-    }
-.woocommerce-account .ma-orders__item-status--state-processing {
-        background-color: var(--ma-info-bg);
-        border-color: var(--ma-info-border);
-        color: var(--ma-info-text);
-    }
-.woocommerce-account .ma-orders__item-status--state-completed {
-        background-color: var(--ma-success-bg);
-        border-color: var(--ma-success-border);
-        color: var(--ma-success-text);
-    }
-.woocommerce-account .ma-orders__item-status--state-refunded {
-        background-color: var(--ma-surface-alt);
-        border-color: var(--ma-border-strong);
-        color: var(--ma-text-muted-dark);
-    }
-.woocommerce-account .ma-orders__item-status--state-cancelled,
-    .woocommerce-account .ma-orders__item-status--state-failed {
-        background-color: var(--ma-danger-bg);
-        border-color: var(--ma-danger-border);
-        color: var(--ma-danger-text);
     }
 /* Mobile meta follows the screenshot layout; desktop keeps the original grouped meta. */
 .woocommerce-account .ma-orders__item-meta--mobile {
@@ -2026,6 +2058,10 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
         display: block;
         width: var(--ma-font-lg);
         height: var(--ma-font-lg);
+    }
+/* Delivered: Lucide truck, no speed lines; green tint reads as completed. */
+.woocommerce-account .ma-orders__item-fulfillment-icon--delivered svg {
+        color: var(--ma-success-icon);
     }
 .woocommerce-account .ma-orders__item-image-overlay {
         position: absolute;
@@ -3116,6 +3152,10 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
         gap: var(--ma-space-md);
 
         /* Same section layout and title-to-body spacing for add and saved */
+
+        /* Brand tile: .ma-u-badge.ma-u-badge--brand-tile */
+
+        /* Default pill: .ma-u-badge.ma-u-badge--inverse — slightly wider gap for check icon + label */
     }
 .woocommerce-account .payment-methods-page .payment-methods-section__title-icon {
             width: var(--ma-font-lg);
@@ -3156,18 +3196,6 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
         }
 .woocommerce-account .payment-methods-page .payment-methods-item__brand {
             flex: none;
-        }
-.woocommerce-account .payment-methods-page .payment-methods-item__brand-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: var(--ma-font-xs);
-            font-weight: 700;
-            border: 1px solid var(--ma-border);
-            color: var(--ma-text-muted-dark);
-            width: var(--ma-space-4xl);
-            height: var(--ma-space-2xl);
-            line-height: var(--ma-line-snug);
         }
 .woocommerce-account .payment-methods-page .payment-methods-item__meta {
             display: flex;
@@ -3222,17 +3250,8 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
             width: var(--ma-font-md);
             height: var(--ma-font-md);
         }
-.woocommerce-account .payment-methods-page .payment-methods-item__default-pill {
-            display: inline-flex;
-            align-items: center;
-            background: var(--ma-btn-pill-bg);
-            color: var(--ma-btn-pill-text);
+.woocommerce-account .payment-methods-page .payment-methods-item__default-pill.ma-u-badge {
             gap: var(--ma-space-sm);
-            padding: var(--ma-space-xs) var(--ma-space-sm);
-            line-height: var(--ma-line-snug);
-            font-size: var(--ma-font-xs);
-            letter-spacing: var(--ma-tracking-wider);
-            text-transform: uppercase;
         }
 .woocommerce-account .payment-methods-page .payment-methods-item__default-icon {
             width: var(--ma-font-xs);
@@ -3353,17 +3372,7 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
         line-height: var(--ma-line-normal);
         color: var(--ma-text-muted-dark);
     }
-.woocommerce-account .ma-address-book__default-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--ma-space-xs);
-        padding: var(--ma-space-xs) var(--ma-space-sm);
-        font-size: var(--ma-font-xs);
-        text-transform: uppercase;
-        letter-spacing: var(--ma-tracking-wider);
-        white-space: nowrap;
-        line-height: var(--ma-line-snug);
-    }
+/* Shell: .ma-u-badge.ma-u-badge--inverse (+ .ma-address-book__default-pill in template). */
 .woocommerce-account .ma-address-book__default-icon {
         width: var(--ma-font-xs);
         height: var(--ma-font-xs);
