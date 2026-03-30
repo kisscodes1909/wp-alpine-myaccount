@@ -651,6 +651,7 @@ body.woocommerce-account header[data-elementor-type="header"] {
 .ma-ui-popup__overlay {
     --ma-tr-duration: var(--ma-duration-fast);
     display: flex;
+    min-height: 100dvh;
     align-items: center;
     justify-content: center;
     padding: var(--ma-space-lg);
@@ -662,11 +663,15 @@ body.woocommerce-account header[data-elementor-type="header"] {
     overflow: auto;
     width: 100%;
     max-width: 700px;
-    max-height: calc(100vh - var(--ma-space-lg) * 2);
+    max-height: calc(100vh - var(--ma-space-lg) * 7);
     padding: var(--ma-space-lg);
     box-shadow: var(--ma-shadow-2xl);
 }
 @media (min-width: 768px) {
+    .ma-ui-popup__panel {
+        max-height: calc(100vh - var(--ma-space-lg) * 2);
+    }
+
     .ma-ui-toast-container {
         top: var(--ma-space-2xl);
         right: var(--ma-space-2xl);
