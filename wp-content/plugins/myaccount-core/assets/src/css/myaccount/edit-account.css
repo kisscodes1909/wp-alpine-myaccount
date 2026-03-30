@@ -20,12 +20,6 @@
         gap: var(--ma-form-space-main-gap);
     }
 
-    .ma-change-password__header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
     .ma-change-password__remember-row {
         display: flex;
         align-items: center;

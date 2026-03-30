@@ -614,14 +614,11 @@ body.woocommerce-account header[data-elementor-type="header"] {
     position: fixed;
     display: flex;
 }
-/* Popup container: full viewport, flex center */
+/* Popup: teleport target only — dialog (.ma-ui-popup__overlay) is fixed and owns layout */
 .ma-ui-popup-container {
     inset: 0;
     z-index: var(--ma-z-modal-backdrop);
-    overflow-y: auto;
-    align-items: center;
-    justify-content: center;
-    padding: var(--ma-space-lg);
+    pointer-events: none;
 }
 /* Loader container: full viewport, teleport target */
 .ma-ui-loader-container {
@@ -651,28 +648,86 @@ body.woocommerce-account header[data-elementor-type="header"] {
 }
 .ma-ui-popup__overlay {
     --ma-tr-duration: var(--ma-duration-fast);
+    --ma-popup-inset-y: calc(
+        max(var(--ma-space-lg), env(safe-area-inset-top, 0px)) +
+        max(var(--ma-space-lg), env(safe-area-inset-bottom, 0px))
+    );
     display: flex;
-    min-height: 100dvh;
     align-items: center;
     justify-content: center;
-    padding: var(--ma-space-lg);
+    box-sizing: border-box;
+    min-height: 100svh;
+    min-height: 100dvh;
+    padding-block: max(var(--ma-space-lg), env(safe-area-inset-top, 0px))
+        max(var(--ma-space-lg), env(safe-area-inset-bottom, 0px));
+    padding-inline: max(var(--ma-space-lg), env(safe-area-inset-left, 0px))
+        max(var(--ma-space-lg), env(safe-area-inset-right, 0px));
+    overscroll-behavior: contain;
+    pointer-events: auto;
 }
 .ma-ui-popup__panel {
     position: relative;
     z-index: var(--ma-z-modal);
-    background: var(--ma-surface);
-    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
     width: 100%;
     max-width: 700px;
-    max-height: calc(100vh - var(--ma-space-lg) * 7);
-    padding: var(--ma-space-lg);
+    max-height: calc(100dvh - var(--ma-popup-inset-y));
+    overflow: hidden;
+    border-radius: var(--ma-radius-xl);
+    background: var(--ma-surface);
     box-shadow: var(--ma-shadow-2xl);
 }
+.ma-modal {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-height: inherit;
+    min-height: 0;
+}
+.ma-modal__header {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--ma-space-md);
+    padding: var(--ma-space-md);
+    border-bottom: 1px solid var(--ma-border);
+    background: var(--ma-surface);
+    flex-shrink: 0;
+}
+.ma-modal__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ma-space-xs);
+    min-width: 0;
+}
+.ma-modal__title,
+.ma-modal__description {
+    margin: 0;
+}
+/* Modal titles use ma-page-heading classes; bump specificity so popup type wins over base heading tokens. */
+.woocommerce-account .ma-modal .ma-modal__title {
+    color: var(--ma-text-primary);
+    font-size: var(--ma-font-lg);
+}
+.ma-modal__description {
+    font-size: var(--ma-font-sm);
+    line-height: var(--ma-line-normal);
+    color: var(--ma-text-muted-dark);
+}
+.ma-modal__close {
+    flex-shrink: 0;
+}
+.ma-modal__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: var(--ma-space-md);
+}
 @media (min-width: 768px) {
-    .ma-ui-popup__panel {
-        max-height: calc(100vh - var(--ma-space-lg) * 2);
-    }
-
     .ma-ui-toast-container {
         top: var(--ma-space-2xl);
         right: var(--ma-space-2xl);
@@ -3223,11 +3278,6 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
         flex-direction: column;
         gap: var(--ma-form-space-main-gap);
     }
-.woocommerce-account .ma-change-password__header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
 .woocommerce-account .ma-change-password__remember-row {
         display: flex;
         align-items: center;
@@ -3368,12 +3418,6 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
         display: flex;
         flex-direction: column;
         gap: var(--ma-form-space-fields-gap);
-    }
-.woocommerce-account .ma-address-form__header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: var(--ma-form-space-section-gap);
     }
 .woocommerce-account .ma-address-form__grid {
         display: grid;

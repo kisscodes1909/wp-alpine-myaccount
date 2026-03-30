@@ -609,12 +609,6 @@
         flex-direction: column;
         gap: var(--ma-form-space-fields-gap);
     }
-.woocommerce-account .ma-address-form__header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: var(--ma-form-space-section-gap);
-    }
 .woocommerce-account .ma-address-form__grid {
         display: grid;
         grid-template-columns: 1fr;

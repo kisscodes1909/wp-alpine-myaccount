@@ -505,11 +505,6 @@
         flex-direction: column;
         gap: var(--ma-form-space-main-gap);
     }
-.woocommerce-account .ma-change-password__header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
 .woocommerce-account .ma-change-password__remember-row {
         display: flex;
         align-items: center;
