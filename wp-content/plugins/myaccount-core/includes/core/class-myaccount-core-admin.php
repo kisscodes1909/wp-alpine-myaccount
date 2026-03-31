@@ -56,6 +56,16 @@ class MyAccount_Core_Admin {
 			)
 		);
 
+		register_setting(
+			'myaccount_core_settings',
+			'myaccount_preserve_third_party_menu_items',
+			array(
+				'type'              => 'string',
+				'sanitize_callback' => array( $this, 'sanitize_preserve_third_party_menu' ),
+				'default'           => '0',
+			)
+		);
+
 	}
 
 	public function sanitize_owner_mode( $value ): string {
@@ -70,13 +80,22 @@ class MyAccount_Core_Admin {
 		return $layout === 'stacked' ? 'stacked' : '';
 	}
 
+	public function sanitize_preserve_third_party_menu( $value ): string {
+		if ( true === $value || 1 === $value || '1' === $value ) {
+			return '1';
+		}
+
+		return '0';
+	}
+
 	public function render_settings_page(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
-		$mode   = MyAccount_Core_Plugin::get_owner_mode();
-		$layout = get_option( 'myaccount_layout', '' );
+		$mode               = MyAccount_Core_Plugin::get_owner_mode();
+		$layout             = get_option( 'myaccount_layout', '' );
+		$preserve_third_nav = get_option( 'myaccount_preserve_third_party_menu_items', '0' );
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'My Account Core', 'myaccount-core' ); ?></h1>
@@ -124,10 +143,10 @@ class MyAccount_Core_Admin {
 										value=""
 										<?php checked( $layout, '' ); ?>
 									/>
-									<?php esc_html_e( 'Theme default (column)', 'myaccount-core' ); ?>
+									<?php esc_html_e( 'Default (vertical sidebar)', 'myaccount-core' ); ?>
 								</label>
 								<p class="description" style="margin-left: 1.5em; margin-top: 0.25em;">
-									<?php esc_html_e( 'Navigation left, content right; theme controls column layout.', 'myaccount-core' ); ?>
+									<?php esc_html_e( 'Navigation left, content right (3/7) with gap from the plugin; mobile keeps the collapsible menu.', 'myaccount-core' ); ?>
 								</p>
 								<br />
 								<label>
@@ -143,6 +162,28 @@ class MyAccount_Core_Admin {
 									<?php esc_html_e( 'Navigation on top (horizontal), content below.', 'myaccount-core' ); ?>
 								</p>
 							</fieldset>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Third-party menu items', 'myaccount-core' ); ?></th>
+						<td>
+							<label>
+								<input
+									type="hidden"
+									name="myaccount_preserve_third_party_menu_items"
+									value="0"
+								/>
+								<input
+									type="checkbox"
+									name="myaccount_preserve_third_party_menu_items"
+									value="1"
+									<?php checked( $preserve_third_nav, '1' ); ?>
+								/>
+								<?php esc_html_e( 'Keep My Account menu items registered by other plugins', 'myaccount-core' ); ?>
+							</label>
+							<p class="description">
+								<?php esc_html_e( 'When enabled, endpoints not in the default order are listed after the core items. When disabled, only the curated order (orders, wishlist, account, address, payments, sign out) is shown.', 'myaccount-core' ); ?>
+							</p>
 						</td>
 					</tr>
 				</table>

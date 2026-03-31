@@ -3,12 +3,12 @@
 /* -------------------------------------------------------------------------- */
 
 .woocommerce-account {
-    /* Local tokens for repeated calc() – keeps source smaller, same output */
+    /* Local tokens for repeated calc() */
     --ma-vo-md-375: calc(var(--ma-space-md) * 0.375);
     --ma-vo-md-75: calc(var(--ma-space-md) * 0.75);
     --ma-vo-md-875: calc(var(--ma-space-md) * 0.875);
-    --ma-vo-md-125: calc(var(--ma-space-md) * 1.25);
-    --ma-vo-md-175: calc(var(--ma-space-md) * 1.75);
+    /* Order status timeline: icon circle diameter (~2.25rem / 36px at 16px base) */
+    --ma-vo-icon-size: calc(var(--ma-base) * 2.25);
 
     .ma-view-order__layout {
         display: grid;
@@ -216,42 +216,42 @@
 
     .ma-order-status-card__timeline {
         padding: var(--ma-space-lg);
-        background: transparent;
     }
 
-    /* Mobile: vertical timeline centered (line and dots in the middle, labels to the right). */
+    /* Mobile: vertical timeline left-aligned; icon circles + labels. */
     .ma-order-status-card__timeline-track {
         display: flex;
         flex-direction: column;
-        align-items: stretch;
         position: relative;
+        gap: var(--ma-space-lg);
+    }
+
+    .ma-order-status-card__timeline-line,
+    .ma-order-status-card__timeline-line-fill {
+        position: absolute;
+        left: calc(var(--ma-vo-icon-size) / 2 - var(--ma-space-2xs) / 2);
+        top: calc(var(--ma-vo-icon-size) / 2);
+        width: var(--ma-space-2xs);
+        z-index: 0;
+        pointer-events: none;
     }
 
     .ma-order-status-card__timeline-line {
-        position: absolute;
-        left: 50%;
-        top: var(--ma-vo-md-375);
-        bottom: var(--ma-vo-md-375);
-        width: var(--ma-space-2xs);
-        transform: translateX(-50%);
+        bottom: calc(var(--ma-vo-icon-size) / 2);
         background: var(--ma-border);
-        z-index: 0;
-        pointer-events: none;
     }
 
     .ma-order-status-card__timeline-line-fill {
-        position: absolute;
-        left: 50%;
-        top: var(--ma-vo-md-375);
-        width: var(--ma-space-2xs);
-        height: calc((100% - var(--ma-vo-md-75)) * var(--ma-timeline-progress, 0) / 100);
-        transform: translateX(-50%);
+        height: calc((100% - var(--ma-vo-icon-size)) * var(--ma-timeline-progress, 0) / 100);
         background: var(--ma-text-primary);
-        z-index: 0;
-        pointer-events: none;
     }
 
+    /* Step base + per-status color tokens */
     .ma-order-status-card__step {
+        --_step-bg: var(--ma-border);
+        --_step-color: var(--ma-text-muted-dark);
+        --_step-active-bg: var(--ma-text-primary);
+        --_step-active-color: var(--ma-text-inverse);
         display: flex;
         flex-direction: row;
         align-items: flex-start;
@@ -259,19 +259,34 @@
         min-width: 0;
         position: relative;
         z-index: 1;
-        gap: var(--ma-vo-md-75);
-        padding-left: calc(50% + var(--ma-vo-md-75));
+        gap: var(--ma-space-md);
     }
 
+    .ma-order-status-card__step--placed    { --_step-active-bg: var(--ma-accent-icon); }
+    .ma-order-status-card__step--processing { --_step-active-bg: var(--ma-warning-icon); }
+    .ma-order-status-card__step--shipped    { --_step-active-bg: var(--ma-info-icon); }
+
+    .ma-order-status-card__step--delivered,
+    .ma-order-status-card__step--complete   { --_step-active-bg: var(--ma-success-icon); }
+
     .ma-order-status-card__step-dot {
-        position: absolute;
-        left: calc(50% - var(--ma-vo-md-375));
-        top: 0;
-        width: var(--ma-vo-md-75);
-        height: var(--ma-vo-md-75);
-        background: var(--ma-border);
+        position: relative;
+        box-sizing: border-box;
+        width: var(--ma-vo-icon-size);
+        height: var(--ma-vo-icon-size);
         flex-shrink: 0;
-        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: var(--_step-bg);
+        color: var(--_step-color);
+    }
+
+    .ma-order-status-card__step-icon {
+        width: 50%;
+        height: 50%;
+        flex-shrink: 0;
     }
 
     .ma-order-status-card__step-labels {
@@ -279,10 +294,17 @@
         flex-direction: column;
         align-items: flex-start;
         text-align: left;
+        padding-top: calc((var(--ma-vo-icon-size) - var(--ma-font-xs) * var(--ma-line-tight)) / 2);
+        min-width: 0;
     }
 
     .ma-order-status-card__step--active .ma-order-status-card__step-dot {
-        background: var(--ma-text-primary);
+        background: var(--_step-active-bg);
+        color: var(--_step-active-color);
+    }
+
+    .ma-order-status-card__step--current .ma-order-status-card__step-dot {
+        box-shadow: 0 0 0 3px var(--ma-surface-base, #fff), 0 0 0 5px var(--_step-active-bg);
     }
 
     .ma-order-status-card__step-label {
@@ -294,38 +316,31 @@
     }
 
     .ma-order-status-card__step--active .ma-order-status-card__step-label {
+        font-size: var(--ma-font-sm);
         color: var(--ma-text-primary);
     }
 
-    .ma-order-status-card__step-sublabel {
-        font-size: var(--ma-font-xs);
-        line-height: var(--ma-line-tight);
-        color: var(--ma-border-strong);
+    .ma-order-status-card__step--current .ma-order-status-card__step-label {
+        font-weight: var(--ma-weight-semibold);
     }
 
-    .ma-order-status-card__step--current .ma-order-status-card__step-sublabel {
-        color: var(--ma-text-muted-dark);
-    }
-
-    .ma-order-status-card__step--active:not(.ma-order-status-card__step--current) .ma-order-status-card__step-sublabel {
-        color: var(--ma-border-strong);
-    }
-
+    .ma-order-status-card__step-sublabel,
     .ma-order-status-card__step-date {
         font-size: var(--ma-font-xs);
         line-height: var(--ma-line-tight);
         color: var(--ma-border-strong);
     }
 
+    .ma-order-status-card__step--active .ma-order-status-card__step-sublabel,
+    .ma-order-status-card__step--active .ma-order-status-card__step-date {
+        color: var(--ma-text-muted-dark);
+    }
+
     .ma-order-status-card__step--current .ma-order-status-card__step-date {
         color: var(--ma-text-muted);
     }
 
-    .ma-order-status-card__step--active:not(.ma-order-status-card__step--current) .ma-order-status-card__step-date {
-        color: var(--ma-border-strong);
-    }
-
-    /* Desktop: header row + horizontal timeline (line + 3 steps: placed → processing → complete). */
+    /* Desktop: horizontal timeline (icons above labels). */
     @media (min-width: 768px) {
         .ma-order-status-card__header {
             flex-direction: row;
@@ -335,34 +350,9 @@
         }
 
         .ma-order-status-card__timeline-track {
-            position: relative;
             flex-direction: row;
             justify-content: space-between;
-        }
-
-        .ma-order-status-card__step {
-            padding-left: 0;
-        }
-
-        .ma-order-status-card__step-dot {
-            position: static;
-        }
-
-        .ma-order-status-card__timeline-line {
-            left: calc(100% / (var(--ma-timeline-steps, 3) * 2));
-            width: calc(100% * (var(--ma-timeline-steps, 3) - 1) / var(--ma-timeline-steps, 3));
-            top: var(--ma-vo-md-375);
-            bottom: auto;
-            height: var(--ma-space-2xs);
-            transform: none;
-        }
-
-        .ma-order-status-card__timeline-line-fill {
-            left: calc(100% / (var(--ma-timeline-steps, 3) * 2));
-            top: var(--ma-vo-md-375);
-            width: calc((100% * (var(--ma-timeline-steps, 3) - 1) / var(--ma-timeline-steps, 3)) * var(--ma-timeline-progress, 0) / 100);
-            height: var(--ma-space-2xs);
-            transform: none;
+            gap: 0;
         }
 
         .ma-order-status-card__step {
@@ -379,6 +369,23 @@
         .ma-order-status-card__step-labels {
             align-items: center;
             text-align: center;
+            padding-top: 0;
+        }
+
+        .ma-order-status-card__timeline-line,
+        .ma-order-status-card__timeline-line-fill {
+            left: calc(100% / (var(--ma-timeline-steps, 3) * 2));
+            top: calc(var(--ma-vo-icon-size) / 2);
+            height: var(--ma-space-2xs);
+        }
+
+        .ma-order-status-card__timeline-line {
+            width: calc(100% * (var(--ma-timeline-steps, 3) - 1) / var(--ma-timeline-steps, 3));
+            bottom: auto;
+        }
+
+        .ma-order-status-card__timeline-line-fill {
+            width: calc((100% * (var(--ma-timeline-steps, 3) - 1) / var(--ma-timeline-steps, 3)) * var(--ma-timeline-progress, 0) / 100);
         }
     }
 
@@ -1023,38 +1030,14 @@
         color: var(--ma-text-muted-dark);
     }
 
-    /* Section 1–4: >= 480px enhancements */
+    /* >= 480px: actions row layout */
     @media (min-width: 480px) {
-        .ma-order-details-header__number {
-            font-size: var(--ma-font-4xl);
-            line-height: var(--ma-line-tight);
-        }
-
-        .ma-order-details-header__total-value {
-            font-size: var(--ma-font-4xl);
-            line-height: var(--ma-line-tight);
-        }
-
         .ma-order-details-header__actions {
             flex-wrap: wrap;
             flex-direction: row;
             align-items: center;
             gap: var(--ma-space-sm);
         }
-
-        .ma-order-status-card__header {
-            padding: var(--ma-space-lg);
-        }
-
-        .ma-order-status-card__timeline {
-            padding: var(--ma-space-lg);
-        }
-
-        .ma-view-order__updates {
-            margin-top: var(--ma-space-lg);
-            padding-top: var(--ma-space-lg);
-        }
-
     }
 
 }

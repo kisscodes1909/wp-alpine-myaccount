@@ -44,8 +44,8 @@ class MyAccount_Core_Hooks {
 	}
 
 	public function reorder_menu_items( array $items ): array {
-		$ordered = array();
 		$keys    = array( 'orders', 'wishlist', 'edit-account', 'address', 'payment-methods', 'customer-logout' );
+		$ordered = array();
 
 		foreach ( $keys as $key ) {
 			if ( isset( $items[ $key ] ) ) {
@@ -53,7 +53,29 @@ class MyAccount_Core_Hooks {
 			}
 		}
 
-		return ! empty( $ordered ) ? $ordered : $items;
+		if ( empty( $ordered ) ) {
+			return $items;
+		}
+
+		if ( '1' === get_option( 'myaccount_preserve_third_party_menu_items', '0' ) ) {
+			$logout_label = null;
+			if ( isset( $ordered['customer-logout'] ) ) {
+				$logout_label = $ordered['customer-logout'];
+				unset( $ordered['customer-logout'] );
+			}
+
+			foreach ( $items as $endpoint => $label ) {
+				if ( ! isset( $ordered[ $endpoint ] ) ) {
+					$ordered[ $endpoint ] = $label;
+				}
+			}
+
+			if ( null !== $logout_label ) {
+				$ordered['customer-logout'] = $logout_label;
+			}
+		}
+
+		return $ordered;
 	}
 
 	/**
@@ -126,6 +148,8 @@ class MyAccount_Core_Hooks {
 
 		if ( get_option( 'myaccount_layout' ) === 'stacked' ) {
 			$classes[] = 'ma-layout-stacked';
+		} else {
+			$classes[] = 'ma-layout-vertical';
 		}
 
 		return $classes;

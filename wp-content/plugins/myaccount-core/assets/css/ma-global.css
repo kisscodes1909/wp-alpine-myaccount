@@ -856,21 +856,38 @@ body.woocommerce-account header[data-elementor-type="header"] {
         transform: scale(1);
     }
 /* -------------------------------------------------------------------------- */
-/* My Account layout: controlled by body.ma-layout-stacked                    */
-/* Only stacked layout is defined here; theme controls column layout by default */
+/* My Account layout: ma-layout-vertical (default) | ma-layout-stacked        */
 /* -------------------------------------------------------------------------- */
-body.woocommerce-account.ma-layout-stacked .ma-account-layout {
+body.woocommerce-account:is(.ma-layout-vertical, .ma-layout-stacked) .ma-account-layout {
         display: flex;
         flex-direction: column;
     }
-body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAccount-navigation {
+body.woocommerce-account:is(.ma-layout-vertical, .ma-layout-stacked) .ma-account-layout .woocommerce-MyAccount-navigation {
             flex-shrink: 0;
         }
-body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAccount-content {
+body.woocommerce-account:is(.ma-layout-vertical, .ma-layout-stacked) .ma-account-layout .woocommerce-MyAccount-content {
             width: 100%;
-            max-width: 1280px;
-            margin-inline: auto;
         }
+body.woocommerce-account.ma-layout-vertical .ma-account-layout .woocommerce-MyAccount-content {
+        min-width: 0;
+    }
+@media (min-width: 992px) {
+        body.woocommerce-account.ma-layout-vertical .ma-account-layout {
+            display: grid;
+            grid-template-columns: 3fr 9fr;
+            gap: var(--ma-space-md);
+            align-items: start;
+        }
+
+        body.woocommerce-account.ma-layout-vertical .ma-account-layout > .woocommerce-MyAccount-navigation,
+        body.woocommerce-account.ma-layout-vertical .ma-account-layout > .woocommerce-MyAccount-content {
+            padding-block-start: var(--ma-space-md);
+        }
+    }
+body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAccount-content {
+        max-width: 1280px;
+        margin-inline: auto;
+    }
 /* My Account — Woo notices + .ma-notice--* (tokens: base.css --ma-notice-*) */
 .woocommerce-account .woocommerce-notices-wrapper,
 .woocommerce-account .ma-form__notice {

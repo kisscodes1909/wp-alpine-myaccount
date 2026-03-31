@@ -857,21 +857,38 @@ body.woocommerce-account header[data-elementor-type="header"] {
         transform: scale(1);
     }
 /* -------------------------------------------------------------------------- */
-/* My Account layout: controlled by body.ma-layout-stacked                    */
-/* Only stacked layout is defined here; theme controls column layout by default */
+/* My Account layout: ma-layout-vertical (default) | ma-layout-stacked        */
 /* -------------------------------------------------------------------------- */
-body.woocommerce-account.ma-layout-stacked .ma-account-layout {
+body.woocommerce-account:is(.ma-layout-vertical, .ma-layout-stacked) .ma-account-layout {
         display: flex;
         flex-direction: column;
     }
-body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAccount-navigation {
+body.woocommerce-account:is(.ma-layout-vertical, .ma-layout-stacked) .ma-account-layout .woocommerce-MyAccount-navigation {
             flex-shrink: 0;
         }
-body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAccount-content {
+body.woocommerce-account:is(.ma-layout-vertical, .ma-layout-stacked) .ma-account-layout .woocommerce-MyAccount-content {
             width: 100%;
-            max-width: 1280px;
-            margin-inline: auto;
         }
+body.woocommerce-account.ma-layout-vertical .ma-account-layout .woocommerce-MyAccount-content {
+        min-width: 0;
+    }
+@media (min-width: 992px) {
+        body.woocommerce-account.ma-layout-vertical .ma-account-layout {
+            display: grid;
+            grid-template-columns: 3fr 9fr;
+            gap: var(--ma-space-md);
+            align-items: start;
+        }
+
+        body.woocommerce-account.ma-layout-vertical .ma-account-layout > .woocommerce-MyAccount-navigation,
+        body.woocommerce-account.ma-layout-vertical .ma-account-layout > .woocommerce-MyAccount-content {
+            padding-block-start: var(--ma-space-md);
+        }
+    }
+body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAccount-content {
+        max-width: 1280px;
+        margin-inline: auto;
+    }
 /* My Account — Woo notices + .ma-notice--* (tokens: base.css --ma-notice-*) */
 .woocommerce-account .woocommerce-notices-wrapper,
 .woocommerce-account .ma-form__notice {
@@ -1580,78 +1597,86 @@ body.woocommerce-account {
 }
     }
 /* -------------------------------------------------------------------------- */
-/* My Account navigation: stacked nav list + mobile dropdown                  */
+/* My Account navigation: vertical | stacked (full-bleed) | mobile dropdown  */
 /* -------------------------------------------------------------------------- */
-/* Stacked layout: nav band, list, links, icons, hover/active */
+/* Stacked: full-bleed nav band (--ma-nav-transition-* inherited from block below) */
 body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation.ma-fullbleed-band {
         --ma-fullbleed-border-top: var(--ma-space-2xs) solid var(--ma-border-divider);
         --ma-fullbleed-border-bottom: var(--ma-space-2xs) solid var(--ma-border-divider);
-        --ma-nav-transition-duration: var(--ma-duration-fast);
-        --ma-nav-transition-timing: var(--ma-easing-smooth);
         display: flex;
         justify-content: center;
         width: 100%;
         margin-inline: auto;
         padding-inline: 0;
     }
-body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list {
+@media (min-width: 992px) {
+        body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation.ma-fullbleed-band {
+            padding-inline: var(--ma-space-5xl);
+        }
+    }
+/* Stacked + vertical (default): nav list, links, icons, hover/active */
+body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) {
+    --ma-nav-transition-duration: var(--ma-duration-fast);
+    --ma-nav-transition-timing: var(--ma-easing-smooth);
+}
+body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list {
         padding: 0;
         display: flex;
         flex-flow: column;
         gap: var(--ma-space-lg);
     }
-body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li {
+body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list li {
             --ma-nav-icon: none;
             flex-shrink: 0;
             margin-bottom: -var(--ma-space-2xs);
             border-bottom: var(--ma-space-2xs) solid transparent;
             transition: border-bottom-color var(--ma-nav-transition-duration) var(--ma-nav-transition-timing);
         }
-body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li:hover .woocommerce-MyAccount-navigation-link {
+body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list li:hover .woocommerce-MyAccount-navigation-link {
                 color: var(--ma-text-primary);
             }
-body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li:hover:not(.is-active) {
+body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list li:hover:not(.is-active) {
                 border-bottom-color: var(--ma-text-primary);
             }
-body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.is-active .woocommerce-MyAccount-navigation-link {
+body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list li.is-active .woocommerce-MyAccount-navigation-link {
                 color: var(--ma-text-primary);
             }
-body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.is-active {
+body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list li.is-active {
                 border-bottom-color: var(--ma-text-primary);
             }
-body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--orders .woocommerce-MyAccount-navigation-link::before,
-            body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--wishlist .woocommerce-MyAccount-navigation-link::before,
-            body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--edit-account .woocommerce-MyAccount-navigation-link::before,
-            body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--edit-address .woocommerce-MyAccount-navigation-link::before,
-            body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--address .woocommerce-MyAccount-navigation-link::before,
-            body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--payment-methods .woocommerce-MyAccount-navigation-link::before,
-            body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--settings .woocommerce-MyAccount-navigation-link::before,
-            body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--customer-logout .woocommerce-MyAccount-navigation-link::before {
+body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--orders .woocommerce-MyAccount-navigation-link::before,
+            body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--wishlist .woocommerce-MyAccount-navigation-link::before,
+            body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--edit-account .woocommerce-MyAccount-navigation-link::before,
+            body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--edit-address .woocommerce-MyAccount-navigation-link::before,
+            body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--address .woocommerce-MyAccount-navigation-link::before,
+            body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--payment-methods .woocommerce-MyAccount-navigation-link::before,
+            body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--settings .woocommerce-MyAccount-navigation-link::before,
+            body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--customer-logout .woocommerce-MyAccount-navigation-link::before {
                 display: inline-block;
             }
-body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--orders {
+body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--orders {
                 --ma-nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9'/%3E%3C/svg%3E");
             }
-body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--wishlist {
+body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--wishlist {
                 --ma-nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z'/%3E%3C/svg%3E");
             }
-body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--edit-account {
+body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--edit-account {
                 --ma-nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 6.75a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75a17.933 17.933 0 01-7.499-1.632z'/%3E%3C/svg%3E");
             }
-body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--edit-address,
-            body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--address {
+body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--edit-address,
+            body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--address {
                 --ma-nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15 10.5a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z'/%3E%3C/svg%3E");
             }
-body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--payment-methods {
+body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--payment-methods {
                 --ma-nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z'/%3E%3C/svg%3E");
             }
-body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--settings {
+body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--settings {
                 --ma-nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M4.5 12a7.5 7.5 0 0012.75 5.303l2.12 2.12a.75.75 0 101.06-1.06l-2.12-2.12A7.5 7.5 0 1012 19.5M12 7.5v9m4.5-4.5h-9'/%3E%3C/svg%3E");
             }
-body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--customer-logout {
+body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-list li.woocommerce-MyAccount-navigation-link--customer-logout {
                 --ma-nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9'/%3E%3C/svg%3E");
             }
-body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-link {
+body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-link {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -1667,7 +1692,7 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lin
         color: var(--ma-text-muted);
         transition: color var(--ma-nav-transition-duration) var(--ma-nav-transition-timing);
     }
-body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-link::before {
+body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .woocommerce-MyAccount-navigation-link::before {
             content: "";
             display: none;
             flex-shrink: 0;
@@ -1683,14 +1708,14 @@ body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation-lin
             -webkit-mask-size: contain;
             mask-size: contain;
         }
-body.woocommerce-account.ma-layout-stacked .ma-nav-link__label {
+body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) .ma-nav-link__label {
         display: block;
     }
-@media (min-width: 992px) {
-        body.woocommerce-account.ma-layout-stacked .woocommerce-MyAccount-navigation.ma-fullbleed-band {
-            padding-inline: var(--ma-space-5xl);
-        }
-    }
+/* Vertical: left-aligned links (mobile dropdown keeps full-width items below) */
+body.woocommerce-account.ma-layout-vertical .woocommerce-MyAccount-navigation-link {
+    justify-content: flex-start;
+    text-align: left;
+}
 /* Mobile: overlay dropdown — shared by stacked and vertical layout */
 body.woocommerce-account .ma-nav-dropdown {
         position: relative;
@@ -1748,12 +1773,11 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
             margin-top: var(--ma-space-2xs);
             padding: var(--ma-space-xs) 0;
             background: var(--ma-surface);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--ma-shadow-sm);
         }
 body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyAccount-navigation-list li {
                 margin-bottom: 0;
-                border: none;
-                border-bottom: 0;
+                border: 0;
             }
 body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyAccount-navigation-list .woocommerce-MyAccount-navigation-link {
                 justify-content: flex-start;
@@ -1785,6 +1809,22 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
                     justify-content: center;
                     padding-inline: 0;
                 }
+            body.woocommerce-account.ma-layout-vertical .ma-nav-dropdown .woocommerce-MyAccount-navigation {
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+            }
+
+            body.woocommerce-account.ma-layout-vertical .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyAccount-navigation-list {
+                align-items: flex-start;
+                width: 100%;
+            }
+
+            body.woocommerce-account.ma-layout-vertical .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyAccount-navigation-list .woocommerce-MyAccount-navigation-link {
+                justify-content: flex-start;
+                text-align: left;
+                padding-inline: 0;
+            }
 
         body.woocommerce-account.ma-layout-stacked .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyAccount-navigation-list {
             flex-flow: row;
@@ -1795,12 +1835,9 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
                 border-bottom: var(--ma-space-2xs) solid transparent;
             }
 
-            body.woocommerce-account.ma-layout-stacked .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyAccount-navigation-list li:hover:not(.is-active) {
-                border-bottom: var(--ma-space-2xs) solid var(--ma-text-primary);
-            }
-
+            body.woocommerce-account.ma-layout-stacked .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyAccount-navigation-list li:hover:not(.is-active),
             body.woocommerce-account.ma-layout-stacked .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyAccount-navigation-list li.is-active {
-                border-bottom: var(--ma-space-2xs) solid var(--ma-text-primary);
+                border-bottom-color: var(--ma-text-primary);
             }
     }
 /* -------------------------------------------------------------------------- */
@@ -2193,12 +2230,12 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
 /* My Account endpoint base layer: View Order                                 */
 /* -------------------------------------------------------------------------- */
 .woocommerce-account {
-    /* Local tokens for repeated calc() – keeps source smaller, same output */
+    /* Local tokens for repeated calc() */
     --ma-vo-md-375: calc(var(--ma-space-md) * 0.375);
     --ma-vo-md-75: calc(var(--ma-space-md) * 0.75);
     --ma-vo-md-875: calc(var(--ma-space-md) * 0.875);
-    --ma-vo-md-125: calc(var(--ma-space-md) * 1.25);
-    --ma-vo-md-175: calc(var(--ma-space-md) * 1.75);
+    /* Order status timeline: icon circle diameter (~2.25rem / 36px at 16px base) */
+    --ma-vo-icon-size: calc(var(--ma-base) * 2.25);
 
 }
 .woocommerce-account .ma-view-order__layout {
@@ -2382,38 +2419,37 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
     }
 .woocommerce-account .ma-order-status-card__timeline {
         padding: var(--ma-space-lg);
-        background: transparent;
     }
-/* Mobile: vertical timeline centered (line and dots in the middle, labels to the right). */
+/* Mobile: vertical timeline left-aligned; icon circles + labels. */
 .woocommerce-account .ma-order-status-card__timeline-track {
         display: flex;
         flex-direction: column;
-        align-items: stretch;
         position: relative;
+        gap: var(--ma-space-lg);
+    }
+.woocommerce-account .ma-order-status-card__timeline-line,
+    .woocommerce-account .ma-order-status-card__timeline-line-fill {
+        position: absolute;
+        left: calc(var(--ma-vo-icon-size) / 2 - var(--ma-space-2xs) / 2);
+        top: calc(var(--ma-vo-icon-size) / 2);
+        width: var(--ma-space-2xs);
+        z-index: 0;
+        pointer-events: none;
     }
 .woocommerce-account .ma-order-status-card__timeline-line {
-        position: absolute;
-        left: 50%;
-        top: var(--ma-vo-md-375);
-        bottom: var(--ma-vo-md-375);
-        width: var(--ma-space-2xs);
-        transform: translateX(-50%);
+        bottom: calc(var(--ma-vo-icon-size) / 2);
         background: var(--ma-border);
-        z-index: 0;
-        pointer-events: none;
     }
 .woocommerce-account .ma-order-status-card__timeline-line-fill {
-        position: absolute;
-        left: 50%;
-        top: var(--ma-vo-md-375);
-        width: var(--ma-space-2xs);
-        height: calc((100% - var(--ma-vo-md-75)) * var(--ma-timeline-progress, 0) / 100);
-        transform: translateX(-50%);
+        height: calc((100% - var(--ma-vo-icon-size)) * var(--ma-timeline-progress, 0) / 100);
         background: var(--ma-text-primary);
-        z-index: 0;
-        pointer-events: none;
     }
+/* Step base + per-status color tokens */
 .woocommerce-account .ma-order-status-card__step {
+        --_step-bg: var(--ma-border);
+        --_step-color: var(--ma-text-muted-dark);
+        --_step-active-bg: var(--ma-text-primary);
+        --_step-active-color: var(--ma-text-inverse);
         display: flex;
         flex-direction: row;
         align-items: flex-start;
@@ -2421,27 +2457,45 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
         min-width: 0;
         position: relative;
         z-index: 1;
-        gap: var(--ma-vo-md-75);
-        padding-left: calc(50% + var(--ma-vo-md-75));
+        gap: var(--ma-space-md);
     }
+.woocommerce-account .ma-order-status-card__step--placed    { --_step-active-bg: var(--ma-accent-icon); }
+.woocommerce-account .ma-order-status-card__step--processing { --_step-active-bg: var(--ma-warning-icon); }
+.woocommerce-account .ma-order-status-card__step--shipped    { --_step-active-bg: var(--ma-info-icon); }
+.woocommerce-account .ma-order-status-card__step--delivered,
+    .woocommerce-account .ma-order-status-card__step--complete   { --_step-active-bg: var(--ma-success-icon); }
 .woocommerce-account .ma-order-status-card__step-dot {
-        position: absolute;
-        left: calc(50% - var(--ma-vo-md-375));
-        top: 0;
-        width: var(--ma-vo-md-75);
-        height: var(--ma-vo-md-75);
-        background: var(--ma-border);
+        position: relative;
+        box-sizing: border-box;
+        width: var(--ma-vo-icon-size);
+        height: var(--ma-vo-icon-size);
         flex-shrink: 0;
-        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: var(--_step-bg);
+        color: var(--_step-color);
+    }
+.woocommerce-account .ma-order-status-card__step-icon {
+        width: 50%;
+        height: 50%;
+        flex-shrink: 0;
     }
 .woocommerce-account .ma-order-status-card__step-labels {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         text-align: left;
+        padding-top: calc((var(--ma-vo-icon-size) - var(--ma-font-xs) * var(--ma-line-tight)) / 2);
+        min-width: 0;
     }
 .woocommerce-account .ma-order-status-card__step--active .ma-order-status-card__step-dot {
-        background: var(--ma-text-primary);
+        background: var(--_step-active-bg);
+        color: var(--_step-active-color);
+    }
+.woocommerce-account .ma-order-status-card__step--current .ma-order-status-card__step-dot {
+        box-shadow: 0 0 0 3px var(--ma-surface-base, #fff), 0 0 0 5px var(--_step-active-bg);
     }
 .woocommerce-account .ma-order-status-card__step-label {
         font-size: var(--ma-font-xs);
@@ -2451,31 +2505,26 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
         color: var(--ma-text-muted);
     }
 .woocommerce-account .ma-order-status-card__step--active .ma-order-status-card__step-label {
+        font-size: var(--ma-font-sm);
         color: var(--ma-text-primary);
     }
-.woocommerce-account .ma-order-status-card__step-sublabel {
+.woocommerce-account .ma-order-status-card__step--current .ma-order-status-card__step-label {
+        font-weight: var(--ma-weight-semibold);
+    }
+.woocommerce-account .ma-order-status-card__step-sublabel,
+    .woocommerce-account .ma-order-status-card__step-date {
         font-size: var(--ma-font-xs);
         line-height: var(--ma-line-tight);
         color: var(--ma-border-strong);
     }
-.woocommerce-account .ma-order-status-card__step--current .ma-order-status-card__step-sublabel {
+.woocommerce-account .ma-order-status-card__step--active .ma-order-status-card__step-sublabel,
+    .woocommerce-account .ma-order-status-card__step--active .ma-order-status-card__step-date {
         color: var(--ma-text-muted-dark);
-    }
-.woocommerce-account .ma-order-status-card__step--active:not(.ma-order-status-card__step--current) .ma-order-status-card__step-sublabel {
-        color: var(--ma-border-strong);
-    }
-.woocommerce-account .ma-order-status-card__step-date {
-        font-size: var(--ma-font-xs);
-        line-height: var(--ma-line-tight);
-        color: var(--ma-border-strong);
     }
 .woocommerce-account .ma-order-status-card__step--current .ma-order-status-card__step-date {
         color: var(--ma-text-muted);
     }
-.woocommerce-account .ma-order-status-card__step--active:not(.ma-order-status-card__step--current) .ma-order-status-card__step-date {
-        color: var(--ma-border-strong);
-    }
-/* Desktop: header row + horizontal timeline (line + 3 steps: placed → processing → complete). */
+/* Desktop: horizontal timeline (icons above labels). */
 @media (min-width: 768px) {
         .woocommerce-account .ma-order-status-card__header {
             flex-direction: row;
@@ -2485,34 +2534,9 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
         }
 
         .woocommerce-account .ma-order-status-card__timeline-track {
-            position: relative;
             flex-direction: row;
             justify-content: space-between;
-        }
-
-        .woocommerce-account .ma-order-status-card__step {
-            padding-left: 0;
-        }
-
-        .woocommerce-account .ma-order-status-card__step-dot {
-            position: static;
-        }
-
-        .woocommerce-account .ma-order-status-card__timeline-line {
-            left: calc(100% / (var(--ma-timeline-steps, 3) * 2));
-            width: calc(100% * (var(--ma-timeline-steps, 3) - 1) / var(--ma-timeline-steps, 3));
-            top: var(--ma-vo-md-375);
-            bottom: auto;
-            height: var(--ma-space-2xs);
-            transform: none;
-        }
-
-        .woocommerce-account .ma-order-status-card__timeline-line-fill {
-            left: calc(100% / (var(--ma-timeline-steps, 3) * 2));
-            top: var(--ma-vo-md-375);
-            width: calc((100% * (var(--ma-timeline-steps, 3) - 1) / var(--ma-timeline-steps, 3)) * var(--ma-timeline-progress, 0) / 100);
-            height: var(--ma-space-2xs);
-            transform: none;
+            gap: 0;
         }
 
         .woocommerce-account .ma-order-status-card__step {
@@ -2529,6 +2553,23 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
         .woocommerce-account .ma-order-status-card__step-labels {
             align-items: center;
             text-align: center;
+            padding-top: 0;
+        }
+
+        .woocommerce-account .ma-order-status-card__timeline-line,
+        .woocommerce-account .ma-order-status-card__timeline-line-fill {
+            left: calc(100% / (var(--ma-timeline-steps, 3) * 2));
+            top: calc(var(--ma-vo-icon-size) / 2);
+            height: var(--ma-space-2xs);
+        }
+
+        .woocommerce-account .ma-order-status-card__timeline-line {
+            width: calc(100% * (var(--ma-timeline-steps, 3) - 1) / var(--ma-timeline-steps, 3));
+            bottom: auto;
+        }
+
+        .woocommerce-account .ma-order-status-card__timeline-line-fill {
+            width: calc((100% * (var(--ma-timeline-steps, 3) - 1) / var(--ma-timeline-steps, 3)) * var(--ma-timeline-progress, 0) / 100);
         }
     }
 .woocommerce-account .ma-view-order-tracking {
@@ -3109,38 +3150,14 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyA
         font-size: var(--ma-font-sm);
         color: var(--ma-text-muted-dark);
     }
-/* Section 1–4: >= 480px enhancements */
+/* >= 480px: actions row layout */
 @media (min-width: 480px) {
-        .woocommerce-account .ma-order-details-header__number {
-            font-size: var(--ma-font-4xl);
-            line-height: var(--ma-line-tight);
-        }
-
-        .woocommerce-account .ma-order-details-header__total-value {
-            font-size: var(--ma-font-4xl);
-            line-height: var(--ma-line-tight);
-        }
-
         .woocommerce-account .ma-order-details-header__actions {
             flex-wrap: wrap;
             flex-direction: row;
             align-items: center;
             gap: var(--ma-space-sm);
         }
-
-        .woocommerce-account .ma-order-status-card__header {
-            padding: var(--ma-space-lg);
-        }
-
-        .woocommerce-account .ma-order-status-card__timeline {
-            padding: var(--ma-space-lg);
-        }
-
-        .woocommerce-account .ma-view-order__updates {
-            margin-top: var(--ma-space-lg);
-            padding-top: var(--ma-space-lg);
-        }
-
     }
 /* -------------------------------------------------------------------------- */
 /* My Account endpoint styles: Payment Methods                                */

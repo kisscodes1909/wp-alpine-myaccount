@@ -1,20 +1,30 @@
 /* -------------------------------------------------------------------------- */
-/* My Account navigation: stacked nav list + mobile dropdown                  */
+/* My Account navigation: vertical | stacked (full-bleed) | mobile dropdown  */
 /* -------------------------------------------------------------------------- */
 
-/* Stacked layout: nav band, list, links, icons, hover/active */
+/* Stacked: full-bleed nav band (--ma-nav-transition-* inherited from block below) */
 body.woocommerce-account.ma-layout-stacked {
     .woocommerce-MyAccount-navigation.ma-fullbleed-band {
         --ma-fullbleed-border-top: var(--ma-space-2xs) solid var(--ma-border-divider);
         --ma-fullbleed-border-bottom: var(--ma-space-2xs) solid var(--ma-border-divider);
-        --ma-nav-transition-duration: var(--ma-duration-fast);
-        --ma-nav-transition-timing: var(--ma-easing-smooth);
         display: flex;
         justify-content: center;
         width: 100%;
         margin-inline: auto;
         padding-inline: 0;
     }
+
+    @media (min-width: 992px) {
+        .woocommerce-MyAccount-navigation.ma-fullbleed-band {
+            padding-inline: var(--ma-space-5xl);
+        }
+    }
+}
+
+/* Stacked + vertical (default): nav list, links, icons, hover/active */
+body.woocommerce-account:is(.ma-layout-stacked, .ma-layout-vertical) {
+    --ma-nav-transition-duration: var(--ma-duration-fast);
+    --ma-nav-transition-timing: var(--ma-easing-smooth);
 
     .woocommerce-MyAccount-navigation-list {
         padding: 0;
@@ -124,12 +134,12 @@ body.woocommerce-account.ma-layout-stacked {
     .ma-nav-link__label {
         display: block;
     }
+}
 
-    @media (min-width: 992px) {
-        .woocommerce-MyAccount-navigation.ma-fullbleed-band {
-            padding-inline: var(--ma-space-5xl);
-        }
-    }
+/* Vertical: left-aligned links (mobile dropdown keeps full-width items below) */
+body.woocommerce-account.ma-layout-vertical .woocommerce-MyAccount-navigation-link {
+    justify-content: flex-start;
+    text-align: left;
 }
 
 /* Mobile: overlay dropdown — shared by stacked and vertical layout */
@@ -197,12 +207,11 @@ body.woocommerce-account {
             margin-top: var(--ma-space-2xs);
             padding: var(--ma-space-xs) 0;
             background: var(--ma-surface);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--ma-shadow-sm);
 
             li {
                 margin-bottom: 0;
-                border: none;
-                border-bottom: 0;
+                border: 0;
             }
 
             .woocommerce-MyAccount-navigation-link {
@@ -241,6 +250,25 @@ body.woocommerce-account {
             }
         }
 
+        &.ma-layout-vertical .ma-nav-dropdown {
+            .woocommerce-MyAccount-navigation {
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+            }
+
+            .ma-nav-dropdown__list.woocommerce-MyAccount-navigation-list {
+                align-items: flex-start;
+                width: 100%;
+            }
+
+            .ma-nav-dropdown__list.woocommerce-MyAccount-navigation-list .woocommerce-MyAccount-navigation-link {
+                justify-content: flex-start;
+                text-align: left;
+                padding-inline: 0;
+            }
+        }
+
         &.ma-layout-stacked .ma-nav-dropdown .ma-nav-dropdown__list.woocommerce-MyAccount-navigation-list {
             flex-flow: row;
 
@@ -249,12 +277,9 @@ body.woocommerce-account {
                 border-bottom: var(--ma-space-2xs) solid transparent;
             }
 
-            li:hover:not(.is-active) {
-                border-bottom: var(--ma-space-2xs) solid var(--ma-text-primary);
-            }
-
+            li:hover:not(.is-active),
             li.is-active {
-                border-bottom: var(--ma-space-2xs) solid var(--ma-text-primary);
+                border-bottom-color: var(--ma-text-primary);
             }
         }
     }
