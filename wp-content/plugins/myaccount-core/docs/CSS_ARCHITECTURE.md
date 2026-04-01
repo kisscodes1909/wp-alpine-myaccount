@@ -21,7 +21,7 @@ Các quy tắc chính cho CSS My Account trong repo. Các link dưới đây tr�
 
 ## Layering
 - **Shared** ([myaccount-shared.css](assets/src/css/myaccount-shared.css)): reset, base, buttons, empty-state, ui-overlays, layout, notices + small utilities. **Không** gồm `form-base`, `navigation`, `auth-shell` (từng bundle endpoint).
-- **Logged-in nav**: [ma-navigation.css](assets/css/ma-navigation.css) — chỉ `navigation.css`; enqueue khi `is_user_logged_in()` (sau shared).
+- **Logged-in nav**: [ma-navigation-vertical.css](assets/css/ma-navigation-vertical.css) hoặc [ma-navigation-stacked.css](assets/css/ma-navigation-stacked.css) — theo option `myaccount_layout` (`stacked` = thanh nav ngang); nguồn `navigation-shared.css` + `navigation-vertical.css` hoặc `navigation-stacked.css`; enqueue khi `is_user_logged_in()` (sau global).
 - **Endpoint**: mỗi file `myaccount-endpoint-*.css` import thêm `form-base` và/hoặc `auth-shell` nếu cần.
 - Fallback: [structure-file.css](assets/src/css/structure-file.css) → `myaccount.css` (một lần form-base + nav + auth-shell + mọi endpoint).
 
@@ -29,12 +29,12 @@ Entry file (fallback):
 - `assets/src/css/structure-file.css`
 
 Output:
-- Split: `ma-shared.css`, `ma-navigation.css`, `ma-{endpoint}.css`; legacy: `myaccount.css`
+- Split: `ma-global.css`, `ma-navigation-vertical.css` hoặc `ma-navigation-stacked.css`, `ma-{endpoint}.css`; legacy: `myaccount.css`
 
 ## Production build & CSS performance
 - **Hằng ngày / khi dev:** dùng `npm run build:css` và/hoặc `npm run build:js` (hoặc `npm run build`) — **không** bắt buộc `build:production` trừ khi đang chuẩn bị release.
 - **Release (bắt buộc trước deploy):** từ root plugin chạy `npm run build:production` để có `assets/css/*.min.css` và `assets/js/*.min.js`. Staging/production nên `WP_ENVIRONMENT_TYPE=production` và tránh `SCRIPT_DEBUG` để enqueue load `.min` ([class-myaccount-core-assets.php](includes/class-myaccount-core-assets.php)).
-- **Checklist deploy (tránh fallback ~94KB):** trước khi release, xác nhận trên disk có đủ `ma-shared.min.css`, `ma-{endpoint}.min.css` tương ứng, và `ma-navigation.min.css` khi user đăng nhập; không xóa nhầm các file split; nếu nghi site đang tải `myaccount.css`, bật log (`MYACCOUNT_CORE_LOG_MISSING_ASSETS` hoặc `WP_DEBUG`) và kiểm tra `error_log`.
+- **Checklist deploy (tránh fallback ~94KB):** trước khi release, xác nhận trên disk có đủ `ma-global.min.css`, `ma-{endpoint}.min.css` tương ứng, và `ma-navigation-vertical.min.css` + `ma-navigation-stacked.min.css` (enqueue theo layout khi user đăng nhập); không xóa nhầm các file split; nếu nghi site đang tải `myaccount.css`, bật log (`MYACCOUNT_CORE_LOG_MISSING_ASSETS` hoặc `WP_DEBUG`) và kiểm tra `error_log`.
 - **Fallback `myaccount.css` (~94KB min):** loaded only when `ma-shared.css` **or** the endpoint CSS file is missing on disk. Missing split files doubles payload; always ship built min files.
 - **Debug:** with `WP_DEBUG` or `define('MYACCOUNT_CORE_LOG_MISSING_ASSETS', true)`, missing assets and fallback enqueue are logged to `error_log`.
 - **Preload:** on account pages, `ma-shared` CSS is preloaded in `wp_head` (same URL as enqueue) to shorten the critical path slightly.

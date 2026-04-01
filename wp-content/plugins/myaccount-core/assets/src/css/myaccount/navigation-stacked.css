@@ -1,0 +1,35 @@
+/* -------------------------------------------------------------------------- */
+/* My Account navigation — stacked / horizontal top band (myaccount_layout)   */
+/* -------------------------------------------------------------------------- */
+
+body.woocommerce-account.ma-layout-stacked {
+    .ma-nav.ma-fullbleed-band {
+        --ma-fullbleed-border-top: var(--ma-space-2xs) solid var(--ma-border-divider);
+        --ma-fullbleed-border-bottom: var(--ma-space-2xs) solid var(--ma-border-divider);
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-inline: auto;
+        padding-inline: 0;
+    }
+
+    @media (min-width: 992px) {
+        .ma-nav.ma-fullbleed-band {
+            padding-inline: var(--ma-space-5xl);
+        }
+
+        .ma-nav-dropdown .ma-nav-dropdown__list.ma-nav__list {
+            flex-flow: row;
+
+            li {
+                margin-bottom: -var(--ma-space-2xs);
+                border-bottom: var(--ma-space-2xs) solid transparent;
+            }
+
+            li:hover:not(.is-active),
+            li.is-active {
+                border-bottom-color: var(--ma-text-primary);
+            }
+        }
+    }
+}

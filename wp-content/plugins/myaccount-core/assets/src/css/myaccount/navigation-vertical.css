@@ -1,0 +1,82 @@
+/* -------------------------------------------------------------------------- */
+/* My Account navigation — vertical sidebar (default layout)                  */
+/* -------------------------------------------------------------------------- */
+
+/* Left rail on the link (full hit area); stacked uses bottom border on li (navigation-shared.css). */
+body.woocommerce-account.ma-layout-vertical .ma-nav__list .ma-nav__link {
+    justify-content: flex-start;
+    text-align: left;
+    box-sizing: border-box;
+    border-inline-start: var(--ma-nav-item-active-accent-width) solid transparent;
+    transition:
+        border-inline-start-color var(--ma-nav-transition-duration) var(--ma-nav-transition-timing),
+        background-color var(--ma-nav-transition-duration) var(--ma-nav-transition-timing);
+
+    @media (min-width: 992px) {
+        width: 100%;
+        font-size: var(--ma-font-sm);
+        gap: calc(var(--ma-base) * 0.8);
+    }
+}
+
+@media (max-width: 991px) {
+    body.woocommerce-account.ma-layout-vertical .ma-nav__list .ma-nav__link {
+        padding-inline-start: var(--ma-space-md);
+    }
+}
+
+body.woocommerce-account.ma-layout-vertical .ma-nav__list li:not(.is-active) .ma-nav__link:hover,
+body.woocommerce-account.ma-layout-vertical .ma-nav__list li:not(.is-active) .ma-nav__link:focus-visible {
+    background-color: var(--ma-surface-alt);
+    border-inline-start-color: var(--ma-nav-item-active-border);
+}
+
+body.woocommerce-account.ma-layout-vertical .ma-nav__list li.is-active .ma-nav__link,
+body.woocommerce-account.ma-layout-vertical .ma-nav__list .ma-nav__link[aria-current="page"] {
+    background-color: var(--ma-surface-alt);
+    border-inline-start-color: var(--ma-nav-item-active-border);
+}
+
+@media (min-width: 992px) {
+    body.woocommerce-account.ma-layout-vertical {
+        .ma-nav-dropdown {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            border-inline-end: var(--ma-space-2xs) solid var(--ma-border-divider);
+        }
+
+        .ma-nav {
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+            top: var(--ma-account-nav-sticky-top);
+            z-index: var(--ma-account-nav-sticky-z-index);
+            align-self: normal;
+            max-height: calc(100vh - var(--ma-account-nav-sticky-top));
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .ma-nav__user {
+            flex-shrink: 0;
+        }
+
+        .ma-nav__list {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            gap: var(--ma-space-xs);
+            /* stretch so each row is full column width (hover/active fill + link width:100%) */
+            align-items: stretch;
+        }
+
+        .ma-nav__list li {
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 0;
+            border-bottom: 0;
+        }
+    }
+}

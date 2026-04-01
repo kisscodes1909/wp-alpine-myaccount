@@ -6,7 +6,7 @@
 @import "./myaccount/ui-overlays.css";
 @import "./myaccount/layout.css";
 @import "./myaccount/notices.css";
-/* form-base, navigation, auth-shell: endpoint bundles or ma-navigation (logged-in). */
+/* form-base, navigation, auth-shell: endpoint bundles or ma-navigation-* (logged-in). */
 /* @import "./myaccount/fashion.css"; */
 
 /* Account pages: body carries .woocommerce-account — token matches base #4d4d4d. */

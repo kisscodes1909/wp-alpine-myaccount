@@ -66,6 +66,7 @@ class MyAccount_Core_Template_Loader {
 			'myaccount/form-add-payment-method.php',
 			'myaccount/partials/ma-empty-state.php',
 			'myaccount/ma-form-edit-change-password.php',
+			'myaccount/ma-account-avatar.php',
 			'order/order-meta-data.php',
 			'order/order-actions.php',
 			'order/order-list-item-content.php',

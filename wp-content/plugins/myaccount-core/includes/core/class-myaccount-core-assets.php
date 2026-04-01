@@ -47,7 +47,7 @@ class MyAccount_Core_Assets {
 		if ( is_user_logged_in() ) {
 			$this->enqueue_style_if_exists(
 				'myaccount-core-css-navigation',
-				$this->asset_path( 'assets/css/ma-navigation.css' ),
+				$this->asset_path( $this->get_account_navigation_css_relative_path() ),
 				$nav_deps
 			);
 		}
@@ -241,6 +241,22 @@ class MyAccount_Core_Assets {
 		}
 
 		return 'dashboard';
+	}
+
+	/**
+	 * Logged-in navigation CSS: `ma-navigation-vertical.css` vs `ma-navigation-stacked.css` from `myaccount_layout`.
+	 *
+	 * Filter: `myaccount_core_navigation_css_relative_path`.
+	 *
+	 * @return string Path relative to plugin root.
+	 */
+	private function get_account_navigation_css_relative_path(): string {
+		$layout = get_option( 'myaccount_layout', '' );
+		$path   = 'stacked' === $layout ? 'assets/css/ma-navigation-stacked.css' : 'assets/css/ma-navigation-vertical.css';
+
+		$filtered = apply_filters( 'myaccount_core_navigation_css_relative_path', $path, $layout );
+
+		return is_string( $filtered ) && '' !== $filtered ? $filtered : $path;
 	}
 
 	private function resolve_endpoint_css_file( string $endpoint ): string {

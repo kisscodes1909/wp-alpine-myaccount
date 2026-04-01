@@ -6,8 +6,9 @@ body.woocommerce-account:is(.ma-layout-vertical, .ma-layout-stacked) {
     .ma-account-layout {
         display: flex;
         flex-direction: column;
+        width: 100%;
 
-        .woocommerce-MyAccount-navigation {
+        .ma-nav {
             flex-shrink: 0;
         }
 
@@ -26,13 +27,12 @@ body.woocommerce-account.ma-layout-vertical {
         .ma-account-layout {
             display: grid;
             grid-template-columns: 3fr 9fr;
-            gap: var(--ma-space-md);
-            align-items: start;
+            gap: var(--ma-space-lg);
+            align-items: stretch;
         }
 
-        .ma-account-layout > .woocommerce-MyAccount-navigation,
-        .ma-account-layout > .woocommerce-MyAccount-content {
-            padding-block-start: var(--ma-space-md);
+        .ma-account-layout > .ma-nav-dropdown {
+            min-height: 0;
         }
     }
 }

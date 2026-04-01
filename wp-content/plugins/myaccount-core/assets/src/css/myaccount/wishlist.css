@@ -19,7 +19,6 @@
     .ma-wishlist .woocommerce.yith-wcwl-form {
         display: flex;
         flex-direction: column;
-        gap: var(--ma-space-xl);
         margin: 0;
     }
 

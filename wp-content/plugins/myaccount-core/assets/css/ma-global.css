@@ -173,6 +173,16 @@
     --ma-info-text: #1e3a8a;
     --ma-info-icon: #3b82f6;
 
+    /* Navigation (account sidebar) */
+    --ma-nav-item-active-bg: transparent;
+    --ma-nav-item-active-border: var(--ma-text-primary);
+    --ma-nav-item-active-accent-width: 2px;
+    --ma-nav-user-avatar-bg: #0a0a0a;
+    --ma-nav-user-avatar-size: calc(var(--ma-base) * 2.5);
+    /* Vertical nav sticky offset — used only in navigation-vertical.css. */
+    --ma-account-nav-sticky-top: var(--ma-space-md);
+    --ma-account-nav-sticky-z-index: 2;
+
     /* ─────────────────────────────────────────────────────────────
         BUTTONS
         ───────────────────────────────────────────────────────────── */
@@ -324,7 +334,7 @@
             border-bottom: var(--ma-fullbleed-border-bottom, 0);
         }
 .woocommerce-account .ma-page-heading {
-        margin-block: var(--ma-space-xl);
+        margin-block: var(--ma-space-md);
         letter-spacing: var(--ma-tracking-wide);
     }
 .woocommerce-account .ma-page-heading .ma-page-heading__back-link {
@@ -380,7 +390,7 @@
             line-height: var(--ma-line-normal);
             letter-spacing: var(--ma-tracking-wide);
             padding-bottom: var(--ma-space-md);
-            border-bottom: 1px solid var(--ma-border-divider);
+            /* border-bottom: 1px solid var(--ma-border-divider); */
             color: var(--ma-text-charcoal);
         }
 /* Page / form titles (replaces apl-heading-chip / apl-heading-chip-sm) */
@@ -394,12 +404,8 @@
         text-transform: uppercase;
         letter-spacing: var(--ma-tracking-wider);
         color: var(--ma-text-primary);
+
     }
-@media (min-width: 992px) {
-.woocommerce-account .ma-page-heading__title {
-            font-size: 34px
-    }
-        }
 .woocommerce-account .ma-page-heading__title--sm {
         font-size: var(--ma-font-xl);
         font-weight: var(--ma-weight-semibold);
@@ -407,6 +413,14 @@
         text-transform: none;
         letter-spacing: var(--ma-tracking-wide);
     }
+body.admin-bar.woocommerce-account {
+    --ma-account-nav-sticky-top: calc(var(--ma-space-md) + 32px);
+}
+@media screen and (max-width: 782px) {
+    body.admin-bar.woocommerce-account {
+        --ma-account-nav-sticky-top: calc(var(--ma-space-md) + 46px);
+    }
+}
 /* -------------------------------------------------------------------------- */
 /* Demo: hide Hello theme header on My Account only                            */
 /* -------------------------------------------------------------------------- */
@@ -861,8 +875,9 @@ body.woocommerce-account header[data-elementor-type="header"] {
 body.woocommerce-account:is(.ma-layout-vertical, .ma-layout-stacked) .ma-account-layout {
         display: flex;
         flex-direction: column;
+        width: 100%;
     }
-body.woocommerce-account:is(.ma-layout-vertical, .ma-layout-stacked) .ma-account-layout .woocommerce-MyAccount-navigation {
+body.woocommerce-account:is(.ma-layout-vertical, .ma-layout-stacked) .ma-account-layout .ma-nav {
             flex-shrink: 0;
         }
 body.woocommerce-account:is(.ma-layout-vertical, .ma-layout-stacked) .ma-account-layout .woocommerce-MyAccount-content {
@@ -875,13 +890,12 @@ body.woocommerce-account.ma-layout-vertical .ma-account-layout .woocommerce-MyAc
         body.woocommerce-account.ma-layout-vertical .ma-account-layout {
             display: grid;
             grid-template-columns: 3fr 9fr;
-            gap: var(--ma-space-md);
-            align-items: start;
+            gap: var(--ma-space-lg);
+            align-items: stretch;
         }
 
-        body.woocommerce-account.ma-layout-vertical .ma-account-layout > .woocommerce-MyAccount-navigation,
-        body.woocommerce-account.ma-layout-vertical .ma-account-layout > .woocommerce-MyAccount-content {
-            padding-block-start: var(--ma-space-md);
+        body.woocommerce-account.ma-layout-vertical .ma-account-layout > .ma-nav-dropdown {
+            min-height: 0;
         }
     }
 body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAccount-content {
@@ -1021,7 +1035,7 @@ body.woocommerce-account.ma-layout-stacked .ma-account-layout .woocommerce-MyAcc
     color: inherit;
     text-decoration: underline;
 }
-/* form-base, navigation, auth-shell: endpoint bundles or ma-navigation (logged-in). */
+/* form-base, navigation, auth-shell: endpoint bundles or ma-navigation-* (logged-in). */
 /* @import "./myaccount/fashion.css"; */
 /* Account pages: body carries .woocommerce-account — token matches base #4d4d4d. */
 body.woocommerce-account {

@@ -15,7 +15,6 @@
 .woocommerce-account .ma-wishlist .woocommerce.yith-wcwl-form {
         display: flex;
         flex-direction: column;
-        gap: var(--ma-space-xl);
         margin: 0;
     }
 .woocommerce-account .ma-wishlist .wishlist-title-container {

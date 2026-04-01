@@ -136,6 +136,16 @@
     --ma-info-text: #1e3a8a;
     --ma-info-icon: #3b82f6;
 
+    /* Navigation (account sidebar) */
+    --ma-nav-item-active-bg: transparent;
+    --ma-nav-item-active-border: var(--ma-text-primary);
+    --ma-nav-item-active-accent-width: 2px;
+    --ma-nav-user-avatar-bg: #0a0a0a;
+    --ma-nav-user-avatar-size: calc(var(--ma-base) * 2.5);
+    /* Vertical nav sticky offset — used only in navigation-vertical.css. */
+    --ma-account-nav-sticky-top: var(--ma-space-md);
+    --ma-account-nav-sticky-z-index: 2;
+
     /* ─────────────────────────────────────────────────────────────
         BUTTONS
         ───────────────────────────────────────────────────────────── */
@@ -282,7 +292,7 @@
     }
 
     .ma-page-heading {
-        margin-block: var(--ma-space-xl);
+        margin-block: var(--ma-space-md);
         letter-spacing: var(--ma-tracking-wide);
 
         .ma-page-heading__back-link {
@@ -344,7 +354,7 @@
             line-height: var(--ma-line-normal);
             letter-spacing: var(--ma-tracking-wide);
             padding-bottom: var(--ma-space-md);
-            border-bottom: 1px solid var(--ma-border-divider);
+            /* border-bottom: 1px solid var(--ma-border-divider); */
             color: var(--ma-text-charcoal);
         }
     }
@@ -361,9 +371,6 @@
         letter-spacing: var(--ma-tracking-wider);
         color: var(--ma-text-primary);
 
-        @media (min-width: 992px) {
-            font-size: 34px;
-        }
     }
 
     .ma-page-heading__title--sm {
@@ -380,6 +387,16 @@
     /* payment-methods endpoint styles: moved to payment-methods.css */
     /* view-order endpoint styles: moved to view-order.css */
     /* address-book endpoint styles: moved to address-book.css */
+}
+
+body.admin-bar.woocommerce-account {
+    --ma-account-nav-sticky-top: calc(var(--ma-space-md) + 32px);
+}
+
+@media screen and (max-width: 782px) {
+    body.admin-bar.woocommerce-account {
+        --ma-account-nav-sticky-top: calc(var(--ma-space-md) + 46px);
+    }
 }
 
 /* -------------------------------------------------------------------------- */
