@@ -20,8 +20,6 @@ class MyAccount_Core_Hooks {
 		add_filter( 'woocommerce_account_menu_items', array( $this, 'remove_dashboard_tab' ) );
 		add_filter( 'woocommerce_account_menu_items', array( $this, 'rename_menu_labels' ), 20 );
 		add_filter( 'woocommerce_account_menu_items', array( $this, 'reorder_menu_items' ), 100 );
-		// Temporary: hide Addresses from nav. Set MYACCOUNT_CORE_SHOW_ADDRESSES_MENU true or use filter myaccount_core_show_addresses_in_account_menu.
-		add_filter( 'woocommerce_account_menu_items', array( $this, 'maybe_hide_addresses_menu' ), 120 );
 		add_filter( 'woocommerce_account_menu_item_classes', array( $this, 'account_menu_item_plugin_classes' ), 10, 2 );
 
 		add_filter( 'woocommerce_login_redirect', array( $this, 'redirect_after_login' ), 10, 2 );
@@ -57,32 +55,6 @@ class MyAccount_Core_Hooks {
 
 	public function remove_dashboard_tab( array $items ): array {
 		unset( $items['dashboard'] );
-		return $items;
-	}
-
-	/**
-	 * Temporarily remove Addresses from the account menu (custom address book + Woo default).
-	 *
-	 * Re-enable: define MYACCOUNT_CORE_SHOW_ADDRESSES_MENU as true in wp-config.php, or
-	 * add_filter( 'myaccount_core_show_addresses_in_account_menu', '__return_true' ); from a mu-plugin/theme.
-	 *
-	 * @param array $items Endpoint => label.
-	 * @return array
-	 */
-	public function maybe_hide_addresses_menu( array $items ): array {
-		// Default hidden until re-enabled via constant or filter.
-		$show = false;
-		if ( defined( 'MYACCOUNT_CORE_SHOW_ADDRESSES_MENU' ) ) {
-			$show = (bool) MYACCOUNT_CORE_SHOW_ADDRESSES_MENU;
-		}
-		$show = (bool) apply_filters( 'myaccount_core_show_addresses_in_account_menu', $show );
-
-		if ( $show ) {
-			return $items;
-		}
-
-		unset( $items['address'], $items['edit-address'] );
-
 		return $items;
 	}
 

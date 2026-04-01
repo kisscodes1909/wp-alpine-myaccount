@@ -50,12 +50,18 @@ body.woocommerce-account.ma-layout-vertical .ma-nav__list .ma-nav__link[aria-cur
             display: flex;
             flex-direction: column;
             position: sticky;
-            top: var(--ma-account-nav-sticky-top);
+            top: 0;
             z-index: var(--ma-account-nav-sticky-z-index);
             align-self: normal;
-            max-height: calc(100vh - var(--ma-account-nav-sticky-top));
+            max-height: 100vh;
             overflow: hidden;
             box-sizing: border-box;
+        }
+
+        /* WP admin bar offset (desktop). */
+        &.admin-bar .ma-nav {
+            top: 32px;
+            max-height: calc(100vh - 32px);
         }
 
         .ma-nav__user {

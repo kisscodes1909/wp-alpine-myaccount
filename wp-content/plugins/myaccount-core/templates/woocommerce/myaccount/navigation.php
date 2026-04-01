@@ -15,7 +15,8 @@ do_action( 'woocommerce_before_account_navigation' );
 ?>
 
 <?php
-$active_nav_label = '';
+$active_nav_label   = '';
+$ma_layout_stacked  = ( get_option( 'myaccount_layout' ) === 'stacked' );
 foreach ( wc_get_account_menu_items() as $endpoint => $label ) {
 	if ( wc_is_current_account_menu_item( $endpoint ) ) {
 		$active_nav_label = $label;
@@ -29,8 +30,8 @@ foreach ( wc_get_account_menu_items() as $endpoint => $label ) {
 	 :class="{ 'is-open': open }"
 	 @click.outside="open = false"
 	 data-active-label="<?php echo esc_attr( $active_nav_label ?: __( 'Menu', 'woocommerce' ) ); ?>">
-	<nav class="ma-nav <?php echo ( get_option( 'myaccount_layout' ) === 'stacked' ) ? 'ma-fullbleed-band' : ''; ?>" aria-label="<?php esc_attr_e( 'Account pages', 'woocommerce' ); ?>">
-		<?php if ( is_user_logged_in() ) : ?>
+	<nav class="ma-nav <?php echo $ma_layout_stacked ? 'ma-fullbleed-band' : ''; ?>" aria-label="<?php esc_attr_e( 'Account pages', 'woocommerce' ); ?>">
+		<?php if ( is_user_logged_in() && ! $ma_layout_stacked ) : ?>
 			<?php
 			$ma_nav_user = wp_get_current_user();
 			if ( $ma_nav_user && $ma_nav_user->exists() ) :

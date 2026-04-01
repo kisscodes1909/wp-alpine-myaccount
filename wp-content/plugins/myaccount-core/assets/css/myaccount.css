@@ -399,8 +399,7 @@
         display: inline-flex;
         align-items: center;
         margin: 0;
-        font-size: var(--ma-font-xl);
-        font-weight: var(--ma-weight-semibold);
+        font-size: var(--ma-font-2xl);
         line-height: 1;
         text-transform: uppercase;
         letter-spacing: var(--ma-tracking-wider);
@@ -1717,13 +1716,18 @@ body.woocommerce-account.ma-layout-stacked .ma-nav__list li.is-active {
     }
 /* Account navigation user block (sidebar header) */
 body.woocommerce-account .ma-nav__user {
-    display: flex;
+    display: none;
     align-items: flex-start;
     gap: var(--ma-space-md);
     padding-block: var(--ma-space-lg);
     margin-bottom: var(--ma-space-md);
     text-align: left;
     border-bottom: var(--ma-space-2xs) solid var(--ma-border-divider);
+}
+@media (min-width: 992px) {
+    body.woocommerce-account .ma-nav__user {
+        display: flex;
+    }
 }
 body.woocommerce-account .ma-nav__user-avatar {
     position: relative;
@@ -1938,12 +1942,18 @@ body.woocommerce-account.ma-layout-vertical .ma-nav__list .ma-nav__link[aria-cur
             display: flex;
             flex-direction: column;
             position: sticky;
-            top: var(--ma-account-nav-sticky-top);
+            top: 0;
             z-index: var(--ma-account-nav-sticky-z-index);
             align-self: normal;
-            max-height: calc(100vh - var(--ma-account-nav-sticky-top));
+            max-height: 100vh;
             overflow: hidden;
             box-sizing: border-box;
+        }
+
+        /* WP admin bar offset (desktop). */
+        body.woocommerce-account.ma-layout-vertical.admin-bar .ma-nav {
+            top: 32px;
+            max-height: calc(100vh - 32px);
         }
 
         body.woocommerce-account.ma-layout-vertical .ma-nav__user {

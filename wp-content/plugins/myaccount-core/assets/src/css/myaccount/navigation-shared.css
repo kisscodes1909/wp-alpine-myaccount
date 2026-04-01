@@ -122,13 +122,19 @@ body.woocommerce-account.ma-layout-stacked .ma-nav__list li {
 
 /* Account navigation user block (sidebar header) */
 body.woocommerce-account .ma-nav__user {
-    display: flex;
+    display: none;
     align-items: flex-start;
     gap: var(--ma-space-md);
     padding-block: var(--ma-space-lg);
     margin-bottom: var(--ma-space-md);
     text-align: left;
     border-bottom: var(--ma-space-2xs) solid var(--ma-border-divider);
+}
+
+@media (min-width: 992px) {
+    body.woocommerce-account .ma-nav__user {
+        display: flex;
+    }
 }
 
 body.woocommerce-account .ma-nav__user-avatar {

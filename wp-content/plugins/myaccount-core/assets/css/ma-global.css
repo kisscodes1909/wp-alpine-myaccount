@@ -398,8 +398,7 @@
         display: inline-flex;
         align-items: center;
         margin: 0;
-        font-size: var(--ma-font-xl);
-        font-weight: var(--ma-weight-semibold);
+        font-size: var(--ma-font-2xl);
         line-height: 1;
         text-transform: uppercase;
         letter-spacing: var(--ma-tracking-wider);
