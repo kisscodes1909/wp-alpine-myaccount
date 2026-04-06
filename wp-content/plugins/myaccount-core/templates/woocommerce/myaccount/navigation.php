@@ -34,45 +34,15 @@ foreach ( wc_get_account_menu_items() as $endpoint => $label ) {
 		<?php if ( is_user_logged_in() && ! $ma_layout_stacked ) : ?>
 			<?php
 			$ma_nav_user = wp_get_current_user();
-			if ( $ma_nav_user && $ma_nav_user->exists() ) :
-				$ma_nav_display  = MyAccount_Core_Hooks::get_navigation_display_name( $ma_nav_user );
-				$ma_nav_initials  = MyAccount_Core_Hooks::get_navigation_user_initials( $ma_nav_user );
-				$ma_nav_avatar_url = MyAccount_Core_Hooks::get_navigation_avatar_url( $ma_nav_user );
-				$ma_nav_avatar_sz  = MyAccount_Core_Hooks::get_navigation_avatar_size( $ma_nav_user );
-				$ma_nav_tier     = MyAccount_Core_Hooks::get_navigation_membership_label( $ma_nav_user );
-				$ma_nav_show_status = (bool) apply_filters( 'myaccount_core_navigation_show_status', true, $ma_nav_user );
-				$ma_nav_status_label = apply_filters( 'myaccount_core_navigation_status_label', __( 'Active', 'myaccount-core' ), $ma_nav_user );
-				?>
-				<div class="ma-nav__user">
-					<div class="ma-nav__user-avatar" aria-hidden="true">
-						<?php if ( '' !== $ma_nav_avatar_url ) : ?>
-							<img
-								class="ma-nav__user-avatar-img"
-								src="<?php echo esc_url( $ma_nav_avatar_url ); ?>"
-								alt=""
-								width="<?php echo (int) $ma_nav_avatar_sz; ?>"
-								height="<?php echo (int) $ma_nav_avatar_sz; ?>"
-								loading="lazy"
-								decoding="async"
-								onerror="this.setAttribute('hidden', ''); var s=this.nextElementSibling; if(s){ s.removeAttribute('hidden'); }"
-							/>
-						<?php endif; ?>
-						<span class="ma-nav__user-avatar-fallback"<?php echo '' !== $ma_nav_avatar_url ? ' hidden' : ''; ?>><?php echo esc_html( $ma_nav_initials ); ?></span>
-					</div>
-					<div class="ma-nav__user-body">
-						<p class="ma-nav__user-name"><?php echo esc_html( $ma_nav_display ); ?></p>
-						<?php if ( '' !== $ma_nav_tier ) : ?>
-							<p class="ma-nav__user-tier"><?php echo esc_html( $ma_nav_tier ); ?></p>
-						<?php endif; ?>
-						<?php if ( $ma_nav_show_status ) : ?>
-							<p class="ma-nav__user-status">
-								<span class="ma-nav__user-status-dot" aria-hidden="true"></span>
-								<span class="ma-nav__user-status-label"><?php echo esc_html( $ma_nav_status_label ); ?></span>
-							</p>
-						<?php endif; ?>
-					</div>
-				</div>
-			<?php endif; ?>
+			if ( $ma_nav_user && $ma_nav_user->exists() ) {
+				wc_get_template(
+					'myaccount/partials/ma-nav-user.php',
+					array(
+						'ma_nav_user' => $ma_nav_user,
+					)
+				);
+			}
+			?>
 		<?php endif; ?>
 		<div class="ma-nav-dropdown__trigger"
 			 role="button"

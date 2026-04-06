@@ -372,7 +372,6 @@
             color: var(--ma-form-color-muted);
             font-weight: 600;
         }
-/* .ma-form__hint { margin: var(--ma-form-space-field-gap) 0 0 0; } */
 .woocommerce-account .ma-form .ma-form__input--capitalize {
             text-transform: capitalize;
         }
@@ -679,7 +678,7 @@
         display: flex;
         flex-direction: column;
         gap: var(--ma-space-md);
-        padding: var(--ma-space-lg);
+        padding: var(--ma-space-md);
         border-bottom: 1px solid var(--ma-border);
         background: var(--ma-surface-alt);
         min-height: calc(var(--ma-space-md) * 6.0625);
@@ -741,14 +740,14 @@
         letter-spacing: var(--ma-tracking-tight);
     }
 .woocommerce-account .ma-order-status-card__timeline {
-        padding: var(--ma-space-lg);
+        padding: var(--ma-space-md);
     }
 /* Mobile: vertical timeline left-aligned; icon circles + labels. */
 .woocommerce-account .ma-order-status-card__timeline-track {
         display: flex;
         flex-direction: column;
         position: relative;
-        gap: var(--ma-space-lg);
+        gap: var(--ma-space-md);
     }
 .woocommerce-account .ma-order-status-card__timeline-line,
     .woocommerce-account .ma-order-status-card__timeline-line-fill {
@@ -900,8 +899,10 @@
     }
 .woocommerce-account .ma-view-order-tracking__card {
         border: 1px solid var(--ma-border);
-        padding: var(--ma-space-md) var(--ma-space-lg);
+        padding: var(--ma-space-md);
         background: var(--ma-surface-base, #fff);
+        min-width: 0;
+        box-sizing: border-box;
     }
 .woocommerce-account .ma-view-order-tracking__item + .ma-view-order-tracking__item {
         padding-top: var(--ma-space-md);
@@ -912,14 +913,51 @@
         display: flex;
         flex-direction: column;
         gap: var(--ma-space-sm);
+        min-width: 0;
     }
-.woocommerce-account .ma-view-order-tracking__row {
+.woocommerce-account .ma-view-order-tracking__shell {
         display: flex;
         flex-direction: column;
         gap: var(--ma-space-sm);
+        min-width: 0;
     }
-.woocommerce-account .ma-view-order-tracking__identity {
+.woocommerce-account .ma-view-order-tracking__main {
         display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: var(--ma-space-md);
+        min-width: 0;
+    }
+.woocommerce-account .ma-view-order-tracking__brand {
+        flex-shrink: 0;
+    }
+.woocommerce-account .ma-view-order-tracking__logo-wrap {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        width: 3rem;
+        height: 3rem;
+        padding: var(--ma-space-2xs);
+        border: 1px solid var(--ma-border);
+        background: var(--ma-surface-base, #fff);
+    }
+.woocommerce-account .ma-view-order-tracking__logo-wrap .ma-view-order-tracking__icon {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+.woocommerce-account .ma-view-order-tracking__logo {
+        display: block;
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        -o-object-fit: contain;
+           object-fit: contain;
+    }
+.woocommerce-account .ma-view-order-tracking__info {
+        display: flex;
+        flex: 1 1 0;
         flex-direction: column;
         gap: var(--ma-space-2xs);
         min-width: 0;
@@ -931,73 +969,109 @@
         width: 1.75rem;
         height: 1.75rem;
         color: var(--ma-text-muted-dark);
-        flex-shrink: 0;
     }
 .woocommerce-account .ma-view-order-tracking__icon svg {
         width: 100%;
         height: 100%;
     }
-.woocommerce-account .ma-view-order-tracking__carrier,
-    .woocommerce-account .ma-view-order-tracking__number,
-    .woocommerce-account .ma-view-order-tracking__status,
-    .woocommerce-account .ma-view-order-tracking__date,
-    .woocommerce-account .ma-view-order-tracking__detail {
+.woocommerce-account .ma-view-order-tracking__headline {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: var(--ma-space-xs);
         margin: 0;
     }
 .woocommerce-account .ma-view-order-tracking__carrier {
-        color: var(--ma-text-primary);
-        font-size: var(--ma-font-base);
-        line-height: var(--ma-line-snug);
-        font-weight: 500;
-    }
-.woocommerce-account .ma-view-order-tracking__number {
+        margin: 0;
         color: var(--ma-text-muted-dark);
+        font-size: var(--ma-font-xs);
+        line-height: var(--ma-line-tight);
+        font-weight: 500;
+        letter-spacing: var(--ma-tracking-wider);
+        text-transform: uppercase;
+    }
+.woocommerce-account .ma-view-order-tracking__meta {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--ma-space-2xs);
+        margin: 0;
+    }
+.woocommerce-account .ma-view-order-tracking__date,
+    .woocommerce-account .ma-view-order-tracking__detail {
+        margin: 0;
+    }
+.woocommerce-account .ma-view-order-tracking__tracking-link {
+        color: var(--ma-accent-text);
         font-size: var(--ma-font-sm);
-        line-height: var(--ma-line-normal);
+        font-weight: 500;
+        text-decoration: underline;
+        text-underline-offset: 2px;
         word-break: break-word;
     }
-.woocommerce-account .ma-view-order-tracking__status {
-        color: var(--ma-text-primary);
+.woocommerce-account .ma-view-order-tracking__tracking-link:hover,
+    .woocommerce-account .ma-view-order-tracking__tracking-link:focus-visible {
+        color: var(--ma-accent-icon);
+    }
+.woocommerce-account .ma-view-order-tracking__tracking-text {
+        color: var(--ma-text-muted-dark);
+        font-size: var(--ma-font-sm);
+        word-break: break-word;
+    }
+.woocommerce-account .ma-view-order-tracking__date {
+        color: var(--ma-text-muted);
         font-size: var(--ma-font-xs);
         line-height: var(--ma-line-tight);
         letter-spacing: var(--ma-tracking-wider);
         text-transform: uppercase;
     }
-.woocommerce-account .ma-view-order-tracking__date,
-    .woocommerce-account .ma-view-order-tracking__detail {
+.woocommerce-account .ma-view-order-tracking__detail {
         color: var(--ma-text-muted-dark);
         font-size: var(--ma-font-sm);
         line-height: var(--ma-line-normal);
-    }
-.woocommerce-account .ma-view-order-tracking__detail {
-        margin-top: calc(var(--ma-space-sm) * -0.25);
+        margin-top: 0;
     }
 .woocommerce-account .ma-view-order-tracking__actions {
         margin-top: 0;
     }
+.woocommerce-account .ma-view-order-tracking__actions .ma-btn {
+        width: 100%;
+        box-sizing: border-box;
+        justify-content: center;
+    }
 @media (min-width: 768px) {
-        .woocommerce-account .ma-view-order-tracking__row {
+        .woocommerce-account .ma-view-order-tracking__shell {
             flex-direction: row;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
-            gap: var(--ma-space-lg);
+            gap: var(--ma-space-xl);
         }
 
-        .woocommerce-account .ma-view-order-tracking__identity {
-            flex-direction: row;
+        .woocommerce-account .ma-view-order-tracking__main {
+            flex: 1 1 0;
             align-items: center;
-            gap: var(--ma-space-md);
             min-width: 0;
-            flex: 1;
         }
 
-        .woocommerce-account .ma-view-order-tracking__status,
-        .woocommerce-account .ma-view-order-tracking__date {
+        .woocommerce-account .ma-view-order-tracking__meta {
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: baseline;
+            -moz-column-gap: var(--ma-space-sm);
+                 column-gap: var(--ma-space-sm);
+            row-gap: var(--ma-space-2xs);
+        }
+
+        .woocommerce-account .ma-view-order-tracking__meta .ma-view-order-tracking__date {
             white-space: nowrap;
         }
 
         .woocommerce-account .ma-view-order-tracking__actions {
             flex-shrink: 0;
+        }
+
+        .woocommerce-account .ma-view-order-tracking__actions .ma-btn {
+            width: auto;
         }
     }
 /* Section 3: DRY tokens + mobile-first */
@@ -1007,11 +1081,6 @@
         --ma-vo-icon-box: 32px;
         margin-top: var(--ma-space-lg);
     }
-@media (min-width: 480px) {
-.woocommerce-account .ma-order-details-items-summary {
-            margin-top: var(--ma-space-lg)
-    }
-        }
 .woocommerce-account .ma-order-details-items-summary .ma-order-details-items-summary__grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -1225,7 +1294,7 @@
     .woocommerce-account .ma-order-details-items-summary__billing-billto,
     .woocommerce-account .ma-order-details-items-summary__billing-contact {
         min-width: 0;
-        padding: var(--ma-space-lg);
+        padding: var(--ma-space-md);
     }
 .woocommerce-account .ma-order-details-items-summary__shipping-contact,
     .woocommerce-account .ma-order-details-items-summary__billing-contact {
@@ -1314,7 +1383,7 @@
         flex-direction: column;
         align-items: stretch;
         min-width: 0;
-        padding: var(--ma-space-lg);
+        padding: var(--ma-space-md);
         gap: var(--ma-space-md);
     }
 @media (min-width: 480px) {
@@ -1482,6 +1551,21 @@
             gap: var(--ma-space-sm);
         }
     }
+/* Vertical layout: single column for items + summary grid; stacked layout unchanged (nested rules above). */
+body.woocommerce-account.ma-layout-vertical .ma-view-order .ma-order-details-items-summary .ma-order-details-items-summary__grid {
+    grid-template-columns: 1fr;
+    -moz-column-gap: 0;
+         column-gap: 0;
+}
+body.woocommerce-account.ma-layout-vertical .ma-view-order .ma-order-details-items-summary .ma-order-details-items-summary__items,
+body.woocommerce-account.ma-layout-vertical .ma-view-order .ma-order-details-items-summary .ma-order-details-items-summary__summary {
+    grid-column: auto;
+    grid-row: auto;
+    align-self: stretch;
+}
+body.woocommerce-account.ma-layout-vertical .ma-view-order .ma-order-details-items-summary .ma-order-details-items-summary__addresses {
+    grid-template-columns: 1fr;
+}
 /* @import "./myaccount/view-order-legacy.css"; */
 
 /*# sourceMappingURL=ma-view-order.css.map */

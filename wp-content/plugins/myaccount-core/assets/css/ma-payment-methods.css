@@ -372,7 +372,6 @@
             color: var(--ma-form-color-muted);
             font-weight: 600;
         }
-/* .ma-form__hint { margin: var(--ma-form-space-field-gap) 0 0 0; } */
 .woocommerce-account .ma-form .ma-form__input--capitalize {
             text-transform: capitalize;
         }
@@ -487,12 +486,6 @@
         display: flex;
         flex-direction: column;
         gap: var(--ma-space-md);
-
-        /* Same section layout and title-to-body spacing for add and saved */
-
-        /* Brand tile: .ma-u-badge.ma-u-badge--brand-tile */
-
-        /* Default pill: .ma-u-badge.ma-u-badge--inverse — slightly wider gap for check icon + label */
     }
 .woocommerce-account .payment-methods-page .payment-methods-section__title-icon {
             width: var(--ma-font-lg);
@@ -504,6 +497,7 @@
             align-items: center;
             gap: var(--ma-space-sm);
         }
+/* Same section layout and title-to-body spacing for add and saved */
 .woocommerce-account .payment-methods-page .payment-methods-section--add,
         .woocommerce-account .payment-methods-page .payment-methods-section--saved {
             display: flex;
@@ -518,22 +512,29 @@
 .woocommerce-account .payment-methods-page .payment-methods-list > * + * {
                 margin-top: var(--ma-space-lg);
             }
+/* ── Mobile base (all widths) ── */
 .woocommerce-account .payment-methods-page .payment-methods-item {
-            min-height: 0;
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
             gap: var(--ma-space-md);
+            /* Tighter padding on mobile — override ma-u-surface-panel 24px */
+            padding: var(--ma-space-md);
         }
+/* Break __main out of flow so brand + meta become direct grid children */
 .woocommerce-account .payment-methods-page .payment-methods-item__main {
-            display: flex;
-            align-items: flex-start;
-            min-width: 0;
-            gap: var(--ma-space-md);
+            display: contents;
         }
+/* ─────────────────────────────────────────────────────────────────────
+           Saved payment card — mobile-first
+           Mobile : 3-col grid via display:contents on __main
+                    [brand (auto) | meta (1fr) | actions (auto)]
+           Desktop: original flex layout restored unchanged
+           ───────────────────────────────────────────────────────────────── */
 .woocommerce-account .payment-methods-page .payment-methods-item__brand {
-            flex: none;
+            align-self: center;
         }
+/* Brand tile: .ma-u-badge.ma-u-badge--brand-tile */
 .woocommerce-account .payment-methods-page .payment-methods-item__meta {
             display: flex;
             flex-direction: column;
@@ -557,42 +558,62 @@
 .woocommerce-account .payment-methods-page .payment-methods-item__default-link {
             display: inline-flex;
             align-items: center;
+            min-height: 32px;
             font-size: var(--ma-font-xs);
-            color: var(--ma-text-muted-dark);
+            font-weight: var(--ma-weight-medium);
+            color: var(--ma-accent-text);
             text-decoration: underline;
+            text-underline-offset: 2px;
             line-height: var(--ma-line-snug);
+            transition: color var(--ma-duration-fast) var(--ma-easing-smooth);
         }
+.woocommerce-account .payment-methods-page .payment-methods-item__default-link:hover {
+                color: var(--ma-text-primary);
+            }
+/* Actions column — stacks DEFAULT pill (compact) + delete vertically on mobile */
 .woocommerce-account .payment-methods-page .payment-methods-item__actions {
             display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: var(--ma-space-sm);
+            flex-direction: column;
+            align-items: flex-end;
+            align-self: flex-start;
+            gap: var(--ma-space-xs);
         }
-.woocommerce-account .payment-methods-page .payment-methods-item__actions a {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                border: 1px solid transparent;
-                background: transparent;
-                color: var(--ma-text-muted-dark);
-                width: var(--ma-space-2xl);
-                height: var(--ma-space-2xl);
-                transition: border-color var(--ma-duration-fast) var(--ma-easing-smooth), background-color var(--ma-duration-fast) var(--ma-easing-smooth);
+/* Default pill: on mobile show only the ✓ icon to keep the column narrow */
+.woocommerce-account .payment-methods-page .payment-methods-item__default-pill.ma-u-badge {
+            gap: 0;
+        }
+.woocommerce-account .payment-methods-page .payment-methods-item__default-pill.ma-u-badge > span {
+                display: none;
             }
-.woocommerce-account .payment-methods-page .payment-methods-item__actions a:hover {
-                    border-color: var(--ma-text-muted);
-                    background-color: var(--ma-surface-alt);
-                }
+.woocommerce-account .payment-methods-page .payment-methods-item__default-icon {
+            width: var(--ma-font-sm);
+            height: var(--ma-font-sm);
+        }
+/* Delete button — 44×44 touch target (WCAG 2.5.8), danger hover */
+.woocommerce-account .payment-methods-page .payment-methods-item__delete-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border: 1px solid transparent;
+            border-radius: var(--ma-radius-md);
+            background: transparent;
+            color: var(--ma-text-muted-dark);
+            transition:
+                border-color var(--ma-duration-fast) var(--ma-easing-smooth),
+                background-color var(--ma-duration-fast) var(--ma-easing-smooth),
+                color var(--ma-duration-fast) var(--ma-easing-smooth);
+        }
+.woocommerce-account .payment-methods-page .payment-methods-item__delete-btn:hover {
+                border-color: var(--ma-danger-border-hover);
+                background-color: var(--ma-danger-bg);
+                color: var(--ma-danger-text);
+            }
 .woocommerce-account .payment-methods-page .payment-methods-item__delete-icon {
             width: var(--ma-font-md);
             height: var(--ma-font-md);
-        }
-.woocommerce-account .payment-methods-page .payment-methods-item__default-pill.ma-u-badge {
-            gap: var(--ma-space-sm);
-        }
-.woocommerce-account .payment-methods-page .payment-methods-item__default-icon {
-            width: var(--ma-font-xs);
-            height: var(--ma-font-xs);
+            pointer-events: none;
         }
 .woocommerce-account .payment-methods-page .payment-methods-section--add .woocommerce-add-payment-method,
         .woocommerce-account .payment-methods-page .payment-methods-section--add #add_payment_method {
@@ -602,7 +623,14 @@
             grid-template-columns: var(--ma-space-lg) 1fr;
             row-gap: 0;
         }
+/* ── Desktop (≥ 992px): restore original flex layout exactly ── */
 @media (min-width: 992px) {
+.woocommerce-account .payment-methods-page {
+
+            /* Restore DEFAULT pill with text label on desktop */
+
+            /* Restore delete button to original size on desktop */
+    }
             .woocommerce-account .payment-methods-page .payment-methods-section--add .woocommerce-add-payment-method,
             .woocommerce-account .payment-methods-page .payment-methods-section--add #add_payment_method {
                 padding: initial;
@@ -614,7 +642,49 @@
             }
 
             .woocommerce-account .payment-methods-page .payment-methods-item {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
                 min-height: 98px;
+                padding: var(--ma-space-lg);
+                gap: var(--ma-space-md);
+            }
+
+            .woocommerce-account .payment-methods-page .payment-methods-item__main {
+                display: flex;
+                align-items: flex-start;
+                min-width: 0;
+                gap: var(--ma-space-md);
+            }
+
+            .woocommerce-account .payment-methods-page .payment-methods-item__brand {
+                flex: none;
+                align-self: auto;
+            }
+
+            .woocommerce-account .payment-methods-page .payment-methods-item__actions {
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-end;
+                align-self: auto;
+                gap: var(--ma-space-sm);
+            }
+            .woocommerce-account .payment-methods-page .payment-methods-item__default-pill.ma-u-badge {
+                gap: var(--ma-space-sm);
+            }
+
+                .woocommerce-account .payment-methods-page .payment-methods-item__default-pill.ma-u-badge > span {
+                    display: inline;
+                }
+
+            .woocommerce-account .payment-methods-page .payment-methods-item__default-icon {
+                width: var(--ma-font-xs);
+                height: var(--ma-font-xs);
+            }
+            .woocommerce-account .payment-methods-page .payment-methods-item__delete-btn {
+                width: var(--ma-space-2xl);
+                height: var(--ma-space-2xl);
+                border-radius: 0;
             }
         }
 

@@ -112,7 +112,7 @@
         margin: 0;
     }
 
-    /* Row 3: Price | View Details, căn 2 bên. */
+    /* Row 3: price | view details (space-between). */
     .ma-orders__item-footer {
         display: flex;
         flex-direction: column;

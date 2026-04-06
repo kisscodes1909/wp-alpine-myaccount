@@ -216,14 +216,87 @@ class MyAccount_Core_Account_Asset_Optimizer {
 	}
 
 	/**
+	 * WooCommerce Cart / Checkout **Blocks** runtime (React, wc-cart-checkout-*, wc-blocks-*).
+	 * Safe to dequeue on My Account when no block on the page needs this stack (see guard below).
+	 *
+	 * Handles follow WooCommerce core `src/Blocks` registration (WC 9.x).
+	 *
+	 * @return string[]
+	 */
+	private function get_wc_blocks_cart_checkout_script_handles(): array {
+		return array(
+			'wc-cart-checkout-vendors',
+			'wc-cart-checkout-base',
+			'wc-blocks-checkout',
+			'wc-blocks-components',
+			'wc-blocks-data-store',
+			'wc-blocks-registry',
+			'wc-blocks-middleware',
+			'wc-blocks-shared-context',
+			'wc-blocks-shared-hocs',
+			'wc-types',
+			'wc-price-format',
+			'wc-cart-block-frontend',
+			'wc-checkout-block-frontend',
+			'wc-blocks-vendors',
+			'wc-blocks',
+			'wc-blocks-frontend-vendors',
+		);
+	}
+
+	/**
+	 * If any of these block frontends is queued, keep the shared WC cart/checkout runtime
+	 * (e.g. Mini Cart in the header still works on My Account).
+	 *
+	 * Filter `myaccount_core_account_needs_wc_cart_checkout_runtime`: return true to force keep,
+	 * false to force strip, null (default) to auto-detect from queued scripts.
+	 *
+	 * @return bool
+	 */
+	private function account_page_needs_wc_cart_checkout_runtime(): bool {
+		$override = apply_filters( 'myaccount_core_account_needs_wc_cart_checkout_runtime', null );
+		if ( true === $override ) {
+			return true;
+		}
+		if ( false === $override ) {
+			return false;
+		}
+
+		$guard_handles = array(
+			'wc-mini-cart-block-frontend',
+			'wc-cart-block-frontend',
+			'wc-checkout-block-frontend',
+		);
+
+		foreach ( $guard_handles as $handle ) {
+			if ( wp_script_is( $handle, 'enqueued' ) ) {
+				return true;
+			}
+		}
+
+		$wp_scripts = wp_scripts();
+		if ( $wp_scripts && ! empty( $wp_scripts->queue ) ) {
+			foreach ( $guard_handles as $handle ) {
+				if ( in_array( $handle, $wp_scripts->queue, true ) ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Default script handles to dequeue on My Account.
 	 *
 	 * Order attribution (`sourcebuster-js`, `wc-order-attribution`) is left loaded so storefront tracking is unchanged.
+	 * WooCommerce Cart/Checkout **Blocks** scripts are removed only when no Mini Cart / Cart / Checkout block
+	 * frontend is on the page (often true for classic My Account templates).
 	 *
 	 * @return string[]
 	 */
 	private function get_default_script_handles(): array {
-		return array(
+		$handles = array(
 			'selectWoo',
 			'select2',
 			'prettyPhoto',
@@ -231,6 +304,12 @@ class MyAccount_Core_Account_Asset_Optimizer {
 			'woo-variation-swatches',
 			'wc-add-to-cart',
 		);
+
+		if ( ! $this->account_page_needs_wc_cart_checkout_runtime() ) {
+			$handles = array_merge( $handles, $this->get_wc_blocks_cart_checkout_script_handles() );
+		}
+
+		return $handles;
 	}
 
 	/**

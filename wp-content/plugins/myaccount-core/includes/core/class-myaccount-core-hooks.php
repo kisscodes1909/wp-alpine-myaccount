@@ -29,6 +29,49 @@ class MyAccount_Core_Hooks {
 		add_filter( 'body_class', array( $this, 'add_template_style_body_class' ) );
 		add_action( 'wp_footer', array( $this, 'render_overlay_containers' ), 5 );
 		add_action( 'wp_footer', array( $this, 'render_ui_templates' ), 6 );
+
+		// Kadence outputs a duplicate account nav avatar on woocommerce_before_account_navigation; plugin nav already shows the same avatar via get_avatar_url().
+		add_action( 'wp', array( $this, 'maybe_disable_kadence_account_navigation_extras' ), 1 );
+	}
+
+	/**
+	 * Remove Kadence theme wrappers and dashboard avatar from WooCommerce account navigation when the same UI is provided by this plugin.
+	 *
+	 * Kadence registers these on Kadence\Woocommerce\Component — same user avatar source as core get_avatar() / get_avatar_url() (Gravatar + filters).
+	 *
+	 * @return void
+	 */
+	public function maybe_disable_kadence_account_navigation_extras(): void {
+		if ( ! function_exists( 'is_account_page' ) || ! is_account_page() ) {
+			return;
+		}
+
+		if ( ! (bool) apply_filters( 'myaccount_core_disable_kadence_account_navigation_extras', true ) ) {
+			return;
+		}
+
+		if ( ! function_exists( '\Kadence\kadence' ) ) {
+			return;
+		}
+
+		try {
+			$theme = \Kadence\kadence();
+			if ( ! is_object( $theme ) || ! method_exists( $theme, 'component' ) ) {
+				return;
+			}
+
+			$woo = $theme->component( 'woocommerce' );
+			if ( ! is_object( $woo ) ) {
+				return;
+			}
+
+			remove_action( 'woocommerce_before_account_navigation', array( $woo, 'myaccount_nav_wrap_start' ), 2 );
+			remove_action( 'woocommerce_before_account_navigation', array( $woo, 'myaccount_nav_avatar' ), 20 );
+			remove_action( 'woocommerce_after_account_navigation', array( $woo, 'myaccount_nav_wrap_end' ), 50 );
+		} catch ( \Throwable $e ) {
+			// Kadence API unavailable or incompatible; leave theme output intact.
+			return;
+		}
 	}
 
 	/**
@@ -62,15 +105,21 @@ class MyAccount_Core_Hooks {
 		$items['orders']             = __( 'Orders', 'myaccount-core' );
 		$items['payment-methods']    = __( 'Payments', 'myaccount-core' );
 		$items['edit-account']       = __( 'Profile', 'myaccount-core' );
-		$items['address']            = __( 'Addresses', 'myaccount-core' );
+		$items['address']            = __( 'Address Book', 'myaccount-core' );
 		$items['customer-logout']    = __( 'Sign out', 'myaccount-core' );
-		if ( isset( $items['downloads'] ) ) {
+		$preserve_third_party = ( '1' === get_option( 'myaccount_preserve_third_party_menu_items', '0' ) );
+		if ( $preserve_third_party && isset( $items['downloads'] ) ) {
 			$items['downloads'] = __( 'Downloads', 'myaccount-core' );
 		}
 		return $items;
 	}
 
 	public function reorder_menu_items( array $items ): array {
+		$preserve_third_party = ( '1' === get_option( 'myaccount_preserve_third_party_menu_items', '0' ) );
+		if ( ! $preserve_third_party ) {
+			unset( $items['downloads'] );
+		}
+
 		$keys    = array( 'orders', 'downloads', 'wishlist', 'edit-account', 'address', 'payment-methods', 'customer-logout' );
 		$ordered = array();
 
@@ -84,7 +133,7 @@ class MyAccount_Core_Hooks {
 			return $items;
 		}
 
-		if ( '1' === get_option( 'myaccount_preserve_third_party_menu_items', '0' ) ) {
+		if ( $preserve_third_party ) {
 			$logout_label = null;
 			if ( isset( $ordered['customer-logout'] ) ) {
 				$logout_label = $ordered['customer-logout'];
@@ -194,159 +243,6 @@ class MyAccount_Core_Hooks {
 		wc_get_template( 'ui/apl-toast.php' );
 		wc_get_template( 'ui/apl-popup.php' );
 		wc_get_template( 'ui/apl-loader.php' );
-	}
-
-	/**
-	 * Display name for the account navigation user block.
-	 *
-	 * @param WP_User $user Current user.
-	 * @return string
-	 */
-	public static function get_navigation_display_name( WP_User $user ): string {
-		$name = trim( $user->display_name );
-		if ( '' === $name ) {
-			$name = trim( $user->user_login );
-		}
-
-		return (string) apply_filters( 'myaccount_core_navigation_display_name', $name, $user );
-	}
-
-	/**
-	 * Gravatar / remote image size (max 512) for account navigation avatar.
-	 *
-	 * @param WP_User $user Current user.
-	 * @return int
-	 */
-	public static function get_navigation_avatar_size( WP_User $user ): int {
-		$size = absint( apply_filters( 'myaccount_core_navigation_avatar_size', 96, $user ) );
-
-		return $size > 0 ? min( $size, 512 ) : 96;
-	}
-
-	/**
-	 * Avatar image URL for account navigation.
-	 * Uses Gravatar when the URL points at gravatar.com — verified via HTTP HEAD + transient
-	 * so missing Gravatar does not render a broken <img> (and CSP does not need inline onerror).
-	 * Non-Gravatar URLs (local avatar plugins) skip remote verification.
-	 * Override via filter `myaccount_core_navigation_avatar_url` (non-empty string skips this logic).
-	 *
-	 * @param WP_User $user Current user.
-	 * @return string
-	 */
-	public static function get_navigation_avatar_url( WP_User $user ): string {
-		$custom = apply_filters( 'myaccount_core_navigation_avatar_url', null, $user );
-		if ( is_string( $custom ) && '' !== $custom ) {
-			return esc_url_raw( $custom );
-		}
-
-		$size = self::get_navigation_avatar_size( $user );
-		$prim = get_avatar_url(
-			$user->ID,
-			array(
-				'size' => $size,
-			)
-		);
-
-		if ( ! is_string( $prim ) || '' === $prim ) {
-			return '';
-		}
-
-		$lower = strtolower( $prim );
-		if ( false === strpos( $lower, 'gravatar.com' ) ) {
-			return $prim;
-		}
-
-		if ( ! self::navigation_gravatar_image_exists( $user, $size ) ) {
-			return '';
-		}
-
-		return $prim;
-	}
-
-	/**
-	 * Whether Gravatar has a real image for this email (HEAD to d=404 endpoint; result cached).
-	 *
-	 * @param WP_User $user Current user.
-	 * @param int     $size Avatar size in pixels.
-	 * @return bool
-	 */
-	private static function navigation_gravatar_image_exists( WP_User $user, int $size ): bool {
-		if ( ! (bool) apply_filters( 'myaccount_core_navigation_verify_gravatar_with_remote', true, $user ) ) {
-			return true;
-		}
-
-		$email = strtolower( trim( $user->user_email ) );
-		if ( '' === $email || ! is_email( $email ) ) {
-			return false;
-		}
-
-		$cache_key = 'ma_core_nav_grav_' . md5( $email . '|' . (string) $size );
-		$cached    = get_transient( $cache_key );
-		if ( false !== $cached ) {
-			return ( '1' === $cached );
-		}
-
-		$hash      = md5( $email );
-		$check_url = sprintf(
-			'https://secure.gravatar.com/avatar/%s?s=%d&d=404',
-			$hash,
-			$size
-		);
-
-		$response = wp_remote_head(
-			$check_url,
-			array(
-				'timeout'     => 3,
-				'redirection' => 3,
-				'httpversion' => '1.1',
-				'headers'     => array(
-					'User-Agent' => 'WordPress/' . get_bloginfo( 'version' ) . '; ' . home_url( '/' ),
-				),
-			)
-		);
-
-		if ( is_wp_error( $response ) ) {
-			return false;
-		}
-
-		$code = (int) wp_remote_retrieve_response_code( $response );
-		if ( 200 === $code ) {
-			set_transient( $cache_key, '1', DAY_IN_SECONDS );
-			return true;
-		}
-
-		set_transient( $cache_key, '0', DAY_IN_SECONDS );
-		return false;
-	}
-
-	/**
-	 * Two-letter initials for the account navigation avatar (fallback when no image).
-	 *
-	 * @param WP_User $user Current user.
-	 * @return string
-	 */
-	public static function get_navigation_user_initials( WP_User $user ): string {
-		$first = trim( $user->first_name );
-		$last  = trim( $user->last_name );
-
-		if ( '' !== $first && '' !== $last ) {
-			$initials = mb_strtoupper( mb_substr( $first, 0, 1 ) . mb_substr( $last, 0, 1 ), 'UTF-8' );
-		} elseif ( '' !== $first ) {
-			$initials = mb_strtoupper( mb_substr( $first, 0, 2 ), 'UTF-8' );
-		} elseif ( '' !== $last ) {
-			$initials = mb_strtoupper( mb_substr( $last, 0, 2 ), 'UTF-8' );
-		} else {
-			$parts = preg_split( '/\s+/', trim( $user->display_name ), -1, PREG_SPLIT_NO_EMPTY );
-			if ( is_array( $parts ) && count( $parts ) >= 2 ) {
-				$initials = mb_strtoupper( mb_substr( $parts[0], 0, 1 ) . mb_substr( $parts[ count( $parts ) - 1 ], 0, 1 ), 'UTF-8' );
-			} elseif ( is_array( $parts ) && 1 === count( $parts ) ) {
-				$initials = mb_strtoupper( mb_substr( $parts[0], 0, 2 ), 'UTF-8' );
-			} else {
-				$initials = mb_strtoupper( mb_substr( $user->user_login, 0, 2 ), 'UTF-8' );
-			}
-		}
-
-		return (string) apply_filters( 'myaccount_core_navigation_user_initials', $initials, $user );
 	}
 
 	/**

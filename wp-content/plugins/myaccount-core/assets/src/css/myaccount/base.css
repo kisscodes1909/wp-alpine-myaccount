@@ -354,7 +354,6 @@
             line-height: var(--ma-line-normal);
             letter-spacing: var(--ma-tracking-wide);
             padding-bottom: var(--ma-space-md);
-            /* border-bottom: 1px solid var(--ma-border-divider); */
             color: var(--ma-text-charcoal);
         }
     }
@@ -367,9 +366,8 @@
         font-size: var(--ma-font-2xl);
         line-height: 1;
         text-transform: uppercase;
-        letter-spacing: var(--ma-tracking-wider);
+        letter-spacing: 0.2rem;
         color: var(--ma-text-primary);
-
     }
 
     .ma-page-heading__title--sm {
@@ -380,12 +378,7 @@
         letter-spacing: var(--ma-tracking-wide);
     }
 
-    /* ma-orders: moved to base-order-history.css */
-
-    /* Payment methods page – shared base layout (Add + Saved sections) */
-    /* payment-methods endpoint styles: moved to payment-methods.css */
-    /* view-order endpoint styles: moved to view-order.css */
-    /* address-book endpoint styles: moved to address-book.css */
+    /* Endpoint-specific blocks: order-history, payment-methods, view-order, address-book (separate CSS files). */
 }
 
 body.admin-bar.woocommerce-account {

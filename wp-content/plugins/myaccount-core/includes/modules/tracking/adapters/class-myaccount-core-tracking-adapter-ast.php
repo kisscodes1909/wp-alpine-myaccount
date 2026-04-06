@@ -30,15 +30,16 @@ class MyAccount_Core_Tracking_Adapter_Ast implements MyAccount_Core_Tracking_Ada
 
 			$entries[] = MyAccount_Core_Tracking_Entry::from_array(
 				array(
-					'provider'        => $this->get_provider_key(),
-					'carrier_name'    => $this->resolve_carrier_name( $item ),
-					'tracking_number' => $tracking_number,
-					'tracking_url'    => $tracking_url,
-					'status_label'    => $status_label,
-					'status_detail'   => $status_detail,
-					'ship_date'       => $this->resolve_ship_date( $item ),
-					'is_delivered'    => $is_delivered,
+					'provider'           => $this->get_provider_key(),
+					'carrier_name'       => $this->resolve_carrier_name( $item ),
+					'tracking_number'    => $tracking_number,
+					'tracking_url'       => $tracking_url,
+					'status_label'       => $status_label,
+					'status_detail'      => $status_detail,
+					'ship_date'          => $this->resolve_ship_date( $item ),
+					'is_delivered'       => $is_delivered,
 					'is_partial_shipped' => $is_partial_shipped,
+					'carrier_logo_url'   => $this->resolve_carrier_logo_url( $item, $order ),
 				)
 			);
 		}
@@ -98,6 +99,41 @@ class MyAccount_Core_Tracking_Adapter_Ast implements MyAccount_Core_Tracking_Ada
 		}
 
 		return '';
+	}
+
+	/**
+	 * Resolve carrier logo URL from AST tracking item meta or filter.
+	 *
+	 * @param array    $item  Raw shipment row from AST / order meta.
+	 * @param WC_Order $order Order context.
+	 * @return string|null Valid URL or null.
+	 */
+	private function resolve_carrier_logo_url( array $item, WC_Order $order ): ?string {
+		$candidates = array(
+			$item['tracking_provider_image'] ?? '',
+			$item['tracking_provider_image_src'] ?? '',
+			$item['ast_provider_image'] ?? '',
+			$item['provider_image'] ?? '',
+			$item['formatted_tracking_provider_image'] ?? '',
+		);
+
+		foreach ( $candidates as $candidate ) {
+			$url = esc_url_raw( (string) $candidate );
+
+			if ( '' !== $url ) {
+				return $url;
+			}
+		}
+
+		$filtered = apply_filters( 'myaccount_core_tracking_carrier_logo_url', null, $item, $order );
+
+		if ( null === $filtered || '' === $filtered ) {
+			return null;
+		}
+
+		$url = esc_url_raw( (string) $filtered );
+
+		return '' !== $url ? $url : null;
 	}
 
 	private function resolve_carrier_name( array $item ): string {

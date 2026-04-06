@@ -13,6 +13,9 @@ class MyAccount_Core_Tracking_Entry {
 	public bool $is_delivered;
 	public bool $is_partial_shipped;
 
+	/** @var string|null Absolute URL to carrier logo (e.g. from AST). */
+	public ?string $carrier_logo_url;
+
 	public function __construct( array $args = array() ) {
 		$this->provider        = sanitize_key( (string) ( $args['provider'] ?? '' ) );
 		$this->carrier_name    = sanitize_text_field( (string) ( $args['carrier_name'] ?? '' ) );
@@ -23,6 +26,7 @@ class MyAccount_Core_Tracking_Entry {
 		$this->ship_date       = $this->sanitize_nullable_text( $args['ship_date'] ?? null );
 		$this->is_delivered    = ! empty( $args['is_delivered'] );
 		$this->is_partial_shipped = ! empty( $args['is_partial_shipped'] );
+		$this->carrier_logo_url = $this->sanitize_nullable_url( $args['carrier_logo_url'] ?? null );
 	}
 
 	public static function from_array( array $args ): MyAccount_Core_Tracking_Entry {
@@ -31,6 +35,10 @@ class MyAccount_Core_Tracking_Entry {
 
 	public function has_tracking_url(): bool {
 		return '' !== $this->tracking_url;
+	}
+
+	public function has_carrier_logo(): bool {
+		return null !== $this->carrier_logo_url && '' !== $this->carrier_logo_url;
 	}
 
 	public function to_array(): array {
@@ -44,6 +52,7 @@ class MyAccount_Core_Tracking_Entry {
 			'ship_date'       => $this->ship_date,
 			'is_delivered'    => $this->is_delivered,
 			'is_partial_shipped' => $this->is_partial_shipped,
+			'carrier_logo_url' => $this->carrier_logo_url,
 		);
 	}
 
@@ -57,5 +66,15 @@ class MyAccount_Core_Tracking_Entry {
 		$url = esc_url_raw( (string) $value );
 
 		return is_string( $url ) ? $url : '';
+	}
+
+	private function sanitize_nullable_url( $value ): ?string {
+		if ( null === $value || '' === $value ) {
+			return null;
+		}
+
+		$url = esc_url_raw( (string) $value );
+
+		return is_string( $url ) && '' !== $url ? $url : null;
 	}
 }

@@ -289,8 +289,15 @@
         }
     }
 @media (min-width: 992px) {
+.woocommerce-account {
+
+        /* Vertical layout: narrower content column → keep 2-up grid. */
+}
         .woocommerce-account .ma-wishlist-grid {
             grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .woocommerce-account.ma-layout-vertical .ma-wishlist-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
         .woocommerce-account .ma-wishlist-card__footer {

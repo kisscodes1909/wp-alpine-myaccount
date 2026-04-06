@@ -45,6 +45,10 @@ const buildTargets = [
     output: 'assets/js/alpine.address.js',
   },
   {
+    input: 'assets/src/js/alpine/entries/endpoint-wishlist.js',
+    output: 'assets/js/alpine.wishlist.js',
+  },
+  {
     input: 'assets/src/js/alpine/init.js',
     output: 'assets/js/alpine.bundle.js',
     globalName: 'AlpineBundle',

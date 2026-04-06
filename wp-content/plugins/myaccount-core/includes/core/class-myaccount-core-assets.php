@@ -24,7 +24,6 @@ class MyAccount_Core_Assets {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ), 20 );
 		add_action( 'wp_head', array( $this, 'preload_global_css' ), 1 );
 		add_filter( 'body_class', array( $this, 'add_endpoint_body_class' ) );
-		add_filter( 'script_loader_tag', array( $this, 'add_defer_attribute' ), 10, 2 );
 	}
 
 	public function enqueue_assets(): void {
@@ -150,21 +149,6 @@ class MyAccount_Core_Assets {
 		}
 	}
 
-	public function add_defer_attribute( string $tag, string $handle ): string {
-		$defer_handles = array(
-			'alpine-bundle',
-			'myaccount-core-js-shared-core',
-			'myaccount-core-js-shared-validation',
-			'myaccount-core-js-endpoint',
-		);
-
-		if ( in_array( $handle, $defer_handles, true ) ) {
-			return str_replace( ' src', ' defer="defer" src', $tag );
-		}
-
-		return $tag;
-	}
-
 	public function add_endpoint_body_class( array $classes ): array {
 		if ( ! is_account_page() ) {
 			return $classes;
@@ -284,7 +268,7 @@ class MyAccount_Core_Assets {
 			'view-order'         => 'alpine.view-order.js',
 			'payment-methods'    => 'alpine.payment-methods.js',
 			'add-payment-method' => 'alpine.payment-methods.js',
-			'wishlist'           => '',
+			'wishlist'           => 'alpine.wishlist.js',
 			'edit-account'       => 'alpine.edit-account.js',
 			'edit-address'       => 'alpine.edit-account.js',
 			'address'            => 'alpine.address.js',
@@ -329,8 +313,10 @@ class MyAccount_Core_Assets {
 		if ( ! file_exists( $file ) ) {
 			return;
 		}
-		$url = esc_url( $this->plugin_url . $path );
-		echo '<link rel="preload" href="' . $url . '" as="style" />' . "\n";
+		// Same query string as wp_enqueue_style (enqueue_style_if_exists) so preload matches the stylesheet URL.
+		$version = filemtime( $file );
+		$url     = add_query_arg( 'ver', (string) $version, $this->plugin_url . $path );
+		echo '<link rel="preload" href="' . esc_url( $url ) . '" as="style" />' . "\n";
 	}
 
 	/**
@@ -397,7 +383,10 @@ class MyAccount_Core_Assets {
 			$this->plugin_url . $relative_path,
 			$deps,
 			$version,
-			true
+			array(
+				'in_footer' => true,
+				'strategy'  => 'defer',
+			)
 		);
 
 		return true;

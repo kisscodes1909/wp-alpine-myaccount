@@ -92,8 +92,8 @@ wc_get_template( 'myaccount/page-heading.php', array( 'page_heading' => 'My Info
 
     <div class="ma-form__section ma-form__section--divided">
         <div class="ma-form__section-head">
-            <h3 class="ma-form__section-title ma-u-section-title"><?php esc_html_e( 'Contact', 'myaccount-core' ); ?></h3>
-            <p class="ma-form__section-description ma-u-section-description"><?php esc_html_e( 'Address and contact details used at checkout and on invoices.', 'myaccount-core' ); ?></p>
+            <h3 class="ma-form__section-title ma-u-section-title"><?php esc_html_e( 'Billing address', 'myaccount-core' ); ?></h3>
+            <p class="ma-form__section-description ma-u-section-description"><?php esc_html_e( 'Used for payment, invoices, and tax. This is separate from your shipping addresses.', 'myaccount-core' ); ?></p>
         </div>
 
         <div class="ma-form__contact-fields">

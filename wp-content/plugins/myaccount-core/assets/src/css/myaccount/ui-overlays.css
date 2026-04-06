@@ -58,7 +58,7 @@
     pointer-events: none;
 }
 
-/* Toast container: mobile = bottom (tầm nhìn tốt, safe-area); desktop = top-right */
+/* Toast container: mobile = bottom (visibility, safe-area); desktop = top-right */
 .ma-ui-toast-container {
     bottom: var(--ma-space-lg);
     left: var(--ma-space-lg);

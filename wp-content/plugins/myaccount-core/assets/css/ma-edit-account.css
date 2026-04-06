@@ -372,7 +372,6 @@
             color: var(--ma-form-color-muted);
             font-weight: 600;
         }
-/* .ma-form__hint { margin: var(--ma-form-space-field-gap) 0 0 0; } */
 .woocommerce-account .ma-form .ma-form__input--capitalize {
             text-transform: capitalize;
         }

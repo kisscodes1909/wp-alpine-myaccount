@@ -163,7 +163,7 @@
     .woocommerce-account .ma-orders__item-meta-group .ma-orders__item-meta-value {
         margin: 0;
     }
-/* Row 3: Price | View Details, căn 2 bên. */
+/* Row 3: price | view details (space-between). */
 .woocommerce-account .ma-orders__item-footer {
         display: flex;
         flex-direction: column;

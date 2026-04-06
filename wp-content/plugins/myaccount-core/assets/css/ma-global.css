@@ -303,12 +303,7 @@
     --ma-badge-radius: var(--ma-radius-sm);
     --ma-badge-border-width: 1px;
 
-    /* ma-orders: moved to base-order-history.css */
-
-    /* Payment methods page – shared base layout (Add + Saved sections) */
-    /* payment-methods endpoint styles: moved to payment-methods.css */
-    /* view-order endpoint styles: moved to view-order.css */
-    /* address-book endpoint styles: moved to address-book.css */
+    /* Endpoint-specific blocks: order-history, payment-methods, view-order, address-book (separate CSS files). */
 }
 /* Shared full-bleed utility for My Account bands inside constrained containers.
        Uses 100vw centered so the band never extends past the viewport (no layout stretch/overflow). */
@@ -390,7 +385,6 @@
             line-height: var(--ma-line-normal);
             letter-spacing: var(--ma-tracking-wide);
             padding-bottom: var(--ma-space-md);
-            /* border-bottom: 1px solid var(--ma-border-divider); */
             color: var(--ma-text-charcoal);
         }
 /* Page / form titles (replaces apl-heading-chip / apl-heading-chip-sm) */
@@ -401,9 +395,8 @@
         font-size: var(--ma-font-2xl);
         line-height: 1;
         text-transform: uppercase;
-        letter-spacing: var(--ma-tracking-wider);
+        letter-spacing: 0.2rem;
         color: var(--ma-text-primary);
-
     }
 .woocommerce-account .ma-page-heading__title--sm {
         font-size: var(--ma-font-xl);
@@ -717,7 +710,7 @@ body.woocommerce-account header[data-elementor-type="header"] {
     justify-content: center;
     pointer-events: none;
 }
-/* Toast container: mobile = bottom (tầm nhìn tốt, safe-area); desktop = top-right */
+/* Toast container: mobile = bottom (visibility, safe-area); desktop = top-right */
 .ma-ui-toast-container {
     bottom: var(--ma-space-lg);
     left: var(--ma-space-lg);

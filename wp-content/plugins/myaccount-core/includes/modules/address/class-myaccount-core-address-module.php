@@ -44,7 +44,7 @@ class MyAccount_Core_Address_Module {
 			return $items;
 		}
 
-		$items['address'] = 'Address Book';
+		$items['address'] = __( 'Address Book', 'myaccount-core' );
 
 		return $items;
 	}

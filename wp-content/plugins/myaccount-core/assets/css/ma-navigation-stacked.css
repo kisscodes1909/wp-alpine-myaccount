@@ -124,6 +124,7 @@ body.woocommerce-account .ma-nav__user-avatar {
     overflow: hidden;
     width: var(--ma-nav-user-avatar-size);
     height: var(--ma-nav-user-avatar-size);
+    border-radius: 50%;
     background: var(--ma-nav-user-avatar-bg);
     color: var(--ma-text-inverse);
     font-size: var(--ma-font-sm);
@@ -265,12 +266,19 @@ body.woocommerce-account .ma-nav-dropdown .ma-nav-dropdown__list.ma-nav__list .m
                 position: static;
                 display: flex;
                 flex-flow: column;
-                gap: var(--ma-space-sm);
                 margin-top: 0;
                 padding: 0;
                 background: transparent;
                 box-shadow: none;
             }
+
+        body.woocommerce-account.ma-layout-vertical .ma-nav-dropdown .ma-nav-dropdown__list.ma-nav__list {
+            gap: var(--ma-space-sm);
+        }
+
+        body.woocommerce-account.ma-layout-stacked .ma-nav-dropdown .ma-nav-dropdown__list.ma-nav__list {
+            gap: var(--ma-space-md);
+        }
             body.woocommerce-account.ma-layout-stacked .ma-nav-dropdown .ma-nav {
                 flex-direction: row;
                 justify-content: center;

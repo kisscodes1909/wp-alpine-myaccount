@@ -114,8 +114,9 @@ wp_enqueue_script( 'wc-add-payment-method' );
                                     <?php
                                     if ( isset( $method['actions']['delete'] ) ) {
                                         echo wp_sprintf(
-                                            "<a href='%s'>%s</a>",
+                                            "<a href='%s' class='payment-methods-item__delete-btn' aria-label='%s'>%s</a>",
                                             esc_url( $method['actions']['delete']['url'] ),
+                                            esc_attr__( 'Delete', 'woocommerce' ),
                                             '<svg xmlns="http://www.w3.org/2000/svg" class="payment-methods-item__delete-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 6 18 18M18 6 6 18" /></svg>'
                                         );
                                     }

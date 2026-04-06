@@ -2,8 +2,8 @@
 wc_get_template(
 	'myaccount/page-heading.php',
 	array(
-		'page_heading'     => 'Address Book',
-		'page_description' => 'Manage your saved addresses',
+		'page_heading'     => __( 'Address Book', 'myaccount-core' ),
+		'page_description' => __( 'Save delivery addresses for your orders. Your default updates your account shipping details so the checkout shipping form can pre-fill.', 'myaccount-core' ),
 	)
 );
 ?>
@@ -72,7 +72,7 @@ wc_get_template(
 			'myaccount/partials/ma-empty-state.php',
 			array(
 				'title'                => esc_html__( 'You have not added any addresses yet.', 'myaccount-core' ),
-				'description'          => esc_html__( 'Add a shipping or billing address to check out faster and keep your delivery details ready.', 'myaccount-core' ),
+				'description'          => esc_html__( 'Add delivery addresses here. Your default updates your shipping details and pre-fills checkout.', 'myaccount-core' ),
 				'primary_as_button'    => true,
 				'primary_label'        => esc_html__( 'Add Address', 'myaccount-core' ),
 				'primary_icon'         => true,

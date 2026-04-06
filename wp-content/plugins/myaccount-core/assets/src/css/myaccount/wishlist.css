@@ -337,6 +337,11 @@
             grid-template-columns: repeat(3, minmax(0, 1fr));
         }
 
+        /* Vertical layout: narrower content column → keep 2-up grid. */
+        &.ma-layout-vertical .ma-wishlist-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
         .ma-wishlist-card__footer {
             display: none;
         }
